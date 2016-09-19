@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Teste</title>
+		<script src="js/snap.svg-min.js" charset="utf-8"></script>
+		<script src="js/Grafos.js" charset="utf-8"></script>
+  </head>
+  <body>
+    <div style="border: 2px solid #333; width: 550px;">
+      <svg id="DijkstraArbitrario" style="width: 550px; height: 280px;"></svg>
+      <script type="text/javascript">
+
+      var s = Snap("#DijkstraArbitrario");
+
+      var GrafoDijkstraArbitrario = new Grafo(s);
+
+      var nodes = [];
+      nodes.push(GrafoDijkstraArbitrario.DrawNode(50, 150, '0'));
+      nodes.push(GrafoDijkstraArbitrario.DrawNode(200, 45, '1'));
+      nodes.push(GrafoDijkstraArbitrario.DrawNode(200, 150, '2'));
+      nodes.push(GrafoDijkstraArbitrario.DrawNode(200, 255, '3'));
+      nodes.push(GrafoDijkstraArbitrario.DrawNode(350, 150, '4'));
+      nodes.push(GrafoDijkstraArbitrario.DrawNode(500, 150, '5'));
+
+      var edges = [];
+      edges.push(GrafoDijkstraArbitrario.DrawEdge(nodes[0], nodes[1], '3'));
+      edges.push(GrafoDijkstraArbitrario.DrawEdge(nodes[0], nodes[2], '1'));
+      edges.push(GrafoDijkstraArbitrario.DrawEdge(nodes[0], nodes[3], '5'));
+      edges.push(GrafoDijkstraArbitrario.DrawEdge(nodes[1], nodes[2], '1'));
+      edges.push(GrafoDijkstraArbitrario.DrawEdge(nodes[1], nodes[4], '7'));
+      edges.push(GrafoDijkstraArbitrario.DrawEdge(nodes[1], nodes[5], '2'));
+      edges.push(GrafoDijkstraArbitrario.DrawEdge(nodes[2], nodes[3], '3'));
+      edges.push(GrafoDijkstraArbitrario.DrawEdge(nodes[2], nodes[4], '5'));
+      edges.push(GrafoDijkstraArbitrario.DrawEdge(nodes[3], nodes[4], '5'));
+      edges.push(GrafoDijkstraArbitrario.DrawEdge(nodes[4], nodes[5], '8'));
+
+/*
+      for (var i = 0; i < nodes.length; i++) {
+
+        nodes[i].drag(moveNode, moveNodeBegin, null);
+        nodes[i].click(function(){console.log('Node clicked!')});
+      }
+*/
+
+      for (var i = 0; i < edges.length; i++) {
+
+        edges[i].click(function(){console.log('Weight Clicked!');});
+      }
+
+      s.dblclick(function() {console.log('Novo nó!');});
+      </script>
+    </div>
+    <br>
+    <div style="border: 2px solid #000; width: 200px; padding: 10px;">
+      <b id="PropLabel">Propriedades:</b>
+      <br>
+      <br>
+      <table id="PropTable" class="align">
+        <tr>
+          <td>
+            <b>Peso:</b>
+          </td>
+          <td>
+            &nbsp; &nbsp; <input type="text" name="name" value="1232" size="8">
+          </td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

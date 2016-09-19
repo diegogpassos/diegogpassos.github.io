@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <!-- Meta info -->
+	<meta charset="utf-8">
+	<meta name="shortauthor" content="Diego Passos"/>
+	<meta name="shorttitle" content="Redes Sem fio: Enlaces, CDMA, WLAN, ..."/>
+	<meta name="shortevent" content="Redes de Computadores II"/>
+	<title>Redes de Computadores II: Aula 8</title>
+
+    <!-- Math support -->
+	<script type="text/x-mathjax-config">
+		MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+			MathJax.InputJax.TeX.Definitions.number = /^(?:[0-9]+(?:\.[0-9]{3})*(?:\{,\}[0-9]*)*|\{,\}[0-9]+)/
+		});
+	</script>
+	<!--<script src="../MathJax/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>-->
+	<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+	<!--<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>-->
+
+    <!-- Fonts -->
+	<link href='https://fonts.googleapis.com/css?family=Lora:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
+
+    <!-- CSS -->
+	<link href='../template/css/template.css' id="template" rel='stylesheet' type='text/css'>
+	<link href='../template/css/presentationSpecific.css' id="presentationSpecific" rel='stylesheet' type='text/css'>
+
+    <!-- Javascript -->
+	<script type="text/javascript" src="../template/js/audio.js"></script>
+</head>
+
+<body>
+    <!-- Audio handlers -->
+     <audio src="audio/ASCII_a_multiPercurso.wav" id="ASCII_a_multiPercurso.wav" preload="auto"></audio>
+     <audio src="audio/ASCII_a_noise.wav" id="ASCII_a_noise.wav" preload="auto"></audio>
+
+    <!-- Title Slide -->
+	<section>
+
+        <div class="slideContent">
+            <h1 class="title">Aula 8 - Redes Sem Fio: Enlaces, CDMA, WLAN, WPAN</h1>
+            <h2 class="author">Diego Passos</h2>
+            <h4 class="institution">Universidade Federal Fluminense</h4>
+            <h3 class="date">Redes de Computadores II</h3>
+        </div>
+
+	</section>
+
+    <!-- Content slides -->
+	
+	<section>
+	<h1>Na Última Aula...</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li>Conceitos Básicos de Redes Sem fio.
+				<ul>
+					<li>Hosts <b>sem fio &ne; móveis</b>.</li>
+					<li>Estação base: interconecta <b>hosts</b>.
+					<ul>
+						<li>Define uma <b>área de cobertura</b>.</li>
+						<li>Também serve de <i>relay</i> com a infraestrutura cabeada.</li>
+					</ul></li>
+					<li>Enlaces sem fio têm <b>grande variabilidade</b>.</li>
+					<li>Meio sem fio é <b>compartilhado</b>.</li>
+					<li>Redes sem fio podem ser <b>infraestruturadas ou <i>ad hoc</i></b>.
+					<ul>
+						<li>Ter ou não estação base.</li>
+					</ul></li>
+				</ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li>Camada física:
+				<ul>
+					<li><b>Representação</b> da informação no meio.
+					<ul>
+						<li>Através de algum <b>parâmetro físico</b> alterável/mensurável.</li>
+					</ul></li>
+					<li><b>Transmissor</b> cria <b>símbolos</b>: altera estado do parâmetro físico.</li>
+					<li><b>Receptor</b> mensura o parâmetro: interpreta o símbolo.</li>
+					<li>Símbolos codificam <b>um ou mais bits</b> e possuem certa <b>duração</b>.
+					<ul>
+						<li><b>Taxa de transmissão</b> é função do # de <b>símbolos/bit</b> e sua <b>duração</b>.</li>
+						<li>Mas taxas maiores &rArr; maior probabilidade de erro.</li>
+					</ul></li>
+				</ul></li>
+			</ul>
+		</div>
+	</div>	
+	</section>
+
+	<section class="secao">
+	<div class="slideContent">
+		Características dos Enlaces Sem Fio
+	</div>
+	</section>
+	
+	<section>
+	<h1>Características dos Enlaces Sem Fio (I)</h1>
+	<div class="slideContent">
+
+		<ul>
+			<li> Diferenças importantes em relação a enlaces cabeados.
+			<ul>
+				<li> <span class="alert">Sinais recebidos com baixa potência:</span> sinal de rádio é atenuado a medida que se propaga.</li>
+				<li> <span class="alert">Interferência de outras fontes:</span> frequências padronizadas para uso de tecnologias sem fio (<i>e.g.</i>, 2,4&nbsp;GHz) compartilhadas com outros dispositivos (<i>e.g.</i>, telefones sem fio).
+				<ul>
+					<li> Mesmo dispositivos que não são de comunicação podem gerar interferência (<i>e.g.</i>, forno de micro-ondas).</li>
+				</ul>
+				</li>
+				<li><span class="alert">Ruídos:</span> fenômenos naturais no ambiente e na geração e captura do sinal criam ruídos.&nbsp;&nbsp;&nbsp;<img src="../template/images/Play.svg" style="width: 3%;" onmouseover="hoverIn(this, '../template/images/Play_enabled.svg');" onmouseout="hoverOut(this, '../template/images/Play.svg');" onclick="playSound('ASCII_a_noise.wav');"/></li>
+				<li> <span class="alert">Propagação por múltiplos percursos:</span> sinal de rádio é refletido (objetos, chão), chega ao destino múltiplas vezes.
+				<ul>
+					<li> Atrasos e tempos ligeiramente diferentes.&nbsp;&nbsp;&nbsp;<img src="../template/images/Play.svg" style="width: 3%;" onmouseover="hoverIn(this, '../template/images/Play_enabled.svg');" onmouseout="hoverOut(this, '../template/images/Play.svg');" onclick="playSound('ASCII_a_multiPercurso.wav');"/></li>
+				</ul>
+				</li>
+			</ul>
+			</li>
+			<li> Tornam comunicação muito mais &ldquo;difícil&rdquo;.</li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Características dos Enlaces Sem Fio (II)</h1>
+	<div class="slideContent">
+
+		<div class="column" style="width: 60%;">
+			<ul>
+				<li>SNR: relação sinal-ruído.
+				<ul>
+					<li>Quanto maior, mais fácil extrair sinal desejado.</li>
+					<li>Quanto menor, transmissão mais propensa a falhas.</li>
+				</ul>
+				</li>
+				<li>BER: taxa de erro de bits.
+				<ul>
+					<li>Fração de bits interpretados de forma errada pelo receptor.</li>
+				</ul>
+				</li>
+				<li><span class="alert">Compromissos entre SNR e BER:</span>
+				<ul>
+					<li>Dada uma camada física (taxa), aumentar SNR &rArr; reduzir BER.</li>
+					<li>Dado um SNR, escolher camada física (taxa) para alcançar certo BER e maximizar vazão.
+					<ul>
+						<li>SNR pode variar dinamicamente (<i>e.g.</i>, mobilidade).</li>
+						<li>Solução: adaptação automática da camada física.</li>
+					</ul>
+					</li>
+				</ul>
+				</li>
+			</ul>
+		</div>
+		<div class="column" style="width: 40%;">
+			<center>
+				<img src="imagens/BERXSNR.svg" style="width: 90%;"/>
+			</center>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Características dos Enlaces Sem Fio (III)</h1>
+	<div class="slideContent">
+
+		<ul>
+			<li>Múltiplos transmissores e receptores sem fio criam problemas adicionais.
+			<ul>
+				<li>Além dos de acesso múltiplo.</li>
+			</ul>
+		</ul>
+
+		<center>
+			<img src="imagens/TerminalEscondido.svg" style="width: 60%;"/>
+		</center>
+
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li><span class="alert">Problema do terminal escondido</span>
+				<ul>
+					<li><b>B</b> e <b>A</b> se ouvem.</li>
+					<li><b>B</b> e <b>C</b> se ouvem.</li>
+					<li><b>A</b> e <b>C</b> não se ouvem.
+						<li><b>A</b> não está ciente de que interfere com <b>C</b> em <b>B</b>.</li>
+					</li>
+				</ul>
+			</ul>
+		</div>
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li>Atenuação do sinal:
+				<ul>
+					<li>Terminais escondidos podem ocorrer mesmo sem obstáculos.</li>
+					<li>Rápida atenuação do sinal pode criar a situação.</li>
+				</ul>
+			</ul>
+		</div>
+	</div>
+	</section>
+
+	<section class="secao">
+	<div class="slideContent">
+		CDMA
+	</div>
+	</section>
+	
+	<section>
+	<h1>Code Division Multiple Access (CDMA)</h1>
+	<div class="slideContent">
+
+		<ul>
+			<li>Outra estratégia para permitir acesso múltiplo a canais de difusão.
+			<ul>
+				<li>Alternativa ao FDMA, TDMA, CSMA, ...</li>
+			</ul></li>
+			<li>&ldquo;Código&rdquo; único atribuído a cada usuário.
+			<ul>
+				<li>Todos os usuários compartilham a mesma frequência.</li>
+				<li>Mas cada um utiliza um código particular para codificar os dados.</li>
+				<li>Permite <b>coexistência</b> e <b>transmissões simultâneas</b> com interferência mínima.
+				<ul>
+					<li>Se os códigos são &ldquo;ortogonais&rdquo;.</li>
+				</li>
+			</ul>
+			<li><span class="alert">Sinal codificado</span> = (dado original) X (código).</li>
+			<li><span class="alert">Decodificação:</span> produto interno entre código e sinal.</li>
+		</ul>
+
+	</div>
+	</section>
+
+	<section>
+	<h1>CDMA: Codificação/Decodificação</h1>
+	<div class="slideContent">
+
+		<center>
+			<img src="imagens/CDMA.svg" style="width: 80%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>CDMA: Transmissores Interferentes</h1>
+	<div class="slideContent">
+
+		<center>
+			<img src="imagens/CDMA2.svg" style="width: 80%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section class="secao">
+	<div class="slideContent">
+		Redes locais IEEE 802.11 (&ldquo;Wi-Fi&rdquo;) e Pessoais IEEE 802.15
+	</div>
+	</section>
+
+	<section>
+	<h1>Redes Locais IEEE 802.11: Histórico</h1>
+	<div class="slideContent">
+
+		<div style="border: 2px solid #000; width: 98%; height: 450px; margin-left: 1%;">
+			<div class="column" style="width: 50%;">
+				<ul>
+					<li><span class="alert">802.11b</span>
+					<ul>
+						<li>Opera na faixa não licenciada de 2.4 GHz.</li>
+						<li>Até 11 Mb/s.</li>
+						<li>Camada física com DSSS (<i>Direct Sequence Spread Spectrum</i>).</li>
+						<ul>
+							<li>Similar ao CDMA, mas todos os nós usam o mesmo código.</li>
+						</ul>
+					</ul>
+					</li>
+					<li><span class="alert">802.11a</span>
+					<ul>
+						<li>Faixa (não licenciada) de 5 GHz.</li>
+						<li>Até 54 Mb/s.</li>
+					</ul>
+					</li>
+				</ul>
+			</div>
+			<div class="column" style="width: 50%;">
+				<ul>
+					<li><span class="alert">802.11g</span>
+					<ul>
+						<li>2,4 GHz.</li>
+						<li>Até 54 Mb/s.</li>
+					</ul>
+					</li>
+					<li><span class="alert">802.11n</span>
+					<ul>
+						<li>2,4 ou 5 GHz.</li>
+						<li>Múltiplas antenas, maior largura de banda.</li>
+						<li>Até 200 Mb/s.</li>
+					</ul>
+					</li>
+					<li><span class="alert">802.11ac</span>
+					<ul>
+						<li>Faixa (não licenciada) de 5 GHz.</li>
+						<li>Largura de banda ainda maior.</li>
+						<li>Até gigabits por segundo.</li>
+					</ul>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<ul>
+			<li>Todas as emendas usam CSMA/CA para acesso múltiplo.</li>
+			<li>Todas preveem modo infraestruturado e <i>ad hoc</i>.</li>
+		</ul>
+
+	</div>
+	</section>
+
+    <section>
+    <h1>Redes Locais IEEE 802.11: Arquitetura</h1>
+    <div class="slideContent">
+        <div class="column" style="width: 50%">
+        	<img src="imagens/80211arquitetura.svg" style="width: 90%;"/>
+        </div>
+	   <div class="column" style="width: 50%;">
+	   	<br>
+	   	<br>
+	   	<br>
+	   	<ul>
+	   		<li>Host sem fio se comunica com estação base.
+	   		<ul>
+	   			<li><span class="alert">Estação base = Ponto de Acesso (AP).</span></li>
+	   		</ul></li>
+			<li><span class="alert">Basic Service Set</span>
+			<ul>
+				<li>Ou &ldquo;célula&rdquo;</li>
+				<li>No modo infraestruturado contém:
+				<ul>
+					<li>Hosts sem fio.</li>
+					<li>Ponto de acesso.</li>
+				</ul></li>
+				<li>No modo ad hoc:
+				<ul>
+					<li>Apenas hosts.</li>
+				</ul></li>
+			</ul></li>
+	   	</ul>
+	   </div>
+	</div>	
+    </section>
+    
+    <section>
+    <h1>Redes Locais IEEE 802.11: Canais</h1>
+    <div class="slideContent">
+		<ul>
+			<li>802.11b: espectro de 2,4&nbsp;GHz até 2,485&nbsp;GHz dividido em 11 canais em frequências diferentes.
+			<ul>
+				<li>Em algumas regiões, há mais canais (faixa é mais larga).</li>
+				<li>Canal escolhido pelo administrador.
+				<ul>
+					<li>Ou algoritmos automáticos.</li>
+				</ul></li>
+				<li>Possibilidade de interferência: canal escolhido pode ser o mesmo da rede vizinha.</li>
+				<li>Além disso, nem todos os canais são <b>ortogonais</b>.</li>
+			</ul></li>
+		</ul>
+		<center>
+			<img src="imagens/80211canais.svg" style="width: 80%;"/>
+		</center>
+	</div>	
+    </section>
+    
+    <section>
+    <h1>Redes Locais IEEE 802.11: Associação</h1>
+    <div class="slideContent">
+		<ul>
+			<li>Host precisa se <span class="alert">associar</span> com o AP.
+			<ul>
+				<li>Varre os canais procurando por quadros de <i>beacon</i>
+				<ul>
+					<li>Contêm informações básicas sobre o AP/rede: nome (SSID), MAC, ...</li>
+				</ul></li>
+				<li>Seleciona um AP para se associar.</li>
+				<li>Pode realizar <span class="alert">autenticação</span> (Cap. 8).</li>
+				<li>Normalmente, executa DHCP para obter endereço IP na sub-rede do AP.</li>
+			</ul></li>
+		</ul>
+	</div>	
+    </section>
+    
+    <section>
+    <h1>Redes Locais IEEE 802.11: Varreduras Passiva e Ativa</h1>
+    <div class="slideContent">
+    			<div class="column" style="width: 50%;">
+				<center>
+					<img src="imagens/80211passive.svg" style="width: 80%;"/>
+				</center>
+				<ul>
+    					<li><span class="alert">Varredura Passiva</span>:
+    					<ol>
+    						<li>AP envia <i>beacon</i>.</li>
+						<li>Host envia quadro de <i>association request</i>.</li>
+						<li>AP responde com quadro de <i>association response</i>.</li>
+    					</ol></li>
+    				</ul>
+    			</div>
+			<div class="column" style="width: 50%;">
+				<center>
+					   <img src="imagens/80211active.svg" style="width: 80%;"/>
+				</center>
+				<ul>
+					<li><span class="alert">Varredura Ativa</span>:
+					<ol>
+						<li>Host envia quadro de <i>probe request</i>.</li>
+						<li>AP envia quadro de <i>probe response</i>.</li>
+						<li>Host envia quadro de <i>association request</i>.</li>
+						<li>AP responde com quadro de <i>association response</i>.</li>
+					</ol></li>
+				</ul>
+			</div>
+	</div>	
+    </section>
+    
+    <section>
+    <h1>Redes Locais IEEE 802.11: Acesso Múltiplo</h1>
+    <div class="slideContent">
+    		<ul>
+    			<li>Evitar colisões: 2 ou mais nós transmitindo ao mesmo tempo.</li>
+			<li>CSMA: ouvir antes de transmitir.
+			<ul>
+				<li>Não cause colisões com transmissões em andamento.</li>
+			</ul></li>
+			<li>Mas sem detecção de colisão.
+			<ul>
+				<li>Ao menos diretamente, como no Ethernet.</li>
+				<li>Dificuldade de recepção (para detectar colisões) enquanto se transmite.
+				<ul>
+					<li>Atenuação: sinal recebido é várias ordens de magnitude mais fraco que sinal transmitido.</li>
+				</ul></li>
+				<li>Além disso, ainda há a possibilidade de não ouvir outras transmissões: terminais escondidos.</li>
+			</ul></li>
+			<li>Logo, o objetivo é <span class="alert">evitar colisões</span>: CSMA/CA (<i>Collision Avoidance</i>).</li>
+    		</ul>
+		<center>
+			<img src="imagens/TerminalEscondido.svg" style="width: 60%;"/>
+		</center>
+	</div>	
+    </section>
+    
+    <section>
+    <h1>Protocolo MAC do IEEE 802.11: CSMA/CA</h1>
+    <div class="slideContent">
+    		<div class="column" style="width: 50%;">
+    			<ul>
+    				<li><span class="alert">Transmissor:</span>
+    				<ol>
+    					<li>Se o canal fica livre por <b>DIFS</b>, então 
+    					<ul>
+    						<li>transmite quadro <b>inteiro</b> (sem detecção de colisão).</li>
+    					</ul></li>
+					<li>Caso contrário 
+					<ul>
+						<li>Inicia <i>backoff</i> aleatório.</li>
+						<li>Temporizador decrementado enquanto <b>meio está livre</b>.</li>
+						<li>Transmite quando temporizador expira.</li>
+					</ul></li>
+					<li>Se o ack não é recebido em um tempo determinado, então 
+					<ul>
+						<li>Se o <b>limite de retransmissões</b> não foi excedido, aumenta <i>backoff</i> e volta para 2.</li>
+						<li>Caso contrário, pacote é descartado.</li>
+					</ul></li>
+    				</ol></li>
+    			</ul>
+    		</div>
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li><span class="alert">Receptor:</span>
+				<ol>
+					<li>Se quadro não está corrompido, então 
+					<ul>
+						<li>Envie ack após <b>SIFS.</b></li>
+					</ul></li>
+				</ol></li>
+			</ul>
+			<center>
+				<img src="imagens/80211csmaca.svg" style="width: 50%;"/>
+			</center>
+		</div>
+	</div>	
+    </section>
+    
+    <section>
+    <h1>Evitando Colisões (Mais)</h1>
+    <div class="slideContent">
+    		<ul>
+    			<li>Ideia: permitir que transmissor &ldquo;reserve&rdquo; o canal para transmitir <b>dados</b>.
+    			<ul>
+    				<li>Ao invés de acessar aleatoriamente.</li>
+				<li>Evita colisões de quadros longos.</li>
+    			</ul></li>
+			<li>Transmissor começa enviando um quadro <b>pequeno</b> de <i>request-to-send</i> (RTS).
+			<ul>
+				<li>RTSs ainda podem colidir, mas são pequenos (&ldquo;baratos&rdquo; para retransmitir).</li>
+			</ul></li>
+			<li>AP envia (<i>broadcast</i>) um CTS como resposta.
+			<ul>
+				<li><i>Clear-to-send</i>.</li>
+				<li>(Idealmente) ouvido por todos os nós.
+				<ul>
+					<li>Que passam a saber que o meio está reservado por determinado período.</li>
+				</ul></li>
+			</ul></li>
+			<li>Transmissor envia dados, enquanto outras estações aguardam.</li>
+			<li><span class="alert">Sempre funciona?</span></li>
+    		</ul>
+	</div>	
+    </section>
+    
+    <section>
+    <h1>Evitando Colisões: Troca de RTS-CTS</h1>
+    <div class="slideContent">
+    		<center>
+    			<img src="imagens/RTSCTS.svg" style="width: 80%;"/>
+    		</center>
+	</div>	
+    </section>
+	
+	<section>
+	<h1>Quadros do IEEE 802.11: Endereçamento (I)</h1>
+	<div class="slideContent">
+		<center>
+			<img src="imagens/80211enderecamento.svg" style="width: 80%;"/>
+		</center>
+	</div>	
+	</section>
+	
+	<section>
+	<h1>Quadros do IEEE 802.11: Endereçamento (II)</h1>
+	<div class="slideContent">
+			<center>
+				<img src="imagens/80211enderecamento2.svg" style="width: 80%;"/>
+			</center>
+	</div>	
+	</section>
+	  
+	<section>
+	<h1>Quadros do IEEE 802.11 (Mais)</h1>
+	<div class="slideContent">
+		<center>
+			<img src="imagens/80211quadro.svg" style="width: 80%;"/>
+		</center>
+	</div>	
+	</section>
+	
+	<section>
+	<h1>IEEE 802.11: Mobilidade Dentro da Mesma Sub-rede</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li>H1 permanece na mesma sub-rede.
+				<ul>
+					<li>Endereço IP pode continuar o mesmo.</li>
+				</ul></li>
+				<li>Ponto de vista do <i>switch</i>: a qual AP H1 está associado?
+				<ul>
+					<li>Auto-aprendizado (Capítulo 5).</li>
+					<li><i>Switch</i> recebe quadro originado em H1.</li>
+					<li>Armazena a informação da porta.</li>
+				</ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50%;">
+			<center>
+				<img src="imagens/80211mobilidade.svg" style="width: 80%;"/>
+			</center>
+		</div>
+	</div>	
+	</section>
+	
+	<section>
+	<h1>IEEE 802.11: Outras Características (I)</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 55%;">
+			<br>
+			<br>
+			<ul>
+				<li><span class="alert">Adaptação automática de taxa:</span>
+				<ul>
+					<li>Estação base e hosts dinamicamente alteram taxa de transmissão.
+					<li>Forma de compensar variações no SNR (<i>e.g.</i>, devido a mobilidade).</li>
+				</ul></li>
+			</ul>
+			<ol>
+				<li>SNR diminui e BER aumenta a medida que host se distancia do AP.</li>
+				<li>Quando o BER se torna muito alto, escolhe-se taxa mais baixa (mas com BER menor).</li>
+			</ol>
+		</div>
+		<div class="column" style="width: 45%;">
+			<center>
+				<img src="imagens/BERXSNR.svg" style="width: 70%;"/>
+			</center>
+		</div>
+	</div>	
+	</section>
+	
+	<section>
+	<h1>IEEE 802.11: Outras Características (II)</h1>
+	<div class="slideContent">
+		<ul>
+			<li><span class="alert">Gerenciamento de Energia:</span>
+			<ul>
+				<li>Host informa ao AP: &ldquo;vou dormir até o próximo <i>beacon</i>&rdquo;.
+				<ul>
+					<li>AP sabe que não deve transmitir quadros para o host.</li>
+					<li>Host acorda antes do próximo <i>beacon</i>.</li>
+				</ul></li>
+				<li>Quadro de <i>beacon</i>:
+				<ul>
+					<li>Contém lista de hosts para os quais AP possui dados a transmitir.</li>
+					<li>Nó permanece acordado se está lista.</li>
+					<li>Caso contrário, pode voltar a dormir até próximo <i>beacon</i>.</li>
+				</ul></li>
+			</ul></li>
+		</ul>
+	</div>	
+	</section>
+	
+
+	<section>
+	<h1>IEEE 802.15: Redes Pessoais</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<br>
+			<br>
+			<ul>
+				<li>Menos de 10 metros de alcance.</li>
+				<li>Substitui cabos em periféricos.
+				<ul>
+					<li>Teclado, <i>mouse</i>, fones de ouvido.</li>
+				</ul></li>
+				<li>Arquitetura <i>ad hoc</i> (sem infraestrutura).</li>
+				<li>Mestres/escravos:
+				<ul>
+					<li>Escravos pedem permissão para transmitir.</li>
+					<li>Mestre atende a pedidos.</li>
+				</ul></li>
+				<li>Evoluiu da especificação do Bluetooth.
+				<ul>
+					<li>Faixa de 2,4-2,5&nbsp;GHz.</li>
+					<li>Até 721 kb/s.</li>
+				</ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50%;">
+			<center>
+				<img src="imagens/80215.svg" style="width: 70%;"/>
+			</center>
+		</div>
+	</div>	
+	</section>
+
+	<section>
+	<h1>Resumo da Aula (I)...</h1>
+	<div class="slideContent">
+			<ul>
+				<li>Enlaces sem fio: <b>mais propensos a erros</b>.
+				<ul>
+					<li>Sinais recebidos com <b>baixa potência</b>.</li>
+					<li>Altos níveis de <b>ruído, interferência</b>.</li>
+					<li><b>Múltiplos percursos</b> de propagação.</li>
+					<li>Tudo isso colabora para queda no <b>SNR</b>.
+					<ul>
+						<li>Resulta em queda da <b>BER</b>.</li>
+						<li>Solução: adaptação automática entre <b>múltiplas taxas.</b></li>
+					</ul></li>
+					<li>Outros problemas: <b>terminais escondidos</b>.</li>
+				</ul></li>
+				<li>CDMA: outra técnica comum para <b>acesso múltiplo</b>.
+				<ul>
+					<li>Usuários <b>podem</b> transmitir ao mesmo tempo, na mesma frequência.</li>
+					<li><b>Códigos ortogonais</b> garantem que não haverá colisão.</li>
+				</ul></li>
+			</ul>
+	</div>	
+	</section>
+
+	<section>
+	<h1>Resumo da Aula (II)...</h1>
+	<div class="slideContent">
+		<ul>
+			<li>IEEE 802.11: padrão para <b>redes locais sem fio</b> (WLANs).
+			<ul>
+				<li>Evolução através de <b>emendas</b>, taxas de transmissão mais altas.</li>
+				<li><b>CSMA/CA</b> para acesso múltiplo.
+				<ul>
+					<li>Detecção de colisões é impossível.</li>
+					<li>Solução: <b>tentar ao máximo</b> evitá-las.</li>
+					<li>Utilizar <i>acks</i> para verificar se transmissão foi bem sucedida.</li>
+					<li>Pode usar <b>CTS/RTS</b>: reserva do meio.</li>
+				</ul></li>
+				<li><b>Modos</b> infraestruturado e <i>ad hoc</i>.</li>
+				<li>Componentes da arquitetura:
+				<ul>
+					<li><b>AP</b> = estação base.</li>
+					<li><b>BSS</b> = área de cobertura do AP, célula.</li>
+				</ul></li>
+				<li>Nem todos os canais são <b>ortogonais</b>.</li>
+				<li><b>Associação</b>: entrada do host na rede.</li>
+				<li><b>Adaptação automática de taxa</b>.</li>
+				<li><b>Gerenciamento de energia</b>.</li>
+			</ul></li>
+		</ul>
+	</div>	
+	</section>
+	
+	<section>
+	<h1>Leitura e Exercícios Sugeridos</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Características dos enlaces sem fio e CDMA.
+			<ul>
+				<li>Páginas 380 a 385 do Kurose (Seção 6.2).</li>
+				<li>Exercícios de fixação 3 e 4 do capítulo 6 do Kurose.</li>
+				<li>Problemas 1, 2 e 4 do Kurose.</li>
+			</ul></li>
+			<li>IEEE 802.11 e IEEE 802.15.
+			<ul>
+				<li>Páginas 385 a 399 do Kurose (Seção 6.3).</li>
+				<li>Exercícios de fixação 5 a 10 do capítulo 6 do Kurose.</li>
+				<li>Problemas 6 e 7 do Kurose.</li>
+			</ul></li>
+			<li>(Opcional) WiMAX.
+			<ul>
+				   <li>Páginas 399 a 401 do Kurose (último tópico da Seção 6.3).</li>
+			</ul></li>
+		</ul>
+	</div>	
+	</section>
+	
+	
+	<section>
+	<h1>Próxima Aula...</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Dois tópicos diferentes, porém interconectados:
+			<ul>
+				<li>Rede Celular.
+				<ul>
+					<li>Evolução, arquitetura, funcionamento.</li>
+				</ul></li>
+				<li>Mobilidade:
+				<ul>
+					<li>Conceitos básicos.</li>
+					<li>Ideias para soluções.</li>
+				</ul></li>
+			</ul></li>
+		</ul>
+	</div>	
+	</section>
+	
+	<!-- {{{{ dzslides core
+	#
+	#
+	#     __  __  __       .  __   ___  __
+	#    |  \  / /__` |    | |  \ |__  /__`
+	#    |__/ /_ .__/ |___ | |__/ |___ .__/ core :€
+	#
+	#
+	# The following block of code is not supposed to be edited.
+	# But if you want to change the behavior of these slides,
+	# feel free to hack it!
+	#
+	-->
+
+    <!-- More CSS -->
+	<link href='../template/css/slides.css' id="slides" rel='stylesheet' type='text/css'>
+	<link href='../template/css/presentationSpecific2.css' id="presentationSpecific2" rel='stylesheet' type='text/css'>
+
+    <!-- More Javascript -->
+	<script type="text/javascript" src="../template/js/dz.js"></script>
+
+	<!-- More CSS -->
+	<link href='../template/css/notesSpecific.css' id="notesSpecific" rel='stylesheet' type='text/css'>
+	<link href='../template/css/printSpecific.css' id="printSpecific" rel='stylesheet' type='text/css'>
+</body>
+</html>
+
+
+

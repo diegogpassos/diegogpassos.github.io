@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <!-- Meta info -->
+	<meta charset="utf-8">
+	<meta name="shortauthor" content="Diego Passos"/>
+	<meta name="shorttitle" content="Segurança: VPNs, IPSec"/>
+	<meta name="shortevent" content="Redes de Computadores II"/>
+	<title>Redes de Computadores II: Aula 15</title>
+
+    <!-- Math support -->
+	<script type="text/x-mathjax-config">
+		MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+			MathJax.InputJax.TeX.Definitions.number = /^(?:[0-9]+(?:\.[0-9]{3})*(?:\{,\}[0-9]*)*|\{,\}[0-9]+)/
+		});
+	</script>
+	<!--<script src="../MathJax/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>-->
+	<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+	<!--<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>-->
+
+    <!-- Fonts -->
+	<link href='https://fonts.googleapis.com/css?family=Lora:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
+
+    <!-- CSS -->
+	<link href='../template/css/template.css' id="template" rel='stylesheet' type='text/css'>
+	<link href='../template/css/presentationSpecific.css' id="presentationSpecific" rel='stylesheet' type='text/css'>
+
+    <!-- Javascript -->
+	<script type="text/javascript" src="../template/js/audio.js"></script>
+</head>
+
+<body>
+    <!-- Audio handlers -->
+
+    <!-- Title Slide -->
+	<section>
+
+        <div class="slideContent">
+            <h1 class="title">Aula 15 - Segurança: VPNs, IPSec</h1>
+            <h2 class="author">Diego Passos</h2>
+            <h4 class="institution">Universidade Federal Fluminense</h4>
+            <h3 class="date">Redes de Computadores II</h3>
+        </div>
+
+	</section>
+
+    <!-- Content slides -->
+	
+	<section>
+	<h1>Na Última Aula...</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 55%;">
+			<ul>
+				<li>SSL: <i>Secure Sockets Layer</i>.
+				<ul>
+					<li>&ldquo;TCP Seguro&rdquo;.</li>
+					<li><b>Amplamente difundido</b> na Internet.
+					<ul>
+						<li>Suporte nativo de <i>browsers</i>.</li>
+						<li>Base do HTTPS.</li>
+					</ul></li>
+					<li>Pode ser entendido como uma camada de segurança <b>entre TCP e aplicação</b>.</li>
+				</ul></li>
+				<li>SSL provê:
+				<ul>
+					<li><b>Confidencialidade, integridade, autenticação</b>.</li>
+				</ul></li>
+				<li>SSL: fases.
+				<ul>
+					<li><i>Handshake</i>: autenticação, escolha de cifras, segredo compartilhado.</li>
+					<li>Derivação de chaves: <b>4 chaves</b>.</li>
+					<li>Transferência de dados: em <b>registros</b>.</li>
+					<li>Fechamento de conexão: importante, mensagens especiais.</li>
+				</ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 45%;">
+			<ul>
+				<li>SSL: <i>handshake</i>.
+				<ul>
+					<li>Múltiplas cifras suportadas: <b>negociação</b>.</li>
+					<li>Nonces impedem <b>ataques de repetição</b>.</li>
+				</ul></li>
+				<li>SSL: registros.
+				<ul>
+					<li>Tamanho <b>variável</b>.</li>
+					<li>Campos: tamanho, tipo, versão.</li>
+					<li>Registros possuem <b>MACs individuais</b>.
+					<ul>
+						<li>Computado sobre dados, cabeçalho e <b>número de sequência implícito</b>.</li>
+						<li>Número de sequência evita ataques do tipo <i>man-in-the-middle</i>.</li>
+					</ul></li>
+				</ul></li>
+				<li>SSL: autenticação.
+				<ul>
+					<li>Feita através de <b>certificados</b>.</li>
+				</ul></li>
+			</ul>
+		</div>
+	</div>	
+	</section>
+
+	<section class="secao">
+	<div class="slideContent">
+		Segurança na Camada de Rede: IPsec
+	</div>
+	</section>
+	
+	<section>
+	<h1>O Que Confidencialidade na Camada de Rede?</h1>
+	<div class="slideContent">
+		<ul>
+			<li><span class="alert">Entre duas entidades de rede:</span>
+			<ul>
+				<li>Entidade transmissora cifra <i>payload</i> do datagrama. <i>Payload</i> pode ser:
+				<ul>
+					<li>Segmento TCP ou UDP, mensagem ICMP, mensagem OSPF...</li>
+				</ul></li>
+				<li>Todos os dados enviados de uma entidade para outra seria escondidos.
+				<ul>
+					<li>Páginas web, e-mail, transferências de arquivos P2P, pacotes TCP SYN...</li>
+				</ul></li>
+				<li>&ldquo;Cobertura total&rdquo;.</li>
+			</ul></li>
+		</ul>
+	</div>	
+	</section>
+	
+	<section>
+	<h1>VPNs: Virtual Private Networks (I)</h1>
+	<div class="slideContent">
+		<ul>
+			<li><span class="alert">Motivação:</span>
+			<ul>
+				<li>Instituições comumente desejam ter redes privadas por razões de segurança.
+				<ul>
+					<li>Alto custo: roteadores separados, enlaces próprios, infraestrutura de DNS.</li>
+				</ul></li>
+			</ul></li>
+			<li>VPN: tráfego interno da instituição é transmitido através da Internet pública, ao invés de usar estrutura dedicada.
+			<ul>
+				<li>Criptografado antes de entrar na Internet pública.</li>
+				<li>Logicamente separado de outros tráfegos.</li>
+			</ul></li>
+		</ul>
+	</div>	
+	</section>
+	
+	<section>
+	<h1>VPNs: Virtual Private Networks (II)</h1>
+	<div class="slideContent">
+		<center>
+			<img src="imagens/VPN.svg" style="width: 80%;"/>
+		</center>
+	</div>	
+	</section>
+	
+	<section>
+	<h1>Serviços do IPSec</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Integridade de dados.</li>
+			<li>Autenticação da origem.</li>
+			<li>Prevenção de ataques de repetição.</li>
+			<li>Confidencialidade.</li>
+			<li>Dois protocolos proveem diferentes modelos de serviço:
+			<ul>
+				<li>AH.</li>
+				<li>ESP.</li>
+			</ul></li>
+		</ul>
+	</div>	
+	</section>
+	
+	<section>
+	<h1>IPSec: Modo Transporte</h1>
+	<div class="slideContent">
+		<center>
+			<img src="imagens/IPTransporte.svg" style="width: 60%;"/>
+		</center>
+		<br>
+		<ul>
+			<li>Datagrama IPSec emitido e recebido por sistemas finais.</li>
+			<li>Protege protocolos de camadas superiores.
+			<ul>
+				<li>Pacote da camada de transporte (incluindo cabeçalhos) é protegido e encapsulado em datagrama IP.</li>
+			</ul></li>
+		</ul>
+	</div>	
+	</section>
+	
+	<section>
+	<h1>IPSec: Modo Túnel</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Datagrama IP <b>original</b> é encapsulado em um cabeçalho IPSec.</li>
+			<li>Esta unidade, por sua vez, é <b>encapsulada em um novo cabeçalho IP</b>.
+		</ul>
+		<center>
+			<img src="imagens/IPTunel.svg" style="width: 80%;"/>
+		</center>
+		<br>
+		<div>
+			<div class="column" style="width: 50%;">
+				<ul>
+					<li>Roteadores de borda são <i>IPSec-Aware</i>.</li>
+				</ul>
+			</div>
+			<div class="column" style="width: 50%;">
+				<ul>
+					<li>Hosts são <i>IPSec-Aware</i>.</li>
+				</ul>
+			</div>
+		</div>
+	</div>	
+	</section>
+	
+	<section>
+	<h1>IPSec: Dois Protocolos</h1>
+	<div class="slideContent">
+		<ul>
+			<li><i>Authentication Header (AH) Protocol</i>:
+			<ul>
+				<li>Provê autenticação da origem e integridade de dados, mas não confidencialidade.</li>
+			</ul></li>
+		     <li><i>Encapsulation Security Protocol (ESP)</i>:
+		     <ul>
+		     	<li>Provê autenticação da origem, integridade de dados <b>e confidencialidade</b>.</li>
+				<li>Mais comumente utilizado que o AH.</li>
+				<li>Foco da aula.</li>
+		     </ul></li>
+		</ul>
+	</div>	
+	</section>
+	
+	<section>
+	<h1>Quatro Possíveis Combinações!</h1>
+	<div class="slideContent">
+		<center>
+			   <table class="align" style="width: 70%;">
+				   <tr style="height: 150px;">
+					   <td style="width: 50%; text-align: center; border:1px solid #000;">Modo Transporte com AH</td>
+					   <td style="width: 50%; text-align: center; border:1px solid #000;">Modo Transporte com ESP</td>
+				   </tr>
+				   <tr style="height: 150px;">
+					   <td style="width: 50%; text-align: center; border:1px solid #000;">Modo Túnel com AH</td>
+					   <td style="width: 50%; text-align: center; border:1px solid #000;">Modo Túnel com ESP</td>
+				   </tr>
+				   <tr style="height: 30px; border: 0;">
+					   <td style="width: 50%; text-align: center;"></td>
+					   <td style="width: 50%; text-align: center;"><span class="alert">&#8593;</span></td>
+				   </tr>
+				   <tr style="height: 30px; border: 0;">
+					   <td style="width: 50%; text-align: center;"></td>
+					   <td style="width: 50%; text-align: center;"><span class="alert">Mais comum e importante!</span></td>
+				   </tr>
+			   </table>
+		</center>
+	</div>	
+	</section>
+	
+	<section>
+	<h1>Associações Seguras (SAs)</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Antes de enviar dados, uma <span class="alert">&ldquo;associação segura&rdquo;</span> é estabelecida entre as entidades de origem e destino.
+			<ul>
+				<li>SAs são simplex: funcionam apenas em uma direção.</li>
+			</ul></li>
+			<li>Entidades de origem e destino mantêm informação sobre a SA.
+			<ul>
+				<li>Lembre-se: os terminais de uma conexão TCP também mantêm estado.</li>
+				<li>IP não é orientado a conexão. Mas o IPSec é!</li>
+			</ul></li>
+			<li>Quantas SAs em uma VPN com matriz, franquias e <i>n</i> vendedores viajantes?</li>
+		</ul>
+	</div>	
+	</section>
+	
+	<section>
+	<h1>Exemplo de SA de R1 para R2</h1>
+	<div class="slideContent">
+		<center>
+			<img src="imagens/IPSecExemplo.svg" style="width: 60%;"/>
+		</center>
+		<br>
+		<ul>
+			<li><span class="alert">R1 armazena para a SA:</span>
+			<ul>
+				<li>Identificador de 32 bits da SA: <i>Security Parameter Index (SPI)</i>.</li>
+				<li>Interface de origem da SA (200.168.1.100).</li>
+				<li>Interface de destino da SA (193.68.2.23).</li>
+				<li>Tipo de criptografia usada (<i>e.g.</i>, 3DES com CBC).</li>
+				<li>Chave de criptografia.</li>
+				<li>Tipo de verificação de integridade (<i>e.g.</i>, HMAC com MD5).</li>
+				<li>Chave de autenticação.</li>
+			</ul></li>
+		</ul>
+	</div>	
+	</section>
+
+	<section>
+	<h1>Base de Dados de Associações Seguras (SAD)</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Terminal armazena estado da SA em uma <span class="alert">Base de Dados de Associações Seguras (SAD)</span>.
+			<ul>
+				<li>Informações das SAs podem ser consultadas quando necessário.</li>
+			</ul></li>
+			<li>Com <i>n</i> vendedores, 2 + 2n SAs na SAD de R1.</li>
+			<li>Quando um datagrama IPSec é enviado, R1 acessa a SAD para determinar como processar o datagrama</li>
+			<li>Quando o datagrama IPSec chega a R2, R2 encontra o SPI no pacote, usa-o para indexar a SAD e processa o datagrama de acordo.</li>
+		</ul>
+	</div>	
+	</section>
+	
+	<section>
+	<h1>Datagrama IPSec</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Modo túnel com ESP.</li>
+		</ul>
+		<br>
+		<center>
+			<img src="imagens/IPSecDatagrama.svg" style="width: 60%;"/>
+		</center>
+	</div>	
+	</section>
+	
+	<section>
+	<h1>O Que Acontece?</h1>
+	<div class="slideContent">
+		<center>
+			<img src="imagens/IPSecOQueAcontece.svg" style="width: 70%;"/>
+		</center>
+	</div>	
+	</section>
+	
+	<section>
+	<h1>R1: Converter o Datagrama Original em um Datagrama IPSec</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Adiciona ao final do datagrama original (o que inclui os cabeçalhos originais!) um campo &ldquo;ESP trailer&rdquo;.</li>
+			<li>Criptografa o resultado usando o algoritmo e chave especificados pela SA.</li>
+			<li>Adiciona ao início desta unidade criptografada o &ldquo;cabeçalho ESP&rdquo;, criando uma &ldquo;enchilada&rdquo;.</li>
+			<li>Cria um MAC sobre toda a &ldquo;enchilada&rdquo;, usando o algoritmo e chave especificados pela SA.</li>
+			<li>Adiciona o MAC ao final da &ldquo;enchilada&rdquo;, formando um <i>payload</i>.</li>
+			<li>Cria um novo cabeçalho IP, com todos os campos clássicos do IPv4, o qual é adicionado ao início do <i>payload</i>.</li>
+		</ul>
+	</div>	
+	</section>
+	
+	<section>
+	<h1>Dentro da Enchilada</h1>
+	<div class="slideContent">
+		<center>
+			<img src="imagens/Enchilada.svg" style="width: 60%;"/>
+		</center>
+		<br>
+		<ul>
+			<li>ESP trailer: padding usado para as cifras de bloco.</li>
+			<li>ESP header:
+			<ul>
+				<li>SPI, para que entidade receptora saiba o que fazer.</li>
+				<li>Número de sequência, para evitar ataques de repetição.</li>
+			</ul></li>
+			<li>O MAC no campo ESP auth é criado com uma chave secreta compartilhada.</li>
+		</ul>
+	</div>	
+	</section>
+	
+	<section>
+	<h1>IPSec: Números de Sequência</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Para cada novo SA, origem inicializa o número de sequência para 0.</li>
+			<li>A cada novo datagrama enviado no SA:
+			<ul>
+				<li>Origem incrementa o número de sequência.</li>
+				<li>Valor é colocado no campo seq #.</li>
+			</ul></li>
+			<li>Objetivo:
+			<ul>
+				<li>Prevenir que atacante monitore e repita um pacote.</li>
+				<li>Recebimento de pacote autenticado duplicado pode interromper o serviço.</li>
+			</ul></li>
+			<li>Metodologia:
+			<ul>
+				<li>Destino verifica se pacotes estão duplicados.</li>
+				<li>Não guarda informação de <b>todos</b> os pacotes recebidos. Ao invés disso, utiliza uma janela.</li>
+			</ul></li>
+		</ul>
+	</div>	
+	</section>
+	
+	<section>
+	<h1>Base de Políticas de Segurança (SPD)</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Política: para um dado datagrama, entidade de origem precisa saber se deve usar IPSec.</li>
+			<li>Também precisa saber qual SA usar.
+			<ul>
+				<li>Informações disponíveis: endereços IP de origem e destino, e número do protocolo.</li>
+			</ul></li>
+			<li>Informação no SPD indica &ldquo;o que&rdquo; fazer com datagrama recebido.</li>
+			<li>Informação no SAD indica &ldquo;como&rdquo; fazer.</li>
+		</ul>
+	</div>	
+	</section>
+	
+	<section>
+	<h1>Serviços IPSec: Sumário</h1>
+	<div class="slideContent">
+		<center>
+			<img src="imagens/Trudy.svg" style="width: 20%;"/>
+		</center>
+		<br>
+		<ul>
+			<li>Suponha que Trudy está em algum ponto da rede entre R1 e R2. Ela não conhece as chaves.
+			<ul>
+				<li>Trudy será capaz de ver o conteúdo original do datagrama? E quanto aos endereços IP de origem e destino, protocolo de transporte e porta da aplicação?</li>
+				<li>Será capaz de alterar bits sem que isso seja detectado pelo receptor?</li>
+				<li>Se passar por R1 utilizando o endereço IP de R1?</li>
+				<li>Repetir um datagrama original de R1?</li>
+			</ul></li>
+		</ul>
+	</div>	
+	</section>
+	
+	<section>
+	<h1>IKE: Internet Key Exchange</h1>
+	<div class="slideContent">
+		<ul>
+			<li><span class="alert">Exemplos anteriores:</span> estabelecimento manual dos SAs do IPsec nos terminais IPSec. <span class="alert">Exemplo de SA:</span>
+			<ul>
+				<li>SPI: 12345.</li>
+				<li>IP de origem: 200.168.1.100.</li>
+				<li>IP de destino: 193.68.2.23.</li>
+				<li>Protocolo: ESP.</li>
+				<li>Algoritmo de criptografia: 3DES-cbc.</li>
+				<li>Algoritmo HMAC: MD5.</li>
+				<li>Chave de criptografia: 0x7aeaca...</li>
+				<li>Chave do HMAC: 0xc0291f...</li>
+			</ul></li>
+			<li>Estabelecimento manual de chaves para VPNs de centenas de terminais é impraticável. </li>
+			<li>Ao invés disso, utiliza-se o <span class="alert">IPsec IKE (Internet Key Exchange)</span>.</li>
+		</ul>
+	</div>	
+	</section>
+	
+	<section>
+	<h1>IKE: PSK e PKI</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Autenticação (provar sua identidade) com uma de duas alternativas:
+			<ul>
+				<li>Uma chave pré-compartilhada (PSK).</li>
+				<li>Uma PKI (chaves pública/privada e certificados).</li>
+			</ul></li>
+			<li>PSK: ambos os lados já começam com um segredo.
+			<ul>
+				<li>IKE é executado para autenticar os lados e para gerar as SAs do IPsec (uma em cada direção), incluindo chaves de criptografia e autenticação.</li>
+			</ul></li>
+			<li>PKI: ambos os lados começam com um par de chaves pública/privada e um certificado.
+			<ul>
+				<li>IKE é executado para autenticar os lados, obter as SAs do IPsec (uma em cada direção).</li>
+				<li>Similar ao <i>handshake</i> no SSL.</li>
+			</ul></li>
+		</ul>
+	</div>	
+	</section>
+	
+	<section>
+	<h1>Fases IKE</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Duas fases:
+			<ul>
+				<li><b>Fase 1:</b> estabelecer uma SA bidirecional do IKE.
+				<ul>
+					<li>Note que a SA do IKE é diferente da SA do IPsec.</li>
+					<li>Diffie-Hellman.</li>
+				</ul></li>
+				<li><b>Fase 2:</b> a SA do IKE é usada para a negociação segura do par de SAs do IPsec.</li>
+			</ul></li>
+			<li>A fase 1 tem dois modos: agressivo e principal.
+			<ul>
+				<li>Modo agressivo usa menos mensagens.</li>
+				<li>Modo principal provê proteção da identidade e é mais flexível.</li>
+			</ul></li>
+		</ul>
+	</div>	
+	</section>
+	
+	<section>
+	<h1>IPSec: Sumário</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Troca de mensagens IKE para algoritmos, chaves secretas e números de SPI.</li>
+			<li>Ou protocolo AH ou protocolo ESP (ou ambos).
+			<ul>
+				<li>AH provê integridade, autenticação da origem.</li>
+				<li>ESP (com AH) adicionalmente provê criptografia.</li>
+			</ul></li>
+			<li>Pares IPsec podem ser dois sistemas finais, dois roteadores/firewalls, ou uma combinação destes.</li>
+		</ul>
+	</div>	
+	</section>
+
+	<section>
+	<h1>Resumo da Aula...</h1>
+	<div class="slideContent">
+		<ul>
+			<li>IPSec: provê segurança na camada de rede.
+			<ul>
+				<li>Confidencialidade, integridade, autenticação da origem.</li>
+			</ul></li>
+			<li>IPSec: dois protocolos.
+			<ul>
+				<li>AH: integridade e autenticação.</li>
+				<li>ESP: integridade, autenticação e confidencialidade.</li>
+			</ul></li>
+			<li>IPSec: dois modos.
+			<ul>
+				<li>Transporte: carga útil do datagrama IP é cifrada/autenticada.</li>
+				<li>Túnel: datagrama IP <b>completo é encapsulado</b> em novo datagrama.
+				<ul>
+					<li>Esconde <b>completamente protocolo de transporte, portas,</b> ...</li>
+				</ul></li>
+			</ul></li>
+			<li>Associações seguras: SA.
+			<ul>
+				<li>Canal de comunicação virtual entre duas entidades IPSec.</li>
+				<li><b>Simplex, mantém estado.</b>
+				<ul>
+					<li>Algoritmos de criptografia, integridade, chaves, ...</li>
+				</ul></li>
+			</ul></li>
+			<li>IPSec: Gerenciamento de Chaves.
+			<ul>
+				<li>Protocolo próprio: IKE.</li>
+			</ul></li>
+		</ul>
+	</div>	
+	</section>
+
+	<section>
+	<h1>Leitura e Exercícios Sugeridos</h1>
+	<div class="slideContent">
+		<ul>
+			<li>IPSec:
+			<ul>
+				<li>Páginas 526 a 531 do Kurose (Seção 8.6).</li>
+				<li>Exercícios de fixação 24, 25 e 26 do capítulo 8 do Kurose.</li>
+				<li>Problemas 22 e 23 do capítulo 8 do Kurose.</li>
+			</ul></li>
+		</ul>
+	</div>	
+	</section>
+	
+	<section>
+	<h1>Próxima Aula...</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Terminaremos nossa discussão sobre segurança.</li>
+			<li>Últimos tópicos abordados:
+			<ul>
+				<li>Segurança em WLANs.</li>
+				<li>Segurança operacional.
+				<ul>
+					<li><i>Firewalls</i>.</li>
+					<li><i>Gateways</i> de aplicação.</li>
+					<li>Sistemas de detecção de intrusão.</li>
+				</ul></li>
+			</ul></li>
+		</ul>
+	</div>	
+	</section>
+	
+	<!-- {{{{ dzslides core
+	#
+	#
+	#     __  __  __       .  __   ___  __
+	#    |  \  / /__` |    | |  \ |__  /__`
+	#    |__/ /_ .__/ |___ | |__/ |___ .__/ core :€
+	#
+	#
+	# The following block of code is not supposed to be edited.
+	# But if you want to change the behavior of these slides,
+	# feel free to hack it!
+	#
+	-->
+
+    <!-- More CSS -->
+	<link href='../template/css/slides.css' id="slides" rel='stylesheet' type='text/css'>
+	<link href='../template/css/presentationSpecific2.css' id="presentationSpecific2" rel='stylesheet' type='text/css'>
+
+    <!-- More Javascript -->
+	<script type="text/javascript" src="../template/js/dz.js"></script>
+
+	<!-- More CSS -->
+	<link href='../template/css/notesSpecific.css' id="notesSpecific" rel='stylesheet' type='text/css'>
+	<link href='../template/css/printSpecific.css' id="printSpecific" rel='stylesheet' type='text/css'>
+</body>
+</html>
+
+
+

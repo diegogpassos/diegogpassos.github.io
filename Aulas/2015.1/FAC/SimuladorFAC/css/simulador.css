@@ -1,0 +1,155 @@
+@font-face {
+    font-family: "LMRoman10";
+    src: url('fonts/cmunss.otf');
+    font-style: normal;
+}
+@font-face {
+    font-family: "LMRoman10";
+    src: url('fonts/cmunsx.otf');
+    font-weight: bold;
+}
+@font-face {
+    font-family: "LMRoman10";
+    src: url('fonts/cmunsi.otf');
+    font-style: italic;
+}
+@font-face {
+    font-family: "LMRoman10";
+    src: url('fonts/cmunbxo.otf');
+    font-weight: bold;
+    font-style: italic;
+}
+
+body {
+/*    font-family: "Courier New";*/
+    font-family: 'Source Code Pro';
+    font-style: normal;
+}
+
+.table {
+
+    border-spacing: 10px;
+    display: table;
+    table-layout:fixed;
+}
+
+.table > div {
+
+    border-spacing: 0px;
+}
+
+.block-container {
+
+    border: 1px solid #ccc;
+    border-top-left-radius:10px;
+    border-top-right-radius:10px;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(102, 175, 233, 0.6);
+    color: #571;
+}
+
+.block-title {
+
+    border: none;
+    width: calc(100% - 5px);
+    height: 25px;
+    background-color: #acb; 
+    padding-top: 10px; 
+    padding-left: 5px;
+    border-top-left-radius:10px;
+    border-top-right-radius:10px;
+    font-weight: bold;
+    font-size: 18px;
+    color: #151;
+    text-align: left;
+}
+
+
+.editorCodigoFonte {
+
+/*
+    margin: 15px;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(102, 175, 233, 0.6);
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    font-family: 'Source Code Pro';
+*/    
+}
+
+.btn,.btn:focus {
+
+    border: 1px solid #999;
+    border-radius: 6px;
+    margin: 5px;
+    padding: 5px;
+    background-color: #eee;
+    color: #444;
+}
+
+.btn:hover {
+
+    border: 1px solid #999;
+    border-radius: 6px;
+    margin: 5px;
+    padding: 5px;
+/*    background-color: #bcb;*/
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(102, 175, 233, 0.6);
+}
+
+.btn:active {
+
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0px 8px rgba(20, 17, 23, 0.6);
+    outline: none;
+}
+
+.btn:disabled {
+
+    color: #aaa;
+    box-shadow: none;
+}
+
+button::-moz-focus-inner {
+      border: 0;
+}
+
+.containerExecutable {
+
+    margin: 15px;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(102, 175, 233, 0.6);
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    font-family: 'Source Code Pro';
+}
+
+.MemoryLoadPosEB {
+
+    border: 1px solid #999;
+    border-radius: 6px;
+    margin: 5px;
+    padding: 5px;
+    background-color: #eee;
+    color: #444;
+    width: 35px;
+}
+
+.FreqEB {
+
+    border: 1px solid #999;
+    border-radius: 6px;
+    margin: 5px;
+    padding: 5px;
+    background-color: #eee;
+    color: #444;
+    width: 35px;
+}
+
+.minimize {
+
+    float: right; 
+    width: 18px; 
+    height: 18px; 
+    border: 1px solid; 
+    text-align: center; 
+    margin-right: 10px; 
+    font-size:14px;
+}
+

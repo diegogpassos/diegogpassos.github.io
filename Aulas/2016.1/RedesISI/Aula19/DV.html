@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html>
+  <head>
+
+    <meta charset="utf-8">
+    <title>Algoritmo de Vetor de Distâncias</title>
+
+		<script src="js/snap.svg-min.js" charset="utf-8"></script>
+		<script src="js/Grafos.js" charset="utf-8"></script>
+
+    <style>
+      html {
+        font-family: "Times New Roman";
+      }
+
+      .circle {
+        width:20px;
+        height:18px;
+        border-radius:50%;
+        border: 2px solid #c33;
+        line-height:20px;
+        text-align:center;
+        margin: auto;
+      }
+
+      table.TabelaDeRoteamento {
+        border-top: 2px double #000;
+        border-bottom: 2px double #000;
+        padding-left: 10px;
+        padding-right: 10px;
+        border-spacing: 0px 2px;
+      }
+
+      table.TabelaDeRoteamento > thead > tr > th {
+        border-bottom: 1px solid #000;
+      }
+
+      table.TabelaDeRoteamento td {
+        padding-left: 10px;
+        padding-right: 10px;
+        text-align: center;
+      }
+
+      table.TabelaDeRoteamento th {
+        padding-left: 10px;
+        padding-right: 10px;
+      }
+
+      table.TabelaExecucao {
+        border-top: 2px double #000;
+        border-bottom: 2px double #000;
+        padding-left: 10px;
+        padding-right: 10px;
+        border-spacing: 0px 2px;
+      }
+
+      table.TabelaExecucao > thead > tr > th {
+        border-bottom: 1px solid #000;
+      }
+
+      table.TabelaExecucao td {
+        padding-left: 10px;
+        padding-right: 10px;
+        text-align: center;
+      }
+
+      table.TabelaExecucao th {
+        padding-left: 10px;
+        padding-right: 10px;
+      }
+    </style>
+
+  </head>
+  <body>
+    <table>
+      <tr>
+        <td>
+          <div style="border: 2px solid #333; width: 550px;">
+            <svg id="DVEntradaSVG" style="width: 550px; height: 280px;"></svg>
+          </div>
+        </td>
+
+        <td style="padding-left: 40px; vertical-align: top;">
+          <table class="TabelaDeRoteamento">
+            <thead>
+              <tr>
+                <th>Destino</th><th>Próximo Salto</th><th>Distância</th>
+              </tr>
+            </thead>
+            <tbody id="TabelaDeRoteamento">
+            </tbody>
+          </table>
+        </td>
+      </tr>
+    </table>
+
+    <br>
+
+    <table class="TabelaExecucao">
+      <thead>
+        <tr>
+        </tr>
+      </thead>
+      <tbody id="TabelaExecucao">
+      </tbody>
+    </table>
+
+    <br>
+
+    <h2>Instruções</h2>
+
+    <ul>
+      <li>Nós podem ser adicionados através de um duplo-clique na imagem.</li>
+      <li>Nós também podem ser arrastados e reposicionados.</li>
+      <li>Para criar uma aresta, clique no nó de origem segurando <tt>&lt;shift&gt;</tt> e clique no nó de destino.</li>
+      <li>Nós e arestas podem ser removidos: clique no elemento desejado segurando <tt>&lt;ctrl&gt;</tt>.</li>
+      <li>O peso de uma aresta pode ser modificado através de um clique segurando a tecla <tt>&lt;shift&gt;</tt>.</li>
+      <li>Os nomes dos nós podem ser alterados através de um clique com o botão do meio.</li>
+      <li>Um clique simples em qualquer nó o seleciona para que a sua tabela de roteamento seja exibida.</li>
+      <li>Qualquer alteração no grafo dispara automaticamente o cálculo dos melhores caminhos.</li>
+    </ul>
+  </body>
+
+  <script type="text/javascript">
+    function DV(grafo, tabelaDeRoteamento, tabelaExecucao) {
+
+      var adj = grafo.AdjacencyMatrix();
+      var N = grafo.Nodes();
+
+      var matrizesDosNos = [];
+      var tabelasDeRoteamento = [];
+      var matrizDeDistancias;
+      var vetorDeDistancias;
+      var nNos = N.length;
+      var minimo;
+      var i, j, k;
+      var mudanca;
+      var mudados = [];
+
+      /*
+       * Para impressão dos resultados.
+       */
+      var tabelaExecucaoHeaders = tabelaExecucao.parentElement.children[0].children[0];
+      var newHTMLText;
+      var novaLinha;
+      var novaCelula;
+      var passo = 0;
+
+      for (i = 0; i < nNos; i++) {
+
+        matrizDeDistancias = [];
+        tabelasDeRoteamento[i] = Array.apply(null, Array(nNos)).map(function(){return(-1);});
+        for (j = 0; j < nNos; j++) {
+
+          if (j == i) {
+
+            vetorDeDistancias = Array.apply(null, Array(nNos)).map(function(){return(-1);});
+            vetorDeDistancias[i] = 0;
+            for (k = 0; k < adj[i].length; k++) {
+
+              vetorDeDistancias[adj[i][k].id] = adj[i][k].weight;
+              tabelasDeRoteamento[i][adj[i][k].id] = adj[i][k].id;
+            }
+            matrizDeDistancias.push(vetorDeDistancias);
+          }
+          else {
+
+            matrizDeDistancias.push(Array.apply(null, Array(nNos)).map(function(){return(-1);}));
+          }
+        }
+
+        matrizesDosNos.push(matrizDeDistancias);
+      }
+
+      /*
+       * Exibir matrizes de distâcias neste momento.
+       */
+
+      tabelaExecucaoHeaders.innerHTML = "";
+      tabelaExecucao.innerHTML = "";
+      tabelaExecucaoHeaders.insertCell(-1);
+      tabelaExecucaoHeaders.insertCell(-1).innerHTML = "<b style='padding-left: 55px;'>t<sub>0</sub></b>";
+      for (i = 0; i < nNos; i++) {
+
+        novaLinha = tabelaExecucao.insertRow(-1);
+        novaLinha.insertCell(-1).innerHTML = "<b><br><br>Nó " + N[i][1].node.innerHTML + "</b>";
+        novaCelula = novaLinha.insertCell(-1);
+
+        newHTMLText = "<table style='border-collapse: collapse;'>";
+        newHTMLText += "<tr>";
+        newHTMLText += "<th colspan='2'></th>";
+        newHTMLText += "<th colspan='" + nNos + "'><i>destino</i></th>";
+        newHTMLText += "</tr>";
+        newHTMLText += "<tr>";
+        newHTMLText += "<th></th>";
+        newHTMLText += "<th style='border-right: 1px solid #000; border-bottom: 1px solid #000;'></th>";
+        for (j = 0; j < nNos; j++) {
+          newHTMLText += "<th style='border-bottom: 1px solid #000;'>" + N[j][1].node.innerHTML + "</th>";
+        }
+        newHTMLText += "</tr>";
+        for (j = 0; j < nNos; j++) {
+
+          newHTMLText += "<tr>"
+          if (j == 0) {
+
+            newHTMLText += "<td style='padding-left: 0px; padding-right: 0px;' rowspan='" + nNos + "'><p style='transform: rotate(-90deg); margin-left: -20px; margin-right: -20px;'><i><b>origem</b></i></p></td>";
+          }
+          newHTMLText += "<td style='border-right: 1px solid #000;'><b>" + N[j][1].node.innerHTML + "</b></td>";
+
+          for (k = 0; k < nNos; k++) {
+
+            if (matrizesDosNos[i][j][k] == -1)
+              newHTMLText += "<td>&infin;</td>";
+            else
+              newHTMLText += "<td>" + matrizesDosNos[i][j][k] + "</td>";
+          }
+          newHTMLText += "</tr>"
+        }
+
+        newHTMLText += "</table>"
+        novaCelula.innerHTML = newHTMLText;
+      }
+
+      /*
+       * Loop principal.
+       */
+
+      mudanca = true;
+      while(mudanca) {
+
+        mudanca = false;
+
+        /*
+         * Atualizar vetores de distancia em cada nó.
+         */
+        for (i = 0; i < nNos; i++) {
+
+          for (j = 0; j < adj[i].length; j++) {
+
+            matrizesDosNos[i][adj[i][j].id] = matrizesDosNos[adj[i][j].id][adj[i][j].id].slice();
+          }
+        }
+
+        /*
+         * Agora que cada nó conhece os vetores de distâncias atualizados
+         * de seus vizinhos, recomputar menores distâncias.
+         */
+        mudados = [];
+        for (i = 0; i < nNos; i++) {
+
+          for (j = 0; j < adj[i].length; j++) {
+
+            for (k = 0; k < nNos; k++) {
+
+              if (matrizesDosNos[i][adj[i][j].id][k] == -1) continue ;
+              if (matrizesDosNos[i][i][k] == -1 || matrizesDosNos[i][i][k] > adj[i][j].weight + matrizesDosNos[i][adj[i][j].id][k]) {
+
+                matrizesDosNos[i][i][k] = adj[i][j].weight + matrizesDosNos[i][adj[i][j].id][k];
+                tabelasDeRoteamento[i][k] = adj[i][j].id;
+                mudanca = true;
+                mudados[i + "," + k] = 1;
+              }
+            }
+          }
+        }
+
+        passo += 1;
+
+        /*
+        * Exibir matrizes de distâcias neste momento.
+        */
+
+        tabelaExecucaoHeaders.insertCell(-1).innerHTML = "<b style='padding-left: 55px;'>t<sub>" + passo + "</sub></b>";
+        for (i = 0; i < nNos; i++) {
+
+          novaLinha = tabelaExecucao.children[i];
+          novaCelula = novaLinha.insertCell(-1);
+
+          newHTMLText = "<table style='border-collapse: collapse;'>";
+          newHTMLText += "<tr>";
+          newHTMLText += "<th colspan='2'></th>";
+          newHTMLText += "<th colspan='" + nNos + "'><i>destino</i></th>";
+          newHTMLText += "</tr>";
+          newHTMLText += "<tr>";
+          newHTMLText += "<th></th>";
+          newHTMLText += "<th style='border-right: 1px solid #000; border-bottom: 1px solid #000;'></th>";
+          for (j = 0; j < nNos; j++) {
+            newHTMLText += "<th style='border-bottom: 1px solid #000;'>" + N[j][1].node.innerHTML + "</th>";
+          }
+          newHTMLText += "</tr>";
+          for (j = 0; j < nNos; j++) {
+
+            newHTMLText += "<tr>"
+            if (j == 0) {
+
+              newHTMLText += "<td style='padding-left: 0px; padding-right: 0px;' rowspan='" + nNos + "'><p style='transform: rotate(-90deg); margin-left: -20px; margin-right: -20px;'><i><b>origem</b></i></p></td>";
+            }
+            newHTMLText += "<td style='border-right: 1px solid #000;'><b>" + N[j][1].node.innerHTML + "</b></td>";
+
+            for (k = 0; k < nNos; k++) {
+
+              if (matrizesDosNos[i][j][k] == -1)
+                newHTMLText += "<td>&infin;</td>";
+              else {
+
+                if (j == i && mudados[i + "," + k] == 1)
+                  newHTMLText += "<td style='padding-left: 4px; padding-right: 4px;'><div class='circle'>" + matrizesDosNos[i][j][k] + "</div></td>";
+                else
+                  newHTMLText += "<td>" + matrizesDosNos[i][j][k] + "</td>";
+              }
+            }
+            newHTMLText += "</tr>"
+          }
+
+          newHTMLText += "</table>"
+          novaCelula.innerHTML = newHTMLText;
+        }
+      }
+
+      /*
+       * Mostrar enlaces selecionados como partes de caminhos mais curtos.
+       * Exibir tabela de roteamento resultante.
+       */
+      grafo.UnHighlightAllEdges();
+      for (i = 0; i < N.length; i++) {
+
+        for (j = 0; j < N.length; j++) {
+
+          if (i == j) continue ;
+          if (tabelasDeRoteamento[i][j] != -1) {
+
+            var aresta = grafo.FindEdge(N[i], N[tabelasDeRoteamento[i][j]]);
+            grafo.HighlightEdge(aresta);
+          }
+
+        }
+      }
+
+      i = N.indexOf(grafo.SelectedNode());
+      tabelaDeRoteamento.innerHTML = "";
+      for (j = 0; j < N.length; j++) {
+
+          if (i == j) continue ;
+          if (tabelasDeRoteamento[i][j] == -1) continue ;
+
+          tabelaDeRoteamento.innerHTML += "<tr><td>" + N[j][1].node.innerHTML + "</td>"
+                                      + "<td>" + N[tabelasDeRoteamento[i][j]][1].node.innerHTML + "</td>"
+                                      + "<td>" + matrizesDosNos[i][i][j] + "</td></tr>";
+      }
+    }
+
+    var s = Snap("#DVEntradaSVG");
+
+    var DVEntrada = new Grafo(s);
+
+    var nodes = [];
+    nodes.push(DVEntrada.DrawNode(150, 200, 'X'));
+    nodes.push(DVEntrada.DrawNode(250, 95, 'Y'));
+    nodes.push(DVEntrada.DrawNode(350, 200, 'Z'));
+
+    DVEntrada.DrawEdge(nodes[0], nodes[1], '2');
+    DVEntrada.DrawEdge(nodes[0], nodes[2], '7');
+    DVEntrada.DrawEdge(nodes[1], nodes[2], '1');
+
+    DVEntrada.OnChange(function() {DV(DVEntrada, document.getElementById('TabelaDeRoteamento'), document.getElementById('TabelaExecucao'));});
+    DVEntrada.ChangeSelectedNode(nodes[0]);
+
+    DV(DVEntrada, document.getElementById('TabelaDeRoteamento'), document.getElementById('TabelaExecucao'));
+  </script>
+
+</html>

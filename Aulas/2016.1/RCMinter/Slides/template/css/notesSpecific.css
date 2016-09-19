@@ -1,0 +1,63 @@
+html {
+    overflow: none;
+    background-color: gray;		
+}
+body {
+    width: 100%;
+    height: none;
+    background-color: gray;		
+    overflow: none;
+}
+div.page {
+    width: 1300px;
+    height: 1730px;
+    background-color: white;
+    -moz-box-shadow:    0px 0px 15px 16px #333;
+    -webkit-box-shadow: 0px 0px 15px 16px #333;
+    box-shadow:         0px 0px 15px 16px #333;
+    margin-bottom: 30px;
+    margin-top: 30px;
+    margin-left: 20px;
+}
+div.page p {
+    text-indent: 30px;
+}
+section {
+    width: 1200px;
+    height: 750px;
+    border: 3px solid #000;
+    margin-top: 20px;
+    margin-left: 45px;
+}
+div.slideNotes {
+    position: absolute;
+    top: 800px;
+    padding: 50px;
+    font-size: 20px;
+    overflow: hidden;
+}
+div.slideNotes h2, div.slideNotes h3 {
+    text-align: left;
+    margin: 10pt 10pt 20pt 10pt;
+    font-weight: bold;
+}
+div.slideNotes ul, div.slideNotes ol {
+    margin: 5px 5px 5px 25px;
+    list-style-image: none;
+    text-indent: 0px;
+}
+
+div.slideNotes li ul, div.slideNotes li ol {
+
+    padding-top: 2px;
+    padding-bottom: 2px;
+    margin: 2px 10px 2px 25px;
+}
+
+div.slideNotes h1 { 
+    font-size: 140%; 
+    text-align: left;
+    color: #000;
+    font-weight: bold;
+}
+

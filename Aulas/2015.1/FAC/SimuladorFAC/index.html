@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+
+    <title>Simulador de Processador</title>
+    <link href='http://fonts.googleapis.com/css?family=Source+Code+Pro:500,700' rel='stylesheet' type='text/css'>
+
+    <link rel="stylesheet" href="css/simulador.css">
+    <link rel="stylesheet" href="css/TextAreaWithLines.css">
+
+    <script type="text/javascript" src="js/callbacks.js"></script>
+    <script type="text/javascript" src="js/initialization.js"></script>
+    <script type="text/javascript" src="js/utils.js"></script>
+    <script type="text/javascript" src="js/assembler.js"></script>
+    <script type="text/javascript" src="js/simulator.js"></script>
+    <script type="text/javascript" src="js/ui.js"></script>
+</head>
+<body>
+
+    <div id="body" style="min-width: 1249px; width: 1249px;">
+    <div style="width: 780px; float:left;">
+    <div id="CPUContainer" class="block-container" style="width: 780px;">
+        <div class="block-title">
+            CPU <font style="font-size: 10px; color: #07a; text-decoration: underline;" title="Visualização do estado do processador. Ao longo da execução, linhas de controle ativas são destacadas.">(ajuda)</font>
+            <div class="minimize" onclick="minimize(this);">
+            -
+            </div>
+        </div>
+        <br>
+        <center>
+            <object id="ProcessorImage" type="image/svg+xml" data="CPU.svg" width="98%">
+                  Este simulador requer um <i>browser</i> que suporte SVG.
+            </object>
+        </center>
+        <br>
+    </div>
+    <br>
+<!--    <div id="interaction" class="table">-->
+    <div id="ExecutableContainer" class="block-container" style="width: 780px;">
+        <div class="block-title">
+            Executável (Linguagem de Máquina)<font style="font-size: 10px; color: #07a; text-decoration: underline;" title="Exibe código executável binário após a montagem (vide 'Código fonte' abaixo). Botão 'Carregar' carrega instruções na posição de memória especificada (decimal). Relocações são realizadas quando necessário.">(ajuda)</font>
+
+            <div class="minimize" onclick="minimize(this);">
+            -
+            </div>
+        </div>
+        <div class="containerExecutable">
+            <div id="DivExecutableCodeHeader" style="width: 750px; height: 25px;">
+                <center>
+                <table id="TableExecutableCodeHeader" style="border: none; border-collapse: collapse; text-align: center;">
+                    <tr style="border-bottom: 3px solid #ccc; font-weight: bold;">
+                        <td width="65px">#</td>
+                        <td width="125px">hex</td>
+                        <td width="445px">bits</td>
+                    </tr>
+                </table>
+                </center>
+            </div>
+            <div id="DivExecutableCodeBody" style="width: 750px; height: 398px; overflow: auto;">
+                <center>
+                <table id="TableExecutableCodeBody" style="border: none; text-align: center;">
+                </table>
+                </center>
+            </div>
+        </div>
+        <center>
+            <table style:"border: none;">
+                <tr>
+                    <td>Posição de Memória:</td>
+                    <td><input class="MemoryLoadPosEB" type="text" id="MemoryLoadPos" maxlength="4" value=0></input></td>
+                    <td><button class="btn" onclick="BtnLoadOnClick()" type="button" id="LoadBtn" autocomplete="off">Carregar</button></td>
+                </tr>
+            </table>
+        </center>
+    </div>
+
+    <br>
+
+    <div id="CodeContainer" class="block-container" style="width: 780px;">
+        <div class="block-title">
+            Código Fonte (Linguagem de Montagem)<font style="font-size: 10px; color: #07a; text-decoration: underline;" title="Permite a entrada de um código fonte em linguagem de montagem. Código pode ser compilado (montado) através do botão 'Montar'. Código resultante é exibido na seção 'Executável' acima. Para uma lista das instruções suportadas, vide link ao final desta página.">(ajuda)</font>
+
+            <div class="minimize" onclick="minimize(this);">
+            -
+            </div>
+        </div>
+        <center>
+        <!--<textarea id="assemblyCode" class="editorCodigoFonte" rows="20" cols="70" wrap="off" style="white-space: nowrap;"></textarea>-->
+        <textarea id="assemblyCode" class="editorCodigoFonte" rows="20" cols="70" wrap="off"></textarea>
+            <script>textAreaWithLinesCreate('assemblyCode');</script>
+            <button class="btn" onclick="BtnAssembleOnClick()" type="button">Montar</button>
+        </center>
+    </div>
+<br>
+Para instruções detalhadas sobre a sintaxe da linguagem de montagem e uma lista das instruções disponíveis, clique <a href="instrucoes.html">aqui</a>.
+<br>
+<br>
+Para exemplos de programas escritos nesta linguagem de montagem, clique <a href="exemplos.html">aqui</a>.
+<br>
+<br>
+   </div>
+
+<!--    <div id="info" class="table">-->
+    <div style="width: 460px; float:right;">
+    <div id="ControllersContainer" class="block-container" style="width: 460px;">
+        <div class="block-title">
+            Controles da Simulação<font style="font-size: 10px; color: #07a; text-decoration: underline;" title="O botão 'Rodar' inicia a execução do simulador do estado atual (PC, memória, etc). O botão 'Pausar' pausa a simulação ao término da instrução corrente. O botão 'Próx. Inst.' executa a próxima instrução (apontada pelo PC). Quando colocado em modo de execução, o simulador será executado (dentro do possível) na frequência especificada (e.g., 1Hz -> 1 instrução por segundo).">(ajuda)</font>
+
+            <div class="minimize" onclick="minimize(this);">
+            -
+            </div>
+        </div>
+        <table>
+            <tr>
+                <td>Frequência (Hz):</td>
+                <td><input class="FreqEB" type="text" id="Freq" maxlength="4" value="1"></input></td>
+
+                <td><button class="btn" onclick="BtnRunOnClick()" type="button" id="RunSimulationBtn" autocomplete="off">Rodar</button></td>
+                <td><button class="btn" onclick="BtnPauseOnClick()" type="button" id="PauseSimulationBtn" disabled autocomplete="off">Pausar</button></td>
+                <td><button class="btn" onclick="BtnNextOnClick()" type="button" id="NextSimulationBtn" autocomplete="off">Próx. Inst.</button></td>
+
+            </tr>
+        </table>
+    </div>
+    <br>
+    <div id="InspectorContainer" class="block-container" style="width: 460px;">
+        <div class="block-title">
+            Inspeção de Componentes<font style="font-size: 10px; color: #07a; text-decoration: underline;" title="Permite verificar o estado atual (valores de entrada e saída) de diversos componentes do processador (e.g., ALU, banco de registradores).">(ajuda)</font>
+
+            <div class="minimize" onclick="minimize(this);">
+            -
+            </div>
+        </div>
+        <div id="InspectorBody" style="line-height:40px; height: 35px;">
+        </div>
+    </div>
+    <br>
+    <div id="TabelaMemoriaContainer" class="block-container" style="width: 460px;">
+        <div class="block-title">
+            Memória Principal<font style="font-size: 10px; color: #07a; text-decoration: underline;" title="Exibe estado atual de cada posição de memória. Por uma questão de desempenho, o tamanho da memória foi limitado a 2048 posições. Valores também podem ser editados: basta clicar em uma posição, editar o valor e clicar em qualquer outra parte da interface.">(ajuda)</font>
+
+            <div class="minimize" onclick="minimize(this);">
+            -
+            </div>
+        </div>
+        <div id="TableMemoriaHeader" style="width: 440px; border: none; height: 25px; display: table-row;">
+            <div id="TableMemoriaHeaderDummy" style="width: 36px; border: none; display: table-cell;">
+            </div>
+            <div id="TableMemoriaHeaderAddresses" style="padding-left: 2px; border-bottom: 1px solid black; width: 400px; display: table-cell;">
+                <table id="TableMemoriaLowAddress" style="border: none;">
+                    <tr>
+                        <td width=20px style="text-align: right;">0</td>
+                        <td width=20px style="text-align: right;">1</td>
+                        <td width=20px style="text-align: right;">2</td>
+                        <td width=20px style="text-align: right;">3</td>
+                        <td width=20px style="text-align: right;">4</td>
+                        <td width=20px style="text-align: right;">5</td>
+                        <td width=20px style="text-align: right;">6</td>
+                        <td width=20px style="text-align: right;">7</td>
+                        <td width=20px style="text-align: right;">8</td>
+                        <td width=20px style="text-align: right;">9</td>
+                        <td width=20px style="text-align: right;">A</td>
+                        <td width=20px style="text-align: right;">B</td>
+                        <td width=20px style="text-align: right;">C</td>
+                        <td width=20px style="text-align: right;">D</td>
+                        <td width=20px style="text-align: right;">E</td>
+                        <td width=20px style="text-align: right;">F</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div id="TableMemoriaBody" style="border: none; width: 440px; height: 275px; overflow: auto;">
+            <div id="TableMemoriaLeftHeader" style="width: 40px; border: none; display: table-cell;">
+            <table id="TableMemoriaUpperAddress" style="border: none;">
+            </table>
+            </div>
+            <div id="TableMemoryData" style="width: 400px; display: table-cell;">
+            <table id="TableMemoriaDataCells" style="border-left: 1px solid black; ">
+            </table>
+            </div>
+        </div>
+    </div>
+<br>
+    <div id="TabelaRegistradoresContainer" class="block-container" style="width: 460px;">
+        <div class="block-title">
+            Registradores<font style="font-size: 10px; color: #07a; text-decoration: underline;" title="Similar à seção 'Memória Principal', permite inspecionar/editar os valores dos registradores.">(ajuda)</font>
+
+            <div class="minimize" onclick="minimize(this);">
+            -
+            </div>
+        </div>
+
+        <table style="border-collapse: collapse; text-align: center;">
+            <tr style="border-bottom: 3px solid #CCC; font-weight: bold;" height="30px">
+                <td width="113"> Reg. 00 </td>
+                <td width="113"> Reg. 01 </td>
+                <td width="113"> Reg. 02 </td>
+                <td width="113"> Reg. 03 </td>
+            </tr>
+            <tr bgcolor="#EEE" height="30px">
+                <td id="reg00" onclick="RegTableOnClick(this);">00000000</td>
+                <td id="reg01" onclick="RegTableOnClick(this);">00000000</td>
+                <td id="reg02" onclick="RegTableOnClick(this);">00000000</td>
+                <td id="reg03" onclick="RegTableOnClick(this);">00000000</td>
+            </tr>
+            <tr style="border-bottom: 3px solid #CCC; font-weight: bold;" height="30px">
+                <td> Reg. 04 </td>
+                <td> Reg. 05 </td>
+                <td> Reg. 06 </td>
+                <td> Reg. 07 </td>
+            </tr>
+            <tr bgcolor="#EEE" height="30px">
+                <td id="reg04" onclick="RegTableOnClick(this);">00000000</td>
+                <td id="reg05" onclick="RegTableOnClick(this);">00000000</td>
+                <td id="reg06" onclick="RegTableOnClick(this);">00000000</td>
+                <td id="reg07" onclick="RegTableOnClick(this);">00000000</td>
+            </tr>
+
+            <tr style="border-bottom: 3px solid #CCC; font-weight: bold;" height="30px">
+                <td> Reg. 08 </td>
+                <td> Reg. 09 </td>
+                <td> Reg. 10 </td>
+                <td> Reg. 11 </td>
+            </tr>
+            <tr bgcolor="#EEE" height="30px">
+                <td id="reg08" onclick="RegTableOnClick(this);">00000000</td>
+                <td id="reg09" onclick="RegTableOnClick(this);">00000000</td>
+                <td id="reg10" onclick="RegTableOnClick(this);">00000000</td>
+                <td id="reg11" onclick="RegTableOnClick(this);">00000000</td>
+            </tr>
+            <tr style="border-bottom: 3px solid #CCC; font-weight: bold;" height="30px">
+                <td> Reg. 12 </td>
+                <td> Reg. 13 </td>
+                <td> Reg. 14 </td>
+                <td> Reg. 15 </td>
+            </tr>
+            <tr bgcolor="#EEE" height="30px">
+                <td id="reg12" onclick="RegTableOnClick(this);">00000000</td>
+                <td id="reg13" onclick="RegTableOnClick(this);">00000000</td>
+                <td id="reg14" onclick="RegTableOnClick(this);">00000000</td>
+                <td id="reg15" onclick="RegTableOnClick(this);">00000000</td>
+            </tr>
+
+            <tr style="border-bottom: 3px solid #CCC; font-weight: bold;"  height="30px">
+                <td> Reg. 16 </td>
+                <td> Reg. 17 </td>
+                <td> Reg. 18 </td>
+                <td> Reg. 19 </td>
+            </tr>
+            <tr bgcolor="#EEE"  height="30px">
+                <td id="reg16" onclick="RegTableOnClick(this);">00000000</td>
+                <td id="reg17" onclick="RegTableOnClick(this);">00000000</td>
+                <td id="reg18" onclick="RegTableOnClick(this);">00000000</td>
+                <td id="reg19" onclick="RegTableOnClick(this);">00000000</td>
+            </tr>
+            <tr style="border-bottom: 3px solid #CCC; font-weight: bold;"  height="30px">
+                <td> Reg. 20 </td>
+                <td> Reg. 21 </td>
+                <td> Reg. 22 </td>
+                <td> Reg. 23 </td>
+            </tr>
+            <tr bgcolor="#EEE"  height="30px">
+                <td id="reg20" onclick="RegTableOnClick(this);">00000000</td>
+                <td id="reg21" onclick="RegTableOnClick(this);">00000000</td>
+                <td id="reg22" onclick="RegTableOnClick(this);">00000000</td>
+                <td id="reg23" onclick="RegTableOnClick(this);">00000000</td>
+            </tr>
+
+            <tr style="border-bottom: 3px solid #CCC; font-weight: bold;"  height="30px">
+                <td> Reg. 24 </td>
+                <td> Reg. 25 </td>
+                <td> Reg. 26 </td>
+                <td> Reg. 27 </td>
+            </tr>
+            <tr bgcolor="#EEE"  height="30px">
+                <td id="reg24" onclick="RegTableOnClick(this);">00000000</td>
+                <td id="reg25" onclick="RegTableOnClick(this);">00000000</td>
+                <td id="reg26" onclick="RegTableOnClick(this);">00000000</td>
+                <td id="reg27" onclick="RegTableOnClick(this);">00000000</td>
+            </tr>
+            <tr style="border-bottom: 3px solid #CCC; font-weight: bold;"  height="30px">
+                <td> Reg. 28 </td>
+                <td> Reg. 29 </td>
+                <td> Reg. 30 </td>
+                <td> Reg. 31 </td>
+            </tr>
+            <tr bgcolor="#EEE"  height="30px">
+                <td id="reg28" onclick="RegTableOnClick(this);">00000000</td>
+                <td id="reg29" onclick="RegTableOnClick(this);">00000000</td>
+                <td id="reg30" onclick="RegTableOnClick(this);">00000000</td>
+                <td id="reg31" onclick="RegTableOnClick(this);">00000000</td>
+            </tr>
+
+        </table>
+        <center>
+        <table style="border-collapse: collapse; text-align: center;" width=100%>
+            <tr style="border-bottom: 3px solid #CCC; font-weight: bold;" height="30px">
+                <td width="100%"> PC </td>
+            </tr>
+            <tr bgcolor="#EEE" height="30px">
+                <td id="regPC" onclick="RegTableOnClick(this);">00000000</td>
+            </tr>
+            <tr style="border-bottom: 3px solid #CCC; font-weight: bold;" height="30px">
+                <td width="100%"> RI (bits) </td>
+            </tr>
+            <tr bgcolor="#EEE" height="30px">
+                <td id="regRI" onclick="RITableOnClick(this);">00000000000000000000000000000000</td>
+            </tr>
+
+
+        </table>
+        </center>
+    </div>
+    </div>
+
+    </div>
+</div>
+</body>
+
+</html>

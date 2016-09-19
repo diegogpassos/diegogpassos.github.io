@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <!-- Meta info -->
+	<meta charset="utf-8">
+	<meta name="shortauthor" content="Diego Passos"/>
+	<meta name="shorttitle" content="Segurança: Autenticação, Integridade"/>
+	<meta name="shortevent" content="Redes de Computadores II"/>
+	<title>Redes de Computadores II: Aula 12</title>
+
+    <!-- Math support -->
+	<script type="text/x-mathjax-config">
+		MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+			MathJax.InputJax.TeX.Definitions.number = /^(?:[0-9]+(?:\.[0-9]{3})*(?:\{,\}[0-9]*)*|\{,\}[0-9]+)/
+		});
+	</script>
+	<!--<script src="../MathJax/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>-->
+	<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+	<!--<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>-->
+
+    <!-- Fonts -->
+	<link href='https://fonts.googleapis.com/css?family=Lora:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
+
+    <!-- CSS -->
+	<link href='../template/css/template.css' id="template" rel='stylesheet' type='text/css'>
+	<link href='../template/css/presentationSpecific.css' id="presentationSpecific" rel='stylesheet' type='text/css'>
+
+    <!-- Javascript -->
+	<script type="text/javascript" src="../template/js/audio.js"></script>
+</head>
+
+<body>
+    <!-- Audio handlers -->
+
+    <!-- Title Slide -->
+	<section>
+
+        <div class="slideContent">
+            <h1 class="title">Aula 12 - Segurança: Autenticação, Integridade</h1>
+            <h2 class="author">Diego Passos</h2>
+            <h4 class="institution">Universidade Federal Fluminense</h4>
+            <h3 class="date">Redes de Computadores II</h3>
+        </div>
+
+	</section>
+
+    <!-- Content slides -->
+	
+	<section>
+	<h1>Na Última Aula...</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li>Requisitos de segurança:
+				<ul>
+					<li><b>Confidencialidade:</b> apenas origem e destino entendem mensagens.</li>
+					<li><b>Autenticidade:</b> origem e destino são quem dizem ser.</li>
+					<li><b>Integridade:</b> mensagens não são alteradas (c.c., podemos detectar).</li>
+					<li><b>Acesso e disponibilidade:</b> serviços precisam estar disponíveis.</li>
+				</ul></li>
+				<li>Jargão típico:
+				<ul>
+					<li>Alice, Bob, Trudy.</li>
+					<li>Chaves.</li>
+					<li><b>Texto plano, texto cifrado</b>.</li>
+				</ul></li>
+				<li>Ataques típicos:
+				<ul>
+					<li><b>Eavesdrop</b>, <b>inserção de mensagens</b>, <b>spoofing</b>, <b>sequestro de conexão</b>, <b>negação de serviço</b>.</li>
+				</ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li>Criptografia: tipos.
+				<ul>
+					<li>Chave simétrica: ambos os lados <b>compartilham uma única chave</b>.
+					<ul>
+						<li>Exemplos: DES, AES.</li>
+					</ul></li>
+					<li>Chave pública: há duas chaves, uma com cada parte.
+					<ul>
+						<li>O que a <b>chave pública</b> cifra, a <b>chave privada</b> decifra.</li>
+						<li>E vice-versa.</li>
+						<li>Exemplo: RSA.</li>
+					</ul></li>
+				</ul></li>
+				<li>RSA: funcionamento.
+				<ul>
+					<li>Chaves: <b>(n, e) e (n, d)</b>.</li>
+					<li>Mensagem: <b>número</b> menor que n.</li>
+					<li>Cifragem: c = m<sup>e</sup> mod n.</li>
+					<li>Deciframento: m = c<sup>e</sup> mod n.</li>
+					<li>Seguro: <b>difícil fatorar n</b>.</li>
+				</ul></li>
+			</ul>
+		</div>
+	</div>	
+	</section>
+
+
+    <section class="secao">
+    <div class="slideContent">
+    		Autenticação
+    </div>
+    </section>
+    
+    <section>
+    <h1>Autenticação (I)</h1>
+    <div class="slideContent">
+    		<ul>
+    			<li><span class="alert">Objetivo:</span> Bob quer que Alice prove sua identidade para ele.</li>
+			<li><span class="alert">Protocolo ap1.0:</span> Alice diz &ldquo;eu sou Alice&rdquo;.</li>
+    		</ul>
+		<br>
+		<br>
+		<div>
+			<div class="column" style="width: 50%;">
+				<center>
+					<img src="imagens/Autenticacao1.svg" style="width: 70%;"/>
+				</center>
+			</div>
+			<div class="column" style="width: 50%;">
+				<br>
+				<br>
+				<br>
+				<br>
+				<center>
+					Cenário de falha?
+				</center>
+			</div>
+		</div>
+    </div>	
+    </section>
+    
+    <section>
+    <h1>Autenticação (II)</h1>
+    <div class="slideContent">
+    		<ul>
+    			<li><span class="alert">Objetivo:</span> Bob quer que Alice prove sua identidade para ele.</li>
+			<li><span class="alert">Protocolo ap1.0:</span> Alice diz &ldquo;eu sou Alice&rdquo;.</li>
+    		</ul>
+		<br>
+		<br>
+		<div>
+			<div class="column" style="width: 50%;">
+				<center>
+					<img src="imagens/Autenticacao2.svg" style="width: 70%;"/>
+				</center>
+			</div>
+			<div class="column" style="width: 40%;">
+				<br>
+				<br>
+				<br>
+				<center>
+					Em uma rede, Bob não pode &ldquo;ver&rdquo; Alice. Logo, Trudy simplesmente declara ser Alice.
+				</center>
+			</div>
+		</div>
+    </div>	
+    </section>
+ 
+    <section>
+    <h1>Autenticação: Nova Tentativa (I)</h1>
+    <div class="slideContent">
+    		<ul>
+			<li><span class="alert">Protocolo ap2.0:</span> Alice diz &ldquo;eu sou Alice&rdquo; em um pacote IP contendo o seu endereço como endereço IP de origem.</li>
+    		</ul>
+		<br>
+		<br>
+		<div>
+			<div class="column" style="width: 50%;">
+				<center>
+					<img src="imagens/Autenticacao3.svg" style="width: 70%;"/>
+				</center>
+			</div>
+			<div class="column" style="width: 50%;">
+				<br>
+				<br>
+				<br>
+				<center>
+					Cenário de falha?
+				</center>
+			</div>
+		</div>
+    </div>	
+    </section>
+ 
+    <section>
+    <h1>Autenticação: Nova Tentativa (II)</h1>
+    <div class="slideContent">
+    		<ul>
+			<li><span class="alert">Protocolo ap2.0:</span> Alice diz &ldquo;eu sou Alice&rdquo; em um pacote IP contendo o endereço seu endereço IP de origem.</li>
+    		</ul>
+		<br>
+		<br>
+		<div>
+			<div class="column" style="width: 60%;">
+				<center>
+					<img src="imagens/Autenticacao4.svg" style="width: 70%;"/>
+				</center>
+			</div>
+			<div class="column" style="width: 40%;">
+				<br>
+				<br>
+				<br>
+				<center>
+					Trudy pode criar um pacote forjando o endereço de Alice (&ldquo;spoofing&rdquo;).
+				</center>
+			</div>
+		</div>
+    </div>	
+    </section>
+
+    <section>
+    <h1>Autenticação: Nova Tentativa (III)</h1>
+    <div class="slideContent">
+    		<ul>
+			<li><span class="alert">Protocolo ap3.0:</span> Alice diz &ldquo;eu sou Alice&rdquo; e envia sua senha secreta como &ldquo;prova&rdquo;.</li>
+    		</ul>
+		<br>
+		<br>
+		<div>
+			<div class="column" style="width: 60%;">
+				<center>
+					<img src="imagens/Autenticacao5.svg" style="width: 70%;"/>
+				</center>
+			</div>
+			<div class="column" style="width: 40%;">
+				<br>
+				<br>
+				<br>
+				<center>
+					Cenário de falha?
+				</center>
+			</div>
+		</div>
+    </div>	
+    </section>
+ 
+    <section>
+    <h1>Autenticação: Nova Tentativa (IV)</h1>
+    <div class="slideContent">
+    		<ul>
+			<li><span class="alert">Protocolo ap3.0:</span> Alice diz &ldquo;eu sou Alice&rdquo; e envia sua senha secreta como &ldquo;prova&rdquo;.</li>
+    		</ul>
+		<br>
+		<br>
+		<div>
+			<div class="column" style="width: 60%;">
+				<center>
+					<img src="imagens/Autenticacao6.svg" style="width: 70%;"/>
+				</center>
+			</div>
+			<div class="column" style="width: 40%;">
+				<br>
+				<br>
+				<br>
+				<center>
+					<span class="alert">Ataque de repetição:</span> Trudy grava pacote gerado por Alice e, mais tarde, o reproduz para Bob.
+				</center>
+			</div>
+		</div>
+    </div>	
+    </section>
+ 
+    <section>
+    <h1>Autenticação: Mais uma Tentativa (I)</h1>
+    <div class="slideContent">
+    		<ul>
+			<li><span class="alert">Protocolo ap3.1:</span> Alice diz &ldquo;eu sou Alice&rdquo; e envia sua senha secreta <span class="alert">criptografada</span> como &ldquo;prova&rdquo;.</li>
+    		</ul>
+		<br>
+		<br>
+		<div>
+			<div class="column" style="width: 60%;">
+				<center>
+					<img src="imagens/Autenticacao7.svg" style="width: 70%;"/>
+				</center>
+			</div>
+			<div class="column" style="width: 40%;">
+				<br>
+				<br>
+				<br>
+				<center>
+					Cenário de falha?
+				</center>
+			</div>
+		</div>
+    </div>	
+    </section>
+ 
+    <section>
+    <h1>Autenticação: Mais uma Tentativa (II)</h1>
+    <div class="slideContent">
+    		<ul>
+			<li><span class="alert">Protocolo ap3.1:</span> Alice diz &ldquo;eu sou Alice&rdquo; e envia sua senha secreta <span class="alert">criptografada</span> como &ldquo;prova&rdquo;.</li>
+    		</ul>
+		<br>
+		<br>
+		<div>
+			<div class="column" style="width: 60%;">
+				<center>
+					<img src="imagens/Autenticacao8.svg" style="width: 70%;"/>
+				</center>
+			</div>
+			<div class="column" style="width: 40%;">
+				<br>
+				<br>
+				<br>
+				<center>
+					Ataque de repetição <span class="alert">ainda</span> funciona!
+				</center>
+			</div>
+		</div>
+    </div>	
+    </section>
+ 
+ 	<section>
+ 	<h1>Autenticação: Uma Nova Abordagem</h1>
+ 	<div class="slideContent">
+ 		<ul>
+ 			<li><span class="alert">Objetivo:</span> evitar ataque de repetição.</li>
+			<li><span class="alert">Nonce (&ldquo;desafio&rdquo;):</span> número (R) usado &ldquo;uma única vez&rdquo;.</li>
+			<li><span class="alert">Protocolo ap4.0:</span> para provar que Alice está &ldquo;ao-vivo&rdquo;, Bob envia um <span class="alert">nonce</span> R. Alice deve retornar R cifrado com sua chave secreta.</li>
+ 		</ul>
+
+		<br>
+		<center>
+				<img src="imagens/Autenticacao9.svg" style="width: 55%;"/>
+		</center>
+
+		<center>
+			Falhas? Desvantagens?
+		</center>
+ 	</div>	
+ 	</section>
+ 	
+	<section>
+	<h1>Autenticação: ap5.0</h1>
+	<div class="slideContent">
+		<ul>
+			<li>ap4.0 requer uso de uma chave simétrica compartilhada.
+			<ul>
+				<li>É possível fazer a autenticação usando técnicas de chave pública?</li>
+			</ul></li>
+			<li><span class="alert">Protocolo ap5.0:</span> usar nonce, criptografia de chave pública.</li>
+		</ul>
+		<br>
+		<center>
+			<img src="imagens/Autenticacao10.svg" style="width: 55%;"/>
+		</center>
+	</div>	
+	</section>
+	
+	<section>
+	<h1>ap5.0: Falha de Segurança (I)</h1>
+	<div class="slideContent">
+		<ul>
+			<li><span class="alert">Ataque do tipo <i>man-in-the-middle</i> (&ldquo;homem-no-meio&rdquo;): Trudy se passa por Alice (para Bob) e por Bob (para Alice).</span></li>
+		</ul>
+
+		<center>
+			<img src="imagens/AP5_Problema.svg" style="width: 70%;"/>
+		</center>
+	</div>	
+	</section>
+	
+	<section>
+	<h1>ap5.0: Falha de Segurança (II)</h1>
+	<div class="slideContent">
+		<ul>
+			<li><span class="alert">Ataque do tipo <i>man-in-the-middle</i> (&ldquo;homem-no-meio&rdquo;): Trudy se passa por Alice (para Bob) e por Bob (para Alice).</span></li>
+		</ul>
+
+		<center>
+			<img src="imagens/AP5_Problema2.svg" style="width: 70%;"/>
+		</center>
+
+		<ul>
+			<li>Dificuldade de detecção:
+			<ul>
+				<li>Bob recebe tudo que Alice envia e vice-versa (<i>e.g.</i>, Bob e Alice podem se encontrar uma semana depois e relembrar da conversa).</li>
+				<li>O problema é que Trudy também recebe todas as mensagens!</li>
+			</ul></li>
+		</ul>
+	</div>	
+	</section>
+	
+	<section class="secao">
+	<div class="slideContent">
+		Integridade de Mensagens
+	</div>
+	</section>
+	
+	<section>
+	<h1>Importância</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Atacante pode não ser capaz de <b>forjar uma identidade</b>, mas pode conseguir <b>alterar o conteúdo de mensagens</b>.
+			<ul>
+				<li>Adicionar, remover, alterar bytes.</li>
+			</ul></li>
+			<li>Vários possíveis objetivos:
+			<ul>
+				<li>Inserir informações erradas/indesejadas.</li>
+				<li>Remover informações desejadas.</li>
+			</ul></li>
+			<li>Garantir a integridade é fundamental em diversas aplicações:
+			<ul>
+				<li><i>Internet Banking</i>.</li>
+				<li>Compras <i>on-line</i>.</li>
+				<li>Protocolos de roteamento.</li>
+				<li>...</li>
+			</ul></li>
+			<li>Mas e se a comunicação utiliza criptografia? Problema da integridade é resolvido?
+			<ul>
+				<li>Pergunta relacionada: é <b>necessário</b> usar criptografia para garantir integridade?</li>
+			</ul></li>
+		</ul>
+	</div>	
+	</section>
+	
+	<section>
+	<h1>Assinaturas Digitais (I)</h1>
+	<div class="slideContent">
+		<ul>
+			<li><span class="alert">Técnica criptográfica análoga às assinaturas escritas:</span>
+			<ul>
+				<li>Origem (Bob) assina digitalmente um documento, estabelecendo que ele é, de fato, o dono/criador do documento.</li>
+				<li><b>Verificável, não-forjável:</b> destinatário (Alice) pode provar a alguém que Bob, e ninguém mais (incluindo Alice), foi quem assinou o documento.</li>
+			</ul></li>
+		</ul>
+	</div>	
+	</section>
+	
+	<section>
+	<h1>Assinaturas Digitais (II)</h1>
+	<div class="slideContent">
+		<ul>
+			<li><span class="alert">Esquema simples de assinatura digital para mensagem m:</span>
+			<ul>
+				<li>Bob assina <b>m</b> cifrando-a com sua chave privada <span class="math inline">\(K^{-}_B\)</span>, criando a mensagem &ldquo;assinada&rdquo; <span class="math inline">\(K^{-}_B(m)\)</span>.</li>
+			</ul></li>
+		</ul>
+
+		<center>
+			<img src="imagens/AssinaturaDigital.svg" style="width: 70%;"/>
+		</center>
+	</div>	
+	</section>
+
+	<section>
+	<h1>Assinaturas Digitais (III)</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Suponha que Alice receba a msg m com a assinatura: m, <span class="math inline">\(K^{-}_B(m)\)</span>.</li>
+			<li>Alice verifica a mensagem m assinada por Bob aplicando a chave pública de Bob, <span class="math inline">\(K^{+}_B\)</span>, a <span class="math inline">\(K^{-}_B(m)\)</span> e verificando se <span class="math inline">\(K^{+}_B\left(K^{-}_B(m)\right) = m\)</span>.</li>
+			<li>Se <span class="math inline">\(K^{+}_B\left(K^{-}_B(m)\right) = m\)</span>, quem quer que tenha assinado m deve ter usado a chave privada de Bob.</li>
+			<li><span class="alert">Logo, Alice é capaz de verificar que:</span>
+			<ul>
+				<li>Bob assinou m.</li>
+				<li>Ninguém mais pode ter assinado m.</li>
+				<li>Bob assinou m e não m&prime;</li>
+			</ul></li>
+			<li><span class="alert">Não-repúdio:</span>
+			<ul>
+				<li>Alice pode levar m e <span class="math inline">\(K^{-}_B(m)\)</span> para um tribunal e provar que Bob assinou m.</li>
+			</ul></li>
+		</ul>
+	</div>	
+	</section>
+	
+	<section>
+	<h1>Resumos Criptográficos</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<br>
+			<br>
+			<br>
+			<ul>
+				<li>É computacionalmente caro cifrar mensagens longas com criptografia de chave pública.</li>
+				<li><span class="alert">Objetivo:</span> criar &ldquo;impressão digital&rdquo; de tamanho fixo e fácil de computar.
+				<ul>
+					<li>Solução: aplicar uma função de espalhamento (<i>hash</i>) H à mensagem m, obter um resumo de tamanho fixo H(m).</li>
+				</ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50%;">
+			<center>
+				<img src="imagens/ResumosCriptograficos.svg" style="width: 70%;"/>
+			</center>
+
+			<ul>
+				<li><span class="alert">Propriedades da função hash:</span>
+				<ul>
+					<li>n-para-1 (<i>i.e.</i>, função não é injetiva).</li>
+					<li>Produz resumo da mensagem de tamanho fixo (<i>fingerprint</i>).</li>
+					<li>Dado o resumo x da mensagem, é computacionalmente inviável encontrar m tal que x = H(m). </li>
+				</ul></li>
+			</ul>
+		</div>
+	</div>	
+	</section>
+	
+	<section>
+	<h1>Checksum da Internet: um Hash Criptográfico Ruim</h1>
+	<div class="slideContent">
+		<ul>
+			<li>O <i>checksum</i> usado na Internet tem algumas destas propriedades:
+			<ul>
+				<li>Produz resumo de tamanho fixo da mensagem: 16-bits.</li>
+				<li>n-para-1.</li>
+			</ul></li>
+			<li>Mas dada uma mensagem com um dado valor de hash, é fácil achar outra mensagem com o mesmo valor:</li>
+		</ul>
+		<br>
+		<center>
+			<img src="imagens/Checksum.svg" style="width: 70%;"/>
+		</center>
+	</div>	
+	</section>
+	
+	<section>
+	<h1>Algoritmos Usados como Funções Hash</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 42%; height: 500px;">
+		<ul>
+			<li><span class="alert">MD5: função hash amplamente utilizada (RFC 1321).</span>
+			<ul>
+				<li>Computa resumo de 128 bits em processo de 4 passos.</li>
+				<li>Para um dado resumo x, é aparentemente difícil construir uma mensagem m cujo hash MD5 seja x.</li>
+			</ul></li>
+		</ul>
+
+		<script src="js/md5.js"></script>
+		<script>
+			function exemploMD5() {
+
+				var input = document.getElementById('exemploMD5Input');	
+				var output = document.getElementById('exemploMD5Output');	
+
+				output.value = CryptoJS.MD5(input.value);
+			}
+		</script>
+
+		<div style="border: 2px solid #000; margin: 5px; position: absolute; bottom: 0px; left: 10px;">
+		<center>
+		<table class="align">
+			<tr>
+				<td style="padding: 5px;">
+					Msg
+				</td>
+				<td>
+					<input type="text" id="exemploMD5Input" name="exemploMD5Input" value="Teste" size="27" maxlength="30" style="font-size: 80%; padding: 0.5%; font-family: 'Lucida Console';"/>
+				</td>
+			</tr>
+			<tr>
+				<td style="padding: 5px;">
+					Hash
+				</td>
+				<td>
+					<input type="text" id="exemploMD5Output" name="exemploMD5Output" value="8e6f6f815b50f474cf0dc22d4f400725" size="28" maxlength="1" style="font-size: 80%; padding: 0.5%; font-family: 'Lucida Console';"/>
+				</td>
+			</tr>
+			<tr>
+				<td colspan=2 style="text-align: center; padding-top: 5px;">
+					<input type="submit" name="exemploMD5Btn" value="Calcular" style="padding: 0.5%; font-size: 90%; font-family: 'Lora', sans-serif;; " onClick="exemploMD5();"/>
+				</td>
+			</tr>
+		</table>
+		</center>
+		</div>
+
+		</div>
+		<div class="column" style="width: 58%; height: 500px;">
+		<ul>
+			<li><span class="alert">SHA-1 também é usado.</span>
+			<ul>
+				<li>Padrão norte-americano [NIST, FIPS PUB 180-1].</li>
+				<li>Resumo de 160 bits.</li>
+			</ul></li>
+		</ul>
+
+		<script src="js/sha1.js"></script>
+		<script>
+			function exemploSHA1() {
+
+				var input = document.getElementById('exemploSHA1Input');	
+				var output = document.getElementById('exemploSHA1Output');	
+
+				output.value = CryptoJS.SHA1(input.value);
+			}
+		</script>
+
+		<div style="border: 2px solid #000; margin: 5px; position: absolute; bottom: 0px; right: 10px;">
+		<center>
+		<table class="align">
+			<tr>
+				<td style="padding: 5px;">
+					Msg
+				</td>
+				<td>
+					<input type="text" id="exemploSHA1Input" name="exemploSHA1Input" value="Teste" size="34" maxlength="30" style="font-size: 80%; padding: 0.5%; font-family: 'Lucida Console';"/>
+				</td>
+			</tr>
+			<tr>
+				<td style="padding: 5px;">
+					Hash
+				</td>
+				<td>
+					<input type="text" id="exemploSHA1Output" name="exemploSHA1Output" value="6d7082969a0681db6fe658a26ff16198600f0923" size="37" maxlength="1" style="font-size: 80%; padding: 0.5%; font-family: 'Lucida Console';"/>
+				</td>
+			</tr>
+			<tr>
+				<td colspan=2 style="text-align: center; padding-top: 5px;">
+					<input type="submit" name="exemploSHA1Btn" value="Calcular" style="padding: 0.5%; font-size: 90%; font-family: 'Lora', sans-serif;; " onClick="exemploSHA1();"/>
+				</td>
+			</tr>
+		</table>
+		</center>
+		</div>
+
+
+		</div>
+	</div>	
+	</section>
+	
+	<section>
+	<h1>Assinatura Digital = Resumo Criptográfico Assinado da Mensagem</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li>Bob envia mensagem assinada digitalmente:</li>
+			</ul>
+			<br>
+			<center>
+				<img src="imagens/ExemploAssinaturaDigital1.svg" style="width: 70%;"/>
+			</center>
+		</div>
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li>Alice verifica assinatura e integridade da mensagem assinada digitalmente.</li>
+			</ul>
+			<br>
+			<center>
+				<img src="imagens/ExemploAssinaturaDigital2.svg" style="width: 70%;"/>
+			</center>
+		</div>
+	</div>	
+	</section>
+	
+	<section>
+	<h1>Códigos de Autenticação de Mensagem</h1>
+	<div class="slideContent">
+		<ul>
+			<li>MAC: <i>Message Authentication Code</i>.</li>
+			<li>Ideia:
+			<ul>
+				<li>Alice e Bob possuem uma chave secreta compartilhada s.
+				<ul>
+					<li>Também chamado <i>segredo compartilhado</i> ou <i>chave de autenticação</i>.</li>
+				</ul></li>
+				<li>Alice concatena a mensagem m com a chave s.</li>
+				<li>Alice calcula o <i>hash</i> H(m + s).</li>
+				<li>Alice envia a mensagem estendida (m, H(m + s)) para Bob.</li>
+				<li>Para verificar integridade, Bob extrai a mensagem m e calcula H(m + s).
+				<ul>
+					<li>Se o resultado for igual ao valor recebido, mensagem é integra.</li>
+				</ul></li>
+			</ul></li>
+		</ul>
+		<center>
+			<img src="imagens/MAC.svg" style="width: 70%;"/>
+		</center>
+	</div>	
+	</section>
+	
+	<section>
+	<h1>MAC: Funciona?</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Suponha que Trudy seja capaz de interceptar mensagens de Alice para Bob.
+			<ul>
+				<li>E alterar o conteúdo, enviar o resultado para Bob.</li>
+			</ul></li>
+			<li>Como Trudy poderia enganar a verificação do MAC?
+			<ul>
+				<li>Digamos que Trudy altere m, obtendo m&prime;.</li>
+				<li>Se H( ) é um <b>bom</b> <i>hash</i> criptográfico, <b>muito provavelmente</b> H(m&prime; + s) &ne; H(m + s).</li>
+				<li>Trudy <b>pode alterar</b> o MAC enviado com a mensagem, mas para qual valor?
+				<ul>
+					<li>Ela não sabe o segredo s, parte do argumento para a função <i>hash</i>.</li>
+					<li>Novamente, se H( ) é um <b>bom</b> <i>hash</i> criptográfico, saber H(m + s), H( ) e m <b>não ajuda</b> a calcular H(m&prime; + s)</li>
+				</ul></li>
+			</ul></li>
+		</ul>
+	</div>	
+	</section>
+	
+	<section>
+	<h1>MAC <i>vs.</i> Assinatura Digital</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Duas abordagens são equivalentes?
+			<ul>
+				<li><b>Não!</b></li>
+			</ul></li>
+			<li>Assinaturas digitais são mais <b>pesadas</b>.
+			<ul>
+				<li>Além do <i>hash</i>, temos que executar algoritmo de criptografia.</li>
+			</ul></li>
+			<li>MACs são mais <b>leves</b>.
+			<ul>
+				<li>Usamos uma chave/segredo, mas apenas para concatenar à mensagem antes do <i>hash</i>.</li>
+			</ul></li>
+			<li>Por outro lado:
+			<ul>
+				<li>MAC exige o estabelecimento prévio de um segredo compartilhado.</li>
+				<li>Mas se Alice conhece a chave pública de Bob, assinatura digital provê evidência <b>irrefutável</b> de que Bob criou a mensagem.</li>
+			</ul></li>
+		</ul>
+	</div>	
+	</section>
+	
+	<section>
+	<h1>Resumo da Aula (I)...</h1>
+	<div class="slideContent">
+			<ul>
+				<li>Autenticação: Objetivo.
+				<ul>
+					<li>Provar que as <b>partes são quem afirmam ser</b>.</li>
+				</ul></li>
+				<li>Autenticação: dificuldades.
+				<ul>
+					<li>Atacante pode <b>forjar identidade</b>.</li>
+					<li>Atacante pode <b>forjar endereço IP</b>.</li>
+					<li>Atacante pode <b>repetir pacotes legítimos enviados</b>.
+					<ul>
+						<li>Mesmo criptografados.</li>
+					</ul></li>
+				</ul></li>
+				<li>Autenticação: <b>nonce</b>.
+				<ul>
+					<li>Número <b>aleatório</b> que &ldquo;não se repete&rdquo;.</li>
+					<li>Enviado como um <b>desafio</b>.
+					<ul>
+						<li>&ldquo;Prove sua identidade <b>cifrando o nonce</b>&rdquo;.</li>
+					</ul></li>
+					<li>Criptografia simétrica ou de chave pública.</li>
+					<li>Ainda vulnerável a ataque do tipo <i>man-in-the-middle</i>.</li>
+				</ul></li>
+			</ul>
+	</div>	
+	</section>
+
+	<section>
+	<h1>Resumo da Aula (II)...</h1>
+	<div class="slideContent">
+			<ul>
+				<li>Integridade: objetivo.
+				<ul>
+					<li>Ser capaz de <b>verificar</b> se mensagem foi <b>alterada pelo atacante</b>.
+					<ul>
+						<li>Bytes foram removidos, adicionados ou alterados.</li>
+					</ul></li>
+				</ul></li>
+				<li>Integridade: abordagens.
+				<ul>
+					<li>Enviar mensagem e versão criptografada com chave privada.
+					<ul>
+						<li>Funciona, mas tem alto custo computacional.</li>
+					</ul></li>
+					<li>Alternativa: assinatura digital.
+					<ul>
+						<li>Enviar mensagem e <b>resumo criptográfico cifrado</b> com a chave privada.</li>
+						<li>Resumo é <b>pequeno, irreversível</b> e muda bastante com alterações na mensagem.</li>
+						<li>Requer criptografia.</li>
+					</ul></li>
+					<li>Alternativa: MAC.
+					<ul>
+						<li><i>Message Authentication Code</i>.</li>
+						<li>Usa <b>segredo compartilhado</b>.</li>
+						<li>Mas apenas <b>concatena</b> mensagem e segredo.</li>
+						<li>O MAC é o <i>hash</i> desta concatenação.</li>
+					</ul></li>
+				  	<li>MAC é mais leve, mas assinatura digital provê automaticamente identidade do transmissor.</li>
+				</ul></li>
+			</ul>
+	</div>	
+	</section>
+
+	<section>
+	<h1>Leitura e Exercícios Sugeridos</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Autenticação:
+			<ul>
+				<li>Páginas 512 a 516 do Kurose (Subseção 8.3.4).</li>
+				<li>Exercícios de fixação 16, 17 e 18 do capítulo 8 do Kurose.</li>
+				<li>Problemas 15 e 16 do capítulo 8 do Kurose.</li>
+			</ul></li>
+			<li>Integridade:
+			<ul>
+				<li>Páginas 504 a 510 do Kurose (Seção 8.3 até subseção 8.3.3, exceto certificação de chave pública).</li>
+				<li>Exercícios de fixação 9, 10, 11, 12, e 13 do capítulo 8 do Kurose.</li>
+				<li>Problemas 11, 12, 13, e 14 do capítulo 8 do Kurose.</li>
+			</ul></li>
+		</ul>
+	</div>	
+	</section>
+	
+
+	<section>
+	<h1>Próxima Aula...</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Até aqui, estudamos vários mecanismos que dependem do conhecimento de chaves.
+			<ul>
+				<li>Estabelecimento de uma chave secreta compartilhada.</li>
+				<li>Ou o conhecimento da chave pública de outra parte.</li>
+			</ul></li>
+			<li>Mas como estas chaves são obtidas <b>de forma segura</b>?
+			<ul>
+				<li>Tema da próxima aula.</li>
+			</ul></li>
+			<li>Além disso, falaremos sobre uma aplicação baseada em segurança: o e-mail seguro.</li>
+		</ul>
+	</div>	
+	</section>
+	
+	<!-- {{{{ dzslides core
+	#
+	#
+	#     __  __  __       .  __   ___  __
+	#    |  \  / /__` |    | |  \ |__  /__`
+	#    |__/ /_ .__/ |___ | |__/ |___ .__/ core :€
+	#
+	#
+	# The following block of code is not supposed to be edited.
+	# But if you want to change the behavior of these slides,
+	# feel free to hack it!
+	#
+	-->
+
+    <!-- More CSS -->
+	<link href='../template/css/slides.css' id="slides" rel='stylesheet' type='text/css'>
+	<link href='../template/css/presentationSpecific2.css' id="presentationSpecific2" rel='stylesheet' type='text/css'>
+
+    <!-- More Javascript -->
+	<script type="text/javascript" src="../template/js/dz.js"></script>
+
+	<!-- More CSS -->
+	<link href='../template/css/notesSpecific.css' id="notesSpecific" rel='stylesheet' type='text/css'>
+	<link href='../template/css/printSpecific.css' id="printSpecific" rel='stylesheet' type='text/css'>
+</body>
+</html>
+
+

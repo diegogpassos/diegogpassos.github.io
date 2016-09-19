@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="222.49081mm"
+   height="62.432571mm"
+   viewBox="0 0 788.35328 221.21777"
+   id="svg3552"
+   version="1.1"
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="DNSHierarquico.svg">
+  <defs
+     id="defs3554" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.35"
+     inkscape:cx="160.60521"
+     inkscape:cy="76.323159"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     inkscape:window-width="1360"
+     inkscape:window-height="719"
+     inkscape:window-x="0"
+     inkscape:window-y="25"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata3557">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-214.39479,-387.46759)">
+    <text
+       y="403.84821"
+       x="511.41351"
+       style="font-variant:normal;font-weight:normal;font-size:22.5px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="text38">
+      <tspan
+         x="511.41351 527.65851 540.16852 552.67847 558.93347 564.91852 581.16351 597.40851 612.41602 618.67102 633.67847 646.18848 653.68097 664.93097 677.44098 684.93347"
+         y="403.84821"
+         sodipodi:role="line"
+         id="tspan40">Root DNS Servers</tspan>
+    </text>
+    <text
+       y="509.06073"
+       x="257.75101"
+       style="font-variant:normal;font-weight:normal;font-size:22.5px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="text42">
+      <tspan
+         x="257.75101 269.00101 281.51099 300.47849 306.23849 322.48349 338.72849 353.73599 359.991 371.241 383.75101 391.2435 402.4935 415.00351 422.496"
+         y="509.06073"
+         sodipodi:role="line"
+         id="tspan44">com DNS servers</tspan>
+    </text>
+    <text
+       y="502.47324"
+       x="518.43848"
+       style="font-variant:normal;font-weight:normal;font-size:22.5px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="text46">
+      <tspan
+         x="518.43848 530.94849 538.44098 550.95099 556.93597 573.18097 589.42596 604.43347 610.68848 621.93848 634.44849 641.94098 653.19098 665.70099 673.19348"
+         y="502.47324"
+         sodipodi:role="line"
+         id="tspan48">org DNS servers</tspan>
+    </text>
+    <text
+       y="502.47324"
+       x="772.0885"
+       style="font-variant:normal;font-weight:normal;font-size:22.5px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="text50">
+      <tspan
+         x="772.0885 784.59845 797.10846 809.61847 815.58099 831.82599 848.07098 863.07849 869.3335 880.5835 893.09351 900.586 911.836 924.34595 931.8385"
+         y="502.47324"
+         sodipodi:role="line"
+         id="tspan52">edu DNS servers</tspan>
+    </text>
+    <path
+       d="m 572.72599,416.72322 -204.2625,59.1625"
+       style="fill:none;stroke:#000000;stroke-width:3.125;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+       id="path54"
+       inkscape:connector-curvature="0" />
+    <path
+       d="m 600.90099,410.14822 0,65.7375"
+       style="fill:none;stroke:#000000;stroke-width:2.5;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+       id="path56"
+       inkscape:connector-curvature="0" />
+    <path
+       d="m 636.12599,416.72322 211.3,59.1625"
+       style="fill:none;stroke:#000000;stroke-width:2.5;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+       id="path58"
+       inkscape:connector-curvature="0" />
+    <text
+       y="564.97321"
+       x="749.47595"
+       style="font-variant:normal;font-weight:normal;font-size:22.53125px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="text60">
+      <tspan
+         x="749.47595 762.00336 774.5307 779.53265 788.4776 794.74127 807.26862 819.72839"
+         y="564.97321"
+         sodipodi:role="line"
+         id="tspan62">poly.edu</tspan>
+    </text>
+    <text
+       y="591.97321"
+       x="749.47595"
+       style="font-variant:normal;font-weight:normal;font-size:22.5px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="text64">
+      <tspan
+         x="749.47595 765.72095 781.966 796.97345 802.98096 814.23096 826.74097 834.23346 845.48346 857.99347 865.48596"
+         y="591.97321"
+         sodipodi:role="line"
+         id="tspan66">DNS servers</tspan>
+    </text>
+    <text
+       y="564.97321"
+       x="876.28845"
+       style="font-variant:normal;font-weight:normal;font-size:22.53125px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="text68">
+      <tspan
+         x="876.28845 888.81586 907.78717 920.31451 931.58014 942.84576 949.04187 961.56927 974.09662"
+         y="564.97321"
+         sodipodi:role="line"
+         id="tspan70">umass.edu</tspan>
+    </text>
+    <text
+       y="591.97321"
+       x="876.28845"
+       style="font-variant:normal;font-weight:normal;font-size:22.5px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="text72">
+      <tspan
+         x="876.28845 892.53345 908.82349 923.83099 929.86096 941.11096 953.62097 961.11346 972.36346 984.87347 992.36597"
+         y="591.97321"
+         sodipodi:role="line"
+         id="tspan74">DNS servers</tspan>
+    </text>
+    <path
+       d="m 840.38849,508.76072 -49.3125,32.8625"
+       style="fill:none;stroke:#000000;stroke-width:2.5;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+       id="path76"
+       inkscape:connector-curvature="0" />
+    <path
+       d="m 882.65099,508.76072 42.25,32.8625"
+       style="fill:none;stroke:#000000;stroke-width:2.5;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+       id="path78"
+       inkscape:connector-curvature="0" />
+    <text
+       y="578.09821"
+       x="214.03224"
+       style="font-variant:normal;font-weight:normal;font-size:22.5px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="text80">
+      <tspan
+         x="214.03224 224.78725 237.29724 249.80725 262.31723 274.82724 281.08224 292.33224 304.84225"
+         y="578.09821"
+         sodipodi:role="line"
+         id="tspan82">yahoo.com</tspan>
+    </text>
+    <text
+       y="605.12323"
+       x="214.03224"
+       style="font-variant:normal;font-weight:normal;font-size:22.53125px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="text84">
+      <tspan
+         x="214.03224 230.2998 246.56737 261.5957 267.52142 278.78705 291.31442 298.81732 310.08298 322.5202 330.02313"
+         y="605.12323"
+         sodipodi:role="line"
+         id="tspan86">DNS servers</tspan>
+    </text>
+    <text
+       y="581.41071"
+       x="363.43851"
+       style="font-variant:normal;font-weight:normal;font-size:22.53125px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="text88">
+      <tspan
+         x="363.43851 375.96588 394.91464 407.44202 418.41473 430.94214 443.46951 449.66559 460.93121 473.45859"
+         y="581.41071"
+         sodipodi:role="line"
+         id="tspan90">amazon.com</tspan>
+    </text>
+    <text
+       y="608.41071"
+       x="363.43851"
+       style="font-variant:normal;font-weight:normal;font-size:22.5px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="text92">
+      <tspan
+         x="363.43851 379.6835 395.9285 410.936 416.94351 428.19351 440.70349 448.19601 459.44601 471.95602 479.44852"
+         y="608.41071"
+         sodipodi:role="line"
+         id="tspan94">DNS servers</tspan>
+    </text>
+    <path
+       d="m 312.12599,515.33572 -28.17875,39.4375"
+       style="fill:none;stroke:#000000;stroke-width:2.5;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+       id="path96"
+       inkscape:connector-curvature="0" />
+    <path
+       d="m 375.51349,515.33572 35.2125,39.4375"
+       style="fill:none;stroke:#000000;stroke-width:2.5;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+       id="path98"
+       inkscape:connector-curvature="0" />
+    <text
+       y="571.41071"
+       x="552.18848"
+       style="font-variant:normal;font-weight:normal;font-size:22.53125px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="text100">
+      <tspan
+         x="552.18848 564.71588 577.24323 588.44128 594.70496 607.23236 614.73523"
+         y="571.41071"
+         sodipodi:role="line"
+         id="tspan102">pbs.org</tspan>
+    </text>
+    <text
+       y="598.41071"
+       x="552.18848"
+       style="font-variant:normal;font-weight:normal;font-size:22.5px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="text104">
+      <tspan
+         x="552.18848 568.43347 584.72351 599.73102 605.76099 617.01099 629.521 637.01349 648.26349 660.7735 668.26599"
+         y="598.41071"
+         sodipodi:role="line"
+         id="tspan106">DNS servers</tspan>
+    </text>
+    <path
+       d="m 600.90099,508.76072 0,39.4375"
+       style="fill:none;stroke:#000000;stroke-width:2.5;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+       id="path108"
+       inkscape:connector-curvature="0" />
+    <text
+       y="454.68573"
+       x="560.526"
+       style="font-variant:normal;font-weight:normal;font-size:25px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="text170">
+      <tspan
+         x="560.526"
+         y="454.68573"
+         id="tspan172">…</tspan>
+    </text>
+    <text
+       y="454.53571"
+       x="616.00098"
+       style="font-variant:normal;font-weight:normal;font-size:25px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="text174">
+      <tspan
+         x="616.00098"
+         y="454.53571"
+         id="tspan176">…</tspan>
+    </text>
+  </g>
+</svg>

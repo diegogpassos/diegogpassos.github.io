@@ -1,0 +1,12 @@
+body {
+    width: 1200px; height: 750px;
+    margin-left: -600px; margin-top: -375px;
+    position: absolute; top: 50%; left: 50%;
+    overflow: hidden;
+}
+section[aria-selected] { pointer-events: auto; }
+html { overflow: hidden; }
+body { display: none; }
+body.loaded { display: block; }
+.incremental {visibility: hidden; }
+.incremental[active] {visibility: visible; }

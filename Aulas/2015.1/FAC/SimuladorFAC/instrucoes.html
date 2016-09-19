@@ -1,0 +1,71 @@
+<html> 
+<head> 
+<meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+<title>Instruções Disponíveis</title> 
+</head>  
+<body bgcolor="white" lang=PT-BR link="black" vlink="gray" alink="#800080">
+<font face="arial">
+
+<div style="display: inline-block;">
+<center> <strong> Instruções Disponíveis no Simulador </strong> </center> <br> <br>
+
+<center>
+<table border="1">
+	<tr>
+		<td width="160em"> <center><b>Instrução</b></center> </td> <td width="300px"> <center><b>Descrição</b></center> </td> <td width="300px"> <center><b>Observações</b></center> </td>
+	</tr>
+	<tr>
+		<td> <tt>lw reg1, imm(reg2)</tt> </td> <td>Carrega palavra de memória da posição reg2 + imm para o registrador reg1.</td> <td>Imediato de 16 bits em complemento a dois.</td>
+	</tr>
+	<tr>
+		<td> <tt>sw reg1, imm(reg2)</tt> </td> <td>Escreve valor da palavra em reg1 para a posição de memória reg2 + imm.</td> <td>Imediato de 16 bits em complemento a dois.</td>
+	</tr>
+	<tr>
+		<td> <tt>add reg1, reg2, reg3</tt> </td> <td>Soma os valores dos registradores reg2 e reg3 e armazena resultado em reg1.</td> <td>---</td>
+	</tr>
+	<tr>
+		<td> <tt>addi reg1, reg2, imm</tt> </td> <td>Soma o valor do registrador reg2 ao valor do imediato e armazena resultado em reg1.</td> <td>Imediato de 16 bits em complemento a dois.</td>
+	</tr>
+	<tr>
+		<td> <tt>sub reg1, reg2, reg3</tt> </td> <td>Subtrai os valores dos registradores reg2 e reg3 e armazena resultado em reg1.</td> <td>Subtração com sinal em complemento a dois.</td>
+	</tr>
+	<tr>
+		<td> <tt>slt reg1, reg2, reg3</tt> </td> <td>Se o valor de reg2 é maior ou igual ao valor de reg3, escreve 0 em reg1. Escreve 1, caso contrário.</td> <td>Comparação com sinal em complemento a dois.</td>
+	</tr>
+	<tr>
+		<td> <tt>and reg1, reg2, reg3</tt> </td> <td>Realiza operação lógica AND bit a bit entre reg2 e reg3 e armazena resultado em reg1.</td> <td>---</td>
+	</tr>
+	<tr>
+		<td> <tt>or reg1, reg2, reg3</tt> </td> <td>Realiza operação lógica AND bit a bit entre reg2 e reg3 e armazena resultado em reg1.</td> <td>---</td>
+	</tr>
+	<tr>
+		<td> <tt>beq reg1, reg2, imm</tt> </td> <td>Se os valores de reg1 e reg2 forem iguais, salta para PC + imm.</td> <td>Imediato de 16 bits em complemento a dois.</td>
+	</tr>
+	<tr>
+		<td> <tt>j imm</tt> </td> <td>Salto incondicional para endereço dado pelo imediato multiplicado por 4.</td> <td>Imediato de 28 bits sem sinal.</td>
+	</tr>
+</table>
+</center>
+
+<br>
+
+Note que:<br>
+<ul>
+	<li>Há 32 registradores disponíveis ao programador. Todos podem ser lidos ou escritos sem restrições.</li>
+	<li>Na linguagem de montagem, estes registradores são identificados pela notação $X, onde X é um número entre 0 e 31 (inclusive).</li>
+	<li>Linhas em branco são desconsideradas.</li>
+	<li>Tudo em uma linha após o caractere ";" é considerado comentário.</li>
+	<li>Imediatos podem ser especificados em formato decimal ou hexadecimal
+		<ul>
+			<li>Números em hexadecimal são precedidos por "0x". Ex: 0xf7f, 0xAA.</li>
+			<li>Números em decimal pode ser precedidos do sinal de menos. Ex: -84.</li>
+			<li>Números em decimal ou hexadecimal <b>não</b> podem ser precedidos do sinal de mais.</li>
+		</ul>
+	</li>
+	<li>Cada linha deve conter, no máximo, uma instrução.</li>
+</ul>
+
+</div>
+</body>
+</html>
+

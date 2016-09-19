@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <!-- Meta info -->
+	<meta charset="utf-8">
+	<meta name="shortauthor" content="Diego Passos"/>
+	<meta name="shorttitle" content="Segurança: WLANs, Firewalls,..."/>
+	<meta name="shortevent" content="Redes de Computadores II"/>
+	<title>Redes de Computadores II: Aula 16</title>
+
+    <!-- Math support -->
+	<script type="text/x-mathjax-config">
+		MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+			MathJax.InputJax.TeX.Definitions.number = /^(?:[0-9]+(?:\.[0-9]{3})*(?:\{,\}[0-9]*)*|\{,\}[0-9]+)/
+		});
+	</script>
+	<!--<script src="../MathJax/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>-->
+	<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+	<!--<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>-->
+
+    <!-- Fonts -->
+	<link href='https://fonts.googleapis.com/css?family=Lora:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
+
+    <!-- CSS -->
+	<link href='../template/css/template.css' id="template" rel='stylesheet' type='text/css'>
+	<link href='../template/css/presentationSpecific.css' id="presentationSpecific" rel='stylesheet' type='text/css'>
+
+    <!-- Javascript -->
+	<script type="text/javascript" src="../template/js/audio.js"></script>
+</head>
+
+<body>
+    <!-- Audio handlers -->
+
+    <!-- Title Slide -->
+	<section>
+
+        <div class="slideContent">
+            <h1 class="title">Aula 16 - Segurança: WLANs, Firewalls, Gateways, IDS</h1>
+            <h2 class="author">Diego Passos</h2>
+            <h4 class="institution">Universidade Federal Fluminense</h4>
+            <h3 class="date">Redes de Computadores II</h3>
+        </div>
+
+	</section>
+
+    <!-- Content slides -->
+	
+	<section>
+	<h1>Na Última Aula...</h1>
+	<div class="slideContent">
+		<ul>
+			<li>IPSec: provê segurança na camada de rede.
+			<ul>
+				<li>Confidencialidade, integridade, autenticação da origem.</li>
+			</ul></li>
+			<li>IPSec: dois protocolos.
+			<ul>
+				<li>AH: integridade e autenticação.</li>
+				<li>ESP: integridade, autenticação e confidencialidade.</li>
+			</ul></li>
+			<li>IPSec: dois modos.
+			<ul>
+				<li>Transporte: carga útil do datagrama IP é cifrada/autenticada.</li>
+				<li>Túnel: datagrama IP <b>completo é encapsulado</b> em novo datagrama.
+				<ul>
+					<li>Esconde <b>completamente protocolo de transporte, portas,</b> ...</li>
+				</ul></li>
+			</ul></li>
+			<li>Associações seguras: SA.
+			<ul>
+				<li>Canal de comunicação virtual entre duas entidades IPSec.</li>
+				<li><b>Simplex, mantém estado.</b>
+				<ul>
+					<li>Algoritmos de criptografia, integridade, chaves, ...</li>
+				</ul></li>
+			</ul></li>
+			<li>IPSec: Gerenciamento de Chaves.
+			<ul>
+				<li>Protocolo próprio: IKE.</li>
+			</ul></li>
+		</ul>
+	</div>	
+	</section>
+
+	<section class="secao">
+	<div class="slideContent">
+		Segurança em LANs Sem Fio	
+	</div>
+	</section>
+	
+	<section>
+	<h1>Objetivos de Projeto do WEP</h1>
+	<div class="slideContent">
+		<div style="width: 100%; height: 190px;">
+			<div class="column" style="width: 50%;">
+				<br>
+				<ul>
+					<li>Criptografia de chave simétrica.
+					<ul>
+						<li>Confidencialidade.</li>
+						<li>Autorização de hosts.</li>
+						<li>Integridade dos dados.</li>
+					</ul></li>
+				</ul>
+			</div>
+			<div class="column" style="width: 50%;">
+				<center>
+					   <img src="imagens/WEP.svg" style="width: 30%;"/>
+				</center>
+			</div>
+		</div>
+		<ul>
+			<li>Auto-sincronização: cada pacote é cifrado separadamente.
+			<ul>
+				<li>Dado pacote cifrado e chave, é possível decifrá-lo, mesmo que pacotes anteriores tenham sido perdidos (diferentemente de algoritmos como o <i>Cipher Block Chaining (CBC)</i> em cifras de bloco).</li>
+			</ul></li>
+			<li>Eficiência.
+			<ul>
+				<li>Implementável em <i>hardware</i> ou <i>software</i>.</li>
+			</ul></li>
+		</ul>
+	</div>	
+	</section>
+	
+	<section>
+	<h1>Cifras de Fluxo Simétricas</h1>
+	<div class="slideContent">
+		<center>
+			<img src="imagens/SymmetricStreamCipher.svg" style="width: 50%;"/>
+		</center>
+		<br>
+		<ul>
+			<li><span class="alert">Combina cada byte do fluxo de chave com byte de texto plano para obter texto criptografado:</span>
+			<ul>
+				<li>m(i) = <i>i-ésima</i> unidade da mensagem.</li>
+				<li>ks(i) = <i>i-ésima</i> unidade do fluxo de chave.</li>
+				<li>c(i) = <i>i-ésima</i> unidade de texto criptografado.</li>
+				<li><span class="math inline">\(c(i) = ks(i) \oplus m(i)\)</span></li>
+				<li><span class="math inline">\(m(i) = ks(i) \oplus c(i)\)</span></li>
+			</ul></li>
+			<li>WEP usa o RC4.</li>
+		</ul>
+	</div>	
+	</section>
+	
+	<section>
+	<h1>Cifras de Fluxo e Independência de Pacotes</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Lembre-se de um objetivo de projeto: cada pacote é criptografado separadamente.</li>
+			<li>Se para o quadro <i>n+1</i>, usamos o fluxo de chaves do ponto em que paramos no quadro <i>n</i>, então quadros não são criptografados separadamente.
+			<ul>
+				<li>É preciso saber onde paramos no último pacote.</li>
+			</ul></li>
+			<li>Abordagem do WEP: inicializa o fluxo de chave com a chave + um IV novo para cada pacote.
+			<ul>
+				<li>IV usado para cifrar um pacote é anexado <b>em texto plano</b> no próprio pacote.</li>
+			</ul></li>
+		</ul>
+		<br>
+		<center>
+			<img src="imagens/SymmetricStreamCipherIndependencia.svg" style="width: 50%;"/>
+		</center>
+	</div>	
+	</section>
+	
+	<section>
+	<h1>Criptografia no WEP (I)</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Transmissor calcula o <i>Integrity Check Value (ICV)</i> sobre os dados.
+			<ul>
+				<li>Hash/CRC de quatro bytes para verificação de integridade.</li>
+			</ul></li>
+			<li>Cada lado possui uma chave compartilhada de 104 bits.</li>
+			<li>Transmissor cria um vetor de inicialização (IV) de 24 bits, adicionado à chave: resulta em nova chave de 128 bits.</li>
+			<li>Transmissor também adiciona um keyID (em um campo de 8 bits).</li>
+			<li>Chave de 128 bits é passada como entrada de um gerador de números pseudo-aleatórios para gerar o fluxo de chave.</li>
+			<li>Dados no quadro + ICV são cifrados com o RC4:
+			<ul>
+				<li>Bytes do fluxo de chave são combinados através de um XOR com bytes dos dados e ICV.</li>
+				<li>IV e keyID são adicionados ao início dos dados criptografados para criar o <i>payload</i>.</li>
+				<li><i>Payload</i> é encapsulado em um quadro 802.11.</li>
+			</ul></li>
+			<br>
+			<center>
+				<img src="imagens/WEPCriptografia.svg" style="width: 40%;"/>
+			</center>
+		</ul>
+	</div>	
+	</section>
+	
+	<section>
+	<h1>Criptografia no WEP (II)</h1>
+	<div class="slideContent">
+		<center>
+			<img src="imagens/WEPCriptografia2.svg" style="width: 70%;"/>
+			<br>
+			<span class="alert">Um novo IV para cada quadro.</span>
+		</center>
+	</div>	
+	</section>
+	
+	<section>
+	<h1>WEP: Visão Geral do Processo de Deciframento</h1>
+	<div class="slideContent">
+		<center>
+			<img src="imagens/WEPCriptografia.svg" style="width: 40%;"/>
+		</center>
+		<br>
+		<ul>
+			<li>Receptor extrai o IV.</li>
+			<li>Passa IV e chave compartilhada como entrada do gerador de números pseudo-aleatórios, obtém fluxo de chave.</li>
+			<li>Faz XOR entre fluxo de chave e dados criptografados para decifrar dados + ICV.</li>
+			<li>Verifica integridade dos dados com o ICV.
+			<ul>
+				<li>Nota: abordagem de verificação de integridade usada aqui é diferente do MAC (<i>Message Authentication Code</i>) e assinaturas (usando PKI).</li>
+			</ul></li>
+		</ul>
+	</div>	
+	</section>
+	
+	<section>
+	<h1>Autenticação do Host Usando Nonce</h1>
+	<div class="slideContent">
+		<ul>
+			<li><span class="alert">Nonce:</span> número (R) usado &ldquo;uma única vez&rdquo;.</li>
+			<li><span class="alert">Como Alice prova estar &ldquo;ao-vivo&rdquo;:</span> Bob envia um <span class="alert">nonce</span>, R. Alice deve retornar R cifrado com a chave compartilhada.</li>
+		</ul>
+		<br>
+		<center>
+				<img src="imagens/Autenticacao9.svg" style="width: 55%;"/>
+		</center>
+	</div>	
+	</section>
+	
+	<section>
+	<h1>Autenticação WEP</h1>
+	<div class="slideContent">
+		<center>
+			<img src="imagens/WEPAutenticacao.svg" style="width: 60%;"/>
+		</center>
+		<br>
+		<ul>
+			<li><span class="alert">Notas:</span>
+			<ul>
+				<li>Nem todos os APs realizam esta autenticação, mesmo quando WEP está em uso.</li>
+				<li>AP indica se autenticação é necessária no quadro de <i>beacon</i>.</li>
+				<li>Feito antes da associação.</li>
+			</ul></li>
+		</ul>
+	</div>	
+	</section>
+	
+	<section>
+	<h1>Quebrando a Criptografia WEP do 802.11</h1>
+	<div class="slideContent">
+		<div style="height: 410px;">
+		<div class="column" style="width: 50%;">
+		<br>
+		<br>
+		<ul>
+			<li><span class="alert">Problema de segurança:</span>
+			<ul>
+				<li>IV de 24 bits, um IV por quadro &rArr; IVs eventualmente reutilizados.</li>
+				<li>IV é transmitido em texto plano &rArr; reuso do IV é facilmente detectado. </li>
+			</ul></li>
+		</ul>
+		</div>
+		<div class="column" style="width: 50%;">
+			<center>
+				<img src="imagens/RepeticaoIVs.svg" style="width: 90%;"/>
+			</center>		
+		</div>
+		</div>
+		<ul>
+			<li><span class="alert">Exemplo de ataque:</span>
+			<ul>
+				<li>Trudy força Alice a cifrar texto plano d<sub>1</sub>d<sub>2</sub>d<sub>3</sub>d<sub>4</sub>...</li>
+				<li>Trudy vê: <span class="math inline">\(c_i = d_i\oplus k_{i}^{IV}\)</span>.</li>
+				<li>Trudy conhece sequência de chaves <span class="math inline">\(k_{1}^{IV}\;k_{2}^{IV}\;k_{3}^{IV}\;k_{4}^{IV}\dots\)</span> correspondente ao IV atual.</li>
+				<li>Na próxima utilização do IV (para um quadro legítimo), Trudy pode decifrar!</li>
+			</ul></li>
+		</ul>
+
+	</div>	
+	</section>
+	
+	<section>
+	<h1>802.11i: Melhorias de Segurança</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Várias formas (mais fortes) de criptografia são possíveis.
+			<ul>
+				<li>AES, ao invés de RC4.</li>
+			</ul></li>
+			<li>Provê sistema de distribuição de chaves.
+			<ul>
+				<li>&ldquo;WPA Enterprise&rdquo;, &ldquo;WPA Personal&rdquo;.</li>
+			</ul></li>
+			<li>No WPA Enterprise, usa servidor de autenticação separado do AP.
+			<ul>
+				<li>Dissociação credenciais de autenticação das chaves de criptografia.</li>
+				<li>Permite que cada usuário tenha suas próprias credenciais.</li>
+			</ul></li>
+		</ul>
+	</div>	
+	</section>
+	
+	<section>
+	<h1>802.11i: Quatro Fases de Operação</h1>
+	<div class="slideContent">
+		<center>
+			<img src="imagens/80211i.svg" style="width: 80%;"/>
+		</center>
+	</div>	
+	</section>
+	
+	<section>
+	<h1>EPA: Extensible Authentication Protocol</h1>
+	<div class="slideContent">
+		<ul>
+			<li>EAP: protocolo de comunicação entre cliente (móvel) e servidor de autenticação.</li>
+			<li>EPA enviado sobre enlaces &ldquo;separados&rdquo;.
+			<ul>
+				<li>Cliente móvel para AP (EAP sobre LAN).</li>
+				<li>AP para servidor de autenticação (Radius sobre UDP).</li>
+			</ul></li>
+		</ul>
+		<br>
+		<center>
+			<img src="imagens/EAP.svg" style="width: 50%;"/>
+		</center>
+	</div>	
+	</section>
+	
+	<section class="secao">
+	<div class="slideContent">
+		Segurança operacional: Firewalls e IDS
+	</div>
+	</section>
+
+	<section>
+	<h1>Firewalls</h1>
+	<div class="slideContent">
+
+			 <center>
+				<div style="border: solid 2px #c00; width: 80%; padding: 10px; text-align:left;">
+					Isolam rede interna de uma organização da Internet pública, permitindo que alguns pacotes passem e bloqueando outros.
+				</div>
+
+				<br>
+			 	<img src="imagens/Firewall.svg" style="width: 60%;"/>
+			 </center>
+	
+	</div>	
+	</section>
+	
+	<section>
+	<h1>Firewalls: Por Que?</h1>
+	<div class="slideContent">
+		<ul>
+			<li><span class="alert">Prevenir ataques de negação de serviço:</span>
+			<ul>
+				<li>Inundação de SYNs: atacante estabelece várias conexões TCP falsas, não deixando recursos para conexões legítimas.</li>
+			</ul></li>
+			<li><span class="alert">Prevenir modificações/acesso ilegais a dados internos:</span>
+			<ul>
+				<li><i>e.g.</i>, atacante substitui página do governo por outro conteúdo.</li>
+			</ul></li>
+			<li><span class="alert">Permitir apenas acesso autorizado à rede interna:</span>
+			<ul>
+				<li>Conjunto de usuários/hosts autenticados.</li>
+			</ul></li>
+			<li><span class="alert">Três tipos de <i>firewall</i>:</span>
+			<ul>
+				<li>Filtro de pacotes <i>stateless</i>.</li>
+				<li>Filtro de pacotes <i>stateful</i>.</li>
+				<li><i>Gateways</i> de aplicação.</li>
+			</ul></li>
+		</ul>
+	</div>	
+	</section>
+	
+	<section>
+	<h1>Filtro de Pacotes Stateless</h1>
+	<div class="slideContent">
+		<center>
+			<img src="imagens/StatelessFilter.svg" style="width: 60%;"/>
+		</center>
+		<br>
+		<ul>
+			<li>Rede interna conectada à Internet através de um <span class="alert">roteador firewall</span>.</li>
+			<li>Roteador <span class="alert">filtra pacote por pacote</span>, decidindo encaminhar ou descartar com base em:
+			<ul>
+				<li>Endereços IP de origem ou destino.</li>
+				<li>Números de porta de origem ou destino.</li>
+				<li>Tipo de protocolo de transporte (tipicamente, TCP ou UDP).</li>
+				<li>Tipo de mensagem ICMP.</li>
+				<li>Bits SYN e ACK em segmentos TCP.</li>
+			</ul></li>
+		</ul>
+	</div>	
+	</section>
+	
+	<section>
+	<h1>Filtro de Pacote Stateless: Exemplo</h1>
+	<div class="slideContent">
+		<ul>
+			<li><span class="alert">Exemplo 1:</span> bloqueie entrada e saída de pacotes com campo <i>protocol</i> do cabeçalho IP = 17. Bloqueie também pacotes com porta de origem ou destino = 23.
+			<ul>
+				<li><b>Resultado:</b> todos os fluxos UDP entrando ou saindo e todas as conexões telnet são bloqueadas.</li>
+			</ul></li>
+			<li><span class="alert">Exemplo 2:</span> bloqueie a entrada de segmentos TCP com bit ACK = 0.
+			<ul>
+				<li><b>Resultado:</b> não permite que clientes externos abram conexões TCP com hosts internos, mas permite que hosts internos abram conexões para fora da rede.</li>
+			</ul></li>
+		</ul>
+	</div>	
+	</section>
+	
+	<section>
+	<h1>Filtro de Pacote Stateless: Mais Exemplos</h1>
+	<div class="slideContent">
+		<center>
+			<table style="width: 85%;">
+				<tr>
+					<th style="color: #b21; width: 50%;">Política</th>
+					<th style="color: blue; width: 50%;">Configuração de Firewall</th>
+				</tr>
+				<tr>
+					<td style="color: red;">Bloquear acesso Web.</td>
+					<td style="color: blue;">Descartar todos os pacotes para qualquer endereço IP, porta 80.</td>
+				</tr>
+				<tr>
+					<td style="color: red;">Bloquear abertura de conexões TCP de fora para dentro, exceto aquelas direcionadas ao servidor Web da instituição.</td>
+					<td style="color: blue;">Descartar todos os pacotes TCP com bit SYN ativo para qualquer IP, exceto 103.207.244.203, porta 80.</td>
+				</tr>
+				<tr>
+					<td style="color: red;">Evitar que rádios on-line consumam toda a banda disponível.</td>
+					<td style="color: blue;">Bloquear a entrada de todos os pacotes UDP, exceto por pacotes de DNS e informações de roteamento.</td>
+				</tr>
+				<tr>
+					<td style="color: red;">Evitar que sua rede seja usada para um ataque de DoS do tipo &ldquo;smurf&rdquo;.</td>
+					<td style="color: blue;">Descartar todos os pacotes ICMP com destino sendo um endereço de &ldquo;broadcast&rdquo; (<i>e.g.</i>, 103.207.255.255).</td>
+				</tr>
+				<tr>
+					<td style="color: red;">Evitar que computadores externos façam um <tt>traceroute</tt> da sua rede.</td>
+					<td style="color: blue;">Descartar todos as mensagens ICMP de TTL expirado saindo da sua rede.</td>
+				</tr>
+			</table>
+		</center>
+	</div>	
+	</section>
+	
+	<section>
+	<h1>Listas de Controle de Acesso</h1>
+	<div class="slideContent">
+		<ul>
+			<li><span class="alert"><i>Access Control List</i> (ACL):</span> tabela de regras, aplicadas de cima para baixo aos pacotes que chegam: pares do tipo (ação, condição).</li>
+		</ul>
+		<br>
+		<center>
+		<table style="width: 95%;">
+			<tr>
+				<th>Ação</th>
+				<th>Endereço de Origem</th>
+				<th>Endereço de Destino</th>
+				<th>Protocolo</th>
+				<th>Porta de Origem</th>
+				<th>Porta de Destino</th>
+				<th>Bit de Flag</th>
+			</tr>
+			<tr>	
+				<td style="text-align: center; padding: 5px;">Permitir</td>
+				<td style="text-align: center; padding: 5px;">222.22/16</td>
+				<td style="text-align: center; padding: 5px;">Fora de 222.22/16</td>
+				<td style="text-align: center; padding: 5px;">TCP</td>
+				<td style="text-align: center; padding: 5px;">&gt; 1023</td>
+				<td style="text-align: center; padding: 5px;">80</td>
+				<td style="text-align: center; padding: 5px;">Qualquer</td>
+			</tr>
+			<tr>	
+				<td style="text-align: center; padding: 5px;">Permitir</td>
+				<td style="text-align: center; padding: 5px;">Fora de 222.22/16</td>
+				<td style="text-align: center; padding: 5px;">222.22/16</td>
+				<td style="text-align: center; padding: 5px;">TCP</td>
+				<td style="text-align: center; padding: 5px;">80</td>
+				<td style="text-align: center; padding: 5px;">&gt; 1023</td>
+				<td style="text-align: center; padding: 5px;">ACK</td>
+			</tr>
+			<tr>	
+				<td style="text-align: center; padding: 5px;">Permitir</td>
+				<td style="text-align: center; padding: 5px;">222.22/16</td>
+				<td style="text-align: center; padding: 5px;">Fora de 222.22/16</td>
+				<td style="text-align: center; padding: 5px;">UDP</td>
+				<td style="text-align: center; padding: 5px;">&gt; 1023</td>
+				<td style="text-align: center; padding: 5px;">53</td>
+				<td style="text-align: center; padding: 5px;">---</td>
+			</tr>
+			<tr>	
+				<td style="text-align: center; padding: 5px;">Permitir</td>
+				<td style="text-align: center; padding: 5px;">Fora de 222.22/16</td>
+				<td style="text-align: center; padding: 5px;">222.22/16</td>
+				<td style="text-align: center; padding: 5px;">UDP</td>
+				<td style="text-align: center; padding: 5px;">53</td>
+				<td style="text-align: center; padding: 5px;">&gt; 1023</td>
+				<td style="text-align: center; padding: 5px;">---</td>
+			</tr>
+			<tr>	
+				<td style="text-align: center; padding: 5px;">Bloquear</td>
+				<td style="text-align: center; padding: 5px;">*</td>
+				<td style="text-align: center; padding: 5px;">*</td>
+				<td style="text-align: center; padding: 5px;">*</td>
+				<td style="text-align: center; padding: 5px;">*</td>
+				<td style="text-align: center; padding: 5px;">*</td>
+				<td style="text-align: center; padding: 5px;">*</td>
+			</tr>
+		</table>
+		</center>
+	</div>	
+	</section>
+
+	<section>
+	<h1>Filtro de Pacotes Stateful (I)</h1>
+	<div class="slideContent">
+		<ul>
+			<li><span class="alert">Filtro de Pacotes <i>Stateless</i>:</span> ferramenta agressiva.
+			<ul>
+				<li>Admite pacotes que &ldquo;não fazem sentido&rdquo;, <i>e.g.</i>, porta de destino 80, bit ACK ativo, embora não haja conexão TCP estabelecida:</li>
+			</ul></li>
+		</ul>
+		<center>
+		<table style="width: 95%;">
+			<tr>
+				<th>Ação</th>
+				<th>Endereço de Origem</th>
+				<th>Endereço de Destino</th>
+				<th>Protocolo</th>
+				<th>Porta de Origem</th>
+				<th>Porta de Destino</th>
+				<th>Bit de Flag</th>
+			</tr>
+			<tr>	
+				<td style="text-align: center; padding: 5px;">Permitir</td>
+				<td style="text-align: center; padding: 5px;">Fora de 222.22/16</td>
+				<td style="text-align: center; padding: 5px;">222.22/16</td>
+				<td style="text-align: center; padding: 5px;">TCP</td>
+				<td style="text-align: center; padding: 5px;">80</td>
+				<td style="text-align: center; padding: 5px;">&gt; 1023</td>
+				<td style="text-align: center; padding: 5px;">ACK</td>
+			</tr>
+		</table>
+		</center>
+		<br>
+		<ul>
+			<li><span class="alert">Filtro de Pacotes <i>Stateful</i>:</span> monitora o estado de cada conexão TCP.
+			<ul>
+				<li>Monitora abertura (SYN) e fechamento (FIN): determina se pacotes que entram ou saem &ldquo;fazem sentido&rdquo;.</li>
+				<li>Conexões inativas sofrem <i>timeout</i> no firewall: pacotes não são mais admitidos.</li>
+			</ul></li>
+		</ul>
+	</div>	
+	</section>
+	
+	<section>
+	<h1>Filtro de Pacotes Stateful (II)</h1>
+	<div class="slideContent">
+		<ul>
+			<li>ACL é aumentada para indicar necessidade de verificar tabela do estado das conexões antes de admitir um pacote.</li>
+		</ul>
+		<br>
+		<center>
+		<table style="width: 95%;">
+			<tr>
+				<th>Ação</th>
+				<th>Endereço de Origem</th>
+				<th>Endereço de Destino</th>
+				<th>Protocolo</th>
+				<th>Porta de Origem</th>
+				<th>Porta de Destino</th>
+				<th>Bit de Flag</th>
+				<th style="padding: 5px;">Checar Conexão</th>
+			</tr>
+			<tr>	
+				<td style="text-align: center; padding: 5px;">Permitir</td>
+				<td style="text-align: center; padding: 5px;">222.22/16</td>
+				<td style="text-align: center; padding: 5px;">Fora de 222.22/16</td>
+				<td style="text-align: center; padding: 5px;">TCP</td>
+				<td style="text-align: center; padding: 5px;">&gt; 1023</td>
+				<td style="text-align: center; padding: 5px;">80</td>
+				<td style="text-align: center; padding: 5px;">Qualquer</td>
+				<td style="text-align: center; padding: 5px;"></td>
+			</tr>
+			<tr>	
+				<td style="text-align: center; padding: 5px;">Permitir</td>
+				<td style="text-align: center; padding: 5px;">Fora de 222.22/16</td>
+				<td style="text-align: center; padding: 5px;">222.22/16</td>
+				<td style="text-align: center; padding: 5px;">TCP</td>
+				<td style="text-align: center; padding: 5px;">80</td>
+				<td style="text-align: center; padding: 5px;">&gt; 1023</td>
+				<td style="text-align: center; padding: 5px;">ACK</td>
+				<td style="text-align: center; padding: 5px; color: red;">X</td>
+			</tr>
+			<tr>	
+				<td style="text-align: center; padding: 5px;">Permitir</td>
+				<td style="text-align: center; padding: 5px;">222.22/16</td>
+				<td style="text-align: center; padding: 5px;">Fora de 222.22/16</td>
+				<td style="text-align: center; padding: 5px;">UDP</td>
+				<td style="text-align: center; padding: 5px;">&gt; 1023</td>
+				<td style="text-align: center; padding: 5px;">53</td>
+				<td style="text-align: center; padding: 5px;">---</td>
+				<td style="text-align: center; padding: 5px;"></td>
+			</tr>
+			<tr>	
+				<td style="text-align: center; padding: 5px;">Permitir</td>
+				<td style="text-align: center; padding: 5px;">Fora de 222.22/16</td>
+				<td style="text-align: center; padding: 5px;">222.22/16</td>
+				<td style="text-align: center; padding: 5px;">UDP</td>
+				<td style="text-align: center; padding: 5px;">53</td>
+				<td style="text-align: center; padding: 5px;">&gt; 1023</td>
+				<td style="text-align: center; padding: 5px;">---</td>
+				<td style="text-align: center; padding: 5px; color: red;">X</td>
+			</tr>
+			<tr>	
+				<td style="text-align: center; padding: 5px;">Bloquear</td>
+				<td style="text-align: center; padding: 5px;">*</td>
+				<td style="text-align: center; padding: 5px;">*</td>
+				<td style="text-align: center; padding: 5px;">*</td>
+				<td style="text-align: center; padding: 5px;">*</td>
+				<td style="text-align: center; padding: 5px;">*</td>
+				<td style="text-align: center; padding: 5px;">*</td>
+				<td style="text-align: center; padding: 5px;"></td>
+			</tr>
+		</table>
+		</center>
+
+	</div>	
+	</section>
+	
+	<section>
+	<h1>Gateways de Aplicação (I)</h1>
+	<div class="slideContent">
+		<div style="width: 100%; height: 350px;">
+			<div class="column" style="width: 50%;">
+				<br>
+				<br>
+				<ul>
+					<li>Filtram pacotes baseados em dados da aplicação, além dos campos do IP/TCP/UDP.</li>
+					<li>Exemplo: permite apenas que um subconjunto de usuários da rede realizem telnet para redes externas.</li>
+				</ul>
+			</div>
+			<div class="column" style="width: 50%;">
+				<center>
+					<img src="imagens/GatewayDeAplicacao1.svg" style="width: 70%;"/>
+				</center>
+			</div>
+		</div>
+		<ol>
+			<li>Requer que todos os usuários realizem telnet através do <i>gateway</i>.</li>
+			<li>Para usuários autorizados, <i>gateway</i> estabelece conexão com o host de destino. <i>Gateway</i> age como <i>relay</i> dos dados entre as duas conexões.</li>
+			<li>Filtro do roteador bloqueia todas as conexões telnet não originadas no <i>gateway</i>.</li>
+		</ol>
+	</div>	
+	</section>
+	
+	<section>
+	<h1>Gateways de Aplicação (II)</h1>
+	<div class="slideContent">
+		<div style="width: 100%; height: 350px;">
+			<div class="column" style="width: 50%;">
+				<br>
+				<br>
+				<ul>
+					<li>Filtram pacotes baseados em dados da aplicação, além dos campos do IP/TCP/UDP.</li>
+					<li>Exemplo: permite apenas que um subconjunto de usuários da rede realizem telnet para redes externas.</li>
+				</ul>
+			</div>
+			<div class="column" style="width: 50%;">
+				<center>
+					<img src="imagens/GatewayDeAplicacao2.svg" style="width: 85%;"/>
+				</center>
+			</div>
+		</div>
+		<ol>
+			<li>Requer que todos os usuários realizem telnet através do <i>gateway</i>.</li>
+			<li>Para usuários autorizados, <i>gateway</i> estabelece conexão com o host de destino. <i>Gateway</i> age como <i>relay</i> dos dados entre as duas conexões.</li>
+			<li>Filtro do roteador bloqueia todas as conexões telnet não originadas no <i>gateway</i>.</li>
+		</ol>
+	</div>	
+	</section>
+	
+	<section>
+	<h1>Limitações de Firewalls, Gateways</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li><span class="alert">IP spoofing:</span> roteador não sabe se dados &ldquo;realmente&rdquo; vêm da origem identificada no cabeçalho IP.</li>
+				<li>Se múltiplas aplicações precisam de tratamento especial, cada uma necessita do seu próprio <i>gateway</i>.</li>
+				<li><i>Software</i> do cliente deve saber como contactar o <i>gateway</i>.
+				<ul>
+					<li><i>e.g.</i>, através da configuração de um <i>proxy</i> no browser.</li>
+				</ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li>Filtros tipicamente usam uma política do tipo &ldquo;tudo ou nada&rdquo; para UDP.</li>
+				<li><span class="alert">Compromisso:</span> grau de comunicação com o mundo externo, nível de segurança.</li>
+				<li>Vários sites altamente protegidos ainda sofrem ataques.</li>
+			</ul>
+		</div>
+	</div>	
+	</section>
+	
+	<section>
+	<h1>Sistemas de Detecção de Intrusão (I)</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Filtros de pacote:
+			<ul>
+				<li>Operam apenas sobre cabeçalhos TCP/IP.</li>
+				<li>Não verificam correlações entre sessões.</li>
+			</ul></li>
+			<li><span class="alert">IDS: <i>Intrusion Detection System</i>.</span>
+			<ul>
+				<li><b>Inspeção profunda nos pacotes:</b> olha o conteúdo do pacote (<i>e.g.</i>, procura por padrões de bytes no pacote cadastrados em uma base de dados de vírus e ataques conhecidos).</li>
+				<li><b>Verificação de correlação</b> entre vários pacotes.
+				<ul>
+					<li><i>Port Scanning</i>.</li>
+					<li>Mapeamento da rede.</li>
+					<li>Ataque de DoS.</li>
+				</ul></li>
+			</ul></li>
+		</ul>
+	</div>	
+	</section>
+	
+	<section>
+	<h1>Sistemas de Detecção de Intrusão (II)</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Vários IDSs: tipos diferentes de verificação em diferentes partes da rede.</li>
+		</ul>
+		<br>
+		<center>
+			<img src="imagens/DeteccaoDeIntrusao.svg" style="width: 70%;"/>
+		</center>
+	</div>	
+	</section>
+	
+	<section>
+	<h1>Resumo da Aula (I)...</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Segurança em WLANs: WEP.
+			<ul>
+				<li><b>Padrão original</b> de segurança no IEEE 802.11.</li>
+				<li>Criptografia de <b>chave simétrica</b>.</li>
+				<li>Mesma chave era <b>compartilhada por todos os usuários</b>.
+				<ul>
+					<li>Chave usada tanto para confidencialidade, quanto para autenticação.</li>
+				</ul></li>
+				<li>IVs para <b>evitar reuso</b> frequente de chaves.
+				<ul>
+					<li>IVs informadas em <b>texto plano</b> nos quadros.</li>
+					<li>24 bits é pouco: <b>IVs se repetem rapidamente</b>.</li>
+				</ul></li>
+				<li>Resultado: WEP é <b>extremamente vulnerável</b>.</li>
+			</ul></li>
+			<li>Segurança em WLANs: 802.11i.
+			<ul>
+				<li>Algoritmos <b>mais fortes</b>, chaves <b>maiores</b>, corrige vulnerabilidades conhecidas.</li>
+				<li>Versão &ldquo;enterprise&rdquo;: dissocia autenticação/confidencialidade, abole chaves compartilhadas.</li>
+			</ul></li>
+		</ul>
+	</div>	
+	</section>
+
+	<section>
+	<h1>Resumo da Aula (II)...</h1>
+	<div class="slideContent">
+		<ul>
+			<li><i>Firewalls</i>: filtros de pacotes.
+			<ul>
+				<li><b>Isolam</b> rede interna da Internet pública.
+				<ul>
+					<li>Aplicam <b>regras</b> para permitir/bloquear pacotes.</li>
+				</ul></li>
+				<li>Previnem:
+				<ul>
+					<li><b>Negação de serviço, acesso a dados internos, uso não autorizado, ...</b></li>
+				</ul></li>
+				<li>Podem ser.
+				<ul>
+					<li><i>Stateless</i>: decisão baseada <b>apenas em campos do pacote</b> analisado.</li>
+					<li><i>Stateful</i>: decisão leva em conta também <b>estado de conexões</b>.</li>
+					<li><i>Gateways</i> de Aplicação: decisão baseada <b>dados de aplicação</b>.</li>
+				</ul></li>
+			</ul></li>
+			<li>IDS: <i>Intrusion Dectection System</i>.
+			<ul>
+				<li>Analisam tráfego, procuram por <b>padrões, assinaturas</b>.</li>
+				<li>Tentam detectar <b>comportamentos anômalos</b>.</li>
+			</ul></li>
+		</ul>
+	</div>	
+	</section>
+	
+	<section>
+	<h1>Leitura e Exercícios Sugeridos</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Segurança em WLANs:
+			<ul>
+				<li>Páginas 531 a 535 do Kurose (Seção 8.7).</li>
+				<li>Exercícios de fixação 27 e 28 do capítulo 8 do Kurose.</li>
+				<li>Problema 24 do capítulo 8 do Kurose.</li>
+			</ul></li>
+			<li>Segurança Operacional (<i>firewalls</i>, <i>gateways</i> de aplicação e IDS):
+			<ul>
+				<li>Páginas 535 a 544 do Kurose (Seção 8.8).</li>
+				<li>Exercícios de fixação 29, 30, 31 e 32 do capítulo 8 do Kurose.</li>
+				<li>Problema 25 do capítulo 8 do Kurose.</li>
+			</ul></li>
+			<li>Leitura adicional (opcional): anonimado e privacidade.
+			<ul>
+				<li>Página 541 do Kurose.</li>
+				<li>Problema 26 do capítulo 8 do Kurose.</li>
+			</ul></li>
+		</ul>
+	</div>	
+	</section>
+	
+	<section>
+	<h1>Segurança em Redes (Sumário)</h1>
+	<div class="slideContent">
+		<ul>
+			<li><span class="alert">Técnicas Básicas...</span>
+			<ul>
+				<li>Criptografia (simétrica e pública).</li>
+				<li>Integridade de mensagens.</li>
+				<li>Autenticação das partes.</li>
+			</ul></li>
+			<li><span class="alert">...usadas em vários cenários de segurança:</span>
+			<ul>
+				<li>E-mail seguro.</li>
+				<li>Transporte seguro (SSL).</li>
+				<li>IPsec.</li>
+				<li>802.11.</li>
+			</ul></li>
+			<li><span class="alert">Segurança operacional: firewalls e IDS.</span></li>
+		</ul>
+	</div>	
+	</section>
+
+
+	<section>
+	<h1>Próxima Aula...</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Começaremos um novo tópico: redes multimídia.
+			<ul>
+				<li>Aplicações típicas.</li>
+				<li>Requisitos.</li>
+				<li>Estudos de caso.</li>
+				<li>Protocolos.</li>
+				<li>Qualidade de serviço.</li>
+			</ul></li>
+			<li><b>Três avisos importantes:</b>
+			<ul>
+				<li>Semana que vem é o recesso de carnaval, mas só até quarta-feira.</li>
+				<li>Na semana seguinte, teremos a P<sub>2</sub>.</li>
+				<li>Entrega do T<sub>2</sub> é na aula seguinte.</li>
+			</ul></li>
+		</ul>
+	</div>	
+	</section>
+	
+	<!-- {{{{ dzslides core
+	#
+	#
+	#     __  __  __       .  __   ___  __
+	#    |  \  / /__` |    | |  \ |__  /__`
+	#    |__/ /_ .__/ |___ | |__/ |___ .__/ core :€
+	#
+	#
+	# The following block of code is not supposed to be edited.
+	# But if you want to change the behavior of these slides,
+	# feel free to hack it!
+	#
+	-->
+
+    <!-- More CSS -->
+	<link href='../template/css/slides.css' id="slides" rel='stylesheet' type='text/css'>
+	<link href='../template/css/presentationSpecific2.css' id="presentationSpecific2" rel='stylesheet' type='text/css'>
+
+    <!-- More Javascript -->
+	<script type="text/javascript" src="../template/js/dz.js"></script>
+
+	<!-- More CSS -->
+	<link href='../template/css/notesSpecific.css' id="notesSpecific" rel='stylesheet' type='text/css'>
+	<link href='../template/css/printSpecific.css' id="printSpecific" rel='stylesheet' type='text/css'>
+</body>
+</html>
+

@@ -1,0 +1,1328 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <!-- Meta info -->
+	<meta charset="utf-8">
+	<meta name="shortauthor" content="Diego Passos"/>
+	<meta name="shorttitle" content="Métricas de Desempenho"/>
+	<meta name="shortevent" content="Redes de Computadores I"/>
+	<title>Redes de Computadores I: Aula 4</title>
+
+    <!-- Math support -->
+	<script type="text/x-mathjax-config">
+		MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+			MathJax.InputJax.TeX.Definitions.number = /^(?:[0-9]+(?:\.[0-9]{3})*(?:\{,\}[0-9]*)*|\{,\}[0-9]+)/
+		});
+	</script>
+	<script src="js/plotly-latest.min.js"></script>
+	<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+    <!--<script src="../../../../MathJax-2.6-latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>-->
+
+    <!-- Fonts -->
+    <link href='https://fonts.googleapis.com/css?family=Lora:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
+    <!--<link href='../../../../Fonts/Lora/lora.css' rel='stylesheet' type='text/css'>-->
+
+    <!-- CSS -->
+	<link href='../template/css/template.css' id="template" rel='stylesheet' type='text/css'>
+	<link href='../template/css/presentationSpecific.css' id="presentationSpecific" rel='stylesheet' type='text/css'>
+
+
+    <!-- Javascript -->
+	<script type="text/javascript" src="../template/js/audio.js"></script>
+</head>
+
+<body>
+    <!-- Audio handlers -->
+	<!--<audio src="audio/La.wav" id="La.wav" preload="auto"></audio>-->
+
+    <!-- Title Slide -->
+	<section>
+
+        <div class="slideContent">
+            <h1 class="title">Aula 4 - Métricas de Desempenho, Modelos em Camadas</h1>
+            <h2 class="author">Diego Passos</h2>
+            <h4 class="institution">Universidade Federal Fluminense</h4>
+            <h3 class="date">Redes de Computadores I</h3>
+        </div>
+
+	<br>
+	<br>
+	<div style="width: 30%; float: right; padding-right: 2%;">
+	<p style="font-size: 18px; text-align: right;">Material adaptado a partir dos slides originais de J.F Kurose and K.W. Ross.</p>
+	</div>
+	</section>
+
+	<section>
+	<h1>Revisão da Última Aula...</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li><span class="alert">Comutação de pacotes</span>.
+				<ul>
+					<li>Informação dividida em unidades chamadas pacotes.</li>
+					<li>Cada pacote tratado isoladamente.</li>
+					<li>Quando transmitido, pacote usa toda a capacidade do enlace.</li>
+				</ul></li>
+				<li><span class="alert"><i>Store-and-Forward</i></span>.
+				<ul>
+					<li>Armazenar e encaminhar.</li>
+					<li>Comutador só pode começar transmissão no próximo enlace, quando recepção estiver <span class="alert">completa</span>.</li>
+					<li>Transmissões do pacote são sequenciais pela rota.</li>
+				</ul></li>
+				<li><span class="alert">Comutação de circuitos</span>.
+				<ul>
+					<li>Estabelecimento prévio de chamada.</li>
+					<li>Recursos pré-alocados, não compartilhados.</li>
+					<li>Possibilidade de <span class="alert">ociosidade</span>.</li>
+				</ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li><span class="alert">Multiplexação</span>.
+				<ul>
+					<li>Dados de vários usuários &ldquo;combinados&rdquo; em um mesmo meio.</li>
+					<li>FDM, TDM.</li>
+				</ul></li>
+				<li>Multiplexação estatística.
+				<ul>
+					<li>Consequência da comutação de pacotes.</li>
+					<li>Ordem intercalada, aleatória de pacotes.</li>
+					<li><span class="alert">Pode melhorar utilização dos recursos</span>.</li>
+				</ul></li>
+				<li>Enfileiramento.
+				<ul>
+					<li>Consequência do <i>store-and-forward</i>.</li>
+					<li>Ocorre quando chegada supera a capacidade de saída.</li>
+					<li>Descarte de pacotes, atrasos.</li>
+				</ul></li>
+			</ul>
+		</div>
+	</div>	
+	</section>
+
+	<!-- Content slides -->
+
+	<section class="secao">
+	<div class="slideContent">
+		Métricas de Desempenho
+	</div>
+	</section>
+	     
+    <!--
+	<section>
+	<h1>Como Perdas de Pacotes e Atraso Ocorrem?</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Pacotes são enfileirados nos <i>buffers</i> dos roteadores.
+			<ul>
+				<li><span class="alert">Taxa de chegada de pacotes (temporariamente) excede capacidade do enlace de saída.</span></li>
+				<li>Pacotes enfileirados, esperam sua vez.</li>
+			</ul></li>
+		</ul>
+		<center>
+			<img src="imagens/DescartesAtrasos.svg" style="width: 70%;"/>
+		</center>
+	</div>	
+	</section>
+    -->
+
+	<section>
+	<h1>Métricas de Desempenho em Redes</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Há <span class="alert">quatro</span> métricas clássicas de desempenho em redes:
+			<ul>
+				<li>Atraso: tempo que pacote leva para sair de um ponto do sistema até outro.</li>
+				<li>Perda de pacotes: fração dos pacotes transmitidos que são descartados.</li>
+				<li>Vazão: o quão rapidamente dados são transmitidos entre uma origem e um destino.</li>
+				<li><i>Jitter</i>: variação do atraso (tópico de Redes II).</li>
+			</ul></li>
+			<li>Fim-a-fim <i>vs.</i> por salto:
+			<ul>
+				<li>Métricas podem ser definidas a cada salto/enlace.</li>
+				<li>Mas também podem ser calculadas considerando a comunicação fim-a-fim.
+				<ul>
+					<li>Desde o nó de origem até o nó de destino.</li>
+				</ul></li>
+			</ul></li>
+		</ul>
+	</div>	
+	</section>
+	
+	<section>
+	<h1>Quatro Fontes de Atraso (I)</h1>
+	<div class="slideContent">
+		<center>
+			<img src="imagens/FontesDeAtraso.svg" style="width: 70%;"/>
+
+			<div style="width: 45%; border: 2px solid #A00;">
+				<span class="math inline">\(d_{nodal} = d_{proc} + d_{fila} + d_{trans} + d_{prop}\)</span>
+			</div>
+		</center>
+
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li><span class="alert"><span class="math inline">\(d_{proc}\)</span>: atraso de processamento.</span>
+				<ul>
+					<li>Verificar integridade.</li>
+					<li>Determinar enlace de saída.</li>
+					<li>...</li>
+					<li>Geralmente, &lt; ms</li>
+				</ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li><span class="alert"><span class="math inline">\(d_{fila}\)</span>: atraso de enfileiramento.</span>
+				<ul>
+					<li>Tempo que pacote aguarda a fila para ser transmitido.</li>
+					<li>Depende do nível de congestionamento do roteador.</li>
+				</ul></li>
+			</ul>
+		</div>
+	</div>	
+	</section>
+	
+	<section>
+	<h1>Quatro Fontes de Atraso (II)</h1>
+	<div class="slideContent">
+		<center>
+			<img src="imagens/FontesDeAtraso.svg" style="width: 70%;"/>
+
+			<div style="width: 45%; border: 2px solid #A00;">
+				<span class="math inline">\(d_{nodal} = d_{proc} + d_{fila} + d_{trans} + d_{prop}\)</span>
+			</div>
+		</center>
+
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li><span class="alert"><span class="math inline">\(d_{trans}\)</span>: atraso de transmissão.</span>
+				<ul>
+					<li>L: comprimento do pacote (bits).</li>
+					<li>R: capacidade do enlace (b/s).</li>
+					<li><span class="math inline">\(d_{trans} = \frac{L}{R}\)</span>.</li>
+				</ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li><span class="alert"><span class="math inline">\(d_{prop}\)</span>: atraso de propagação.</span>
+				<ul>
+					<li>d: comprimento do meio físico.</li>
+					<li>s: velocidade de propagação do sinal no meio.</li>
+					<li><span class="math inline">\(d_{prop} = \frac{d}{s}\)</span>.</li>
+				</ul></li>
+			</ul>
+		</div>
+		<br>
+		<center>
+			<span class="math inline">\(d_{trans}\)</span> e <span class="math inline">\(d_{prop}\)</span> são <span class="alert">muito diferentes!</span></li>
+		</center>
+	</div>	
+	</section>
+	
+	<section>
+	<h1>Atraso de Transmissão <i>vs.</i> Atraso de Propagação (I)</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Analogia de caravana:</li>
+		</ul>
+		<center>
+			<img src="imagens/Caravana.svg" style="width: 70%;"/>
+		</center>
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li>Carros &ldquo;se propagam&rdquo; a 100 Km/h.</li>
+				<li>Cabine de pedágio leva 12 segundos para servir carro.
+				<ul>
+					<li>Tempo de &ldquo;transmissão de um bit&rdquo;.</li>
+					<li>&ldquo;Taxa de transmissão&rdquo;: <span class="math inline">\(\frac{1}{12}\) carros/s.</span></li>
+				</ul></li>
+				<li>Carro &#126; bit, caravana &#126; pacote.</li>
+				<li><span class="alert">Pergunta: quanto tempo até a caravana estar toda enfileirada na segunda cabine?</span></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li>Tempo para &ldquo;colocar&rdquo; toda a caravana na estrada = <span class="math inline">\(12\cdot 10 = 120\)</span> segundos.</li>
+				<li>Tempo para que o último carro se propague da primeira para a segunda cabine = <span class="math inline">\(\frac{100~km}{100~km/h} = 1\)</span> hora.</li>
+				<li><span class="alert">Ou 62 minutos.</span></li>
+			</ul>
+		</div>
+	</div>	
+	</section>
+	
+	<section>
+	<h1>Atraso de Transmissão <i>vs.</i> Atraso de Propagação (II)</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Analogia de caravana:</li>
+		</ul>
+		<center>
+			<img src="imagens/Caravana.svg" style="width: 70%;"/>
+		</center>
+		<ul>
+			<li>Suponha que agora carros propaguem a 1000 km/h.</li>
+			<li>E cabines agora levam um minuto para servir cada carro.</li>
+			<li><span class="alert">Pergunta: um ou mais carros chegarão à segunda cabine antes que todos sejam servidos pela primeira?</span>
+			<ul>
+				<li><span class="alert">Sim!</span> Depois de 7 minutos, primeiro carro chega à segunda cabine.
+				<ul>
+					<li>Mas três ainda serão servidos pela primeira.</li>
+				</ul></li>
+			</ul></li>
+		</ul>
+	</div>	
+	</section>
+	
+	<section>
+	<h1>Atraso de Transmissão <i>vs.</i> Atraso de Propagação (III)</h1>
+	<div class="slideContent">
+		
+        <div class="column" style="width: 40%;">
+
+            <div style="border: 2px solid #4A4; width: 95%; margin-left: 10px; padding-bottom: 10px;">
+                <center>
+                    <table class="align" style="margin-bottom: 10px;">
+                        <tr>
+                            <td style="width: 80%;">Atraso de Propagação (ms)</td>
+                            <td><input id="AnimacaoPropagacaoVsTransmissaoProp" value="200" size=5 style="font-size: 24px;"></input></td>
+                        </tr>
+                        <tr>
+                            <td>Taxa de Transmissão (kb/s)</td>
+                            <td><input id="AnimacaoPropagacaoVsTransmissaoTaxa" value="120" size=5 style="font-size: 24px;"></input></td>
+                        </tr>
+                        <tr>
+                            <td>Tamanho do Pacote (B)</td>
+                            <td><input id="AnimacaoPropagacaoVsTransmissaoTam" value="1000" size=5 style="font-size: 24px;"></input></td>
+                        </tr>
+                    </table>
+                    <input type="button" onclick="PropagacaoVsTransmissaoStart();" value="Transmitir" style="font-size: 28px; font-family: 'Lora', sans-serif;"></input>
+                </center>
+            </div>
+        
+        </div>
+
+        <div class="column" style="width: 60%;">
+            <center>
+                <svg id="AnimacaoPropagacaoVsTransmissao" style="width: 600px; height: 90px;"></svg>
+                <br>
+                <br>
+                <p id="AnimacaoPropagacaoVsTransmissaoTempo">t = 0 ms</p><br>
+            </center>
+            <span id="AnimacaoPropagacaoVsTransmissaoStat1">Último bit é colocado no canal em t = </span><br>
+            <span id="AnimacaoPropagacaoVsTransmissaoStat2">Primeiro bit chega ao receptor em t = </span><br>
+            <span id="AnimacaoPropagacaoVsTransmissaoStat3">Último bit chega ao receptor em t = </span>
+        </div>
+
+		<script src="js/snap.svg-min.js"></script>
+		<script type="text/javascript">
+			Snap.load("imagens/AnimacaoPropagacaoVsTransmissao.svg", function(f) {
+				var s = Snap("#AnimacaoPropagacaoVsTransmissao");
+				s.prepend(f.select("g"));
+			});
+
+            var PropagacaoVsTransmissaoTimer;
+
+            function PropagacaoVsTransmissaoUpdateTime() {
+
+                var time = document.getElementById('AnimacaoPropagacaoVsTransmissaoTempo');
+                var t = parseInt(time.innerHTML.split(' ')[2]);
+                
+                t = t + 100;
+                time.innerHTML = "t = " + t + " ms";
+            }
+
+            function PropagacaoVsTransmissaoEnd() {
+
+                var time = document.getElementById('AnimacaoPropagacaoVsTransmissaoTempo');
+                var linkBW_kbps = parseInt(document.getElementById('AnimacaoPropagacaoVsTransmissaoTaxa').value);
+                var propSpeed_ms = parseInt(document.getElementById('AnimacaoPropagacaoVsTransmissaoProp').value);
+                var packetSize_B = parseInt(document.getElementById('AnimacaoPropagacaoVsTransmissaoTam').value);
+
+                window.clearTimeout(PropagacaoVsTransmissaoTimer);
+                document.getElementById('AnimacaoPropagacaoVsTransmissaoStat1').innerHTML = "Último bit é colocado no canal em t = " + (Math.floor((packetSize_B * 8 / linkBW_kbps) * 100) / 100) + " ms";
+                document.getElementById('AnimacaoPropagacaoVsTransmissaoStat2').innerHTML = "Primeiro bit chega ao receptor em t = " + (Math.floor(propSpeed_ms * 100) / 100) + " ms";
+                document.getElementById('AnimacaoPropagacaoVsTransmissaoStat3').innerHTML = "Último bit chega ao receptor em t = " + (Math.floor((packetSize_B * 8 / linkBW_kbps + propSpeed_ms) * 100) / 100) + " ms";
+            }
+
+			function PropagacaoVsTransmissaoStart() {
+
+                // Conversão de unidades: 
+                // * Cada s de tempo real corresponde a 100ms de tempo simulado.
+                // * Cada 4 kb/s de capacidade do enlace equivalem a 1px de largura.
+				var s = Snap("#AnimacaoPropagacaoVsTransmissao");
+				var linkBegin = 135; // Em px.
+				var linkEnd = 465; // Em px.
+
+                var link = s.select("#link");
+                var linkBW_kbps = document.getElementById('AnimacaoPropagacaoVsTransmissaoTaxa').value;
+                var linkBW = linkBW_kbps / 4;
+                link.attr({height: 0.606283755227 * (linkBW + 1.32), y: 0.606283755227 * (30.937 - (linkBW - 29.5) / 2) + 102.95758}); // Correção por causa da reescala da figura.
+
+                var propSpeed_ms = document.getElementById('AnimacaoPropagacaoVsTransmissaoProp').value;
+				var propSpeed = (linkEnd - linkBegin) / (propSpeed_ms * 10); // Em px/ms
+
+				var packet = s.rect(135, 28.2 - (linkBW - 29.5) / 2, 0, linkBW);
+                packet.attr({fill: '#33A'})
+				var packetSize_B = document.getElementById('AnimacaoPropagacaoVsTransmissaoTam').value;
+				var packetSize = 8 * packetSize_B / (linkBW_kbps) * 10 * propSpeed;
+
+                document.getElementById('AnimacaoPropagacaoVsTransmissaoTempo').innerHTML = "t = 0 ms";
+                PropagacaoVsTransmissaoTimer = window.setInterval(PropagacaoVsTransmissaoUpdateTime, 1000);
+                document.getElementById('AnimacaoPropagacaoVsTransmissaoStat1').innerHTML = "Último bit é colocado no canal em t = ";
+                document.getElementById('AnimacaoPropagacaoVsTransmissaoStat2').innerHTML = "Primeiro bit chega ao receptor em t = ";
+                document.getElementById('AnimacaoPropagacaoVsTransmissaoStat3').innerHTML = "Último bit chega ao receptor em t = ";
+
+                if (packetSize <= linkEnd - linkBegin) {
+
+                    packet.animate({width: packetSize}, packetSize/propSpeed, null,
+                            function() {
+                                packet.animate({x: linkEnd - packetSize}, (linkEnd - packetSize - linkBegin) / propSpeed, null, 
+                                        function() {
+                                            packet.animate({width: 0}, packetSize/propSpeed);
+                                            packet.animate({x: linkEnd}, packetSize/propSpeed);
+                                            window.setTimeout(function(){PropagacaoVsTransmissaoEnd();}, packetSize/propSpeed);
+                                        }
+                                        );
+                            }
+                    );
+                }
+                else {
+
+                    packet.animate({width: linkEnd - linkBegin}, (linkEnd - linkBegin)/propSpeed, null,
+                            function() {
+                                window.setTimeout(function() {
+                                    packet.animate({width: 0}, (linkEnd - linkBegin)/propSpeed);
+                                    packet.animate({x: linkEnd}, (linkEnd - linkBegin)/propSpeed);
+                                    window.setTimeout(function() {PropagacaoVsTransmissaoEnd();}, (linkEnd - linkBegin)/propSpeed);
+                                }, ((packetSize_B * 8 / linkBW_kbps) - propSpeed_ms) * 10);
+                            }
+                    );
+
+                }
+			}
+			
+		</script>
+	</div>	
+	</section>
+	
+	<section>
+	<h1>Perdas de Pacotes</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Filas (ou <i>buffers</i>) têm capacidade finita.</li>
+			<li>Pacote que chega a um <i>buffer</i> causa descarte.
+			<ul>
+				<li>Do pacote recém chegado ou de outro.</li>
+				<li>Também conhecido como <span class="alert">perda</span>.</li>
+			</ul></li>
+			<li>Pacotes perdidos <span class="alert">podem</span> ser retransmitidos.
+			<ul>
+				<li>Pelo nó anterior (menos comum).</li>
+				<li>Pela origem (mais comum).</li>
+			</ul></li>
+		</ul>
+		<center>
+			<img src="imagens/Perdas.svg" style="width: 70%;"/>
+		</center>
+	</div>	
+	</section>
+	
+	<section>
+	<h1>Vazão (I)</h1>
+	<div class="slideContent">
+		<ul>
+			<li><span class="alert">Vazão:</span> taxa (bits/unidade de tempo) na qual bits são transferidos entre origem e destino.
+			<ul>
+				<li><span class="alert">Instantânea:</span> vazão em um ponto no tempo.</li>
+				<li><span class="alert">Média:</span> taxa considerando um período mais longo.</li>
+			</ul></li>
+			<li>Vazão do fluxo <i>vs.</i> taxa de transmissão do fluxo.
+			<ul>
+				<li>Aplicação pode gerar pacotes a uma taxa alta e vazão ser limitada pela rede.</li>
+				<li>Rede pode ter capacidade alta, mas aplicação pode gerar fluxo com baixa taxa.</li>
+			</ul></li>
+		</ul>
+		<center>
+			<img src="imagens/Vazao1.svg" style="width: 70%;"/>
+		</center>
+	</div>	
+	</section>
+	
+	<section>
+	<h1>Vazão (II)</h1>
+	<div class="slideContent">
+		<center>
+			<img src="imagens/Vazao2.svg" style="width: 70%;"/>
+			<br>
+			<center>
+				<div class="block" style="width:1100px;">
+					<div class="blockTitle" style="width: 100%;">
+						<p>Enlace de Gargalo</p>
+					</div>
+					<div class="blockBody">
+						Enlace no caminho fim-a-fim que <span class="alert">restringe</span> vazão fim-a-fim.
+					</div>
+				</div>
+			</center>
+		</center>
+	</div>	
+	</section>
+	
+	<section>
+	<h1>Cenário de Vazão na Internet</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<br>
+			<br>
+			<br>
+			<br>
+			<ul>
+				<li>Vazão fim-a-fim por conexão: <span class="math inline">\(min\left(R_c, R_s, \frac{R}{10}\right)\)</span></li>
+				<li>Na prática: <span class="math inline">\(R_c\)</span> ou <span class="math inline">\(R_s\)</span> são normalmente os gargalos.</li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50%;">
+			<center>
+				<img src="imagens/VazaoInternet.svg" style="width: 90%;"/>
+			</center>
+		</div>
+	</div>	
+	</section>
+	
+    <section class="secao">
+    <div class="slideContent">
+        Modelos em Camadas
+    </div>
+    </section>
+    
+    <section>
+    <h1>&ldquo;Camadas&rdquo; de Protocolos</h1>
+    <div class="slideContent">
+    		<div class="column" style="width: 50%;">
+    			<ul>
+    				<li><span class="alert">Redes são sistemas complexos, com várias &ldquo;partes&rdquo;</span>.
+    				<ul>
+    					<li><i>Hosts</i>.</li>
+					<li>Roteadores.</li>
+					<li>Enlaces (de vários tipos).</li>
+					<li>Aplicações.</li>
+					<li>Protocolos.</li>
+					<li><i>Hardware</i>, <i>software</i>.</li>
+    				</ul></li>
+    			</ul>
+    		</div>
+		<div class="column" style="width: 40%;">
+			<table class="align" style="border: none; text-align: center;">
+				<tr style="height: 100px;"><td><span class="alert">Pergunta</span></td></tr>
+				<tr style="height: 150px;"><td>Alguma chance de organizar a estrutura da rede?</td></tr>
+				<tr><td></td></tr>
+				<tr><td>... ou ao menos nossa discussão sobre redes?</td></tr>
+			</table>
+		</div>
+    </div>	
+    </section>
+    
+    <section>
+    <h1>Analogia: Organização de uma Viagem Aérea (I)</h1>
+    <div class="slideContent">
+    	<center>
+    		<img src="imagens/AnalogiaVoo.svg" style="width: 70%;"/>
+    	</center>
+
+	<ul>
+		<li>Uma série de passos envolvidos.</li>
+	</ul>
+    </div>	
+    </section>
+    
+    <section>
+    <h1>Organizando Funcionalidades da Cia. Aérea em Camadas </h1>
+    <div class="slideContent">
+    	<center>
+    		<img src="imagens/AnalogiaVooCamadas.svg" style="width: 75%;"/>
+    	</center>
+
+	<ul>
+		<li><span class="alert">Camadas:</span> cada camada implementa um serviço.
+		<ul>
+			<li>Através de ações internas da própria camada.</li>
+			<li>Dependendo de serviços providos pela camada abaixo.</li>
+		</ul></li>
+	</ul>
+    </div>	
+    </section>
+    
+    <section>
+    <h1>Por Que uma Organização em Camadas?</h1>
+    <div class="slideContent">
+    	<ul>
+    		<li>Lidar com sistemas complexos:
+    		<ul>
+    			<li>Estrutura explícita permite identificar relações entre os pedaços do sistema.
+    			<ul>
+    				<li><span class="alert">Modelo de referência</span> em camadas para discussão.</li>
+    			</ul></li>
+    			<li>Modularização facilita a manutenção, atualização do sistema.
+    			<ul>
+    				<li>Alterar a implementação de uma camada é transparente para o resto do sistema.</li>
+    				<li><i>e.g.</i>, mudança no processo de embarque não afeta o resto do sistema da cia. aérea.</li>
+    			</ul></li>
+    			<li>&ldquo;Layering considered harmful&rdquo;?</li>
+    		</ul></li>
+    	</ul>
+    </div>	
+    </section>
+    
+    <section>
+    <h1>Pilha de Protocolos da Internet (I)</h1>
+    <div class="slideContent">
+    	<ul>
+    		<li>Ou suíte de protocolos da Internet.</li>
+    		<li>Ou modelo TCP/IP.</li>
+    		<li>Define organização dos vários protocolos usados na Internet em camadas.</li>
+		<li>Define <span class="alert">responsabilidades, serviços</span> de cada camada.</li>
+		<li>Dividida em 4 ou 5 camadas, dependendo do autor.
+		<ul>
+			<li>Nomes das camadas também podem variar.</li>
+			item
+			<li>Nesta disciplina, <span class="alert">seguiremos o modelo do livro-texto</span>.</li>
+		</ul></li>
+    	</ul>
+    </div>	
+    </section>
+    
+    <section>
+    <h1>Pilha de Protocolos da Internet (II)</h1>
+    <div class="slideContent">
+    	<div class="column" style="width: 60%;">
+    		<ul>
+    			<li><span class="alert">Aplicação:</span> suporte à aplicações de rede.
+    			<ul>
+    				<li>Definem formato, ordem, semântica das mensagens trocadas pelas aplicações.</li>
+    				<li>Exemplo da web:
+    				<ul>
+    					<li>Cliente (<i>browser</i>) gera mensagem de requisição de conteúdo.</li>
+					<li>Servidor envia mensagem de resposta.</li>
+					<li>Cada mensagem tem seus campos específicos (próximo capítulo).</li>
+    				</ul></li>
+				<li>Exemplos de protocolos:
+				<ul>
+					<li>HTTP, FTP, SMTP, ...</li>
+				</ul></li>
+    			</ul></li>
+    		</ul>
+    	</div>
+	<div class="column" style="width: 40%;">
+		<center>
+			<img src="imagens/PilhaTCPIP.svg" style="width: 50%;"/>
+		</center>
+	</div>
+    </div>	
+    </section>
+    
+    <section>
+    <h1>Pilha de Protocolos da Internet (III)</h1>
+    <div class="slideContent">
+    	<div class="column" style="width: 60%;">
+    		<ul>
+    			<li><span class="alert">Transporte:</span> comunicação entre processos em computadores (potencialmente) diferentes.
+    			<ul>
+    				<li>Transfere dados de um processo para o outro.
+    				<ul>
+    					<li>Potencialmente, em computadores diferentes.</li>
+    				</ul></li>
+    				<li>Dois exemplos clássicos de protocolos:
+    				<ul>
+					<li>UDP e TCP.</li>
+    				</ul></li>
+				<li>Protocolos diferentes proveem <span class="alert">modelos de serviço diferentes</span>.
+				<ul>
+					<li>TCP provê garantias mais fortes.</li>
+				</ul></li>
+				<li><span class="alert">Responde a pergunta: para qual processo devemos enviar o conteúdo de um pacote que chegou a este <i>host</i>?</span></li>
+    			</ul></li>
+    		</ul>
+    	</div>
+	<div class="column" style="width: 40%;">
+		<center>
+			<img src="imagens/PilhaTCPIP.svg" style="width: 50%;"/>
+		</center>
+	</div>
+    </div>	
+    </section>
+ 
+    <section>
+    <h1>Pilha de Protocolos da Internet (IV)</h1>
+    <div class="slideContent">
+    	<div class="column" style="width: 60%;">
+    		<ul>
+    			<li><span class="alert">Rede:</span> comunicação entre <i>hosts</i>.
+    			<ul>
+				<li>Transfere dados de um <i>host</i> para outro.</li>
+				<li>Diferença (aparentemente) sutil em relação à camada de transporte.
+				<ul>
+					<li>Aquela comunicava processos específicos, diferenciando-os.</li>
+					<li>Esta comunica <i>hosts</i> indiscriminadamente.</li>
+				</ul></li>
+				<li>Provê o serviço de roteamento dos pacotes.
+				<ul>
+					<li>Entre outros.</li>
+				</ul></li>
+				<li><span class="alert">Responde a pergunta: por qual caminho devemos enviar este pacote para que chegue ao <i>host</i> de destino?</span></li>
+    			</ul></li>
+
+    		</ul>
+    	</div>
+	<div class="column" style="width: 40%;">
+		<center>
+			<img src="imagens/PilhaTCPIP.svg" style="width: 50%;"/>
+		</center>
+	</div>
+    </div>	
+    </section>
+ 
+
+    <section>
+    <h1>Pilha de Protocolos da Internet (V)</h1>
+    <div class="slideContent">
+    	<div class="column" style="width: 60%;">
+    		<ul>
+    			<li><span class="alert">Enlace:</span> comunicação nós (<i>hosts</i>, comutadores) diretamente conectados por um enlace.
+    			<ul>
+				<li><i>i.e.</i>, nós &ldquo;vizinhos&rdquo;.</li>
+				<li>Diferente da camada de rede, preocupação apenas com <span class="alert">próximo salto</span>.
+				<ul>
+					<li>Aspectos relacionados à transmissão do pacote pelo enlace.</li>
+				</ul></li>
+				<li>Exemplo de serviço: integridade.
+				<ul>
+					<li>Em enlaces susceptíveis a falhas, verifica se houve bits errados na recepção pelo enlace.</li>
+				</ul></li>
+				<li><span class="alert">Responde a pergunta: como envio o pacote para o próximo dispositivo no caminho?</li>
+    			</ul></li>
+
+    		</ul>
+    	</div>
+	<div class="column" style="width: 40%;">
+		<center>
+			<img src="imagens/PilhaTCPIP.svg" style="width: 50%;"/>
+		</center>
+	</div>
+    </div>	
+    </section>
+
+    <section>
+    <h1>Pilha de Protocolos da Internet (VI)</h1>
+    <div class="slideContent">
+    	<div class="column" style="width: 60%;">
+    		<ul>
+    			<li><span class="alert">Física:</span> representação do pacote no meio físico de transmissão.
+    			<ul>
+				<li>Traduz bits para sinais.
+				<ul>
+					<li>Pulsos elétricos, ondas acústicas, pulsos de luz, ...</li>
+				</ul></li>
+				<li>Se preocupa com a forma mais eficiente de representação.
+				<ul>
+					<li><i>e.g.</i>, como transmitir mais bits em menos tempo no canal?</li>
+					<li><i>e.g.</i>, como minimizar os erros na transmissão?</li>
+				</ul></li>
+    			</ul></li>
+    		</ul>
+    	</div>
+	<div class="column" style="width: 40%;">
+		<center>
+			<img src="imagens/PilhaTCPIP.svg" style="width: 50%;"/>
+		</center>
+	</div>
+    </div>	
+    </section>
+
+    <section>
+    <h1>Pilha de Protocolos: Uma Visão <i>Bottom-Up</i></h1>
+    <div class="slideContent">
+	    <ul>
+	    	<li>Cada camada assume que camadas inferiores resolvem &ldquo;uma parte do problema&rdquo;.
+	    	<ul>
+	    		<li>Sobre a solução existente, são adicionadas novas funcionalidades.</li>
+	    	</ul></li>
+	    	<li>Exemplo (simplificado):
+	    	<ul>
+	    		<li>Camada de enlace assume que sabemos enviar bits por um enlace.
+	    		<ul>
+	    			<li>Preocupa-se em verificar se bits chegaram corretos.</li>
+	    		</ul></li>
+			<li>Camada de rede assume que sabemos enviar pacote entre nós diretamente conectados.
+			<ul>
+				<li>Preocupa-se em encontrar e usar caminhos de múltiplos saltos entre origem e destino.</li>
+			</ul></li>
+			<li>Camada de transporte assume que sabemos enviar pacote entre origem e destino.
+			<ul>
+				<li>Preocupa-se em separar pacotes que chegam entre os vários processos do <i>host</i>. </li>
+			</ul></li>
+			<li>Camada de aplicação assume que sabemos enviar pacotes entre processos em computadores diferentes.
+			<ul>
+				<li>Preocupa-se em gerar mensagens que permitam o funcionamento da <span class="alert">aplicação distribuída</span>.</li>
+			</ul></li>
+	    	</ul></li>
+	    </ul>
+    </div>	
+    </section>
+    
+    <section>
+    <h1>Pilha de Protocolos: Uma Visão <i>Top-Down</i> (I)</h1>
+    <!--    <div class="slideContent">-->
+    	<br>
+    	<br>
+    	<br>
+    	<ul>
+    		<li>Estratégia utilizada pelo livro-texto.</li>
+    		<li>Estudar as redes de computadores (Internet, em particular) percorrendo camadas de cima para baixo.
+    		<ul>
+    			<li>Aplicação &mdash; Capítulo 2.</li>
+    			<li>Transporte &mdash; Capítulo 3.</li>
+    			<li>Rede &mdash; Capítulo 4.</li>
+    			<li>Enlace &mdash; Capítulo 5.</li>
+    		</ul></li>
+		<li>No restante desta disciplina, estudaremos as várias camadas da pilha TCP/IP.</li>
+    	</ul>
+	<!--    </div>	-->
+    </section>
+    
+    <section>
+    <h1>Pilha de Protocolos: Uma Visão <i>Top-Down</i> (II)</h1>
+    <!--    <div class="slideContent">-->
+    	<br>
+    	<br>
+    	<br>
+    	<ul>
+    		<li>Estratégia utilizada pelo livro-texto.</li>
+    		<li>Estudar as redes de computadores (Internet, em particular) percorrendo camadas de cima para baixo.
+    		<ul>
+			<li><span class="alert">Aplicação &mdash; Capítulo 2.</span></li>
+			<li><span class="alert">Transporte &mdash; Capítulo 3.</span></li>
+			<li><span class="alert">Rede &mdash; Capítulo 4.</span></li>
+    			<li>Enlace &mdash; Capítulo 5.</li>
+    		</ul></li>
+		<li>No restante desta disciplina, estudaremos as várias camadas da pilha TCP/IP.
+		<ul>
+			<li>Aplicação, Rede e Transporte em Redes I (camadas 5, 4 e 3).</li>
+			<li>Camada de enlace (e outros tópicos) em Redes II.</li>
+		</ul></li>
+    	</ul>
+	<!--    </div>	-->
+    </section>
+ 
+    <section>
+    <h1>O Modelo de Referência ISO/OSI</h1>
+    <div class="slideContent">
+    	<div class="column" style="width: 60%;">
+    		<ul>
+    			<li>Modelo TCP/IP não é o único, absoluto.</li>
+    			<li>Uma alternativa: modelo OSI.
+    			<ul>
+    				<li>Sete camadas, ao invés de 5/4.</li>
+    				<li><span class="alert">Apresentação:</span> &ldquo;traduz&rdquo; formato dos dados entre a aplicação e a rede.
+    				<ul>
+    					<li><i>e.g.</i>, criptografia, compressão, <i>endianess</i>.</li>
+    				</ul></li>
+    				<li><span class="alert">Sessão:</span> provê funcionalidades como sincronização, <i>checkpoints</i>, recuperação de dados.</li>
+    			</ul></li>
+			<li>Como a Internet lida com a ausência destas camadas?
+			<ul>
+				<li>Funcionalidades implementadas na aplicação, <span class="alert">se necessárias</span>.</li>
+				<li>São necessárias?</li>
+			</ul></li>
+    		</ul>	
+    	</div>
+	<div class="column" style="width: 40%;">
+		<center>
+			<img src="imagens/ModeloOSI.svg" style="width: 50%;"/>
+		</center>
+	</div>
+    </div>	
+    </section>
+    
+    <section>
+    <h1>Inteligência nas Bordas e Camadas</h1>
+    <div class="slideContent">
+	    <div class="column" style="width: 50%;">
+	    	<ul>
+			<li>Lembrando: na Internet, procura-se manter a inteligência nas bordas.
+			<ul>
+				<li><i>i.e.</i>, na medida do possível, funcionalidades são mantidas nas bordas, e não no núcleo.</li>
+				<li>Argumento fim-a-fim.</li>
+			</ul></li>
+			<li>Isto se manifesta (idealmente) na organização em camadas.
+			<ul>
+				<li><i>Hosts</i> implementam todas as camadas.</li>
+				<li>Comutadores implementam apenas as 2 ou 3 mais baixas.
+				<ul>
+					<li><i>Switches</i> até a camada 2.</li>
+					<li>Roteadores até a camada 3.</li>
+				</ul></li>
+			</ul></li>
+		</ul>
+	    </div>
+	    <div class="column" style="width: 50%;">
+	    	<center>
+	    		<img src="imagens/InteligenciaNasBordas.svg" style="width: 95%;"/>
+	    	</center>
+	    </div>
+    </div>	
+    </section>
+    
+    <section>
+    <h1>Encapsulamento e Cabeçalhos (I)</h1>
+    <div class="slideContent">
+    	<ul>
+    		<li>Pacotes são gerados (normalmente) na aplicação e descem pelas demais camadas.</li>
+    		<li>Cada nova camada pode precisar adicionar informações ao pacote para cumprir suas responsabilidades.
+    		<ul>
+    			<li><i>e.g.</i>, camada de transporte adiciona um identificador ao pacote para que receptor saiba para qual processo este é destinado.</li>
+    		</ul></li>
+    		<li>Informações adicionais são colocadas em posições bem definidas do pacote.
+    		<ul>
+    			<li>Em <span class="alert">cabeçalhos</span>.</li>
+    		</ul></li>
+    		<li>Cada camada pode adicionar (e geralmente adiciona) seu cabeçalho à mensagem.
+    		<ul>
+    			<li>Com suas informações relevantes.</li>
+    		</ul></li>
+    	</ul>
+    </div>	
+    </section>
+    
+    <section>
+    <h1>Encapsulamento e Cabeçalhos (II)</h1>
+    <div class="slideContent">
+    	<center>
+    		<img src="imagens/Encapsulamento.svg" style="width: 75%;"/>
+    	</center>
+    </div>	
+    </section>
+    
+	
+    <section class="secao">
+    <div class="slideContent">
+        Segurança
+    </div>
+    </section>
+    
+    <section>
+    <h1>Segurança em Redes</h1>
+    <div class="slideContent">
+    	<ul>
+		<li><span class="alert">Campo que estuda</span>:
+    		<ul>
+    			<li>Como atacantes podem gerar problemas para a rede/computadores.</li>
+    			<li>Como podemos nos defender destes ataques.</li>
+    			<li>Como projetar a arquiteturas de redes imunes a ataques.</li>
+    		</ul></li>
+    		<li>Internet <span class="alert">não foi</span> originalmente pensada com (muita) segurança em mente.
+    		<ul>
+    			<li>Visão original: &ldquo;grupo de usuários que confiam uns nos outros conectados a uma rede transparente&rdquo;.</li>
+    			<li>Projetistas de protocolos da Internet estão sempre &ldquo;correndo atrás&rdquo;.</li>
+    			<li>Considerações de segurança aparecem em todas as camadas!</li>
+    		</ul></li>
+    	</ul>
+    </div>	
+    </section>
+
+    <section>
+    <h1>Atacantes: Inserção de <i>malware</i> nos <i>hosts</i> via Internet</h1>
+    <div class="slideContent">
+    	<ul>
+    		<li><i>Malware</i> pode infectar um <i>host</i> de algumas formas.
+    		<ul>
+    			<li><span class="alert">Vírus:</span> <i>software</i> que se auto-replica através da recepção/execução de objetos pela rede (<i>e.g.</i>, anexo em e-mail).</li>
+			<li><span class="alert">Worm:</span> <i>software</i> que se auto-replica através do recebimento/execução <span class="alert">passivos</span> (<i>e.g.</i>, automáticos) de um objeto.</li>
+    		</ul></li>
+    		<li>Um <i>malware</i> do tipo <span class="alert">spyware</span> pode gravar ações do usuário (<i>e.g.</i>, teclas pressionadas, páginas visitadas) e enviar para servidor do atacante.</li>
+    		<li><i>Host infectado pode ser controlado como parte de uma <span class="alert"><i>botnet</i></span>.</i></li>
+    		item
+    	</ul>
+    </div>	
+    </section>
+    
+    <section>
+    <h1>Ataques a Servidores, Infraestrutura de Rede</h1>
+    <div class="slideContent">
+    	<ul>
+    		<li><span class="alert">Ataque de Negação de Serviço:</span>
+    		<ul>
+    			<li><i>Denial of Service</i> (DoS).</li>
+    			<li>Atacante faz com que recurso (servidor, banda) fique indisponível para os usuários legítimos.</li>
+    			<li>Normalmente, se basea na geração de tráfego artificial em grandes volumes, ocupando os recursos.</li>
+    		</ul></li>
+    	</ul>
+	<div class="column" style="width: 55%;">
+		<ol>
+			<li>Selecionar o alvo.</li>
+			<li>Comprometer <i>hosts</i> pela rede (<i>i.e.</i>, criar uma <i>botnet</i>).</li>
+			<li>Enviar pacotes para o alvo a partir dos <i>hosts</i> comprometidos.
+			<ul>
+				<li>Mais de um <i>host</i> &#x2192; DDoS.</li>
+			</ul></li>
+		</ol>
+	</div>
+	<div class="column" style="width: 45%;">
+		<center>
+			<img src="imagens/DDoS.svg" style="width: 70%;"/>
+		</center>
+	</div>
+    </div>	
+    </section>
+    
+    <section>
+    <h1><i>Sniffing</i> de Pacotes</h1>
+    <div class="slideContent">
+    	<ul>
+    		<li>Normalmente, interfaces só passam para as camadas superiores quadros destinados ao próprio dispositivo.</li>
+    		<li>Mas, fisicamente, interface muitas vezes recebe quadros para outros nós.
+    		<ul>
+    			<li><i>e.g.</i>, enlaces compartilhados.</li>
+    		</ul></li>
+    		<li><i>Softwares</i> especiais podem capturar e exibir estes pacotes.
+    		<ul>
+			<li><i>Sniffers</i> de pacotes, como o Wireshark.</li>
+    		</ul></li>
+    	</ul>
+	<center>
+		<img src="imagens/Sniffer.svg" style="width: 60%;"/>
+	</center>
+	<ul>
+		<li>Também utilizados para fins legítimos!</li>
+	</ul>
+    </div>	
+    </section>
+    
+
+    <section class="secao">
+    <div class="slideContent">
+        Histórico
+    </div>
+    </section>
+    
+    <section>
+    <h1>História da Internet (I)</h1>
+    <div class="slideContent">
+    	<center>
+    		<div class="block" style="width:1100px;">
+    			<div class="blockTitle" style="width: 100%;">
+    				<p>1961 a 1972</p>
+    			</div>
+    			<div class="blockBody">
+    				Estabelecimento dos princípios da comutação de pacotes	
+    			</div>
+    		</div>
+    	</center>
+
+	<div class="column" style="width: 45%;">
+		<ul>
+			<li><span class="alert">1961:</span> Kleinrock mostra através de teoria das filas a efetividade da comutação de pacotes.</li>
+			<li><span class="alert">1964:</span> Comutação de pacotes é aplicada a redes militares.</li>
+			<li><span class="alert">1967:</span> Concepção da ARPAnet pela ARPA.</li>
+			<li><span class="alert">1969:</span> primeiro nó operacional da ARPAnet.</li>
+		</ul>
+	</div>
+
+	<div class="column" style="width: 55%;">
+		<ul>
+			<li><span class="alert">1972:</span>
+			<ul>
+				<li>Primeira demonstração pública da ARPAnet.</li>
+				<li>NCP (<i>Network Control Protocol</i>).</li>
+				<li>Primeiro programa de e-mail.</li>
+				<li>ARPAnet chega a 15 nós.</li>
+			</ul></li>
+		</ul>
+		<center>
+			<img src="imagens/ARPAnet.svg" style="width: 38%;"/>
+		</center>
+	</div>
+
+
+    </div>	
+    </section>
+    
+    <section>
+    <h1>História da Internet (II)</h1>
+    <div class="slideContent">
+    	<center>
+    		<div class="block" style="width:1100px;">
+    			<div class="blockTitle" style="width: 100%;">
+    				<p>1972 a 1980</p>
+    			</div>
+    			<div class="blockBody">
+				Intercomunicação entre redes, redes novas e proprietárias
+    			</div>
+    		</div>
+    	</center>
+
+	<div class="column" style="width: 45%;">
+		<ul>
+			<li><span class="alert">1970:</span> ALOHAnet no Havaii.</li>
+			<li><span class="alert">1974:</span> Cerf e Kahn definem arquitetura para intercomunicação de redes.</li>
+			<li><span class="alert">1976:</span> Ethernet é criado na Xerox PARC.</li>
+			<li><span class="alert">Final de 1970:</span> Arquiteturas proprietárias (DECnet, SNA, XNA).</li>
+			<li><span class="alert">Final de 1970:</span> Comutação de pacotes de comprimento fixo (precursor do ATM).</li>
+			<li><span class="alert">1979:</span> ARPAnet com 200 nós.</li>
+		</ul>
+	</div>
+
+	<div class="column" style="width: 55%;">
+		<br>
+		<br>
+		<div style="width: 90%; border: 2px solid #A00;">
+			<span class="alert">Princípios de intercomunicação de redes segundo Cerf e Kahn:</span><br>
+			<ul>
+				<li>Minimalismo, autonomia: evitar mudanças nas redes interconectadas.</li>
+				<li>Modelo de serviço de <span class="alert">melhor esforço</span>.</li>
+				<li>Roteadores <span class="alert"><i>stateless</i></span>.</li>
+				<li>Controle descentralizado.</li>
+			</ul>
+			<br>
+			<span class="alert">Definem a arquitetura da Internet atual</span>
+		</div>
+	</div>
+
+    </div>	
+    </section>
+    
+    <section>
+    <h1>História da Internet (III)</h1>
+    <div class="slideContent">
+    	<center>
+    		<div class="block" style="width:1100px;">
+    			<div class="blockTitle" style="width: 100%;">
+    				<p>1980 a 1990</p>
+    			</div>
+    			<div class="blockBody">
+    				Novos protocolos, proliferação de redes
+    			</div>
+    		</div>
+    	</center>
+
+	<div class="column" style="width: 45%;">
+		<ul>
+			<li><span class="alert">1983:</span> Implantação do TCP/IP.</li>
+			<li><span class="alert">1982:</span> Protocolo de e-mail SMTP definido.</li>
+			<li><span class="alert">1983:</span> Protocolo DNS é definido para tradução de nomes.</li>
+			<li><span class="alert">1985:</span> Protocolo FTP é definido.</li>
+		</ul>
+	</div>
+
+	<div class="column" style="width: 55%;">
+		<ul>
+			<li>Novas redes nacionais surgem nos EUA: Csnet, BITnet, NSFnet, Minitel.</li>
+			<li>100000 <i>hosts</i> conectados a confederação de redes.</li>
+		</ul>
+	</div>
+    </div>	
+    </section>
+    
+    <section>
+    <h1>História da Internet (IV)</h1>
+    <div class="slideContent">
+     	<center>
+    		<div class="block" style="width:1100px;">
+    			<div class="blockTitle" style="width: 100%;">
+    				<p>1990 a 2005</p>
+    			</div>
+    			<div class="blockBody">
+    				Comercialização, a web, novas aplicações
+    			</div>
+    		</div>
+    	</center>
+
+	<div class="column" style="width: 45%;">
+		<ul>
+			<li><span class="alert">Início de 1990:</span> ARPAnet é desativada.</li>
+			<li><span class="alert">1991:</span> NSF retira restrições de uso comercial da NSFnet.</li>
+			<li><span class="alert">Início de 1990:</span> Surgimento da Web.
+			<ul>
+				<li>Hipertexto.</li>
+				<li>HTML e HTTP: Berners-Lee.</li>
+				<li>1994: Mosaic, mais tarde Netscape.</li>
+				<li>Fim da década 1990: comercialização da web.</li>
+			</ul></li>
+		</ul>
+	</div>
+
+	<div class="column" style="width: 55%;">
+		<ul>
+			<li><span class="alert">Fim de 1990 a meados de 2000:</span>
+			<ul>
+				<li>Mais aplicações populares: mensagens instantâneas, transferência de arquivos via P2P.</li>
+				<li>Foco maior em segurança.</li>
+				<li>Estimativas de 50 milhões de <i>hosts</i>, mais de 100 milhões de usuários.</li>
+				<li><i>Links</i> de <i>backbone</i> a Gb/s.</li>
+			</ul></li>
+		</ul>
+	</div>
+   	
+    </div>	
+    </section>
+    
+    <section>
+    <h1>História da Internet (V)</h1>
+    <div class="slideContent">
+    	<center>
+    		<div class="block" style="width:1100px;">
+    			<div class="blockTitle" style="width: 100%;">
+    				<p>2005 &mdash; presente</p>
+    			</div>
+    			<div class="blockBody">
+    				Expansão, aumento de escala, multimídia, dispositivos móveis.
+    			</div>
+    		</div>
+    	</center>
+
+	<ul>
+		<li>Aproximadamente 900 milhões de <i>hosts</i> (2012).
+		<ul>
+			<li><i>Tablets</i>, <i>smartphones</i>, ...</li>
+			<li>Implantação agressiva de acesso banda larga.</li>
+			<li>Acesso à Internet sem fio se tornando ubíquo.</li>
+			<li>Surgimento das redes sociais.
+			<ul>
+				<li>Facebook: 1,65 bilhões de usuários (2016).</li>
+			</ul></li>
+			<li>Servidores de conteúdo criam suas próprias redes.
+			<ul>
+				<li>&ldquo;Evitam&rdquo; Internet pública, entregam conteúdo de forma &ldquo;instantânea&rdquo;: buscas, e-mail, vídeos.</li>
+			</ul></li>
+			<li>Empresas, universidades, comércio eletrônico rodando seus serviços na &ldquo;nuvem&rdquo; (<i>e.g.</i>, EC2 da Amazon).</li>
+		</ul></li>
+	</ul>
+    </div>	
+    </section>
+    
+	<section>
+	<h1>Resumo da Aula...</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 45%;">
+		<ul>
+			<li>Medidas de desempenho em redes:
+			<ul>
+				<li>Perda de pacotes.</li>
+				<li>Atraso.</li>
+				<li>Vazão.</li>
+			</ul></li>
+			<li>Perda de pacotes ocorre por:
+			<ul>
+				<li>Erros na transmissão por enlaces (menos comum na Internet).</li>
+				<li><span class="alert">Descartes por <i>buffers</i> cheios</span> (mais comum).</li>
+			</ul></li>
+			<li>Atraso é acumulado a cada salto:
+			<ul>
+				<li>Processamento.</li>
+				<li>Enfileiramento.</li>
+				<li>Transmissão.</li>
+				<li>Propagação.</li>
+			</ul></li>
+		</ul>
+		</div>
+		<div class="column" style="width: 55%;">
+			<ul>
+				<li>Vazão é diferente da taxa de transmissão do fluxo.
+				<ul>
+					<li>Depende da capacidade da rede.</li>
+					<li>Limitada pelo <span class="alert">enlace de gargalo</span>.</li>
+					<li>Também afetada por competição entre fluxos.</li>
+					item
+				</ul></li>
+				<li>Pilha de Protocolos TCP/IP.
+				<ul>
+					<li>Modelo em camadas.</li>
+					<li>Organiza protocolos na Internet.</li>
+					<li>Define <span class="alert">responsabilidades</span>.</li>
+					<li>Alternativa: modelo OSI.</li>
+					<li><span class="alert">Encapsulamento:</span> camadas/protocolos adicionam cabeçalhos.</li>
+				</ul></li>
+				<li>Segurança:
+				<ul>
+					<li>Ataque de negação de serviço.</li>
+				</ul></li>
+				<li>Modelo de serviço de <span class="alert">melhor esforço</span>.</li>
+			</ul>	
+		</div>
+	</div>	
+	</section>
+
+	<section>
+	<h1>Conceitos Importantes do Capítulo 1</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li><i>Hosts</i>, sistemas finais, comutadores, enlaces.</li>
+				<li>ISPs.</li>
+				<li>Núcleo <i>vs.</i> borda da rede.</li>
+				<li>Protocolos.</li>
+				<li>Taxa de transmissão/capacidade de um enlace.</li>
+				<li>Descarte de pacotes.</li>
+				<li>Atraso, perda, vazão.</li>
+				<li>Inteligência nas bordas, argumento fim-a-fim, KISS.</li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li>Comutação de pacotes <i>vs.</i> comutação de circuitos.</li>
+				<li><i>Store-and-forward</i>.</li>
+				<li>Multiplexação estatística.</li>
+				<li>Enfileiramento.</li>
+				<li>Melhor esforço.</li>
+				<li>Pilha de protocolos TCP/IP.</li>
+				<li>Encapsulamento.</li>
+				<li>Cabeçalhos.</li>
+			</ul>
+		</div>
+	</div>	
+	</section>
+	
+	<section>
+	<h1>Próxima Aula...</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Começamos um novo capítulo: Camada de Aplicação.
+			<ul>
+				<li>Conceitos básicos de aplicações distribuídas.</li>
+				<li>Arquiteturas (Cliente-Servidor <i>vs.</i> P2P).</li>
+				<li>Serviços da camada de aplicação.</li>
+				<li>Início da discussão sobre o protocolo HTTP.</li>
+			</ul></li>
+		</ul>
+	</div>	
+	</section>
+	
+	<!-- {{{{ dzslides core
+	#
+	#
+	#     __  __  __       .  __   ___  __
+	#    |  \  / /__` |    | |  \ |__  /__`
+	#    |__/ /_ .__/ |___ | |__/ |___ .__/ core :€
+	#
+	#
+	# The following block of code is not supposed to be edited.
+	# But if you want to change the behavior of these slides,
+	# feel free to hack it!
+	#
+	-->
+
+    <!-- More CSS -->
+	<link href='../template/css/slides.css' id="slides" rel='stylesheet' type='text/css'>
+	<link href='../template/css/presentationSpecific2.css' id="presentationSpecific2" rel='stylesheet' type='text/css'>
+
+    <!-- More Javascript -->
+	<script type="text/javascript" src="../template/js/dz.js"></script>
+
+	<!-- More CSS -->
+	<link href='../template/css/notesSpecific.css' id="notesSpecific" rel='stylesheet' type='text/css'>
+	<link href='../template/css/printSpecific.css' id="printSpecific" rel='stylesheet' type='text/css'>
+</body>
+</html>

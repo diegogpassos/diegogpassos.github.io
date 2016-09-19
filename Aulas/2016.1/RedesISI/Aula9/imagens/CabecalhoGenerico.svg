@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg id="svg6424" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://www.w3.org/2000/svg" height="391.27" width="336.1" version="1.1" xmlns:cc="http://creativecommons.org/ns#" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:dc="http://purl.org/dc/elements/1.1/">
+ <defs id="defs6426"></defs>
+ <metadata id="metadata6429">
+  <rdf:RDF>
+   <cc:Work rdf:about="">
+    <dc:format>image/svg+xml</dc:format>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:title/>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <g id="layer1" transform="translate(-70.518265,-253.40436)">
+  <path id="path10168" d="m79.431,592.35,327.19,0,0-315-327.19,0,0,315z" fill-rule="evenodd" fill="#009"/>
+  <path id="path10170" d="m71.931,601.72,327.19,0,0-315-327.19,0,0,315z" fill-rule="evenodd" fill="#FFF"/>
+  <path id="path10172" stroke-linejoin="miter" d="m71.931,601.72,327.19,0,0-315-327.19,0,0,315z" stroke="#000" stroke-linecap="butt" stroke-miterlimit="10" stroke-dasharray="none" stroke-width="1.875" fill="none"/>
+  <text id="text10262" y="315.06158" x="85.268257" font-size="15px">
+   <tspan id="tspan10264" style="writing-mode:lr-tb;" font-weight="normal" fill-rule="nonzero" font-size="22.5px" font-variant="normal" y="315.06158" x="85.268257 95.303261 107.52077 120.07577 128.17577 138.66077 150.49576 157.20076 169.71075 181.92827 190.02826 197.54326 204.58577" font-family="Tahoma" fill="#cc0000">source port #</tspan>
+  </text>
+  <text id="text10266" y="315.06158" x="261.11826" font-size="15px">
+   <tspan id="tspan10268" style="writing-mode:lr-tb;" font-weight="normal" fill-rule="nonzero" font-size="22.5px" font-variant="normal" y="315.06158" x="261.11826 273.56076 285.39575 295.43076 302.87827 309.92078 322.36325 334.58075 342.68076 350.12827 357.17075" font-family="Tahoma" fill="#cc0000">dest port #</tspan>
+  </text>
+  <path id="path10270" stroke-linejoin="round" d="m70.993,326.1,327.66,0" stroke="#000" stroke-linecap="butt" stroke-miterlimit="10" stroke-dasharray="none" stroke-width="1.875" fill="none"/>
+  <path id="path10272" stroke-linejoin="round" d="m71.931,423.6,327.19,0" stroke="#000" stroke-linecap="butt" stroke-miterlimit="10" stroke-dasharray="none" stroke-width="1.875" fill="none"/>
+  <path id="path10274" stroke-linejoin="round" d="m233.18,325.64,0-38.912" stroke="#000" stroke-linecap="butt" stroke-miterlimit="10" stroke-dasharray="none" stroke-width="1.875" fill="none"/>
+  <text id="text10276" y="270.49908" x="197.59326" font-size="15px">
+   <tspan id="tspan10278" style="writing-mode:lr-tb;" font-weight="normal" fill-rule="nonzero" font-size="22.5px" font-variant="normal" y="270.49908" x="197.59326 209.87827 222.09576 229.13828 241.58076 246.82327 254.33827" font-family="Tahoma" fill="#000000">32 bits</tspan>
+  </text>
+  <path id="path10280" d="m278.18,262.81,111.88,0.45,0,1.875-111.88-0.45,0-1.875zm110.64-2.3625,7.4875,3.775-7.5125,3.725,0.025-7.5z" fill-rule="nonzero" fill="#000"/>
+  <path id="path10282" d="m181.62,265.62-104.85,0,0-1.875,104.85,0,0,1.875zm-103.6,2.8125-7.5-3.75,7.5-3.75,0,7.5z" fill-rule="nonzero" fill="#000"/>
+  <text id="text10284" y="485.49908" x="169.36826" font-size="15px">
+   <tspan id="tspan10286" style="writing-mode:lr-tb;" font-weight="normal" fill-rule="nonzero" font-size="25px" font-variant="normal" y="485.49908" x="169.36826 182.36826 196.19325 209.86827 215.59328 221.31827 232.84328 245.86827 254.11827 259.84326 273.41827" font-family="Tahoma" fill="#000000">application</tspan>
+  </text>
+  <text id="text10288" y="515.49902" x="200.36827" font-size="15px">
+   <tspan id="tspan10290" style="writing-mode:lr-tb;" font-weight="normal" fill-rule="nonzero" font-size="25px" font-variant="normal" y="515.49902" x="200.36827 214.19327 227.11827 235.36827 248.36827" font-family="Tahoma" fill="#000000">data</tspan>
+  </text>
+  <text id="text10292" y="545.53656" x="176.36826" font-size="15px">
+   <tspan id="tspan10294" style="writing-mode:lr-tb;" font-weight="normal" fill-rule="nonzero" font-size="25.03125px" font-variant="normal" y="545.53656" x="176.36826 185.88013 199.6223 212.3632 224.82877 230.56093 244.15289 257.11908 270.86124" font-family="Tahoma" fill="#000000">(payload)</tspan>
+  </text>
+  <text id="text10296" y="390.31158" x="131.30576" font-size="15px">
+   <tspan id="tspan10298" style="writing-mode:lr-tb;" font-weight="normal" fill-rule="nonzero" font-size="25px" font-variant="normal" y="390.31158" x="131.30576 144.88075 153.05576 167.00575 180.28076 189.28076 197.03078 210.98077 224.25577 237.25577 251.08076 264.23074 273.23077 280.75577 288.70575 294.48074 307.70575 313.43076 327.25574" font-family="Tahoma" fill="#000000">other header fields</tspan>
+  </text>
+  <text id="text10300" y="639.47406" x="102.84326" font-size="15px">
+   <tspan id="tspan10302" style="writing-mode:lr-tb;" font-weight="normal" fill-rule="nonzero" font-size="25px" font-variant="normal" y="639.47406" x="102.84326 116.84326 131.86826 145.64326 155.09326 171.56825 188.51826 202.29327 209.81827 221.04327 234.26826 248.09326 269.09326 282.24326 296.24326 304.49329 311.99329 319.74326 333.31827 342.31827 363.24326 376.24326" font-family="Tahoma" fill="#000000">TCP/UDP segment format</tspan>
+  </text>
+ </g>
+</svg>

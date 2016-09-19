@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <!-- Meta info -->
+	<meta charset="utf-8">
+	<meta name="shortauthor" content="Diego Passos"/>
+	<meta name="shorttitle" content="Enlace: Switches e VLANs"/>
+	<meta name="shortevent" content="Redes de Computadores II"/>
+	<title>Redes de Computadores II: Aula 5</title>
+
+    <!-- Math support -->
+	<script type="text/x-mathjax-config">
+		MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+			MathJax.InputJax.TeX.Definitions.number = /^(?:[0-9]+(?:\.[0-9]{3})*(?:\{,\}[0-9]*)*|\{,\}[0-9]+)/
+		});
+	</script>
+	<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+	<!--<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>-->
+
+    <!-- Fonts -->
+	<link href='https://fonts.googleapis.com/css?family=Lora:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
+
+    <!-- CSS -->
+	<link href='../template/css/template.css' id="template" rel='stylesheet' type='text/css'>
+	<link href='../template/css/presentationSpecific.css' id="presentationSpecific" rel='stylesheet' type='text/css'>
+
+    <!-- Javascript -->
+	<script type="text/javascript" src="../template/js/audio.js"></script>
+</head>
+
+<body>
+    <!-- Audio handlers -->
+	<!--<audio src="audio/La.wav" id="La.wav" preload="auto"></audio>-->
+
+    <!-- Title Slide -->
+	<section>
+
+        <div class="slideContent">
+            <h1 class="title">Aula 5 - Camada de Enlace: Switches e VLANs</h1>
+            <h2 class="author">Diego Passos</h2>
+            <h4 class="institution">Universidade Federal Fluminense</h4>
+            <h3 class="date">Redes de Computadores II</h3>
+        </div>
+
+	</section>
+
+    <!-- Content slides -->
+	
+	<section>
+	<h1>Na Última Aula...</h1>
+	<div class="slideContent">
+        <div class="column" style="width: 50%;">
+            <ul>
+                <li>Endereçamento e ARP:
+                <ul>
+                    <li>Camada de enlace tem <b>esquema próprio</b> de endereçamento.
+                    <ul>
+                        <li>Diferente da camada de rede.</li>
+                        <li>Usado na <b>comunicação direta</b> entre dispositivos.</li>
+                        <li>Endereços <b>planos</b>.</li>
+                        <li>Interface sai de fábrica com <b>endereço único</b>.</li>
+                        <li>Garante unicidade ao se <b>trocar de rede</b>.</li>
+                    </ul></li>
+                    <li>Há um <b>mapeamento</b> entre endereços das camadas de rede e enlace.
+                    <ul>
+                        <li><b>Tradução</b> feita através do ARP.</li>
+                    </ul></li>
+                </ul></li>
+            </ul>
+        </div>
+        <div class="column" style="width: 50%;">
+            <ul>
+                <li>Ethernet: tecnologia padrão para LANs cabeadas.
+                <ul>
+                    <li><b>Simples e barato</b>.</li>
+                    <li>Adoção <b>ampla</b>.</li>
+                    <li><b>Evoluiu</b> ao longo do tempo.</li>
+                </ul></li>
+                <li>Topologia originalmente em <b>barramento</b>, atualmente <b>estrela</b>.
+                <ul>
+                    <li>Comunicação intermediada por um <b>switch</b>.</li>
+                    <li>Enlaces <b>full-duplex</b>.</li>
+                    <li>Garante <b>ausência de colisões</b>.</li>
+                </ul></li>
+                <li>Serviço <b>sem conexão, não confiável</b>.</li>
+                <li>Acesso ao meio via CSMA/CD.</li>
+            </ul>
+        </div>
+	</div>	
+	</section>
+
+
+        <section>
+        <h1>Switch Ethernet</h1>
+        <div class="slideContent">
+
+            <ul>
+                <li> Dispositivo <b>ativo</b> da camada de enlace.
+                <ul>
+                    <li> Armazena e encaminha quadros Ethernet.</li>
+                    <li> Examina endereços do quadro que chega.
+                    <ul>
+                        <li> <b>Seletivamente</b>, o encaminha para um <b>ou mais</b> enlaces de saída.</li>
+                    </ul>
+                    </li>
+                    <li> Utiliza CSMA/CD para acessar enlaces.</li>
+                </ul>
+                </li>
+                <li> <span class="alert">Transparente</span>: <i>hosts</i> não sabem da presença dos <i>switches</i>.</li>
+                <li> <span class="alert">Plug-and-play, aprendizado automático</span>: não requerem configuração para executar encaminhamento.</li>
+            </ul>
+        </div>
+        </section>
+
+        <section>
+        <h1>Switches e Transmissões Simultâneas</h1>
+        <div class="slideContent">
+
+
+            <div class="column" style="width: 60% ;">
+                <br>
+                <br>
+                <ul>
+                    <li> Hosts têm enlaces dedicados, <i>full-duplex</i>, diretos com o <i>switch</i>.</li>
+                    <li> <i>Switches</i> armazenam quadros em <i>buffers</i> internos.</li>
+                    <li> Protocolo MAC do Ethernet usado em cada enlace, mas não há colisões.
+                    <ul>
+                        <li> Cada enlace é seu próprio domínio de colisão confinado.</li>
+                    </ul>
+                    </li>
+                    <li> Transmissões entre <b>A</b> e <b>A&prime;</b> e <b>B</b> e <b>B&prime;</b> podem ocorrer simultaneamente.</li>
+                </ul>
+            </div>
+            <div class="column" style="width: 40% ;">
+                <center>
+                    <img src="imagens/switch_opt.svg" style="width: 90% ;"/>
+                </center>
+            </div>
+
+        </div>
+        </section>
+
+        <section>
+        <h1>Switches e Tabelas de Encaminhamento</h1>
+        <div class="slideContent">
+
+
+            <div class="column" style="width: 60% ;">
+                <br>
+                <ul>
+                    <li> Como o switch sabe que <b>A&prime;</b> é alcançável pela interface 4?</li>
+                    <li> E <b>B&prime;</b> pela interface 5?
+                    <ul>
+                        <li> <b>Resposta:</b> cada switch possui uma <b>tabela de encaminhamento</b>.</li>
+                        <li> Cada entrada da tabela é uma tupla da forma:
+                        <ul>
+                            <li> <tt>&lt;MAC, interface, timestamp&gt;</tt>.</li>
+                        </ul>
+                        </li>
+                        <li> Similar à tabela de roteamento!</li>
+                    </ul>
+                    </li>
+                    <li> Mas como a entradas são gerenciadas?
+                    <ul>
+                        <li> De forma parecida com um protocolo de roteamento?</li>
+                    </ul>
+                    </li>
+                </ul>
+            </div>
+            <div class="column" style="width: 40% ;">
+                <center>
+                    <img src="imagens/switch_opt.svg" style="width: 90% ;"/>
+                </center>
+            </div>
+
+
+        </div>
+        </section>
+
+        <section>
+        <h1>Switches: Auto-aprendizado</h1>
+        <div class="slideContent">
+
+
+            <div class="column" style="width: 50% ;">
+                <br><br><br>
+                <ul>
+                    <li> Switch <b>aprende</b> quais <i>hosts</i> são alcançáveis por quais interfaces.
+                    <ul>
+                        <li> Quando quadro é recebido, switch aprende localização do emissor.</li>
+                        <li> Localização é armazenada na tabela de encaminhamento do switch.</li>
+                    </ul>
+                    </li>
+                </ul>
+            </div>
+            <div class="column" style="width: 50% ;">
+                <center>
+                    <img src="imagens/selfLearning_opt.svg" style="width: 80% ;"/>
+                </center>
+            </div>
+
+        </div>
+        </section>
+
+        <section>
+        <h1>Switch: Filtragem/Encaminhamento de Quadros</h1>
+        <div class="slideContent">
+
+            <ul>
+                <li> Quando um quadro chega a uma dada porta do switch:
+                <ol>
+                    <li> Armazena número de porta, MAC de origem na tabela de encaminhamento.</li>
+                    <li> Utiliza MAC de destino como índice da tabela de encaminhamento.</li>
+                    <li> Se há uma entrada:
+                    <ol>
+                        <li> Se destino está na mesma porta pela qual quadro chegou, descarte o quadro (<span class="alert">Por quê?</span>).</li>
+                        <li> Caso contrário, encaminhe o quadro para a porta.</li>
+                    </ol>
+                    </li>
+                    <li> Caso contrário, inundação (<i>i.e.</i>, replique quadro por todas as portas, exceto pela qual ele chegou).</li>
+                </ol>
+                </li>
+            </ul>
+        </div>
+        </section>
+
+        <section>
+        <h1>Auto-aprendizado e Encaminhamento: Exemplo</h1>
+        <div class="slideContent">
+
+
+            <div class="column" style="width: 50% ;">
+                <ul>
+                    <li> <b>A</b> envia quadro destinado a <b>A&prime;</b>.
+                    <ul>
+                        <li> Switch recebe pela porta 1.
+                        <ul>
+                            <li> Armazena mapeamento <tt>(<b>A</b>, 1)</tt> na tabela de encaminhamento.</li>
+                        </ul>
+                        </li>
+                        <li> Não conhece localização de <b>A&prime;</b>.
+                        <ul>
+                            <li> Inunda todas as portas (exceto a 1).</li>
+                        </ul>
+                        </li>
+                    </ul>
+                    </li>
+                    <li> <b>A&prime;</b> envia quadro destinado a <b>A</b>.
+                    <ul>
+                        <li> Switch recebe pela porta 4.
+                        <ul>
+                            <li> Armazena mapeamento <tt>(<b>A&prime;</b>, 4)</tt> na tabela de encaminhamento.</li>
+                        </ul>
+                        </li>
+                        <li> Sabe que <b>A</b> está na porta 1.
+                        <ul>
+                            <li> Envio <b>seletivo</b>.</li>
+                        </ul>
+                        </li>
+                    </ul>
+                    </li>
+                </ul>
+            </div>
+            <div class="column" style="width: 50% ;">
+                <center>
+                    <img src="imagens/selfLearning2_opt.svg" style="width: 80% ;"/>
+                </center>
+            </div>
+
+        </div>
+        </section>
+
+        <section>
+        <h1>Interconectando Switches</h1>
+        <div class="slideContent">
+
+            <ul>
+                <li> Switches podem ser interconectados.</li>
+            </ul>
+            <center>
+                <img src="imagens/multipleSwitches_opt.svg" style="width: 70% ;"/>
+            </center>
+            <ul>
+                <li> <span class="alert">Pergunta:</span> quadro de <b>A</b> para <b>G</b> &mdash; como <b>S<sub>1</sub></b> sabe que deve encaminhar através de <b>S<sub>4</sub></b> e <b>S<sub>3</sub></b>?
+                <ul>
+                    <li> <span class="alert">Resposta:</span> auto-aprendizado! (exatamente da mesma forma que no caso com único switch!)</li>
+                </ul>
+                </li>
+            </ul>
+        </div>
+        </section>
+
+        <section>
+        <h1>Interconectando Switches: Exemplo de Auto-aprendizado</h1>
+        <div class="slideContent">
+
+            <ul>
+                <li> Assuma que <b>C</b> envia quadro para <b>I</b> e <b>I</b> envia resposta para <b>C</b>.</li>
+            </ul>
+            <center>
+                <img src="imagens/multipleSwitches_opt.svg" style="width: 70% ;"/>
+            </center>
+            <ul>
+                <li> <b>Após estes envios</b>, mostre as tabelas de encaminhamento em <b>S<sub>1</sub></b>, <b>S<sub>2</sub></b>, <b>S<sub>3</sub></b>, <b>S<sub>4</sub></b>.</li>
+            </ul>
+        </div>
+        </section>
+
+        <section>
+        <h1>Rede Institucional (Possível Arquitetura)</h1>
+        <div class="slideContent">
+
+            <center>
+                <img src="imagens/RedeInstitucional_opt.svg" style="width: 70% ;"/>
+            </center>
+
+        </div>
+        </section>
+
+		<section>
+		<h1>Switches: Vantagens em Relação à Hubs/Repetidores/Barramentos</h1>
+		<div class="slideContent">
+			<ul>
+				<li><b>Eliminação de colisões</b>:
+				<ul>
+					<li>Colisões são <b>impossíveis</b>.</li>
+					<li>Banda não é desperdiçada.</li>
+					<li>Ganho de eficiência.</li>
+				</ul></li>
+				<li><b>Possibilidade de enlaces heterogêneos:</b>
+				<ul>
+					<li>Como cada porta do switch corresponde a um enlace isolado, portas diferentes podem operar em taxas diferentes.</li>
+					<li>Garante interoperabilidade entre dispositivos modernos e legados.</li>
+					<li>Graças também a grande retro-compatibilidade do Ethernet.</li>
+				</ul></li>
+				<li><b>Facilidade de gerenciamento:</b>
+				<ul>
+					<li>Como portas são isoladas, é possível desativar portas individualmente.
+					<ul>
+						<li><i>e.g.</i>, por conta do mau-funcionamento de um dispositivo.</li>
+					</ul></li>
+					<li>Switches modernos também reportam estatísticas sobre cada porta (detalhes no Cap. 9).</li>
+				</ul></li>
+			</ul>
+		</div>	
+		</section>
+		
+        <section>
+        <h1>Switches <i>vs.</i> Roteadores</h1>
+        <div class="slideContent">
+
+
+            <div class="column" style="width: 50% ;">
+                <ul>
+                    <li> Ambos utilizam o <i>store-and-forward</i>.
+                    <ul>
+                        <li> <span class="alert">Roteadores:</span> dispositivos da camada de rede (examinam cabeçalhos de nível 3).</li>
+                        <li> <span class="alert">Switches:</span> dispositivos da camada de enlace (examinam cabeçalhos de nível 2).</li>
+                    </ul>
+                    </li>
+                    <li> Ambos possuem tabelas de encaminhamento/roteamento.
+                    <ul>
+                        <li> <span class="alert">Roteadores:</span> computam tabelas usando algoritmos de roteamento, endereços IP.</li>
+                        <li> <span class="alert">Switches:</span> montam tabelas de encaminhamento utilizando inundação, auto-aprendizagem, endereços MAC.</li>
+                    </ul>
+                    </li>
+                </ul>
+            </div>
+            <div class="column" style="width: 50% ;">
+                <center>
+                    <img src="imagens/SwitchesVsRoteadores_opt.svg" style="width: 80% ;"/>
+                </center>
+            </div>
+
+
+        </div>
+        </section>
+
+	<section>
+	<h1>Switches ou Roteadores? (I)</h1>
+		<br>
+		<br>
+		<ul>
+			<li>Você foi contratado para projetar a infraestrutura de rede interna de uma instituição.</li>
+			<li>Qual a melhor opção?
+			<ul>
+				<li>Interconectar <b>todos</b> os dispositivos em nível 2 (<i>i.e.</i>, usando apenas <i>switches</i>)?</li>
+				<li>Ou dividir a rede em sub-redes, interconectadas por roteadores?</li>
+			</ul></li>
+		</ul>
+	</section>
+	
+	<section>
+	<h1>Switches ou Roteadores? (II)</h1>
+		<br>
+		<br>
+		<ul>
+			<li>Você foi contratado para projetar a infraestrutura de rede interna de uma instituição.</li>
+			<li>Qual a melhor opção?
+			<ul>
+				<li>Interconectar <b>todos</b> os dispositivos em nível 2 (<i>i.e.</i>, usando apenas <i>switches</i>)?</li>
+				<li>Ou dividir a rede em sub-redes, interconectadas por roteadores?</li>
+			</ul></li>
+			<li>Resposta: <b>depende.</b></li>
+			<li>Cada solução tem seus prós e contras. Exemplos:
+			<ul>
+				<li>Roteadores requerem configurações mais complexas, e tempo de processamento é maior.</li>
+				<li>Switches são <i>plug-and-play</i>, e processam apenas até a camada 2.</li>
+				<li>Por outro lado, roteadores proveem melhor isolamento de tráfego.</li>
+				<li>Switches interligados constituem (a princípio) um <b>único grande domínio de broadcast</b>.
+				<ul>
+					<li>Possibilidade de tempestade de <i>broadcast</i>.</li>
+					<li>Além disso, problemas como <i>loops</i> são mais difíceis de diagnosticar.</li>
+					<li>Por fim, muitos switches em cascata sobrecarregam tabelas de encaminhamento.</li>
+				</ul></li>
+			</ul></li>
+		</ul>
+	</section>
+	
+	<section>
+	<h1>Switches ou Roteadores? (III)</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Em geral, para redes &ldquo;pequenas&rdquo; (<i>i.e.</i>, com poucos nós), topologias apenas com <i>switches</i> são razoáveis. </li>
+			<li>À medida que a rede cresce, o domínio de broadcast único se torna problemático.
+			<ul>
+				<li>Em termos de desempenho: quadros em <i>broadcast</i> enviados para a rede toda.</li>
+				<li>Em termos de gerência: difícil descobrir fontes de problemas, como endereços duplicados.</li>
+				<li>Em termos de segurança: difícil impedir uso/acesso não autorizado a recursos da rede.</li>
+			</ul></li>
+		</ul>
+	</div>	
+	</section>
+	
+	<section class="secao">
+	<div class="slideContent">
+		VLANs
+	</div>
+	</section>
+	
+        <section>
+        <h1>VLANs: Motivação</h1>
+        <div class="slideContent">
+
+
+            <div class="column" style="width: 50% ;">
+                <br><br>
+                <center>
+                    <img src="imagens/VLANMotivacao_opt.svg" style="width: 80% ;"/>
+                </center>
+            </div>
+            <div class="column" style="width: 50% ;">
+                <ul>
+                    <li> Considere os seguintes aspectos:
+                    <ul>
+                        <li> Funcionário da CS muda para escritório na EE.
+                        <ul>
+                            <li> É possível mantê-lo &ldquo;conectado&rdquo; ao switch da CS?</li>
+                        </ul>
+                        </li>
+                        <li> Outra questão: único domínio de <i>broadcast</i>.
+                        <ul>
+                            <li> Todo tráfego de nível 2 (ARP, DHCP, inundações por falta de entrada nas tabelas de encaminhamento) atravessa toda a LAN.</li>
+                            <li> Problemas de privacidade/segurança e eficiência.</li>
+                        </ul>
+                        </li>
+                    </ul>
+                    </li>
+                </ul>
+            </div>
+
+
+        </div>
+        </section>
+
+        <section>
+        <h1>VLANs</h1>
+        <div class="slideContent">
+
+            <center>
+                <div class="block" style="width:1000px;">
+                    <div class="blockTitle" style="width: 100%;">
+                        <p><i>Virtual Local Area Network</i></p>
+                    </div>
+                    <div class="blockBody">
+                        <ul>
+                            <li> Switches que possuem capacidades de VLAN podem definir <b>múltiplas LANs virtuais</b> usando uma única infraestrutura física.</li>
+                        </ul>
+                    </div>
+                </div>
+            </center>
+
+            <ul>
+                <li> <span class="alert">VLAN baseada em porta:</span>
+                <ul>
+                    <li> Portas do switch agrupadas (pelo <i>software</i> de gerenciamento do switch).</li>
+                </ul>
+                </li>
+            </ul>
+
+            <div class="column" style="width: 50% ;">
+                <ul>
+                    <li> Um único switch físico...</li>
+                </ul>
+                <center>
+                    <img src="imagens/VLANPorPorta1_opt.svg" style="width: 80% ;"/>
+                </center>
+            </div>
+            <div class="column" style="width: 50% ;">
+                <ul>
+                    <li> ... age como <b>múltiplos</b> switches virtuais.</li>
+                </ul>
+                <center>
+                    <img src="imagens/VLANPorPorta2_opt.svg" style="width: 80% ;"/>
+                </center>
+            </div>
+
+
+        </div>
+        </section>
+
+        <section>
+        <h1>VLAN Baseada em Porta</h1>
+        <div class="slideContent">
+
+
+            <div class="column" style="width: 50% ;">
+                <ul>
+                    <li> <span class="alert">Isolamento de tráfego:</span> quadros originários das portas 1&mdash;8 chegam <b>apenas</b> às portas 1&mdash;8.</li>
+                    <li> <span class="alert">Alocação dinâmica:</span> portas podem ser alocadas dinamicamente a VLANs.
+                    <ul>
+                        <li> É possível definir VLANs com base nos MACs dos dispositivos.</li>
+                    </ul>
+                    </li>
+                    <li> <span class="alert">Encaminhamento entre VLANs:</span> feito via roteamento (nível 3).
+                    <ul>
+                        <li> Na prática, fabricantes vendem switches que são, também, roteadores.</li>
+                    </ul>
+                    </li>
+                </ul>
+            </div>
+            <div class="column" style="width: 50% ;">
+                <center>
+                    <img src="imagens/VLANPorPorta3_opt.svg" style="width: 80% ;"/>
+                </center>
+            </div>
+
+
+        </div>
+        </section>
+
+        <section>
+        <h1>VLANs Formadas por Múltiplos Switches Físicos</h1>
+        <div class="slideContent">
+
+            <center>
+                <img src="imagens/VLANMultiplosSwitches_opt.svg" style="width: 80% ;"/>
+            </center>
+
+            <ul>
+                <li> <span class="alert">Porta <i>trunk</i>:</span> transportam quadros entre VLANs definidas sobre múltiplos switches físicos.
+                <ul>
+                    <li> Quadros encaminhados dentro da mesma VLAN entre switches diferentes não podem ser quadros Ethernet &ldquo;normais&rdquo;.
+                    <ul>
+                        <li> Precisam armazenar identificador da VLAN.</li>
+                    </ul>
+                    </li>
+                    <li> Protocolo 802.1Q adiciona/remove campos adicionais de cabeçalho para quadros transmitidos entre portas <i>trunk</i>.</li>
+                </ul>
+                </li>
+            </ul>
+        </div>
+        </section>
+
+        <section>
+        <h1>Formato de um Quadro 802.1Q</h1>
+        <div class="slideContent">
+
+            <center>
+                <img src="imagens/802_1q_opt.svg" style="width: 80% ;"/>
+            </center>
+
+        </div>
+        </section>
+
+	<section>
+	<h1>Resumo da Aula (I)...</h1>
+	<div class="slideContent">
+        <div class="column" style="width: 50%;">
+            <ul>
+                <li><i>Switch</i>: dispositivo ativo, nível 2, intermediário.
+                <ul>
+                    <li><b>Enlaces dedicados</b> para cada dispositivo conectado.</li>
+                    <li>Paradigma <i>store-and-forward</i>.</li>            
+                    <li><b>Examina</b> quadros recebidos, <b>seleciona</b> porta de saída.</li>
+                    <li><b>Transparente</b> para os dispositivos.</li>
+                    <li>Permite <b>transmissões simultâneas</b>.</li>
+                </ul></li>
+                <li><b>Aprendizado automático:</b> descobre sozinho onde estão os dispositivos.
+                <ul>
+                    <li>Monta uma <b>tabela de encaminhamento</b>.</li>
+                    <li>Se não há entrada na tabela: <b>inundação</b>.</li>
+                </ul></li>
+            </ul>
+        </div>
+        <div class="column" style="width: 50%;">
+            <ul>
+                <li><i>Switches</i> em cascata: podem ser interconectados para estender a rede.
+                <ul>
+                    <li>Auto-aprendizado continua funcionando.</li>
+                    <li>Potencialmente, <b>mais de um MAC associado a cada porta</b>.</li>
+                    <li>Pode <b>esgotar a capacidade</b> da tabela de encaminhamento.
+                    <ul>
+                        <li>Mais inundações, pior desempenho.</li>
+                    </ul></li>
+                </ul></li>
+                <li><b>Várias diferenças</b> em relação aos roteadores.
+                <ul>
+                    <li><b>Camada</b>.</li>
+                    <li>Encaminhamento baseado em <b>endereços diferentes</b>.</li>
+                    <li>Métodos de <b>construção</b> das tabelas.</li>
+                </ul></li>
+            </ul>
+        </div>
+	</div>	
+	</section>
+	
+    <section>
+    <h1>Resumo da Aula (II)...</h1>
+    <div class="slideContent">
+        <ul>
+            <li>VLANs:
+            <ul>
+                <li>Solução para <b>&ldquo;separar&rdquo; redes em nível 2</b>, compartilhando mesma infraestrutura física.</li>
+                <li>Separação <b>puramente lógica</b>.</li>
+                <li>Define <b>domínios de broadcast</b> distintos.</li>
+                <li>Motivações: <b>segurança, desempenho</b>.</li>
+            </ul></li>
+            <li>Podem ser definidas com base em:
+            <ul>
+                <li>Portas específicas.</li>
+                <li>Tags informadas em cabeçalhos específicos.</li>
+            </ul></li>
+            <li>VLANs podem se estender por <b>vários switches físicos diferentes</b>.</li>
+        </ul>
+    </div>    
+    </section>
+    
+    <section>
+    <h1>Leitura e Exercícios Sugeridos</h1>
+    <div class="slideContent">
+    		<ul>
+    			<li>Switches:
+    			<ul>
+    				<li>Páginas 351 a 355 do Kurose (Seção 5.6 até Subseção 5.6.4, inclusive).</li>
+				<li>Exercício de fixação 15 do capítulo 5 do Kurose.</li>
+				<li>Problemas 27, 28, 32, 34 do capítulo 5 do Kurose.</li>
+    			</ul></li>
+			<li>VLANs:
+			<ul>
+				<li>Páginas 355 a 358 do Kurose (Subseção 5.6.5).</li>
+				<li>Exercícios de fixação 16 e 17 do capítulo 5 do Kurose.</li>
+			</ul></li>
+    		</ul>
+    </div>	
+    </section>
+    
+	<section>
+	<h1>Próxima Aula...</h1>
+	<div class="slideContent">
+        <ul>
+            <li>Iremos finalizar a discussão sobre a camada de enlace.
+            <ul>
+                <li>Algumas conclusões.</li>
+                <li>Alguns exemplos práticos.</li>
+            </ul></li>
+            <li>Iremos também fazer um apanhado geral do processo de transmissão de um pacote pela Internet.
+            <ul>
+                <li>Considerando todas as camadas.</li>
+                <li>Veremos onde a camada de enlace se encaixa.</li>
+                <li>Pequena revisão da matéria vista em Redes I.</li>
+            </ul></li>
+        </ul>
+	</div>	
+	</section>
+	
+	<!-- {{{{ dzslides core
+	#
+	#
+	#     __  __  __       .  __   ___  __
+	#    |  \  / /__` |    | |  \ |__  /__`
+	#    |__/ /_ .__/ |___ | |__/ |___ .__/ core :€
+	#
+	#
+	# The following block of code is not supposed to be edited.
+	# But if you want to change the behavior of these slides,
+	# feel free to hack it!
+	#
+	-->
+
+    <!-- More CSS -->
+	<link href='../template/css/slides.css' id="slides" rel='stylesheet' type='text/css'>
+	<link href='../template/css/presentationSpecific2.css' id="presentationSpecific2" rel='stylesheet' type='text/css'>
+
+    <!-- More Javascript -->
+	<script type="text/javascript" src="../template/js/dz.js"></script>
+
+	<!-- More CSS -->
+	<link href='../template/css/notesSpecific.css' id="notesSpecific" rel='stylesheet' type='text/css'>
+	<link href='../template/css/printSpecific.css' id="printSpecific" rel='stylesheet' type='text/css'>
+</body>
+</html>
+
+
+
+

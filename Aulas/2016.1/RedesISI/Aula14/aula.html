@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <!-- Meta info -->
+		<meta charset="utf-8">
+		<meta name="shortauthor" content="Diego Passos"/>
+		<meta name="shorttitle" content="Camada de Rede: Conceitos Básicos"/>
+		<meta name="shortevent" content="Redes de Computadores I"/>
+		<title>Redes de Computadores I: Aula 14</title>
+
+		<!-- Math support -->
+		<script type="text/x-mathjax-config">
+		MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+			MathJax.InputJax.TeX.Definitions.number = /^(?:[0-9]+(?:\.[0-9]{3})*(?:\{,\}[0-9]*)*|\{,\}[0-9]+)/
+		});
+		</script>
+		<!--<script src="js/plotly-latest.min.js"></script>-->
+		<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+		<!--<script src="../../../../MathJax-2.6-latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>-->
+		<script type="text/javascript" src="../template/js/dz_pre.js"></script>
+
+		<!-- Fonts -->
+		<link href='https://fonts.googleapis.com/css?family=Lora:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
+		<!--<link href='../../../../Fonts/Lora/lora.css' rel='stylesheet' type='text/css'>-->
+
+		<!-- CSS -->
+		<link href='../template/css/template.css' id="template" rel='stylesheet' type='text/css'>
+		<link href='../template/css/presentationSpecific.css' id="presentationSpecific" rel='stylesheet' type='text/css'>
+
+
+		<!-- Javascript -->
+		<!--
+		<script type="text/javascript" src="../template/js/audio.js"></script>
+		<script src="js/term.js" charset="utf-8"></script>
+    <script src="js/termcast.js" charset="utf-8"></script>
+		<link rel="stylesheet" href="css/googlecode.css">
+		<script src="js/highlight.pack.js"></script>
+		<script>
+			hljs.initHighlightingOnLoad();
+			hljs.configure({
+				tabReplace: '  '
+			});
+		</script>
+		-->
+</head>
+
+<body>
+    <!-- Audio handlers -->
+	<!--<audio src="audio/La.wav" id="La.wav" preload="auto"></audio>-->
+
+    <!-- Title Slide -->
+	<section>
+
+        <div class="slideContent">
+            <h1 class="title">Aula 14 - Camada de Rede: Conceitos Básicos</h1>
+            <h2 class="author">Diego Passos</h2>
+            <h4 class="institution">Universidade Federal Fluminense</h4>
+            <h3 class="date">Redes de Computadores I</h3>
+        </div>
+		<br>
+		<br>
+			<div style="width: 30%; float: right; padding-right: 2%;">
+			<p style="font-size: 18px; text-align: right;">Material adaptado a partir dos slides originais de J.F Kurose and K.W. Ross.</p>
+		</div>
+	</section>
+
+	<section>
+	<h1>Revisão da Última Aula (I)...</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+		  <ul>
+		    <li><b>Controle de Congestionamento:</b>
+		    <ul>
+		      <li>Evitar congestionamento da rede.</li>
+		      <li>Limitar taxa de transmissão das fontes.</li>
+		      <li><span class="alert">&ne; controle de fluxo.</span></li>
+		    </ul></li>
+		    <li><b>Custos do congestionamento:</b>
+		    <ul>
+		      <li>Atrasos altos.</li>
+		      <li>Retransmissões.</li>
+		      <li>Queda no <i>goodput</i>.</li>
+		      <li>Desperdício de recursos.</li>
+		    </ul></li>
+			  <li><b>Duas abordagens:</b>
+			  <ul>
+			    <li>Fim-a-fim (inferido pelos <i>hosts</i>).</li>
+			    <li>Assistido pela rede: explicitamente avisado.</li>
+			  </ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50%;">
+		  <ul>
+		    <li><b>Controle de congestionamento do TCP:</b>
+		    <ul>
+		      <li><span class="alert">Fim-a-fim.</span></li>
+		      <li>Dividido em fases: <i>Slow Start, Congestion Avoidance</i>.</li>
+					<li><span class="alert">Inferido via perdas</span>.</li>
+		    </ul></li>
+		    <li><b><i>Slow Start</i>:</b>
+		    <ul>
+		      <li>Taxa começa lenta, mas <span class="alert">aumenta exponencialmente</span>.</li>
+		      <li>Aumento de 1 MSS a cada ACK.</li>
+		      <li>Executado até que <b>cwnd &ge; ssthresh</b>.</li>
+		    </ul></li>
+		    <li><b><i>Congestion Avoidance</i>: AIMD.</b>
+		    <ul>
+					<li>Incremento Aditivo: 1 MSS por RTT.</li>
+					<li>Decremento multiplicativo: divide pela metade em caso de perda.</li>
+		    </ul></li>
+		  </ul>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Revisão da Última Aula (II)...</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li><b>Em caso de perda:</b>
+	    <ul>
+	      <li><b>ssthresh = cwnd/2</b>.</li>
+	      <li><b>cwnd = 1 MSS</b>.</li>
+	      <li>Volta-se ao <i>Slow Start</i>.</li>
+	    </ul></li>
+	    <li><b><i>Fast Recovery</i>:</b>
+	    <ul>
+	      <li>Otimização do TCP Reno (<i>vs.</i> Tahoe).</li>
+	      <li>Perda por ACK duplicado.</li>
+	      <li>Tenta se manter no CA.</li>
+	    </ul></li>
+			<li><b>Vazão do TCP:</b>
+			<ul>
+			  <li>Eficiência menor que 100%.</li>
+			  <li>Pior para enlaces com alta capacidade e alto RTT.</li>
+			</ul></li>
+			<li><b>TCP: justiça.</b>
+			<ul>
+			  <li>Objetivo: divisão justa da vazão.</li>
+			  <li>Sob certas condições, TCP alcança.</li>
+			  <li>UDP, conexões múltiplas podem interferir.</li>
+			</ul></li>
+	  </ul>
+	</div>
+	</section>
+
+	<section class="secao">
+	<div class="slideContent">
+	  Camada de Rede: Conceitos Básicos
+	</div>
+	</section>
+
+	<section>
+	<h1>Camada de Rede</h1>
+	<div class="slideContent">
+	  <div class="column" style="width: 50%;">
+			<br>
+			<ul>
+			  <li>Transporta segmento do <i>host</i> de origem ao <i>host de destino.</i></li>
+			  <li>No lado transmissor, encapsula segmentos em <b>datagramas</b>.</li>
+			  <li>No lado receptor, entrega segmentos à camada de transporte.</li>
+			  <li>Protocolos de camada de rede atuam em <span class="alert">todos os nós</span> (roteadores, <i>hosts</i>).</li>
+			  <li>Roteador examina campos de cabeçalho em todos os datagramas IP que passam por ele.</li>
+			</ul>
+	  </div>
+	  <div class="column" style="width: 50%;">
+			<center>
+			  <img src="imagens/CamadaDeRede.svg" style="width: 70%;"/>
+			</center>
+	  </div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Duas Funções Chave da Camada de Rede</h1>
+	<div class="slideContent">
+	  <div class="column" style="width: 50%;">
+			<ul>
+			  <li><b>Encaminhamento:</b> mover pacotes da entrada para a saída de um roteador.</li>
+			  <li><b>Roteamento:</b> determina rota usada por pacote da origem ao destino.
+			  <ul>
+			    <li><span class="alert">Algoritmos de roteamento</span>.</li>
+			  </ul></li>
+			</ul>
+	  </div>
+	  <div class="column" style="width: 50%;">
+			<ul>
+			  <li><b>Analogia:</b>
+			  <ul>
+			    <li><b>Roteamento:</b> processo de planejar uma viagem da origem ao destino.</li>
+			    <li><b>Encaminhamento:</b> processo de realizar um trecho da viagem.</li>
+			  </ul></li>
+			</ul>
+	  </div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Sinergia entre Roteamento e Encaminhamento</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/RoteamentoEEncaminhamento.svg" style="width: 70%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Estabelecimento de Conexão</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>Terceira função importante em <b>algumas</b> redes.
+	    <ul>
+	      <li><i>e.g.</i>, ATM, <i>frame relay</i>, X.25.</li>
+	    </ul></li>
+	    <li>Antes de iniciarem o fluxo de dados, <i>hosts</i> e roteadores intermediários estabelecem uma conexão virtual.
+	    <ul>
+	      <li><span class="alert">Roteadores participam do processo.</span></li>
+	    </ul></li>
+	    <li>Serviço orientado a conexão na camada de rede <i>vs.</i> na camada de transporte:
+	    <ul>
+	      <li><b>Rede:</b> conexão entre dois <i>hosts</i> (pode também envolver roteadores intermediários em caso de circuitos virtuais).</li>
+				<li><b>Transporte:</b> entre dois processos.</li>
+	    </ul></li>
+	  </ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Modelo de Serviço da Rede</h1>
+	<div class="slideContent">
+		<ul>
+		  <li><span class="alert">Pergunta:</span> qual o <span class="alert">modelo de serviço</span> para o &ldquo;canal&rdquo; que transporta datagramas entre origem e destino?</li>
+		</ul>
+	  <div class="column" style="width: 50%;">
+			<ul>
+			  <li><b>Exemplos de serviço para datagramas individuais:</b>
+			  <ul>
+			    <li>Garantia de entrega.</li>
+			    <li>Garantia de entrega com menos de 40 ms de atraso.</li>
+			  </ul></li>
+			</ul>
+	  </div>
+	  <div class="column" style="width: 50%;">
+			<ul>
+			  <li><b>Exemplos de serviço para um fluxo de datagramas:</b>
+			  <ul>
+			    <li>Entrega ordenada.</li>
+			    <li>Garantia de vazão mínima para o fluxo.</li>
+			    <li>Restrições sobre alterações no espaçamento entre pacotes.</li>
+			  </ul></li>
+			</ul>
+	  </div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Modelos de Serviço da Rede: Exemplos</h1>
+	<div class="slideContent">
+	  <center>
+			<style media="screen">
+				td,table {
+					border: none;
+					text-align: center;
+					padding-left: 5px;
+					padding-right: 5px;
+				}
+				tr {
+					border: none;
+					border-bottom: solid 3px #1a1;
+					padding-top: 3px;
+					padding-bottom: 3px;
+				}
+			</style>
+	    <table>
+	    	<tr style="border: none;">
+	    		<td>
+						Arquitetura
+					</td>
+					<td>
+						Modelo de
+	    		</td>
+					<td colspan=4 style="border-bottom: solid 2px #1a1;">
+						Garantias?
+					</td>
+					<td>
+						Aviso de
+					</td>
+	    	</tr>
+				<tr>
+					<td>
+						da Rede
+					</td>
+					<td>
+						Serviço
+					</td>
+					<td>
+						Banda
+					</td>
+					<td>
+						Perda
+					</td>
+					<td>
+						Ordenação
+					</td>
+					<td>
+						Atraso
+					</td>
+					<td>
+						Congestionamento
+					</td>
+				</tr>
+				<tr>
+					<td>
+						Internet
+					</td>
+					<td>
+						Melhor Esforço
+					</td>
+					<td>
+						Não
+					</td>
+					<td>
+						Não
+					</td>
+					<td>
+						Não
+					</td>
+					<td>
+						Não
+					</td>
+					<td>
+						Não (inferida via perdas)
+					</td>
+				</tr>
+				<tr>
+					<td>
+						ATM
+					</td>
+					<td>
+						CBR
+					</td>
+					<td>
+						Taxa Constante
+					</td>
+					<td>
+						Sim
+					</td>
+					<td>
+						Sim
+					</td>
+					<td>
+						Sim
+					</td>
+					<td>
+						Não há
+					</td>
+				</tr>
+				<tr>
+					<td>
+						ATM
+					</td>
+					<td>
+						VBR
+					</td>
+					<td>
+						Taxa Garantida
+					</td>
+					<td>
+						Sim
+					</td>
+					<td>
+						Sim
+					</td>
+					<td>
+						Sim
+					</td>
+					<td>
+						Não há
+					</td>
+				</tr>
+				<tr>
+					<td>
+						ATM
+					</td>
+					<td>
+						ABR
+					</td>
+					<td>
+						Mínima Garantida
+					</td>
+					<td>
+						Não
+					</td>
+					<td>
+						Sim
+					</td>
+					<td>
+						Não
+					</td>
+					<td>
+						Sim
+					</td>
+				</tr>
+				<tr>
+					<td>
+						ATM
+					</td>
+					<td>
+						UBR
+					</td>
+					<td>
+						Nenhuma
+					</td>
+					<td>
+						Não
+					</td>
+					<td>
+						Sim
+					</td>
+					<td>
+						Não
+					</td>
+					<td>
+						Não
+					</td>
+				</tr>
+	    </table>
+	  </center>
+	</div>
+	</section>
+
+	<section class="secao">
+	<div class="slideContent">
+	  Redes de Circuitos Virtuais
+	</div>
+	</section>
+
+	<section>
+	<h1>Serviços Orientados e Não-Orientados a Conexão</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>Redes de <span class="alert">datagramas</span> proveem serviço não-orientado a conexão na camada de rede.</li>
+	    <li>Redes de <span class="alert">circuitos virtuais</span> proveem serviço orientado a conexão na camada de rede.</li>
+	    <li>Análogo aos serviços do TCP/UDP com e sem conexão na camada de transporte, mas:
+	    <ul>
+	      <li><span class="alert">Serviço:</span> <i>host</i> a <i>host</i>.</li>
+	      <li><span class="alert">Não há escolha:</span> rede provê um ou outro.</li>
+	      <li><span class="alert">Implementação:</span> no núcleo da rede.</li>
+	    </ul></li>
+	  </ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Circuitos Virtuais</h1>
+	<div class="slideContent">
+		<center>
+	    <div style="border: solid 2px #a11; width: 80%; text-align: left;">
+	    	<ul>
+	    	  <li>Caminho fim-a-fim se comporta de maneira similar a circuito telefônico.
+	    	  <ul>
+	    	    <li>Em termos de desempenho.</li>
+	    	    <li>Ações da rede ao longo do caminho fim-a-fim.</li>
+	    	  </ul></li>
+	    	</ul>
+	    </div>
+	  </center>
+		<br>
+		<ul>
+		  <li>Estabelecimento de chamada para cada conexão <b>antes</b> do fluxo de dados.</li>
+		  <li>Cada pacote carrega um <span class="alert">identificador de circuito virtual</span> (ou VC), ao invés de endereço do destinatário.</li>
+		  <li>Cada roteador no caminho fim-a-fim mantém &ldquo;estado&rdquo; para cada conexão passante.</li>
+		  <li>Recursos de enlaces, roteadores (banda, <i>buffers</i>) podem ser <b>alocados</b> para o VC.
+		  <ul>
+		    <li>Recursos dedicados = serviço previsível.</li>
+		  </ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Implementação de um Circuito Virtual</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li><b>Um VC consiste de:</b>
+	    <ol>
+	      <li><span class="alert">Caminho</span> entre origem e destino.</li>
+	      <li><span class="alert">Número(s) de identificação</span>, um para cada enlace no caminho.</li>
+	      <li><span class="alert">Entradas nas tabelas de roteamento</span> nos roteadores do caminho.</li>
+	    </ol></li>
+	    <li>Pacote pertencente ao VC carrega do número do VC (ao invés do endereço do destinatário).</li>
+	    <li>Número do VC pode ser alterado a cada salto do caminho.
+	    <ul>
+	      <li>Novo número do VC vem da tabela de roteamento.</li>
+	    </ul></li>
+	  </ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Circuitos Virtuais: Tabela de Roteamento</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/VCRoutingTable.svg" style="width: 70%;"/>
+	  </center>
+		<br>
+		<center>
+	    <div style="border: solid 2px #a11; width: 80%;">
+				Em rede de circuitos virtuais, roteadores mantêm informação de estado da conexão!
+	    </div>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Circuitos Virtuais: Protocolos de Sinalização</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>Usados para estabelecimento, manutenção e finalização do VC.</li>
+	    <li>Usados em redes ATM, <i>frame relay</i>, X.25.</li>
+	    <li>Não são utilizados na Internet atual.</li>
+	  </ul>
+		<br>
+		<center>
+		  <img src="imagens/Sinalizacao.svg" style="width: 80%;"/>
+		</center>
+
+	</div>
+	</section>
+
+	<section>
+	<h1>Redes de Datagramas</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>Sem estabelecimento de conexão na camada de rede.</li>
+	    <li>Roteadores: sem estado sobre conexões fim-a-fim.
+	    <ul>
+	      <li>Não há o conceito de &ldquo;conexão&rdquo; no nível da rede.</li>
+	    </ul></li>
+	    <li>Pacotes encaminhados usando o endereço de destino do <i>host</i>.</li>
+	  </ul>
+		<br>
+		<center>
+		  <img src="imagens/Datagramas.svg" style="width: 80%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Redes de Datagramas: Tabela de Roteamento (I)</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/DatagramasTabelaRoteamento.svg" style="width: 65%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Redes de Datagramas: Tabela de Roteamento (II)</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/DatagramasTabelaRoteamento2.svg" style="width: 70%;"/>
+	  </center>
+		<ul>
+		  <li><span class="alert">Pergunta:</span> e se os endereços não são divididos de forma tão organizada?</li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Casamento por Prefixo mais Longo</h1>
+	<div class="slideContent">
+	  <center>
+	  <div class="block" style="width:1100px;">
+	      <div class="blockTitle" style="width: 100%;">
+	          <p>Casamento por Prefixo mais longo</p>
+	      </div>
+	      <div class="blockBody">
+	          Ao procurar por uma entrada na tabela de roteamento para um destino, opte sempre pelo <span class="alert">prefixo mais longo</span> que casa com o endereço do destino.
+	      </div>
+	  </div>
+	  </center>
+		<br>
+		<center>
+		  <img src="imagens/TabelaRoteamentoPrefixo.svg" style="width: 70%;"/>
+		</center>
+		<br>
+		<ul>
+		  <li><b>Exemplos:</b>
+		  <ul>
+		    <li>Destino: <tt>11001000 00010111 0001<span style="background-color: green;">0110 10100001</span></tt>. <span class="alert">Qual interface?</span></li>
+		    <li>Destino: <tt>11001000 00010111 0001<span style="background-color: green;">1000 10101010</span></tt>. <span class="alert">Qual interface?</span></li>
+		  </ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Datagrama ou Circuitos Virtuais: Por Quê?</h1>
+	<div class="slideContent">
+	  <div class="column" style="width: 50%;">
+			<ul>
+			  <li><b>Internet (datagrama):</b>
+			  <ul>
+			    <li>Dados trocados entre computadores.
+			    <ul>
+			      <li>Serviço &ldquo;elástico&rdquo;, sem requisitos temporais estritos.</li>
+			    </ul></li>
+			    <li>Muitos tipos diferentes de enlaces.
+			    <ul>
+			      <li>Características variadas.</li>
+			      <li>Difícil prover serviço uniforme.</li>
+			    </ul></li>
+			    <li>Dispositivos finais &ldquo;inteligentes&rdquo; (computadores).
+			    <ul>
+			      <li>Podem se adaptar, realizar controle, recuperação de erros.</li>
+			      <li><span class="alert">Núcleo simples, complexidade nas bordas.</span></li>
+			    </ul></li>
+			  </ul></li>
+			</ul>
+	  </div>
+	  <div class="column" style="width: 50%;">
+			<ul>
+			  <li><b>ATM (VC):</b>
+			  <ul>
+			    <li>Evoluiu da telefonia.</li>
+			    <li>Conversação humana:
+			    <ul>
+			      <li>Requisitos temporais estritos.</li>
+			      <li>Garantias de serviço necessárias.</li>
+			    </ul></li>
+			    <li>Sistemas finais &ldquo;burros&rdquo;.
+			    <ul>
+			      <li>Telefones.</li>
+			      <li><span class="alert">Complexidade no núcleo da rede.</span></li>
+			    </ul></li>
+			  </ul></li>
+			</ul>
+	  </div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Resumo da Aula...</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 53%;">
+		  <ul>
+		    <li><b>Camada de rede:</b>
+		    <ul>
+		      <li>Comunicação fim a fim <span class="alert">entre <i>hosts</i>.</span></li>
+		      <li>Encapsula segmentos em <span class="alert">datagramas</span>.</li>
+		      <li>Roda em todos os nós.</li>
+		    </ul></li>
+		    <li><b>Funções chave:</b>
+		    <ul>
+		      <li>Encaminhamento: mover datagrama da entrada para saída.</li>
+		      <li>Roteamento: encontrar <span class="alert">rota</span> fim-a-fim.</li>
+		    </ul></li>
+		    <li><b>Tabela de roteamento</b>:
+		    <ul>
+		      <li>Montada pelo roteamento.</li>
+		      <li>Usada pelo encaminhamento.</li>
+		    </ul></li>
+		    <li><b>Modelos de Serviço:</b>
+		    <ul>
+		      <li>O que a rede promete.</li>
+		      <li><i>e.g.</i>, banda mínima, atraso máximo, entrega ordenada.</li>
+					<li>Modelo da Internet: <span class="alert">melhor esforço</span>.</li>
+		    </ul></li>
+		  </ul>
+		</div>
+		<div class="column" style="width: 47%;">
+		  <ul>
+		    <li><b>Redes de Circuitos Virtuais:</b>
+		    <ul>
+		      <li>Serviço orientado a conexão.</li>
+		      <li>Pacotes corregam identificador do VC.
+		      <ul>
+		        <li>E não endereço de destino.</li>
+		      </ul></li>
+		      <li>Recursos muitas vezes reservados.</li>
+		      <li>Tabela de roteamento associa:
+		      <ul>
+		        <li>Interface, # do VC de entrada.</li>
+		        <li>Interface, # do VC de saída.</li>
+		      </ul></li>
+		    </ul></li>
+		    <li><b>Redes de datagramas:</b>
+		    <ul>
+		      <li>Paradigma usado na Internet.</li>
+		      <li>Encaminhamento baseado no <span class="alert">endereço de destino</span>.</li>
+		      <li><span class="alert">Agregação de endereço.</span></li>
+		      <li><span class="alert">Casamento por prefixo mais longo</span>.</li>
+		    </ul></li>
+		  </ul>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Próxima Aula...</h1>
+	<div class="slideContent">
+		<ul>
+		  <li>Continuaremos estudando a camada de rede.</li>
+		  <li>Em particular, discutiremos o funcionamento interno de um roteador.
+		  <ul>
+		    <li>Arquiteturas.</li>
+		    <li><i>Buffers</i>.</li>
+		    <li>Políticas de enfileiramento.</li>
+		  </ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<!-- {{{{ dzslides core
+	#
+	#
+	#     __  __  __       .  __   ___  __
+	#    |  \  / /__` |    | |  \ |__  /__`
+	#    |__/ /_ .__/ |___ | |__/ |___ .__/ core :€
+	#
+	#
+	# The following block of code is not supposed to be edited.
+	# But if you want to change the behavior of these slides,
+	# feel free to hack it!
+	#
+	-->
+
+    <!-- More CSS -->
+	<link href='../template/css/slides.css' id="slides" rel='stylesheet' type='text/css'>
+	<link href='../template/css/presentationSpecific2.css' id="presentationSpecific2" rel='stylesheet' type='text/css'>
+
+    <!-- More Javascript -->
+	<script type="text/javascript" src="../template/js/dz.js"></script>
+
+	<!-- More CSS -->
+	<link href='../template/css/notesSpecific.css' id="notesSpecific" rel='stylesheet' type='text/css'>
+	<link href='../template/css/printSpecific.css' id="printSpecific" rel='stylesheet' type='text/css'>
+</body>
+</html>
