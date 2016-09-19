@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <!-- Meta info -->
+	<meta charset="utf-8">
+	<meta name="shortauthor" content="Diego Passos"/>
+	<meta name="shorttitle" content="Enlace: Conclusão"/>
+	<meta name="shortevent" content="Redes de Computadores II"/>
+	<title>Redes de Computadores II: Aula 6</title>
+
+    <!-- Math support -->
+	<script type="text/x-mathjax-config">
+		MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+			MathJax.InputJax.TeX.Definitions.number = /^(?:[0-9]+(?:\.[0-9]{3})*(?:\{,\}[0-9]*)*|\{,\}[0-9]+)/
+		});
+	</script>
+	<!--<script src="../MathJax/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>-->
+		<!--<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>-->
+	<script src="../../../../MathJax-2.6-latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+
+    <!-- Fonts -->
+	<!--<link href='https://fonts.googleapis.com/css?family=Lora:400,400italic,700,700italic' rel='stylesheet' type='text/css'>-->
+	<link href='../../../../Fonts/Lora/lora.css' rel='stylesheet' type='text/css'>
+
+    <!-- CSS -->
+	<link href='../template/css/template.css' id="template" rel='stylesheet' type='text/css'>
+	<link href='../template/css/presentationSpecific.css' id="presentationSpecific" rel='stylesheet' type='text/css'>
+
+    <!-- Javascript -->
+	<script type="text/javascript" src="../template/js/audio.js"></script>
+</head>
+
+<body>
+    <!-- Audio handlers -->
+	<!--<audio src="audio/La.wav" id="La.wav" preload="auto"></audio>-->
+
+    <!-- Title Slide -->
+	<section>
+
+        <div class="slideContent">
+            <h1 class="title">Aula 6 - Camada de Enlace: Conclusão</h1>
+            <h2 class="author">Diego Passos</h2>
+            <h4 class="institution">Universidade Federal Fluminense</h4>
+            <h3 class="date">Redes de Computadores II</h3>
+        </div>
+
+	</section>
+
+    <!-- Content slides -->
+
+	<section>
+	<h1>Na Última Aula...</h1>
+	<div class="slideContent">
+		<ul>
+		  <li>Protocolo de camada 2.5:
+		  <ul>
+		    <li>Entre camada de rede e camada de enlace.</li>
+		  </ul></li>
+		  <li>Motivação original: agilizar encaminhamento.
+		  <ul>
+		    <li>Tabela de encaminhamento indexável.</li>
+		    <li>Consultas mais rápidas.</li>
+		  </ul></li>
+		  <li>Funcionamento:
+		  <ul>
+		    <li>Roteadores MPLS de borda adicionam <i>label</i> a cada pacote de acordo com destino, outros critérios.</li>
+		    <li>Tabelas de encaminhamento em cada nó associam <i>labels</i> a portas de saída.</li>
+				<li>Protocolos de sinalização configuram <i>labels</i> nas tabelas de encaminhamento dos roteadores.</li>
+		  </ul></li>
+		  <li>Outros detalhes:
+		  <ul>
+		    <li><i>Labels</i> podem ser empilhados: roteamento hierárquico.</li>
+		    <li>Classes de tráfego podem ser definidas.</li>
+		    <li>Proposto com IP em mente, mas pode ser utilizado com outras combinações de protocolos das camadas 2 e 3.</li>
+		  </ul></li>
+		</ul>
+	</div>
+	</section>
+
+    <section class="secao">
+    <div class="slideContent">
+    	Estudo de Caso: Redes de <i>Data Centers</i>.
+    </div>
+    </section>
+
+        <section>
+        <h1>Redes de Data Centers (I)</h1>
+        <div class="slideContent">
+
+            <ul>
+                <li> Dezenas (ou centenas) de <b>milhares</b> de <i>hosts</i>, geralmente fortemente acoplados, próximos.
+                <ul>
+                    <li> <i>E-business</i> (<i>e.g.</i>, amazon).</li>
+                    <li> Servidores de conteúdo (<i>e.g.</i>, youtube, Akamai, Apple, Microsoft).</li>
+                    <li> Ferramentas de busca (<i>e.g.</i>, google, yahoo).</li>
+                </ul>
+                </li>
+            </ul>
+
+            <div class="column" style="width: 50% ;">
+                <ul>
+                    <li> Desafios:
+                    <ul>
+                        <li> Múltiplas aplicações, cada uma servindo quantidades enormes de usuários.</li>
+                        <li> Gerenciamento/balanceamento de carga, evitar gargalos de processamento, rede e dados.</li>
+                    </ul>
+                    </li>
+                </ul>
+            </div>
+            <div class="column" style="width: 50% ;">
+                <center>
+                    <img src="imagens/MicrosoftDataCenter.jpg" style="width: 80% ;"/>
+                </center>
+            </div>
+
+        </div>
+        </section>
+
+        <!-- Aqui talvez fosse interessante fazer uma demonstração de balanceamento de carga (máquinas virtuais?). Também pode ser interessante falar sobre balanceamento de carga via dns.-->
+        <section>
+        <h1>Redes de Data Centers (II)</h1>
+        <div class="slideContent">
+
+
+            <div class="column" style="width: 55% ;">
+                <center>
+                    <img src="imagens/BalanceamentoDeCarga_opt.svg" style="width: 100%;"/>
+                </center>
+            </div>
+            <div class="column" style="width: 45% ;">
+                <ul>
+                    <li> <b>Balanceador de carga</b>: roteamento na camada de aplicação.
+                    <ul>
+                        <li> Recebe requisições de clientes externos.</li>
+                        <li> Direciona carga dentro do Data Center.</li>
+                        <li> Retorna resultado para o cliente.
+                        <ul>
+                            <li> Esconde funcionamento interno do cliente.</li>
+                        </ul>
+                        </li>
+                    </ul>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+        </section>
+
+        <section>
+        <h1>Redes de Data Centers (III)</h1>
+        <div class="slideContent">
+
+            <ul>
+                <li> Alto grau de interconexão entre switches e racks.
+                <ul>
+                    <li> Aumento de vazão entre racks (múltiplos caminhos possíveis).</li>
+                    <li> Aumento no grau de confiança (redundância).</li>
+                </ul>
+                </li>
+            </ul>
+            <center>
+                <img src="imagens/ConexoesRedundantes_opt.svg" style="width: 80% ;"/>
+            </center>
+        </div>
+        </section>
+
+        <section class="secao">
+        <div class="slideContent">
+            Um Dia na Vida de uma Requisição Web
+        </div>
+        </section>
+
+        <section>
+        <h1>Síntese: Um Dia na Vida de uma Requisição Web</h1>
+        <div class="slideContent">
+
+            <ul>
+                <li> Jornada pela pilha de protocolos finalmente completa.
+                <ul>
+                    <li> Aplicação, transporte, rede e enlace.</li>
+                </ul>
+                </li>
+                <li> Juntando tudo: síntese.
+                <ul>
+                    <li> <span class="alert">Objetivo:</span> identificar, revisar, entender protocolos (de todas as camadas) envolvidos em um cenário aparentemente simples: a requisição de uma página web.</li>
+                    <li> <span class="alert">Cenário:</span> estudante conecta laptop à rede do <i>campus</i>, acessa <tt>www.google.com</tt>.</li>
+                </ul>
+                </li>
+            </ul>
+        </div>
+        </section>
+
+        <section>
+        <h1>Um Dia na Vida de uma Requisição Web: Cenário</h1>
+        <div class="slideContent">
+
+            <center>
+                <img src="imagens/ADayCenario_opt.svg" style="width: 80% ;"/>
+            </center>
+
+        </div>
+        </section>
+
+        <section>
+        <h1>Um Dia na Vida... Conectando-se à Internet (I)</h1>
+        <div class="slideContent">
+
+
+            <div class="column" style="width: 50% ;">
+                <center>
+                    <img src="imagens/ADayConectando_opt.svg" style="width: 95%;"/>
+                </center>
+            </div>
+            <div class="column" style="width: 50% ;">
+                <ul>
+                    <li> Laptop precisa de um endereço IP, do endereço IP do roteador de primeiro salto, e do servidor de DNS: usar DHCP.</li>
+                    <li> DHCP Request encapsulado em UDP, encapsulado em IP, encapsulado em 802.3 (Ethernet).</li>
+                    <li> Quadro Ethernet enviado em <i>broadcast</i> (dest. <tt>FF:FF:FF:FF:FF:FF</tt>) na LAN, receptor executando servidor DHCP.</li>
+                    <li> Ethernet demultiplexado para IP, demultiplexado para UDP, demultiplexado para DHCP.</li>
+                </ul>
+            </div>
+
+
+        </div>
+        </section>
+
+        <section>
+        <h1>Um Dia na Vida... Conectando-se à Internet (II)</h1>
+        <div class="slideContent">
+
+
+            <div class="column" style="width: 50% ;">
+                <center>
+                    <img src="imagens/ADayConectando2_opt.svg" style="width: 90%;"/>
+                </center>
+            </div>
+            <div class="column" style="width: 50% ;">
+                <ul>
+                    <li> Servidor DHCP formata um DHCP ACK, contendo IP do cliente, endereço do roteador de primeiro salto e do servidor de DNS.</li>
+                    <li> Encapsulamento no servidor DHCP, encaminhamento do quadro (<span class="alert">auto-aprendizado nos switches</span>) pela LAN, demultiplexações no cliente.</li>
+                    <li> Cliente DHCP recebe DHCP ACK.</li>
+                    <li> Agora, cliente possui IP e sabe IP do roteador de primeiro salto e servidor de DNS.</li>
+                </ul>
+            </div>
+
+
+        </div>
+        </section>
+
+        <section>
+        <h1>Um Dia na Vida... ARP (antes de DNS e HTTP)</h1>
+        <div class="slideContent">
+
+
+            <div class="column" style="width: 50% ;">
+                <center>
+                    <img src="imagens/ADayARP_opt.svg" style="width: 90%;"/>
+                </center>
+            </div>
+            <div class="column" style="width: 50% ;">
+                <ul>
+                    <li> Antes de enviar requisição HTTP, cliente precisa resolver IP de <tt>www.google.com</tt>: <span class="alert">DNS</span>.</li>
+                    <li> Cria requisição DNS, encapsulada em UDP, encapsulada em IP, encapsulada em 802.3. Mas qual o MAC de destino?
+                    <ul>
+                        <li> MAC da interface do roteador de primeiro salto: <span class="alert">ARP</span>.</li>
+                    </ul>
+                    </li>
+                    <li> ARP query enviado em <i>broadcast</i>, recebido pelo roteador, que responde com ARP reply, contendo MAC da sua interface.</li>
+                    <li> Cliente agora conhece endereço MAC do primeiro salto. Pode enviar quadro contendo a query DNS.</li>
+                </ul>
+            </div>
+
+
+        </div>
+        </section>
+
+        <section>
+        <h1>Um Dia na Vida... usando DNS</h1>
+        <div class="slideContent">
+
+            <center>
+                <img src="imagens/ADayDNS_opt.svg" style="width: 60% ;"/>
+            </center>
+
+            <div class="column" style="width: 50% ;">
+                <ul>
+                    <li> Datagrama IP contendo query DNS encaminhado pelo switch da LAN do cliente para o roteador de primeiro salto.</li>
+                    <li> Datagrama IP encaminhado da rede do <i>campus</i> para  rede do ISP, roteado (tabelas criadas pelo protocolos <span class="alert">RIP, OSPF, IS-IS</span> e/ou <span class="alert">BGP</span>) até o servidor DNS.</li>
+                </ul>
+            </div>
+            <div class="column" style="width: 50% ;">
+                <ul>
+                    <li> Demultiplexado até o serviço de DNS.</li>
+                    <li> Servidor DNS responde ao cliente com endereço IP de <tt>www.google.com</tt>.</li>
+                </ul>
+            </div>
+
+        </div>
+        </section>
+
+        <section>
+        <h1>Um Dia na Vida... Conexão TCP Transportando HTTP</h1>
+        <div class="slideContent">
+
+
+            <div class="column" style="width: 60% ;">
+                <center>
+                    <img src="imagens/ADayTCP_opt.svg" style="width: 90%;"/>
+                </center>
+            </div>
+            <div class="column" style="width: 40% ;">
+                <br><br>
+                <ul>
+                    <li> Para enviar requisição HTTP, cliente abre <i>socket</i> <span class="alert">TCP</span> para servidor Web.</li>
+                    <li> Segmento SYN do TCP (passo 1 do <i>3-way handshake</i>) enviado usando roteamento inter-domínio para o servidor web.</li>
+                    <li> Servidor web responde com SYNACK (passo 2).</li>
+                    <li> Conexão TCP estabelecida!</li>
+                </ul>
+            </div>
+
+
+        </div>
+        </section>
+
+        <section>
+        <h1>Um Dia na Vida... Requisição/Resposta HTTP</h1>
+        <div class="slideContent">
+
+
+            <div class="column" style="width: 60% ;">
+                <center>
+                    <img src="imagens/ADayHTTP_opt.svg" style="width: 90%;"/>
+                </center>
+            </div>
+            <div class="column" style="width: 40% ;">
+                <br><br>
+                <ul>
+                    <li> Requisição <span class="alert">HTTP</span> enviada pelo <i>socket</i> TCP.</li>
+                    <li> Datagrama IP contendo requisição roteado até <tt>www.google.com</tt>.</li>
+                    <li> Servidor web envia resposta HTTP (contendo a página web).</li>
+                    <li> Datagrama IP contendo a resposta é roteado de volta ao cliente.</li>
+                </ul>
+            </div>
+
+
+        </div>
+        </section>
+
+	<!-- Demonstração de cenário similar com wireshark. -->
+
+	<section>
+	<h1>Resumo da Aula...</h1>
+	<div class="slideContent">
+        <div class="column" style="width: 45%;">
+        <ul>
+            <li>Redes de <i>Data Centers</i>:
+            <ul>
+                <li><b>Alto grau de interconectividade</b> entre <i>switches</i>.
+                <ul>
+                    <li><i>Loops</i> físicos <b>propositais</b>.</li>
+                    <li><b>Múltiplos caminhos</b> alternativos entre elementos da rede.</li>
+                    <li><b>Redundância, confiabilidade</b>.</li>
+                    <li>Problemas são evitados com configurações corretas.</li>
+                </ul></li>
+            </ul></li>
+        </ul>
+        </div>
+        <div class="column" style="width: 55%;">
+        <ul>
+            <li>Pilha de protocolos (quase) completa:
+            <ul>
+                <li>TCP/IP é bastante <b>complexo</b>.</li>
+                <li>Da conexão física do dispositivo, ao recebimento de dados, há <b>muitos passos</b>.
+                <ul>
+                    <li>Obtenção de endereço IP (DHCP).</li>
+                    <li>Traduções de endereços via ARP.</li>
+                    <li>Roteamento.</li>
+                    <li>Encapsulamentos, desencapsulamentos.</li>
+                    <li>Estabelecimento de conexões, <i>handshakes</i>.</li>
+                    <li>...</li>
+                </ul></li>
+            </ul></li>
+        </ul>
+        </div>
+	</div>
+	</section>
+
+
+        <section>
+        <h1>Sumário do Capítulo 5</h1>
+        <div class="slideContent">
+
+            <ul>
+                <li> Princípios dos serviços da camada de enlace.
+                <ul>
+                    <li> Detecção e correção de erros.</li>
+                    <li> Compartilhamento de um canal físico: acesso múltiplo.</li>
+                    <li> Endereçamento na camada de enlace.</li>
+                </ul>
+                </li>
+                <li> Implementações de várias tecnologias da camada de enlace.
+                <ul>
+                    <li> Ethernet.</li>
+                    <li> LANs baseadas em switches, VLANs, STP.</li>
+										<li> MPLS.</li>
+                </ul>
+                </li>
+                <li> Síntese: um dia na vida de uma requisição web.</li>
+            </ul>
+        </div>
+        </section>
+
+	<section>
+	<h1>Conceitos Importantes</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 45%;">
+			<ul>
+				<li>Objetivos da camada de enlace.</li>
+				<li>Quadro.</li>
+				<li>Detecção e correção de erros.
+				<ul>
+					<li>Paridade, CRC, Checksum, FEC.</li>
+				</ul></li>
+				<li>Enlaces.
+				<ul>
+					<li>Full-duplex <i>vs.</i> half-duplex.</li>
+					<li>Ponto-a-ponto <i>vs.</i> difusão.</li>
+				</ul></li>
+				<li>Protocolos de acesso múltiplo.
+				<ul>
+					<li>Acesso aleatório <i>vs.</i> particionamento de canal <i>vs.</i> acesso alternado.</li>
+					<li>TDMA, FDMA, CSMA, passagem de token, polling.</li>
+				</ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 55%;">
+			<ul>
+				<li>Endereço MAC.</li>
+				<li>Protocolo ARP.</li>
+				<li>Ethernet: 802.3.
+				<ul>
+					<li>Switches <i>vs.</i> hubs.</li>
+					<li>Auto-aprendizagem, tabela de encaminhamento, inundação.</li>
+					<li>VLANs.</li>
+					<li>STP.</li>
+				</ul></li>
+				<li>MPLS.</li>
+			</ul>
+		</div>
+	</div>
+	</section>
+
+ 	<section>
+ 	<h1>Leitura e Exercícios Sugeridos</h1>
+ 	<div class="slideContent">
+ 		<ul>
+			<li>Um dia...
+			<ul>
+				   <li>Páginas 363 a 367 do Kurose (Seção 5.9).</li>
+				   <li>Problema 37 do capítulo 5 do Kurose.</li>
+			</ul></li>
+			<li>Resumo do capítulo:
+			<ul>
+				<li>Páginas 367 e 368 do Kurose (Seção 5.10).</li>
+				<li>Exercício sugerido: instale o Wireshark em um computador na sua casa e refaça a demonstração do &ldquo;Um dia...&rdquo;.</li>
+			</ul></li>
+ 		</ul>
+ 	</div>
+ 	</section>
+
+        <section>
+        <h1>Vamos Respirar um Pouco</h1>
+        <div class="slideContent">
+
+            <ul>
+                <li> Jornada pelas várias camadas da pilha de protocolos está completa.
+                <ul>
+                    <li> Exceto pela camada física.</li>
+                </ul>
+                </li>
+                <li> Compreensão sólida dos princípios e prática de redes.</li>
+                <li> O assunto de redes está completo? <b>Não</b>, há vários tópicos de interesse ainda.
+                <ul>
+                    <li> Redes sem fio.</li>
+                    <li> Mobilidade.</li>
+                    <li> Multimídia.</li>
+                    <li> Segurança.</li>
+                    <li> Gerência de redes.</li>
+                </ul>
+                </li>
+            </ul>
+        </div>
+        </section>
+
+
+	<section>
+	<h1>Próxima Aula...</h1>
+	<div class="slideContent">
+        <ul>
+            <li>Começaremos um novo capítulo.<ul>
+                <li>Capítulo 6: Redes Sem Fio e Mobilidade.</li>
+            </ul></li>
+            <li>Na próxima aula, cobriremos:
+            <ul>
+                <li>Alguns conceitos iniciais sobre redes sem fio e mobilidade.</li>
+                <li>Algumas ideias básicas sobre como ocorrem transmissões na camada física.
+                <ul>
+                    <li>E quais são as consequências disso.</li>
+                </ul></li>
+            </ul></li>
+        </ul>
+	</div>
+	</section>
+
+	<!-- {{{{ dzslides core
+	#
+	#
+	#     __  __  __       .  __   ___  __
+	#    |  \  / /__` |    | |  \ |__  /__`
+	#    |__/ /_ .__/ |___ | |__/ |___ .__/ core :€
+	#
+	#
+	# The following block of code is not supposed to be edited.
+	# But if you want to change the behavior of these slides,
+	# feel free to hack it!
+	#
+	-->
+
+    <!-- More CSS -->
+	<link href='../template/css/slides.css' id="slides" rel='stylesheet' type='text/css'>
+	<link href='../template/css/presentationSpecific2.css' id="presentationSpecific2" rel='stylesheet' type='text/css'>
+
+    <!-- More Javascript -->
+	<script type="text/javascript" src="../template/js/dz.js"></script>
+
+	<!-- More CSS -->
+	<link href='../template/css/notesSpecific.css' id="notesSpecific" rel='stylesheet' type='text/css'>
+	<link href='../template/css/printSpecific.css' id="printSpecific" rel='stylesheet' type='text/css'>
+</body>
+</html>
