@@ -33,9 +33,11 @@ class audioInput:
 		freq2Idx = self.sampleTotalTime * freq2
 
 		# Transformacao da unidade para dB
-		freqPwr1 = 10 * numpy.log10(freqs[freq1Idx] / maxf)
-		freqPwr2 = 10 * numpy.log10(freqs[freq2Idx] / maxf)
+		freqPwr1 = 10 * numpy.log10(freqs[int(round(freq1Idx))] / maxf)
+		freqPwr2 = 10 * numpy.log10(freqs[int(round(freq2Idx))] / maxf)
 		avgPwr = 10 * numpy.log10(avg / maxf)
+
+		#print "freqPwr1 = %f, freqPwr2 = %f, avgPwr = %f\n" % (freqPwr1, freqPwr2, avgPwr) 
 
 		#print 10 * numpy.log10(freqs[freq1Idx - 1] / maxf)
 		#print 10 * numpy.log10(freqs[freq1Idx + 1] / maxf)
