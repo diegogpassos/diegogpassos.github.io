@@ -3,6 +3,7 @@
 import audioOutput
 import sys
 import fileinput
+import time
 
 symbolDuration = 4.0
 
