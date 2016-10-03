@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <!-- Meta info -->
+	<meta charset="utf-8">
+	<meta name="shortauthor" content="Diego Passos"/>
+	<meta name="shorttitle" content="Sem Fio: Celular/Mobilidade: Intro."/>
+	<meta name="shortevent" content="Redes de Computadores II"/>
+	<title>Redes de Computadores II: Aula 11</title>
+
+    <!-- Math support -->
+	<script type="text/x-mathjax-config">
+		MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+			MathJax.InputJax.TeX.Definitions.number = /^(?:[0-9]+(?:\.[0-9]{3})*(?:\{,\}[0-9]*)*|\{,\}[0-9]+)/
+		});
+	</script>
+	<!--<script src="../MathJax/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>-->
+	<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+	<!--<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>-->
+
+    <!-- Fonts -->
+	<link href='https://fonts.googleapis.com/css?family=Lora:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
+
+    <!-- CSS -->
+	<link href='../template/css/template.css' id="template" rel='stylesheet' type='text/css'>
+	<link href='../template/css/presentationSpecific.css' id="presentationSpecific" rel='stylesheet' type='text/css'>
+
+    <!-- Javascript -->
+	<script type="text/javascript" src="../template/js/audio.js"></script>
+</head>
+
+<body>
+
+    <!-- Title Slide -->
+	<section>
+
+        <div class="slideContent">
+            <h1 class="title">Aula 11 - Redes Sem Fio: Redes Celular/Mobilidade: Introdução</h1>
+            <h2 class="author">Diego Passos</h2>
+            <h4 class="institution">Universidade Federal Fluminense</h4>
+            <h3 class="date">Redes de Computadores II</h3>
+        </div>
+
+	</section>
+
+    <!-- Content slides -->
+
+	<section>
+	<h1>Na Última Aula...</h1>
+	<div class="slideContent">
+        <div class="column" style="width: 50%;">
+            <ul>
+                <li>Enlaces sem fio: <b>mais propensos a erros</b>.
+                <ul>
+                    <li><b>Baixa potência, ruídos, interferências,</b>...</li>
+                    <li>Necessidade de <b>múltiplas taxas de transmissão</b>.</li>
+                    <li>Há ainda <b>terminais escondidos</b>.</li>
+                </ul></li>
+                <li>CDMA: acesso múltiplo por <b>código</b>
+                <ul>
+                    <li>Transmissões <b>simultâneas, no mesmo canal</b>.</li>
+                    <li>Códigos <b>ortogonais</b> garantem ausência de colisões.</li>
+                </ul></li>
+            </ul>
+        </div>
+        <div class="column" style="width: 50%;">
+            <ul>
+                <li>IEEE 802.11: padrão para <b>WLANs</b>.
+                <ul>
+                    <li><b>CSMA/CA</b>.
+                    <ul>
+                        <li><b>Não é possível detectar</b> (diretamente) colisões.</li>
+                        <li>Solução: evitá-las, usar confirmações (<b>acks</b>).</li>
+                        <li><b>RTS/CTS</b>.
+                        <ul>
+                            <li>Reserva do meio.</li>
+                        </ul></li>
+                    </ul></li>
+                    <li>Modos infraestruturado e <i>ad hoc</i>.</li>
+                </ul></li>
+            </ul>
+        </div>
+	</div>
+	</section>
+
+	<section class="secao">
+	<div class="slideContent">
+		Redes Celular
+	</div>
+	</section>
+
+	<section>
+	<h1>Histórico: 1G</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Evolução das redes celular se deu em &ldquo;gerações&rdquo;.
+			<ul>
+				<li>1G, 2G, 3G, ...</li>
+			</ul></li>
+			<li>Primeira geração:
+			<ul>
+				<li>Rede de voz.</li>
+				<li>Analógica.</li>
+				<li>FDMA.</li>
+				<li>Pouca interoperabilidade.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Histórico: GSM (2G)</h1>
+	<div class="slideContent">
+		<ul>
+			<li><i>Global System for Mobile Communications</i>.
+			<ul>
+				<li>Ou, originalmente: <i>Groupe Spécial Mobile</i>.</li>
+			</ul></li>
+			<li>Padrão europeu.
+			<ul>
+				<li>Primeira implementação: Finlândia, 1991.</li>
+				<li>Mas eventualmente adotado no mundo todo.</li>
+			</ul></li>
+			<li>Características:
+			<ul>
+				<li>Rede de voz.</li>
+				<li><b>Digital</b>.</li>
+				<li>Interoperabilidade (por conta da ampla adoção).</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Histórico: 2.5G</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Expansão do 2G para permitir tráfego de dados.</li>
+			<li>GSM + GPRS.
+			<ul>
+				<li>GPRS: <i>General Packet Radio Service</i>.</li>
+			</ul></li>
+			<li>Serviço de <b>melhor esforço</b>.</li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Histórico: Outras Evoluções</h1>
+	<div class="slideContent">
+		<ul>
+			<li>3G.
+			<ul>
+				<li>Voz e dados.</li>
+				<li>Digital.</li>
+				<li>Várias tecnologias proveem taxas de transmissão diferentes.
+				<ul>
+					<li>3.5G, 3.75G, ...</li>
+				</ul></li>
+			</ul></li>
+			<li>4G.
+			<ul>
+				<li>Próxima evolução.</li>
+				<li>Principais tecnologias candidatas: LTE, Mobile WiMAX.
+				<ul>
+					<li>Embora o LTE pareça estar em vantagem hoje.
+					<ul>
+						   <li>Maior compatibilidade com padrões anteriores.</li>
+						   <li>Tecnologia 4G dominante no Brasil.</li>
+					</ul></li>
+				</ul></li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Componentes da Arquitetura da Rede Celular</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 45%;">
+			<ul>
+				<li><span class="alert">Célula:</span>
+				<ul>
+					<li>Cobre região geográfica.</li>
+					<li><span class="alert">Estação base</span> (BS): análogo ao AP no 802.11.</li>
+					<li><span class="alert">Usuários móveis</span> se conectam à rede através do BS.</li>
+					<li><span class="alert">Interface aérea:</span> camadas física e de enlace entre usuário móvel e BS.</li>
+				</ul></li>
+				<li><span class="alert">MSC (<i>Mobile Switching Center</i>)</span>
+				<ul>
+					<li>Conecta células à rede cabeada de telefone.</li>
+					<li>Gerencia estabelecimento de ligações (detalhes mais tarde).</li>
+					<li>Lida com a mobilidade (detalhes mais tarde).</li>
+				</ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 55%;">
+			<br>
+			<br>
+			<center>
+				<img src="imagens/celularArquitetura.svg" style="width: 90%;"/>
+			</center>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Rede Celular: Primeiro Salto</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li>Duas técnicas usadas para lidar com acesso múltiplo:
+				<ul>
+					<li><span class="alert">Combinação de FDMA e TDMA:</span>
+					<ul>
+						<li>Divide espectro em canais de frequências diferentes.</li>
+						<li>Cada canal é dividido em <i>slots</i>.</li>
+					</ul></li>
+					<li><span class="alert">CDMA:</span>
+					<ul>
+						<li>Códigos diferentes são atribuídos para usuários.</li>
+					</ul></li>
+				</ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50%;">
+			<center>
+				<img src="imagens/TDMAFDMA.svg" style="width: 80%;"/>
+			</center>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Arquitetura das Redes 2G (Voz)</h1>
+	<div class="slideContent">
+		<center>
+			<img src="imagens/celular2G.svg" style="width: 80%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Arquitetura das Redes 3G (Voz+Dados) (I)</h1>
+	<div class="slideContent" style="height: 500px;">
+		<div style="position: absolute; top: 1%; left: 3%; width: 90%; height: 500px;">
+			<center>
+				<img src="imagens/celular3G.svg" style="width: 80%;"/>
+			</center>
+		</div>
+		<div style="position: absolute; top: 50%; left: 0%; width: 50%; height: 200px;">
+			<ul>
+				<li><span class="alert">Ponto principal:</span> rede celular de dados opera em <b>paralelo</b> à rede de voz.
+				<ul>
+					<li>Núcleo da rede de voz permanece idêntico.</li>
+					<li>Rede de dados opera paralelamente.</li>
+				</ul></li>
+			</ul>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Arquitetura das Redes 3G (Voz+Dados) (II)</h1>
+	<div class="slideContent">
+		<center>
+			<img src="imagens/celular3G2.svg" style="width: 72%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section class="secao">
+	<div class="slideContent">
+		Mobilidade: Endereçamento e Roteamento para Usuários Móveis
+	</div>
+	</section>
+
+	<section>
+	<h1>O Que É Mobilidade?</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Há vários <span class="alert">níveis</span> de mobilidade.</li>
+			<li>Espectro de mobilidade, do ponto de vista da <b>rede</b>:</li>
+		</ul>
+		<center>
+			<img src="imagens/mobilidadeEspectro.svg" style="width: 80%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Mobilidade: Jargão</h1>
+	<div class="slideContent">
+		<center>
+			<img src="imagens/mobilidadeJargao.svg" style="width: 80%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Mobilidade: Jargão (Mais)</h1>
+	<div class="slideContent">
+		<center>
+			<img src="imagens/mobilidadeJargao2.svg" style="width: 80%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Como <i>Você</i> Contacta um Amigo Móvel?</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<br>
+			<br>
+			<ul>
+			   <li>Considere uma amiga que constantemente muda de endereço. Como encontrá-la?
+				   <ul>
+					   <li>Procurar em todas as listas telefônicas?</li>
+					   <li>Ligar para os pais dela?</li>
+					   <li>Aguardar até que ela entre em contato avisando onde está?</li>
+				   </ul>
+			   </li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50%;">
+			<center>
+				<img src="imagens/mobileFriend.svg" style="width: 100%;"/>
+			</center>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Mobilidade: Abordagens</h1>
+	<div class="slideContent">
+		<ul>
+			<li><span class="alert">Deixar que o roteamento resolva:</span>
+			<ul>
+				<li>Nós móveis possuem endereços permanentes.</li>
+				<li>Quando nó se move para uma nova rede, roteador anuncia endereço específico através dos protocolos normais.</li>
+				<li>Tabelas de roteamento indicam localização do nó.</li>
+				<li>Não são necessárias alterações nos sistemas finais.</li>
+			</ul></li>
+			<li><span class="alert">Deixar que os sistemas finais resolvam:</span>
+			<ul>
+				<li><span class="alert">Roteamento indireto:</span> comunicação com nó móvel intermediada pelo <b>home agent</b>, que realiza o encaminhamento.</li>
+				<li><span class="alert">Roteamento direto:</span> nó remoto obtém o <b>care-of-address</b> do nó móvel, transmite diretamente.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Mobilidade: Abordagens</h1>
+	<div class="slideContent">
+		<ul>
+			<li style="color: #aaa;">Deixar que o roteamento resolva:
+			<ul>
+				<li>Nós móveis possuem endereços permanentes.</li>
+				<li>Quando nó se move para uma nova rede, roteador anuncia endereço específico através dos protocolos normais.</li>
+				<li>Tabelas de roteamento indicam localização do nó.</li>
+				<li>Não são necessárias alterações nos sistemas finais.</li>
+			</ul></li>
+			<li><span class="alert">Deixar que os sistemas finais resolvam:</span>
+			<ul>
+				<li><span class="alert">Roteamento indireto:</span> comunicação com nó móvel intermediada pelo <b>home agent</b>, que realiza o encaminhamento.</li>
+				<li><span class="alert">Roteamento direto:</span> nó remoto obtém o <b>care-of-address</b> do nó móvel, transmite diretamente.</li>
+			</ul></li>
+		</ul>
+		<div style="width: 92.5%; height: 50%; position: absolute; top: 2.5%; left: 2.5%;">
+		<!--<div style="width: 92.5%; height: 50%; background: #777; opacity: 0.6; position: absolute; top: 2.5%; left: 2.5%;">-->
+			<center>
+				<img src="imagens/naoEscalavel.svg" style="width: 17%;"/>
+			</center>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Mobilidade: Registro</h1>
+	<div class="slideContent">
+		<center>
+			<img src="imagens/mobilidadeRegistro.svg" style="width: 70%;"/>
+		</center>
+		<ul>
+			<li>Resultado:
+			<ul>
+				<li><b>Foreign Agent</b> conhece nó móvel.</li>
+				<li><b>Home Agent</b> conhece localização do nó móvel.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Mobilidade Através de Roteamento Indireto</h1>
+	<div class="slideContent">
+		<center>
+			<img src="imagens/mobilidadeRoteamentoIndireto.svg" style="width: 80%;"/>
+		</center>
+	</div>
+	</section>
+
+	<!-- É bom verificar exatamente qual é a nomenclatura que a versão em
+	     português do livro usa para estes termos. -->
+	<section>
+	<h1>Roteamento Indireto: Observações</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Usuário móvel utiliza dois endereços:
+			<ul>
+				<li><b>Endereço permanente (home address):</b> usado pelo nó remoto.
+				<ul>
+					<li>Logo, localização do nó móvel é transparente para o remoto.</li>
+				</ul></li>
+				<li><b>Endereço temporário (care-of-address):</b> usado pelo <i>home agent</i> para encaminhar pacotes ao usuário móvel.</li>
+			</ul></li>
+			<li>Funções do <i>foreign agent</i> podem ser feitas pelo próprio nó móvel.</li>
+		</ul>
+		<div class="column" style="width: 45%;">
+			<ul>
+				<li><span class="alert">Roteamento triangular</span>: remoto &#x2192; rede de origem &#x2192; nó móvel
+				<ul>
+					<li>Ineficiente quando nó móvel e remoto estão na mesma rede.</li>
+				</ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 55%;">
+			<center>
+				<img src="imagens/mobilidadeRoteamentoTriangular.svg" style="width: 80%;"/>
+			</center>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Roteamento Indireto: Migrando para uma Nova Rede</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Suponha que o nó móvel migra para uma nova rede.
+			<ul>
+				<li>Se registra com o novo <i>foreign agent</i>.</li>
+				<li>Novo <i>foreign agent</i> se registra com o <i>home agent</i>.</li>
+				<li><i>Home agent</i> atualiza endereço temporário do nó móvel.</li>
+				<li>Pacotes continuam sendo encaminhados para o nó móvel.
+				<ul>
+					<li>Mas com o novo endereço temporário.</li>
+				</ul></li>
+			</ul></li>
+			<li>Mobilidade e mudança de rede são transparentes: <span class="alert">conexões em andamento podem ser mantidas!</span></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Mobilidade Através de Roteamento Direto</h1>
+	<div class="slideContent">
+		<center>
+			<img src="imagens/mobilidadeRoteamentoDireto.svg" style="width: 80%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Mobilidade Através de Roteamento Direto: Observações</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Resolve problema de roteamento triangular.</li>
+			<li><span class="alert">Mas não é transparente para o nó remoto:</span>
+			<ul>
+				<li>Nó remoto precisa obter endereço temporário com o <i>home agent</i>.</li>
+				<li>O que acontece se nó móvel visita outra rede?</li>
+			</ul></li>
+		</ul>
+		<center>
+			<img src="imagens/mobilidadeRoteamentoDiretoMudancaDeRede.svg" style="width: 70%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Mobilidade Através de Roteamento Direto: Lidando com Mudanças de Rede</h1>
+	<div class="slideContent">
+		<ul>
+			<li><i>Foreign agent</i> âncora: FA da primeira rede visitada.</li>
+			<li>Dados <b>sempre</b> são encaminhados através do FA âncora.</li>
+			<li>Quando nó móvel visita nova rede:
+			<ul>
+				<li>Novo FA pede que FA antigo encaminhe os dados para ele (encadeamento).</li>
+			</ul></li>
+		</ul>
+		<center>
+			<img src="imagens/mobilidadeEncadeamento.svg" style="width: 70%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Resumo da Aula...</h1>
+	<div class="slideContent">
+        <div class="column" style="width: 50%;">
+            <ul>
+                <li>Redes celular: arquitetura.
+                <ul>
+                    <li><b>Célula</b>: região de cobertura.
+                    <ul>
+                        <li>Composta por <b>estação base, usuários móveis</b>.</li>
+                    </ul></li>
+                    <li>Células se conectam à rede cabeada de telefone por um <b>MSC</b>.
+                    <ul>
+                        <li>Responsável por <b>ligações, mobilidade</b>.</li>
+                    </ul></li>
+                </ul></li>
+                <li>Redes celular: comunicação entre usuário e estação.
+                <ul>
+                    <li>Pode ser <b>combinação de FDMA e TDMA</b>.</li>
+                    <li>Ou <b>CDMA</b>.</li>
+                </ul></li>
+                <li>Redes celular: evolução.
+                <ul>
+                    <li>2G: somente voz.</li>
+                    <li>3G: rede de voz idêntica, <b>rede de dados paralela</b>.</li>
+                </ul></li>
+            </ul>
+        </div>
+        <div class="column" style="width: 50%;">
+            <ul>
+                <li>Mobilidade: <b>vários tipos</b>.
+                <ul>
+                    <li>Dentro de um mesmo ponto de acesso.</li>
+                    <li>Entre redes, obtendo novo IP.</li>
+                    <li>Entre pontos de acesso, mantendo conexões.</li>
+                </ul></li>
+                <li>Mobilidade: Jargão.
+                <ul>
+                    <li>Rede de origem: <b>home network</b>, <b>home agent</b>, <b>endereço permanente</b>.</li>
+                    <li>Rede de destino: <b>foreign-agent</b>.</li>
+                </ul></li>
+                <li>Mobilidade: possíveis abordagens.
+                <ul>
+                    <li>Atualização de <b>tabelas de roteamento</b>: não escala.</li>
+                    <li>Sistemas finais: <b>roteamento direto ou indireto</b>.</li>
+                </ul></li>
+            </ul>
+        </div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Leitura e Exercícios Sugeridos</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Redes Celular.
+			<ul>
+				<li>Páginas 401 a 405 do Kurose (Seção 6.4).</li>
+				<li>Questões dissertativas 2 e 5 do capítulo 6 do Kurose. </li>
+			</ul></li>
+			<li>Princípios de Mobilidade.
+			<ul>
+				<li>Páginas 405 a 412 do Kurose (Seção 6.5).</li>
+				<li>Exercícios de fixação 16 e 17 do capítulo 6 do Kurose.</li>
+				<li>Problemas 11 e 12 do capítulo 6 do Kurose.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+
+	<section>
+	<h1>Próxima Aula...</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Continuaremos discutindo mobilidade:
+			<ul>
+				<li>IP Móvel.
+                <li>Mobilidade em redes celular.</li>
+                <li>Comparações entre as duas abordagens.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<!-- {{{{ dzslides core
+	#
+	#
+	#     __  __  __       .  __   ___  __
+	#    |  \  / /__` |    | |  \ |__  /__`
+	#    |__/ /_ .__/ |___ | |__/ |___ .__/ core :€
+	#
+	#
+	# The following block of code is not supposed to be edited.
+	# But if you want to change the behavior of these slides,
+	# feel free to hack it!
+	#
+	-->
+
+    <!-- More CSS -->
+	<link href='../template/css/slides.css' id="slides" rel='stylesheet' type='text/css'>
+	<link href='../template/css/presentationSpecific2.css' id="presentationSpecific2" rel='stylesheet' type='text/css'>
+
+    <!-- More Javascript -->
+	<script type="text/javascript" src="../template/js/dz.js"></script>
+
+	<!-- More CSS -->
+	<link href='../template/css/notesSpecific.css' id="notesSpecific" rel='stylesheet' type='text/css'>
+	<link href='../template/css/printSpecific.css' id="printSpecific" rel='stylesheet' type='text/css'>
+</body>
+</html>
