@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <!-- Meta info -->
+	<meta charset="utf-8">
+	<meta name="shortauthor" content="Diego Passos"/>
+	<meta name="shorttitle" content="Multimídia: CDN, Netflix, VoIP"/>
+	<meta name="shortevent" content="Redes de Computadores II"/>
+	<title>Redes de Computadores II: Aula 16</title>
+
+    <!-- Math support -->
+	<script type="text/x-mathjax-config">
+		MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+			MathJax.InputJax.TeX.Definitions.number = /^(?:[0-9]+(?:\.[0-9]{3})*(?:\{,\}[0-9]*)*|\{,\}[0-9]+)/
+		});
+	</script>
+	<!--<script src="../../../../MathJax-2.6-latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>-->
+	<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+	<!--<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>-->
+
+    <!-- Fonts -->
+	<link href='https://fonts.googleapis.com/css?family=Lora:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
+	<!--<link href='../../../../Fonts/Lora/lora.css' rel='stylesheet' type='text/css'>-->
+
+    <!-- CSS -->
+	<link href='../template/css/template.css' id="template" rel='stylesheet' type='text/css'>
+	<link href='../template/css/presentationSpecific.css' id="presentationSpecific" rel='stylesheet' type='text/css'>
+
+    <!-- Javascript -->
+	<script type="text/javascript" src="../template/js/audio.js"></script>
+</head>
+
+<body>
+    <!-- Audio handlers -->
+     <audio src="audio/ASCII_a_multiPercurso.wav" id="ASCII_a_multiPercurso.wav" preload="auto"></audio>
+
+    <!-- Title Slide -->
+	<section>
+
+        <div class="slideContent">
+            <h1 class="title">Aula 16 - CDN, Netflix, VoIP</h1>
+            <h2 class="author">Diego Passos</h2>
+            <h4 class="institution">Universidade Federal Fluminense</h4>
+            <h3 class="date">Redes de Computadores II</h3>
+        </div>
+
+	</section>
+
+    <!-- Content slides -->
+
+	<section>
+	<h1>Na Última Aula (I)...</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 55%;">
+			<ul>
+				<li>Tipos de conteúdo: áudio e vídeo.
+				<ul>
+					<li>Sequências de <b>amostras</b>.
+					<ul>
+						<li>Imagens estáticas ou sinal sonoro.</li>
+					</ul></li>
+					<li>Amostras são <b>quantizadas</b>: mapeadas para valores discretos.</li>
+					<li><b>Taxa de amostragem</b>: quantas amostras por intervalo de tempo.</li>
+					<li><b>Bits por amostra</b>: quanto mais bits, maior a resolução da amostra.</li>
+					<li>Reduzir taxa de amostra ou bits por amostra reduz tamanho do conteúdo.
+					<ul>
+						<li>Mas também <b>reduz qualidade</b>.</li>
+						<li><i>e.g.</i>, introdução de <b>ruído de quantização</b>.</li>
+					</ul></li>
+				</ul></li>
+				<li>Compressão de dados: reduzir <b>redundância</b>.
+				<ul>
+					<li><b>Temporal</b> ou <b>espacial</b>.</li>
+					<li>Pode levar a <b>taxa variável</b>.</li>
+				</ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 45%;">
+			<ul>
+			<li>Tipos de aplicação multimídia:
+			<ul>
+				<li><i>Streaming</i> de conteúdo <b>armazenado</b>.
+				<ul>
+					<li>Reprodução começa <b>antes</b> do cliente obter todo o conteúdo.</li>
+					<li>Mas conteúdo completo já está <b>pronto, armazenado</b> no servidor.
+					<ul>
+						<li>Pode ser transmitido <b>mais rapidamente que a taxa de reprodução</b>.</li>
+					</ul></li>
+				</ul></li>
+			</ul></li>
+			<li>Conversação de voz/vídeo.
+			<ul>
+				<li>Aplicação <b>interativa</b>, baixa <b>tolerância a atraso</b>.</li>
+			</ul></li>
+			<li><i>Streaming</i> de conteúdo ao vivo.</li>
+			</ul>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Na Última Aula (II)...</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Aplicações multimídia e a Internet: desafios.
+			<ul>
+				<li>Internet: rede de <b>melhor esforço</b>.</li>
+				<li>Perda de pacotes, <b>atrasos variáveis</b> (<i>jitter</i>).</li>
+			</ul></li>
+			<li>Buffer de reprodução: absorve variações.
+			<ul>
+				<li>Cliente <b>não começa</b> reprodução imediatamente.</li>
+				<li>Aguarda período, <i>bufferizando</i> amostras.</li>
+				<li>Se <i>buffer</i> é grande o <b>suficiente</b>, variações não serão percebidas.</li>
+				<li>Por outro lado: <i>buffer</i> <b>muito grande</b>, grande <b>atraso do início da reprodução</b>.</li>
+				<li>Buffer e vazão: se taxa de chegada de dados é <b>menor que a taxa de reprodução</b>, <i>buffer</i> será <b>esgotado</b>.
+				<ul>
+					<li>Não importa seu tamanho, supondo que conteúdo seja <b>longo</b>.</li>
+				</ul></li>
+			</ul></li>
+			<li>UDP <i>vs.</i> TCP:
+			<ul>
+				<li>UDP: <b>taxa constante, independente de congestionamento</b>, pode ser filtrado.</li>
+				<li>TCP (HTTP): transmitido <b>o mais rápido possível</b>, <i>firewall friendly</i>.
+				<ul>
+					<li>DASH: <b>taxa adaptativa</b>, escolhida pelo <b>cliente</b>.</li>
+				</ul></li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Redes de Distribuição de Conteúdo (I)</h1>
+	<div class="slideContent">
+		<ul>
+			<li><span class="alert">Desafio:</span> como fazer <i>streaming</i> de conteúdo (selecionado entre milhões disponíveis) para centenas de milhares de usuários simultâneos?</li>
+			<li><span class="alert">Opção 1:</span> um único "mega servidor".
+			<ul>
+				<li>Ponto único de falha.</li>
+				<li>Ponto de congestionamento da rede.</li>
+				<li>Longo caminho para clientes distantes.</li>
+				<li>Múltiplas cópias do vídeo enviadas pelo mesmo enlace de saída.</li>
+			</ul></li>
+			<li>Resumo: esta solução <span class="alert">não escala</span>.</li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Redes de Distribuição de Conteúdo (II)</h1>
+	<div class="slideContent">
+		<ul>
+			<li><span class="alert">Desafio:</span> como fazer <i>streaming</i> de conteúdo (selecionado entre milhões disponíveis) para centenas de milhares de usuários simultâneos?</li>
+			<li><span class="alert">Opção 2:</span> armazenar/servir múltiplas cópias dos vídeos em vários servidores geograficamente distribuídos (<span class="alert">CDN</span>).
+			<ul>
+				<li><b>Alta penetração</b>: servidores CDN inseridos em várias redes de acesso.
+				<ul>
+					<li>Próximos aos usuários.</li>
+					<li>Usado pela Akamai, 1700 regiões.</li>
+				</ul></li>
+				<li><b>Vizinhanças</b>: Número menor (dezenas) de <i>clusters</i> maiores próximos (mas não dentro) das redes de acesso.
+				<ul>
+					<li>Usado pela Limelight.</li>
+				</ul></li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>CDN: Exemplo &ldquo;Simples&rdquo; de Acesso a Conteúdo</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Bob (cliente) requisita vídeo em <tt>http://netcinema.com/6Y7B23V</tt>.</li>
+			<li>Vídeo armazenado na CDN em <tt>http://KingCDN.com/NetC6y&amp;B23V</tt></li>
+		</ul>
+		<center>
+			<img src="imagens/cdn.svg" style="width: 80%;"/>
+		</center>
+	</div>
+	</section>
+
+	<!-- Demonstração: mostrar algum serviço de distribuição de mídia, escolhendo servidores
+	diferentes (youtube, nytimes, ...). -->
+	<section>
+	<h1>CDN: Estratégia de Seleção de Cluster</h1>
+	<div class="slideContent">
+		<ul>
+			<li><span class="alert">Desafio:</span> como o DNS da CDN seleciona um servidor &ldquo;bom&rdquo; para prover o conteúdo ao cliente?
+			<ul>
+				<li>Seleciona servidor mais próximo geograficamente.</li>
+				<li>Seleciona o servidor CDN com o menor atraso.
+				<ul>
+					<li>Servidores CDN periodicamente enviam <i>pings</i> para ISPs, reportando resultados ao DNS.</li>
+				</ul></li>
+				<li>Utilização de IP <i>anycast</i>.</li>
+			</ul></li>
+			<li><span class="alert">Alternativa:</span> deixar o <b>cliente</b> decidir.
+			<ul>
+				<li>Dar uma lista de vários servidores CDN.</li>
+				<li>Cliente faz <i>ping</i> para os servidores, escolhe o &ldquo;melhor&rdquo;.</li>
+				<li>Estratégia usada pelo Netflix.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Estudo de Caso: Netflix (I)</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Responde por 30% do tráfego <i>downstream</i> nos EUA (2011).
+			<ul>
+				<li>36,5% em 2015.</li>
+			</ul></li>
+			<li>Possui pouca infraestrutura, terceira muitos serviços.
+			<ul>
+				<li>Possui servidores para registro e pagamento dos usuários.</li>
+				<li>Terceiriza serviços para a Amazon Cloud Services.
+				<ul>
+					<li>Envia versão original dos conteúdos para a nuvem da Amazon.</li>
+					<li>Na nuvem, cria múltiplas versões de cada vídeo (diferentes codificações).</li>
+					<li>Faz o <i>upload</i> das versões para CDNs.</li>
+					<li>Nuvem hospeda páginas do Netflix usadas para usuários acessarem o catálogo.</li>
+				</ul></li>
+				<li><b>Três</b> serviços terceirizados de CDN são usados pelo Netflix:
+				<ul>
+					<li>Akamai, Limelight e Level-3.</li>
+				</ul></li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Estudo de Caso: Netflix (II)</h1>
+	<div class="slideContent">
+		<center>
+			<img src="imagens/netflix.svg" style="width: 80%;"/>
+		</center>
+	</div>
+	</section>
+
+	<!-- Possível demonstração: análise de tráfego do netflix? Talvez exibir formato do manifesto. -->
+
+	<section class="secao">
+	<div class="slideContent">
+		Voz Sobre IP
+	</div>
+	</section>
+
+	<!-- Possível demostração: como atrasos altos dificultam conversação. -->
+	<section>
+	<h1>Voz Sobre IP (VoIP)</h1>
+	<div class="slideContent">
+		<ul>
+			<li><span class="alert">Requisitos de atraso fim a fim:</span> necessários para manter aspecto conversacional.
+			<ul>
+				<li>Grandes atrasos são notáveis, dificultam interação.</li>
+				<li>&lt; 150 ms: bom.</li>
+				<li>&gt; 400 ms: ruim.</li>
+				<li>Inclui tanto atrasos da rede, quanto da aplicação (empacotamento, <i>buffer</i>).</li>
+			</ul></li>
+			<li><span class="alert">Inicialização da sessão:</span> como receptor de chamadas anuncia endereço IP, número de porta, algoritmos de codificação?</li>
+			<li><span class="alert">Serviços adicionais:</span> encaminhamento de ligação, identificador de chamadas, gravação.</li>
+			<li><span class="alert">Serviços emergenciais:</span> 190.</li>
+		</ul>
+	</div>
+	</section>
+
+	<!-- Possível demonstração: captura de tráfego de aplicação VoIP, mostrando períodos de silêncio. -->
+	<section>
+	<h1>VoIP: Características</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Fala: alterna momentos som e de silêncio.
+			<ul>
+				<li>64 kb/s durante fala efetiva.</li>
+			     <li>Pacotes gerados apenas quando realmente há fala.</li>
+				<li>Trechos de 20 ms de duração a 8 kB/s: pacotes de 160 bytes.</li>
+			</ul></li>
+			<li>Cabeçalho de camada de aplicação adicionado a cada pacote.</li>
+			<li>Pacote encapsulado em segmento UDP ou TCP.</li>
+			<li>Durante fala efetiva, aplicação envia pacotes pelo socket a cada 20 ms.</li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>VoIP: Perda de Pacotes e Atraso</h1>
+	<div class="slideContent">
+		<ul>
+			<li><span class="alert">Perda de pacotes na rede:</span> datagrama IP é perdido por conta de congestionamento na rede (<i>overflow</i> do <i>buffer</i> de algum roteador).</li>
+			<li><span class="alert">Perda por atraso excessivo:</span>datagrama IP é recebido muito tarde para ser reproduzido no receptor.
+			<ul>
+				<li>Atrasos: processamento, enfileiramento na rede, atrasos nos sistemas finais.</li>
+				<li>Tipicamente, atraso máximo tolerado de 400 ms.</li>
+			</ul></li>
+			<li><span class="alert">Tolerância a perdas:</span> dependendo do codificador de voz, perdas de 1% a 10% são toleráveis.</li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1><i>Jitter</i></h1>
+	<div class="slideContent">
+		<center>
+			<img src="imagens/jitter.svg" style="width: 80%;"/>
+		</center>
+		<ul>
+			<li>Atraso fim a fim de dois pacotes consecutivos: diferença pode ser maior ou menor que 20 ms.</li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>VoIP: Atraso de Reprodução Fixo (I)</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Receptor tenta reproduzir cada trecho exatamente <tt>q</tt> ms após geração do mesmo.
+			<ul>
+				<li>Cada trecho possui um <i>timestamp</i> <tt>t</tt>: reproduzir trecho em <tt>t+q</tt>.</li>
+				<li>Se trecho chega após <tt>t+q</tt>: muito tarde, trecho é perdido.</li>
+			</ul></li>
+			<li>Compromisso na escolha de <tt>q</tt>:
+			<ul>
+				<li><span class="alert"><tt>q</tt> grande:</span> menos perda de pacotes.</li>
+				<li><span class="alert"><tt>q</tt> pequeno:</span> melhor experiência interativa.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>VoIP: Atraso de Reprodução Fixo (II)</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Transmissor gera pacotes a cada 20 ms durante períodos de fala.</li>
+			<li>Primeiro pacote recebido no tempo <tt>r</tt>.</li>
+			<li>Primeira tentativa: reprodução é agendada para começar no instante <tt>p</tt>.
+			<ul>
+				<li>Atraso de reprodução muito pequeno: quarto pacote de áudio é perdido.</li>
+			</ul></li>
+			<li>Segunda tentativa: reprodução é agendada para começar no instante <tt>p&prime;</tt>.</li>
+		</ul>
+		<center>
+			<img src="imagens/fixedPlayoutDelay.svg" style="width: 50%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Atraso de Reprodução Adaptativo (I)</h1>
+	<div class="slideContent">
+		<ul>
+			<li><span class="alert">Objetivo:</span> atraso de reprodução baixo, pouca perda de pacotes.</li>
+			<li><span class="alert">Estratégia:</span> ajustar dinamicamente o atraso de reprodução.
+			<ul>
+				<li>Estimar atraso da rede, ajustar o atraso de reprodução no início de cada período de fala.</li>
+				<li>Períodos de silêncio alongados ou comprimidos.</li>
+				<li>Durante períodos de fala, trechos de som ainda são reproduzidos a cada 20 ms.</li>
+			</ul></li>
+			<li>Estimativa dinâmica do atraso dos pacotes: média movente exponencialmente ponderada (lembre-se da estimativa do RTT pelo TCP):</li>
+		</ul>
+		<center>
+			   <span class="math">\(d_i = (1 - \alpha)\cdot d_{i-1} + \alpha\cdot (r_i - t_i)\),</span>
+		</center>
+		<ul>
+			<li>Onde:
+			   <ul>
+				   <li><span class="math inline">\(d_i\)</span>: estimativa do atraso após i-<i>ésimo</i> pacote.</li>
+				   <li><span class="math inline">\(\alpha\)</span>: pequena constante entre 0 e 1, <i>e.g.</i>, 0,1.</li>
+				   <li><span class="math inline">\(r_i\)</span>: momento em que trecho é recebido.</li>
+				   <li><span class="math inline">\(t_i\)</span>: momento em que trecho é enviado (<b>timestamp</b>).</li>
+			   </ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<!-- TODO: verificar fonte das equações. -->
+	<section>
+	<h1>Atraso de Reprodução Adaptativo (II)</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Também é útil estimar desvio médio do atraso:</li>
+		</ul>
+		<center>
+			   <span class="math">\(v_i = (1-\beta)\cdot v_{i-1} + \beta\cdot\lvert r_i - t_i - d_i\rvert\)</span>
+		</center>
+
+		<ul>
+			<li>Estimativas para <span class="math inline">\(d_i\)</span>, <span class="math inline">\(v_i\)</span> calculadas para cada pacote recebido.
+			<ul>
+				<li>Mas usadas apenas no início de cada período de fala.</li>
+			</ul></li>
+			<li>Para primeiro pacote de um período de fala, reprodução é agendada para:</li>
+		</ul>
+		<center>
+			<span class="math">\(t_{repro_i} = t_i + d_i + K\cdot v_i\)</span>
+		</center>
+		<ul>
+			<li>Demais pacotes são reproduzidos periodicamente.</li>
+		</ul>
+	</div>
+
+	</section>
+
+	<section>
+	<h1>Atraso de Reprodução Adaptativo (III)</h1>
+	<div class="slideContent">
+		<ul>
+			<li><span class="alert">Pergunta:</span> como receptor determina se pacote é o primeiro de um período de fala?
+			<ul>
+				<li>Se não ocorrem perdas, receptor pode procurar por <i>timestamps</i> sucessivos.
+				<ul>
+					<li>Se a diferença for maior que 20 ms, então é o início de um período de fala.</li>
+				</ul></li>
+				<li>Se perdas são possíveis, receptor precisa também de um <b>número de sequência</b>.
+				<ul>
+					<li>Diferença maior que 20 ms <span class="alert">e</span> números de sequência sem saltos &#x2192; começo de período de fala.</li>
+				</ul></li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>VoIP: Recuperação de Eventos de Perda de Pacote (I)</h1>
+	<div class="slideContent">
+		<ul>
+			<li><span class="alert">Desafio:</span> recuperar perda de pacotes dada pequena tolerância a atrasos entre momento da transmissão e da reprodução.
+			<ul>
+				<li>Cada Ack/Nack demora aproximadamente um RTT.</li>
+				<li>Alternativa: <span class="alert"><i>Forward Error Correction (FEC)</i></span>:
+				<ul>
+					<li>Enviar bits redundantes para permitir recuperação sem retransmissão (lembre-se da paridade bidimensional vista no Cap. 5).</li>
+				</ul></li>
+			</ul></li>
+			<li><span class="alert">FEC simples:</span>
+			<ul>
+				<li>Para cada grupo de <tt>n</tt> trechos, criar trecho redundante através de um <tt>ou-exclusivo</tt> dos <tt>n</tt> trechos originais.</li>
+				<li>Enviar <tt>n+1</tt> trechos, aumentando a banda utilizada por um fator de <tt>1/n</tt>.</li>
+				<li>É possível reconstruir os <tt>n</tt> pedaços originais se há, no máximo, um trecho perdido dos <tt>n+1</tt> enviados.
+				<ul>
+					<li>Atraso na reprodução é necessário.</li>
+				</ul></li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>VoIP: Recuperação de Eventos de Perda de Pacote (I)</h1>
+	<div class="slideContent">
+		<div style="width: 100%; height: 300px;">
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li><span class="alert">Outro esquema de FEC:</span>
+				<ul>
+					<li>Fazer um &ldquo;piggyback&rdquo; de um fluxo de mais baixa qualidade.</li>
+					<li>Fluxo com qualidade mais baixa é enviado como redundância.</li>
+					<li><i>e.g.</i>, fluxo nominal usando codificação PCM@64 kb/s e redundância usando GSM@13kb/s.</li>
+				</ul></li>
+			</ul>
+		</div>
+	     <div class="column" style="width: 50%;">
+		     <center>
+		   	     <img src="imagens/VoIPRecovery.png" style="width: 80%;"/>
+		     </center>
+	     </div>
+	     </div>
+		<ul>
+			<li>Perdas não-consecutivas: receptor pode esconder perda.</li>
+			<li>Generalização: transmissor também pode inserir trechos mais antigos de baixa qualidade.
+			<ul>
+				<li>Permite recuperação mesmo com (certo grau de) perdas consecutivas.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<!-- Possível demonstração: captura de tráfego de software de VoIP, verificando estratégia
+	usada para recuperação de perdas. -->
+	<section>
+	<h1>VoIP: Recuperação de Eventos de Perda de Pacote (III)</h1>
+	<div class="slideContent">
+		   <center>
+			   <img src="imagens/VoIPInterleaving.png" style="width: 50%;"/>
+		   </center>
+		<div style="width: 100%;">
+		<div class="column" style="width: 50%;">
+		  &nbsp;<span class="alert">Escondendo perdas com <i>interleaving</i></span>:
+		  <ul>
+			  <li>Trechos de áudio divididos em unidades menores, <i>e.g.</i>, 4 unidades de 5 ms.</li>
+			  <li>Pacote contem unidades de trechos diferentes.</li>
+		  </ul>
+		</div>
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li>Se pacote é perdido, receptor ainda tem <span class="alert">a maior parte</span> de todos os trechos.</li>
+				<li>Não é preciso adicionar redundância, mas atraso de reprodução aumenta.</li>
+			</ul>
+		</div>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Voz sobre IP: Skype</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li>Protocolo proprietário de camada de aplicação (inferido através de engenharia reversa):
+				<ul>
+					<li>Mensagens criptografadas.</li>
+				</ul></li>
+				<li>Componentes P2P:
+				<ul>
+					<li><span class="alert">Clientes (SC):</span> pares se conectam diretamente para chamadas VoIP.</li>
+					<li><span class="alert">Super-nós (SN):</span> nós skype com funções especiais.</li>
+					<li><span class="alert">Rede de sobreposição:</span> formadas entre SNs para localização de SCs.</li>
+					<li><span class="alert">Servidor de login.</span></li>
+				</ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50%;">
+			<center>
+				<img src="imagens/Skype.svg" style="width: 80%;"/>
+			</center>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Voz sobre IP P2P: Skype</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li><span class="alert">Operação do cliente Skype:</span>
+				<ol>
+					<li>Entra na rede Skype contactando SN (endereço IP em cache) usando TCP.</li>
+					<li>Efetua login (nome de usuário, senha) em servidor centralizado do Skype.</li>
+					<li>Obtém endereço IP do destinatário da chamada via SN, rede de sobreposição.
+					<ul>
+						<li>Ou lista de contatos.</li>
+					</ul></li>
+					<li>Inicia chamada diretamente com o destinatário.</li>
+				</ol></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50%;">
+			<center>
+				<img src="imagens/Skype2.svg" style="width: 80%;"/>
+			</center>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Skype: Pares Atuando como Relays</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+		<ul>
+			<li><span class="alert">Problema:</span> tanto Alice, quanto Bob estão atrás de NATs.
+			<ul>
+				<li>NAT não permite que nó externo inicie conexão com nó interno.</li>
+				<li>Apenas nó interno <i>pode</i> iniciar conexão com nó externo.</li>
+			</ul></li>
+			<li><span class="alert">Solução através de <i>relays</i>:</span> Alice, Bob mantém conexões abertas com seus SNs.
+			<ul>
+				<li>Alice sinaliza ao seu SN que deseja ligar para Bob.</li>
+				<li>SN de Alice se conecta ao SN de Bob.</li>
+				<li>SN de Bob o contacta através de conexão previamente estabelecida de Bob para o SN.</li>
+			</ul></li>
+		</ul>
+		</div>
+		<div class="column" style="width: 50%;">
+		<center>
+			<img src="imagens/Skype3.svg" style="width: 80%;"/>
+		</center>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Resumo da Aula (I)...</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li>Redes de Distribuição de Conteúdo:
+				<ul>
+					<li>Conteúdos replicados em <b>vários servidores</b>.</li>
+					<li>Servidores <b>distribuídos geograficamente</b>.</li>
+					<li>Cada cliente é servidor por <b>bom servidor</b>.</li>
+					<li>Evita:
+					<ul>
+						<li><b>Ponto único de falha</b>.</li>
+						<li>Congestionamento gerado por <b>concentração do tráfego</b>.</li>
+						<li>Caminhos longos para certos clientes.</li>
+					</ul></li>
+				</ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li>Estudo de caso: Netflix.
+				<ul>
+					<li>Três tipos de servidores:
+					<ul>
+						<li>Registro/pagamento.</li>
+						<li>Navegação de catálogo.</li>
+						<li>Entrega de conteúdo.
+						<ul>
+							<li><b>CDN</b>.</li>
+						</ul></li>
+					</ul></li>
+					<li>Usa <i>streaming</i> <b>adaptativo</b>.</li>
+				</ul></li>
+				<li>VoIP:
+				<ul>
+					<li><b>Fortes requisitos</b> de latência.
+					<ul>
+						<li>Evitar prejuízo da conversação.</li>
+					</ul></li>
+					<li><b>Alternância</b> entre fala e silêncio.</li>
+					<li>Em período de fala, pacotes gerados (tipicamente) a cada 20 ms.
+					<ul>
+						<li>Pacotes pequenos, <b>overheads significativos</b>.</li>
+					</ul></li>
+				</ul></li>
+			</ul>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Resumo da Aula (II)...</h1>
+	<div class="slideContent">
+		<ul>
+			<li>VoIP (mais):
+			<ul>
+				<li>Perda de pacotes:
+				<ul>
+					<li>Por perda <b>efetiva</b> do datagrama.</li>
+					<li>Ou simplesmente por <b>atraso excessivo</b>.</li>
+					<li>Certo grau de <b>tolerância</b>, varia com a codificação.</li>
+				</ul></li>
+				<li><i>Jitter</i>:
+				<ul>
+					<li>Dificulta gerência do atraso.
+					<ul>
+						<li>Sem <i>jitter</i>, bastaria <b>atraso de reprodução fixo</b>.</li>
+						<li>Com <i>jitter</i>, certos pacotes podem expirar (perdidos).</li>
+					</ul></li>
+					<li>Alternativa: atraso de reprodução <b>adaptativo</b>.
+					<ul>
+						<li>Estimar atraso, média movente.</li>
+						<li>Usar momentos de <b>silêncio</b> para alterar atraso de reprodução.</li>
+					</ul></li>
+				</ul></li>
+				<li>Perda de pacotes.
+				<ul>
+					<li>Requisitos temporais fortes, <b>retransmissões inviáveis</b>.</li>
+					<li>Soluções:
+					<ul>
+						<li>FEC 1: inserir <b>redundância, corrigir</b> erros.</li>
+						<li>FEC 2: transmitir fluxo adicional de <b>baixa qualidade</b>.</li>
+						<li><i>Interleaving</i>: transmitir partes de trechos de forma <i>embaralhada</i>.</li>
+					</ul></li>
+				</ul></li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Leitura e Exercícios Sugeridos</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Redes de Distribuição de Conteúdo:
+			<ul>
+				<li>Páginas 449 a 451 do Kurose (Subseção 7.3.4).</li>
+				<li>Exercício de fixação 8 do capítulo 7 do Kurose.</li>
+				<li>Problemas 13 e 14 do capítulo 7 do Kurose.</li>
+			</ul></li>
+			<li>Netflix (opcional):
+			<ul>
+				<li>Apresentação sobre codificação do conteúdo:
+				<ul>
+					   <li><a href="http://www.streamingmedia.com/Articles/Editorial/Featured-Articles/Netflix-Development-The-Cost-of-Life-on-the-Bleeding-Edge-91182.aspx">http://www.streamingmedia.com/Articles/Editorial/Featured-Articles/Netflix-Development-The-Cost-of-Life-on-the-Bleeding-Edge-91182.aspx</a></li>
+				</ul></li>
+			</ul></li>
+			<li>VoIP:
+			<ul>
+				<li>Páginas 442 a 449 do Kurose (Seção 7.3 até Subseção 7.3.3, inclusive).</li>
+				<li>Exercícios de fixação 5, 6 e 7 do capítulo 7 do Kurose.</li>
+				<li>Problemas 4 a 12 do capítulo 7 do Kurose.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+<!--
+	<section>
+	<h1>Lembrete</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Prazo para a entrega do terceiro trabalho começa a contar.
+			<ul>
+				<li>Cerca de 20 dias de prazo.</li>
+			</ul></li>
+			<li>Trabalho consiste em:
+			<ul>
+				<li>Realizar captura de tráfego de três aplicações:
+				<ul>
+					<li>Vídeo do youtube.</li>
+					<li>Conversa via Skype.</li>
+					<li>E-mail do iduff.</li>
+				</ul></li>
+				<li><b>Escrever relatório</b> respondendo às perguntas do documento de especificação.</li>
+				<li>As questões tratam de:
+				<ul>
+					<li>Aspectos de segurança (presença ou ausência, protocolos utilizados).</li>
+					<li>Banda utilizada.</li>
+					<li>Períodos de silêncio.</li>
+					<li>...</li>
+				</ul></li>
+				<li><b>Apenas o relatório deve ser entregue!</b></li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+-->
+
+	<section>
+	<h1>Próxima Aula...</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Prosseguimos no tema das redes multimídia.</li>
+			<li>Próximo tópico: protocolos comumente utilizados.
+			<ul>
+				<li>RTP.</li>
+				<li>RTCP.</li>
+				<li>SIP.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<!-- {{{{ dzslides core
+	#
+	#
+	#     __  __  __       .  __   ___  __
+	#    |  \  / /__` |    | |  \ |__  /__`
+	#    |__/ /_ .__/ |___ | |__/ |___ .__/ core :€
+	#
+	#
+	# The following block of code is not supposed to be edited.
+	# But if you want to change the behavior of these slides,
+	# feel free to hack it!
+	#
+	-->
+
+    <!-- More CSS -->
+	<link href='../template/css/slides.css' id="slides" rel='stylesheet' type='text/css'>
+	<link href='../template/css/presentationSpecific2.css' id="presentationSpecific2" rel='stylesheet' type='text/css'>
+
+    <!-- More Javascript -->
+	<script type="text/javascript" src="../template/js/dz.js"></script>
+
+	<!-- More CSS -->
+	<link href='../template/css/notesSpecific.css' id="notesSpecific" rel='stylesheet' type='text/css'>
+	<link href='../template/css/printSpecific.css' id="printSpecific" rel='stylesheet' type='text/css'>
+</body>
+</html>
