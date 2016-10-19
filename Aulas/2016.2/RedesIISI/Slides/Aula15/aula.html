@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <!-- Meta info -->
+	<meta charset="utf-8">
+	<meta name="shortauthor" content="Diego Passos"/>
+	<meta name="shorttitle" content="Multimídia: Conceitos, Aplicações"/>
+	<meta name="shortevent" content="Redes de Computadores II"/>
+	<title>Redes de Computadores II: Aula 15</title>
+
+    <!-- Math support -->
+	<script type="text/x-mathjax-config">
+		MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+			MathJax.InputJax.TeX.Definitions.number = /^(?:[0-9]+(?:\.[0-9]{3})*(?:\{,\}[0-9]*)*|\{,\}[0-9]+)/
+		});
+	</script>
+	<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+	<!--<script src="../../../../MathJax-2.6-latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>-->
+
+    <!-- Fonts -->
+	<link href='https://fonts.googleapis.com/css?family=Lora:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
+	<!--<link href='../../../../Fonts/Lora/lora.css' rel='stylesheet' type='text/css'>-->
+
+
+    <!-- CSS -->
+	<link href='../template/css/template.css' id="template" rel='stylesheet' type='text/css'>
+	<link href='../template/css/presentationSpecific.css' id="presentationSpecific" rel='stylesheet' type='text/css'>
+
+    <!-- Javascript -->
+	<script type="text/javascript" src="../template/js/audio.js"></script>
+</head>
+
+<body>
+    <!-- Audio handlers -->
+    <audio src="audio/Fur_Elise_by_Beethoven_16bits_44100.wav" id="16_44100" preload="auto"></audio>
+    <audio src="audio/Fur_Elise_by_Beethoven_16bits_8000.wav" id="16_8000" preload="auto"></audio>
+    <audio src="audio/Fur_Elise_by_Beethoven_16bits_2000.wav" id="16_2000" preload="auto"></audio>
+    <audio src="audio/Fur_Elise_by_Beethoven_8bits_44100.wav" id="8_44100" preload="auto"></audio>
+    <audio src="audio/Fur_Elise_by_Beethoven_4bits_44100.wav" id="4_44100" preload="auto"></audio>
+    <audio src="audio/Fur_Elise_by_Beethoven_3bits_44100.wav" id="3_44100" preload="auto"></audio>
+
+    <!-- Title Slide -->
+	<section>
+
+        <div class="slideContent">
+            <h1 class="title">Aula 15 - Multimídia: Conceitos, Aplicações</h1>
+            <h2 class="author">Diego Passos</h2>
+            <h4 class="institution">Universidade Federal Fluminense</h4>
+            <h3 class="date">Redes de Computadores II</h3>
+        </div>
+
+	</section>
+
+    <!-- Content slides -->
+
+	<section>
+	<h1>Na Última Aula...</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 57%;">
+			<ul>
+				<li>IP Móvel:
+				<ul>
+					<li><b>Roteamento indireto</b>.</li>
+					<li>Descoberta de agentes através de mensagens ICMP.</li>
+					<li>Registro com agentes.</li>
+				</ul></li>
+				<li>IP Móvel e segurança.
+				<ul>
+					<li>É preciso haver algum tipo de <b>autenticação</b>.</li>
+				</ul></li>
+				<li>Mobilidade celular:
+				<ul>
+					<li>Mobilidade entre operadoras diferentes: <i>roaming</i>.
+					<ul>
+						<li>HLR: informações de usuários <b>originalmente</b> daquela operadora.</li>
+						<li>VLR: informações de usuários que, <b>no momento</b>, estão naquela rede.</li>
+						<li><b>Roteamento indireto</b>.
+						<ul>
+							<li>Rede de origem encaminha ligações para rede de atual.</li>
+						</ul></li>
+					</ul></li>
+				</ul>
+			</ul>
+		</div>
+		<div class="column" style="width: 43%;">
+			<ul>
+				<li>Mobilidade celular:
+				<ul>
+					<li><i>Handoff</i>: mobilidade entre duas estações bases.
+					<ul>
+						<li>Objetivo: manter ligações sem interrupção.</li>
+						<li><b>Usuário monitora</b>conectividade com estações base.
+						<ul>
+							<li>Envia dados para estação base atual.</li>
+						</ul></li>
+						<li><b>Rede</b> instrui usuário a fazer o <i>handoff</i>.</li>
+						<li>Pode ocorrer também entre torres de MSCs diferentes.</li>
+					</ul></li>
+				</ul></li>
+			</ul>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Agenda do Capítulo 7</h1>
+	<div class="slideContent">
+
+	  <ul>
+		  <li>Aplicações multimídia de rede.</li>
+		  <li><i>Streaming</i> de vídeo <b>armazenado</b>.</li>
+		  <li>Voz sobre IP.</li>
+		  <li>Protocolos para aplicações de <b>tempo real</b>.</li>
+		  <li>Suporte da rede às aplicações multimídia.</li>
+	  </ul>
+
+	</div>
+	</section>
+
+	<section class="secao">
+	<div class="slideContent">
+		Aplicações multimídia de rede
+	</div>
+	</section>
+
+	<section>
+	<h1>Multimídia: Áudio (I)</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li>Sinal analógico de áudio amostrado a taxa constante.
+				<ul>
+					<li>Telefone: 8000 amostras/s.</li>
+					<li>CD de música: 44100 amostras/s.</li>
+				</ul></li>
+				<li>Cada amostra quantizada, <i>i.e.</i>, arredondada.
+				<ul>
+					<li><i>e.g.</i>, <span class="math inline">\(2^8 = 256\)</span> possíveis valores quantizados.</li>
+					<li>Cada valor quantizado representado por bits, <i>e.g.</i>, 8 bits para 256 valores.</li>
+				</ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50%;">
+			<center>
+				<img src="imagens/audioSignal.svg" style="width: 80%;"/>
+			</center>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Multimídia: Áudio (II)</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li>Exemplo: 8000 amostras/s, 256 valores quantizados: 64000 b/s.</li>
+				<li>Receptor converte bits de volta ao sinal analógico.
+				<ul>
+					<li>Com, possivelmente, alguma perda de qualidade.</li>
+				</ul></li>
+				<li><span class="alert">Exemplos de taxas:</span>
+				<ul>
+					<li>CD: 1411 Mb/s.</li>
+					<li>MP3: 96, 128, 160 kb/s.</li>
+					<li>Telefonia via Internet: 5,3 kb/s ou mais.</li>
+				</ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50%;">
+			<center>
+				<img src="imagens/audioSignal.svg" style="width: 80%;"/>
+			</center>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Multimídia: Áudio (III)</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Reduzir amostragem ou bits por amostra reduz tamanho do áudio.</li>
+			<li>Mas também reduz <b>a qualidade</b>.</li>
+		</ul>
+
+		<br>
+		<br>
+		<center>
+		<style>
+			p.vertical {
+				   -webkit-transform: rotate(270deg);
+				   -moz-transform: rotate(270deg);
+				   -ms-transform: rotate(270deg);
+				   -o-transform: rotate(270deg);
+				   transform: rotate(270deg);
+			}
+		</style>
+		<table class="align" style="width: 70%;">
+			<tr>
+				<td rowspan=3 style="width: 5%;">
+					<p class="vertical"><b>Bits por Amostra</b></p>
+				</td>
+				<td style="border-right: solid 3px #000; padding-right: 10px;">
+					<b>16</b>
+				</td>
+				<td>
+					&nbsp;&nbsp;&nbsp;<img src="../template/images/Play.svg" style="width: 21%;" onmouseover="hoverIn(this, '../template/images/Play_enabled.svg');" onmouseout="hoverOut(this, '../template/images/Play.svg');" onclick="playSound('16_44100');"/>
+				</td>
+				<td>
+					&nbsp;&nbsp;&nbsp;<img src="../template/images/Play.svg" style="width: 21%;" onmouseover="hoverIn(this, '../template/images/Play_enabled.svg');" onmouseout="hoverOut(this, '../template/images/Play.svg');" onclick="playSound('16_8000');"/>
+				</td>
+				<td>
+					&nbsp;&nbsp;&nbsp;<img src="../template/images/Play.svg" style="width: 21%;" onmouseover="hoverIn(this, '../template/images/Play_enabled.svg');" onmouseout="hoverOut(this, '../template/images/Play.svg');" onclick="playSound('16_2000');"/>
+				</td>
+			</tr>
+			<tr>
+				<td style="border-right: solid 3px #000;">
+					<b>8</b>
+				</td>
+				<td>
+					&nbsp;&nbsp;&nbsp;<img src="../template/images/Play.svg" style="width: 21%;" onmouseover="hoverIn(this, '../template/images/Play_enabled.svg');" onmouseout="hoverOut(this, '../template/images/Play.svg');" onclick="playSound('8_44100');"/>
+				</td>
+				<td>
+				</td>
+				<td>
+				</td>
+			</tr>
+			<tr>
+				<td style="border-right: solid 3px #000; border-bottom: solid 3px #000;">
+					<b>4</b>
+				</td>
+				<td style="border-bottom: solid 3px #000;">
+					&nbsp;&nbsp;&nbsp;<img src="../template/images/Play.svg" style="width: 21%;" onmouseover="hoverIn(this, '../template/images/Play_enabled.svg');" onmouseout="hoverOut(this, '../template/images/Play.svg');" onclick="playSound('4_44100');"/>
+				</td>
+				<td style="border-bottom: solid 3px #000;">
+				</td>
+				<td style="border-bottom: solid 3px #000;">
+				</td>
+			</tr>
+			<tr>
+				<td>
+				</td>
+				<td style="border-right: solid 3px #000;">
+				</td>
+				<td style="padding-left: 10px;">
+					<b>44100</b>
+				</td>
+				<td>
+					<b>8000</b>
+				</td>
+				<td>
+					<b>2000</b>
+				</td>
+			</tr>
+			<tr>
+				<td>
+				</td>
+				<td>
+				</td>
+				<td colspan=3 style="text-align: center; padding-top: 10px;">
+					<b>Taxa de Amostragem (Amostras/s)</b>
+				</td>
+			</tr>
+
+	</table>
+		</center>
+	</div>
+	</section>
+
+	<!-- Talvez mostrar diferença de tamanho de um vídeo "raw" para um formato que usa este tipo de compressão -->
+	<section>
+	<h1>Multimídia: Vídeo (I)</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 55%;">
+			<br>
+			<br>
+			<br>
+			<ul>
+				<li>Vídeo: sequência de imagens mostradas a taxa constante.
+				<ul>
+					<li><i>e.g.</i>, 24 imagens/s.</li>
+				</ul></li>
+				<li>Imagem digital: matriz de pixels.
+				<ul>
+					<li>Cada pixel representado por bits.</li>
+				</ul></li>
+				<li>Codificação: uso de redundância <span class="alert">dentro</span> e <span class="alert">entre</span> imagens para reduzir # de bits necessários.
+				<ul>
+					<li>Espacial (dentro de uma imagem).</li>
+					<li>Temporal (de uma imagem para outra).</li>
+				</ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 45%;">
+			<center>
+				<img src="imagens/videoEncoding.svg" style="width: 80%;"/>
+			</center>
+		</div>
+	</div>
+	</section>
+
+	<!-- Talvez mostrar uma captura do wireshark de um streaming de vídeo, ilustrando que MPEG é VBR. -->
+	<section>
+	<h1>Multimídia: Vídeo (II)</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 55%;">
+			<br>
+			<br>
+			<br>
+			<ul>
+				<li><span class="alert">CBR (Constant Bit Rate):</span> taxa de codificação do vídeo é constante.</li>
+				<li><span class="alert">VBR (Variable Bit Rate):</span> taxa de codificação do vídeo muda à medida que redundância espacial/temporal muda.</li>
+				<li><span class="alert">Exemplos:</span>
+				<ul>
+					<li>MPEG1 (CD-ROM): 1,5 Mb/s.</li>
+					<li>MPEG2 (DVD): 3 a 6 Mb/s.</li>
+					<li>MPEG4 (como comumente usado na Internet): &lt; 1 Mb/s.</li>
+				</ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 45%;">
+			<center>
+				<img src="imagens/videoEncoding.svg" style="width: 80%;"/>
+			</center>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Multimídia: Três Tipos de Aplicação de Rede</h1>
+	<div class="slideContent">
+		<ul>
+			<li><span class="alert"><i>Streaming</i></span> de vídeo/áudio <span class="alert">armazenado</span>.
+			<ul>
+				<li><b><i>Streaming</i></b>: conteúdo começa a ser reproduzido antes do <i>download</i> do arquivo todo.</li>
+				<li><b>Armazenado</b>: conteúdo pode ser transmitido mais rapidamente que a renderização do áudio/vídeo.
+				<ul>
+					<li>Implica armazenamento/buffer no cliente.</li>
+				</ul></li>
+				<li><i>e.g.</i>, YouTube, Netflix, Hulu.</li>
+			</ul></li>
+			<li><span class="alert">Conversação de voz/vídeo sobre IP</span>.
+			<ul>
+				<li>Natureza interativa da comunicação humana limita tolerância ao atraso.</li>
+				<li><i>e.g.</i>, Skype.</li>
+			</ul></li>
+			<li><span class="alert"><i>Streaming ao vivo</i> de áudio/vídeo.</span>
+			<ul>
+				<li><i>e.g.</i>, evento esportivo ao vivo.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<!-- Demonstração: tolerância a perda de aplicações de áudio e vídeo. -->
+	<!-- Demonstração: baixa tolerância a atraso. -->
+
+	<section>
+	<h1>Aplicações Multimídia e a Internet Atual</h1>
+	<div class="slideContent">
+		<ul>
+			<li>A Internet atual é adequada a estas aplicações?
+			<ul>
+				<li>Tema contraditório...</li>
+				<li>Por um lado, estas aplicações são <b>realidade hoje</b>.
+				<ul>
+					<li>Youtube, Netflix, Skype, <i>streaming</i> ao-vivo de eventos esportivos, ...</li>
+				</ul></li>
+				<li>Por outro, sabemos que a Internet é uma rede de <b>melhor esforço</b>.
+				<ul>
+					<li>Atraso variável, congestionamento, perda de pacotes, ...</li>
+				</ul></li>
+			</ul></li>
+			<li>Três correntes de pensamento:
+			<ul>
+				<li><b>Aumentar capacidade</b> da rede.</li>
+				<li>Implantar mecanismos auxiliares <b>sem alterar funcionamento básico</b> da rede.</li>
+				<li>Ou realizar <b>mudanças arquiteturais</b> profundas.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section class="secao">
+	<div class="slideContent">
+		<i>Streaming</i> de vídeo armazenado
+	</div>
+	</section>
+
+	<section>
+	<h1><i>Streaming</i> de Vídeo Armazenado</h1>
+	<div class="slideContent">
+		<center>
+			<img src="imagens/videoStreaming.svg" style="width: 80%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1><i>Streaming</i> de Vídeo Armazenado: Desafios</h1>
+	<div class="slideContent">
+		<ul>
+			<li><span class="alert">Restrição de reprodução contínua:</span>
+			<ul>
+				<li>Uma vez começada, reprodução no cliente deve seguir temporização original.</li>
+				<li>... mas <span class="alert">atrasos de rede são variáveis</span> (<i>jitter</i>).</li>
+				<li>É necessário um <b>buffer no cliente</b> para <b>absorver as variações da rede</b>.</li>
+			</ul></li>
+			<li>Outros desafios:
+			<ul>
+				<li>Interatividade com o cliente: pausar, avançar, retroceder, pular para outras partes do vídeo.</li>
+				<li>Pacotes de vídeo podem ser perdidos, retransmitidos, duplicados.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1><i>Streaming</i> de Vídeo Armazenado: Revisitando</h1>
+	<div class="slideContent">
+		<center>
+			<img src="imagens/streamingBuffer.svg" style="width: 80%;"/>
+		</center>
+
+		<ul>
+			<li><span class="alert">Buffer do cliente e atraso na reprodução</span>: compensam atrasos da rede e jitter.</li>
+		</ul>
+	</div>
+	</section>
+
+	<!-- Possível demonstração: mostrar interrupção da execução do vídeo por conta de esgotamento de playout buffer. -->
+
+	<section>
+	<h1>Buffer do Cliente, Reprodução (I)</h1>
+	   <center>
+			 <img src="imagens/playout1.svg" style="width: 80%;"/>
+	   </center>
+	</section>
+
+	<section>
+	<h1>Buffer do Cliente, Reprodução (II)</h1>
+	   <center>
+			 <img src="imagens/playout2.svg" style="width: 80%;"/>
+	   </center>
+	   <ol>
+	   	<li>Preenchimento inicial do buffer até que reprodução inicie em <span class="math inline">\(t_p\)</span>.</li>
+		<li>Reprodução começa em <span class="math inline">\(t_p\)</span>.</li>
+		<li>Ocupação do buffer varia no tempo, já que taxa de chegada <span class="alert">x(t)</span> varia, enquanto taxa de reprodução é constante.</li>
+	   </ol>
+	</section>
+
+	<section>
+	<h1>Buffer do Cliente, Reprodução (III)</h1>
+	   <center>
+			 <img src="imagens/playout3.svg" style="width: 80%;"/>
+	   </center>
+	   <ul>
+	   	<li><span class="alert">Buffer do cliente</span>: taxa de chegada média <b>x</b>, taxa de reprodução <b>r</b>.
+	   	<ul>
+	   		<li>Se <b>x &lt; r</b>, buffer eventualmente é esgotado, fazendo com que reprodução seja interrompida até que ele seja preenchido novamente.</li>
+			<li>Se <b>x > r</b>, buffer nunca será esgotado, desde que atraso inicial de reprodução seja grande o suficiente para absorver variabilidades em <b>x(t)</b>.
+			<ul>
+				<li><span class="alert">Compromisso do atraso inicial de reprodução</span>: quanto maior o atraso, menor a probabilidade de esgotamento do buffer, mas maior o tempo que usuário precisa esperar para começar a ver o conteúdo.</li>
+			</ul></li>
+	   	</ul></li>
+	   </ul>
+	</section>
+
+	<section>
+	<h1><i>Streaming</i> Multimídia: UDP</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Servidor envia a taxa apropriada para o cliente.
+			<ul>
+				<li>Comumente: taxa de transmissão = taxa de codificação = taxa constante.</li>
+				<li>Taxa de transmissão é normalmente ortogonal aos níveis de congestionamento da rede.</li>
+			</ul></li>
+			<li>Pequeno atraso inicial de reprodução usado para absorver jitter.</li>
+			<li>Recuperação de erros: no nível da aplicação, se há tempo para isso.</li>
+			<li>RTP [RFC 2326]: tipos de <i>payload</i> multimídia.</li>
+			<li>Firewalls podem filtrar pacotes UDP.</li>
+		</ul>
+	</div>
+	</section>
+
+	<!-- Possível demonstração: mostrar como o nível do buffer varia ao longo do tempo em um streaming. -->
+
+	<section>
+	<h1><i>Streaming</i> Multimídia: HTTP</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Arquivo de mídia é requisitado através de uma requisição GET HTTP.</li>
+			<li>Enviado à taxa mais alta possível via TCP.</li>
+		</ul>
+		<center>
+			<img src="imagens/streamingHTTP.svg" style="width: 80%;"/>
+		</center>
+		<ul>
+			<li>Taxa de chegada no cliente varia, devido ao controle de congestionamento e retransmissões do TCP (entrega em ordem).</li>
+			<li>Atraso de reprodução tipicamente maior: suaviza taxa de transmissão do TCP.</li>
+			<li>HTTP/TCP passa mais facilmente por <i>firewalls</i>.</li>
+		</ul>
+	</div>
+	</section>
+
+	<!-- Possível demonstração: mostrar como diferença de reprodução entre streaming do mesmo vídeo via TCP e UDP. -->
+
+	<!-- Pode ser legal mostrar um pequeno vídeo ilustrando esta adaptação. -->
+	<section>
+	<h1><i>Streaming</i> Multimídia: DASH (I)</h1>
+	<div class="slideContent">
+		<ul>
+			<li><span class="alert">DASH:</span> <i>Dynamic, Adaptive Streaming over HTTP</i>.</li>
+			<li><b>Servidor</b>:
+			<ul>
+				<li>Divide vídeo em vários pedaços.</li>
+				<li>Cada pedaço armazenado e codificado em taxas diferentes.</li>
+				<li>Manifesto: arquivo que provê URLs para os diferentes pedaços.</li>
+			</ul></li>
+			<li><b>Cliente</b>:
+			<ul>
+				<li>Periodicamente mede banda até o servidor.</li>
+				<li>Consulta o manifesto, e requisita um pedaço por vez.
+				<ul>
+					<li>Escolhe maior taxa possível, dada a banda disponível.</li>
+					<li>Pode escolher taxas diferentes em momentos diferentes (dependendo da banda disponível no tempo).</li>
+				</ul></li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1><i>Streaming</i> Multimídia: DASH (II)</h1>
+	<div class="slideContent">
+		<ul>
+			<li><span class="alert">DASH:</span> <i>Dynamic, Adaptive Streaming over HTTP</i>.</li>
+			<li><b>Inteligência no Cliente</b>: cliente determina
+			<ul>
+				<li><span class="alert">Quando</span> requisitar pedaço (de forma que esgotamento e <i>overflow</i> do buffer não ocorram).</li>
+				<li><span class="alert">Qual taxa de transmissão</span> requisitar (aumentando a qualidade quando possível).</li>
+				<li><span class="alert">De onde</span> requisitar um pedaço (pode escolher um servidor &ldquo;próximo&rdquo; ou com mais banda disponível).</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+
+	<section>
+	<h1>Resumo da Aula (I)...</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 55%;">
+			<ul>
+				<li>Tipos de conteúdo: áudio e vídeo.
+				<ul>
+					<li>Sequências de <b>amostras</b>.
+					<ul>
+						<li>Imagens estáticas ou sinal sonoro.</li>
+					</ul></li>
+					<li>Amostras são <b>quantizadas</b>: mapeadas para valores discretos.</li>
+					<li><b>Taxa de amostragem</b>: quantas amostras por intervalo de tempo.</li>
+					<li><b>Bits por amostra</b>: quanto mais bits, maior a resolução da amostra.</li>
+					<li>Reduzir taxa de amostra ou bits por amostra reduz tamanho do conteúdo.
+					<ul>
+						<li>Mas também <b>reduz qualidade</b>.</li>
+						<li><i>e.g.</i>, introdução de <b>ruído de quantização</b>.</li>
+					</ul></li>
+				</ul></li>
+				<li>Compressão de dados: reduzir <b>redundância</b>.
+				<ul>
+					<li><b>Temporal</b> ou <b>espacial</b>.</li>
+					<li>Pode levar a <b>taxa variável</b>.</li>
+				</ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 45%;">
+			<ul>
+			<li>Tipos de aplicação multimídia:
+			<ul>
+				<li><i>Streaming</i> de conteúdo <b>armazenado</b>.
+				<ul>
+					<li>Reprodução começa <b>antes</b> do cliente obter todo o conteúdo.</li>
+					<li>Mas conteúdo completo já está <b>pronto, armazenado</b> no servidor.
+					<ul>
+						<li>Pode ser transmitido <b>mais rapidamente que a taxa de reprodução</b>.</li>
+					</ul></li>
+				</ul></li>
+			</ul></li>
+			<li>Conversação de voz/vídeo.
+			<ul>
+				<li>Aplicação <b>interativa</b>, baixa <b>tolerância a atraso</b>.</li>
+			</ul></li>
+			<li><i>Streaming</i> de conteúdo ao vivo.</li>
+			</ul>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Resumo da Aula (II)...</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Aplicações multimídia e a Internet: desafios.
+			<ul>
+				<li>Internet: rede de <b>melhor esforço</b>.</li>
+				<li>Perda de pacotes, <b>atrasos variáveis</b> (<i>jitter</i>).</li>
+			</ul></li>
+			<li>Buffer de reprodução: absorve variações.
+			<ul>
+				<li>Cliente <b>não começa</b> reprodução imediatamente.</li>
+				<li>Aguarda período, <i>bufferizando</i> amostras.</li>
+				<li>Se <i>buffer</i> é grande o <b>suficiente</b>, variações não serão percebidas.</li>
+				<li>Por outro lado: <i>buffer</i> <b>muito grande</b>, grande <b>atraso do início da reprodução</b>.</li>
+				<li>Buffer e vazão: se taxa de chegada de dados é <b>menor que a taxa de reprodução</b>, <i>buffer</i> será <b>esgotado</b>.
+				<ul>
+					<li>Não importa seu tamanho, supondo que conteúdo seja <b>longo</b>.</li>
+				</ul></li>
+			</ul></li>
+			<li>UDP <i>vs.</i> TCP:
+			<ul>
+				<li>UDP: <b>taxa constante, independente de congestionamento</b>, pode ser filtrado.</li>
+				<li>TCP (HTTP): transmitido <b>o mais rápido possível</b>, <i>firewall friendly</i>.
+				<ul>
+					<li>DASH: <b>taxa adaptativa</b>, escolhida pelo <b>cliente</b>.</li>
+				</ul></li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Leitura e Exercícios Sugeridos</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Aplicações multimídia típicas:
+			<ul>
+				<li>Páginas 428 a 493 (até Subseção 7.2.2, inclusive).</li>
+				<li>Exercícios de fixação 1 e 2 do capítulo 7 do Kurose.</li>
+				<li>Problemas 1 (somente a e b), 2 e 3 do capítulo 7 do Kurose.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Lembretes</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Próxima aula: <b>prova</b> (P<sub>2</sub>).</li>
+			<li>Aula seguinte: expira o prazo para entrega do <b>segundo trabalho</b>.
+			<ul>
+				<li>Como sempre, entrega por e-mail.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Próxima Aula...</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Prova.</li>
+			<li>Aula seguinte: continuamos discutindo multimídia.
+			<ul>
+				<li>Distribuição de conteúdo: CDNs.</li>
+				<li>VoIP.</li>
+				<li>Estudos de caso: Netflix, Skype.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<!-- {{{{ dzslides core
+	#
+	#
+	#     __  __  __       .  __   ___  __
+	#    |  \  / /__` |    | |  \ |__  /__`
+	#    |__/ /_ .__/ |___ | |__/ |___ .__/ core :€
+	#
+	#
+	# The following block of code is not supposed to be edited.
+	# But if you want to change the behavior of these slides,
+	# feel free to hack it!
+	#
+	-->
+
+    <!-- More CSS -->
+	<link href='../template/css/slides.css' id="slides" rel='stylesheet' type='text/css'>
+	<link href='../template/css/presentationSpecific2.css' id="presentationSpecific2" rel='stylesheet' type='text/css'>
+
+    <!-- More Javascript -->
+	<script type="text/javascript" src="../template/js/dz.js"></script>
+
+	<!-- More CSS -->
+	<link href='../template/css/notesSpecific.css' id="notesSpecific" rel='stylesheet' type='text/css'>
+	<link href='../template/css/printSpecific.css' id="printSpecific" rel='stylesheet' type='text/css'>
+</body>
+</html>
