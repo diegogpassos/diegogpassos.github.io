@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <!-- Meta info -->
+	<meta charset="utf-8">
+	<meta name="shortauthor" content="Diego Passos"/>
+	<meta name="shorttitle" content="Gerência: Conceitos, SNMP, MIBs"/>
+	<meta name="shortevent" content="Redes de Computadores II"/>
+	<title>Redes de Computadores II: Aula 20</title>
+
+    <!-- Math support -->
+	<script type="text/x-mathjax-config">
+		MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+			MathJax.InputJax.TeX.Definitions.number = /^(?:[0-9]+(?:\.[0-9]{3})*(?:\{,\}[0-9]*)*|\{,\}[0-9]+)/
+		});
+	</script>
+	<!--<script src="../MathJax/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>-->
+	<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+	<!--<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>-->
+
+    <!-- Fonts -->
+	<link href='https://fonts.googleapis.com/css?family=Lora:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
+	<!--<link href='../../../../Fonts/Lora/lora.css' rel='stylesheet' type='text/css'>-->
+
+    <!-- CSS -->
+	<link href='../template/css/template.css' id="template" rel='stylesheet' type='text/css'>
+	<link href='../template/css/presentationSpecific.css' id="presentationSpecific" rel='stylesheet' type='text/css'>
+
+    <!-- Javascript -->
+	<script type="text/javascript" src="../template/js/audio.js"></script>
+</head>
+
+<body>
+    <!-- Audio handlers -->
+
+    <!-- Title Slide -->
+	<section>
+
+        <div class="slideContent">
+            <h1 class="title">Aula 19 - Conceitos, SNMP, MIBs</h1>
+            <h2 class="author">Diego Passos</h2>
+            <h4 class="institution">Universidade Federal Fluminense</h4>
+            <h3 class="date">Redes de Computadores II</h3>
+        </div>
+
+	</section>
+
+    <!-- Content slides -->
+
+   	<section>
+	<h1>Na Última Aula (I)...</h1>
+	<div class="slideContent">
+        <div class="column" style="width: 50%;">
+            <ul>
+                <li>Dimensionamento:
+                <ul>
+                    <li>Criar <b>capacidade</b> compatível com a <b>demanda</b>.</li>
+                    <li>Mas quanto é <b>suficiente</b>?</li>
+                </ul></li>
+                <li>Classes de Serviço:
+                <ul>
+                    <li>Tráfego é dividido em <b>classes</b>.</li>
+                    <li>Classes recebem <b>tratamentos diferentes</b>.</li>
+                    <li><b>Escalabilidade</b>.</li>
+                </ul></li>
+                <li>Marcação de pacotes:
+                <ul>
+                    <li>Pacotes recebem marcas.</li>
+                    <li>Identificação de classe.</li>
+                </ul></li>
+            </ul>
+        </div>
+        <div class="column" style="width: 50%;">
+            <ul>
+                <li>Isolamento:
+                <ul>
+                    <li>Classes não devem se interferir.</li>
+                    <li>Mas <b>recursos não usados devem ser aproveitados</b>.</li>
+                </ul></li>
+                <li>Escalonamento:
+                <ul>
+                    <li>Política de escolha de pacotes para uso do enlace.
+                    <ul>
+                        <li>FIFO, <i>Priority Scheduling</i>, <i>Round Robin</i>, WFQ, ...</li>
+                    </ul></li>
+                </ul></li>
+                <li>Mecanismos de regulação:
+                <ul>
+                    <li>Garantem que tráfego atende parâmetros declarados.</li>
+                    <li><i>e.g.</i>, <i>Token Bucket</i>.</li>
+                </ul></li>
+            </ul>
+        </div>
+	</div>
+	</section>
+
+    <section>
+    <h1>Na Última Aula (II)...</h1>
+    <div class="slideContent">
+        <ul>
+            <li>Diffserv: arquitetura para diferenciação de serviços.
+            <ul>
+                <li><b>Escalabilidade:</b> maior esforço nas bordas.
+                <ul>
+                    <li>Marcação de pacotes, condicionamento.</li>
+                </ul></li>
+                <li>Roteadores de núcleo: obedecem ao PHB.
+                <ul>
+                    <li>Aplicam políticas de compartilhamento de banda, <i>buffer</i>.</li>
+                    <li>Políticas diferentes para classes diferentes.</li>
+                </ul></li>
+            </ul></li>
+            <li>Garantias de QoS por fluxo: necessita de <b>controle de admissão</b>.
+            <ul>
+                <li>Garantir que rede/enlace possui <b>capacidade suficiente</b> para atender a <b>todos os fluxos</b>.</li>
+                <li>Configuração de chamada.</li>
+                <li>Cada elemento da rede deve prover garantias.</li>
+            </ul></li>
+        </ul>
+    </div>
+    </section>
+
+    <section>
+    <h1>Objetivos do Capítulo 9</h1>
+    <div class="slideContent">
+    		<ul>
+    			<li>Introdução ao gerenciamento de redes.
+    			<ul>
+    				<li>Motivação.</li>
+				<li>Componentes principais.</li>
+    			</ul></li>
+			<li><i>Framework</i> de gerenciamento de redes na Internet.
+			<ul>
+				<li>MIB: <i>Management Information Base</i>.</li>
+				<li>SMI: linguagem de definição de dados.</li>
+				<li>SNMP: protocolo para gerência de redes.</li>
+				<li>Segurança e administração.</li>
+			</ul></li>
+			<li>Serviços de apresentação: ASN.1.</li>
+    		</ul>
+    </div>
+    </section>
+
+    <section>
+    <h1>Agenda do Capítulo 9</h1>
+    <div class="slideContent">
+    		<ul>
+    			<li>O que é gerência de redes?</li>
+			<li><i>Framework</i> padrão de gerenciamento de redes na Internet.
+			<ul>
+				<li><i>Structure of Management Information</i>: SMI</li>
+				<li><i>Management Information Base</i>: MIB.</li>
+				<li>SNMP: operação do protocolo e Mapeamentos de Transporte.</li>
+				<li>Segurança e administração.</li>
+			</ul></li>
+			<li>ASN.1.</li>
+    		</ul>
+    </div>
+    </section>
+
+    <section class="secao">
+    <div class="slideContent">
+    	O que é gerência de redes?
+    </div>
+    </section>
+
+    <section>
+    <h1>O Que É Gerência de Redes</h1>
+    <div class="slideContent">
+    		<ul>
+    			<li><span class="alert">Sistemas autônomos (&ldquo;redes&rdquo;): milhares de componentes de <i>hardware</i>/<i>software</i> interagindo.</span></li>
+			<li>Outros sistemas complexos requerem monitoramento, controle:
+			<ul>
+				<li>Avião.</li>
+				<li>Usina nuclear.</li>
+				<li>Outros?</li>
+			</ul></li>
+    		</ul>
+		<div style="width: 100%; height: 190px;">
+			   <img src="imagens/Duvida.svg" style="width: 20%;"/>
+			   <div style="width: 70%; padding: 10px; border: 2px solid red; float: right; margin: 5px;">
+					&ldquo;<b>A gerência de redes</b> inclui o desenvolvimento, integração e coordenação do <i>hardware</i>, <i>software</i> e elementos humanos para monitorar, testar, indagar, configurar, analisar, avaliar e controlar a rede e seus recursos para alcançar os requisitos de tempo real, desempenho operacional e qualidade de serviço com custos razoáveis.&rdquo;
+			   </div>
+		</div>
+    </div>
+    </section>
+
+    <section>
+    <h1>Gerência nos Primórdios da Internet</h1>
+    <div class="slideContent">
+    		<ul>
+    			<li>Gerência era um processo quase inexistente.
+    			<ul>
+				<li>Rede era um artefato de pesquisa</li>
+    				<li>Não um &ldquo;produto&rdquo; usado por milhões de pessoas simultaneamente.
+    				<ul>
+    					<li>Incluindo transações financeiras e outras aplicações sensíveis.</li>
+    				</ul></li>
+    			</ul></li>
+			<li>Problemas eram identificados de forma <i>ad hoc</i>.
+			<ul>
+				<li>Ferramentas básicas como o <i>ping</i> eram usadas para tentar localizar a fonte.</li>
+			</ul></li>
+			<li><i>e.g.</i>, RFC 789 (primeira grande queda da ARPAnet).</li>
+    		</ul>
+    </div>
+    </section>
+
+	<section>
+	<h1>Gerência de Redes: Casos de Uso (I)</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Detecção de falha em interface de rede de um <i>host</i> ou roteador.
+			<ul>
+				<li>Dispositivo com interface problemática pode enviar alerta ao administrador.</li>
+				<li>Administrador pode monitorar desempenho, detectar previamente degradação.</li>
+			</ul></li>
+			<li>Monitoramento de <i>hosts</i>/serviços.
+			<ul>
+				<li>Administrador pode verificar periodicamente se <i>hosts</i>/serviços estão ativos, funcionais.</li>
+			</ul></li>
+			<li>Monitoramento de tráfego.
+			<ul>
+				<li>Administrador pode monitorar continuamente o tráfego nos enlaces da rede.</li>
+				<li>Permite identificar padrões de tráfego, otimizar localização de elementos da rede.</li>
+				<li>Permite identificar necessidade de aumento de capacidade antes que rede se torne um gargalo.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Gerência de Redes: Casos de Uso (II)</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Detecção de instabilidades de roteamento.
+			<ul>
+				<li>Administrador pode monitorar continuamente certas rotas.
+				<ul>
+					<li>Ou estatísticas compiladas sobre o protocolo de roteamento.</li>
+				</ul></li>
+				<li>Pode identificar mudanças muito frequentes, prejudicando desempenho.</li>
+			</ul></li>
+			<li>Monitoramento de SLAs.
+			<ul>
+				<li>Administrador pode monitorar métricas de desempenho estabelecidas em contratos de serviço.</li>
+				<li>Identificar que determinado acordo não está sendo seguido.</li>
+			</ul></li>
+			<li>Detecção de intrusos/tentativas de intrusão.
+			<ul>
+				<li>Administrador pode monitorar tentativas suspeitas de acesso a recursos da rede.
+				<ul>
+					<li><i>e.g.</i>, quantidades anormais de aberturas de conexão para porta 22 de um servidor.</li>
+				</ul></li>
+				<li>Permite prevenir ataques/invasões.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<!-- Possível demonstração: exibir dados monitorados de rede real e discutir como eles podem indicar problemas. -->
+	<section>
+	<h1>Áreas de Gerenciamento de Rede</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Cinco áreas definidas pela ISO:</li>
+		</ul>
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li><b>Gerenciamento de desempenho</b>:
+				<ul>
+					<li>Medir/quantificar desempenho dos componentes de rede.</li>
+					<li>Roteadores, <i>switches</i>, <i>hosts</i>, ...</li>
+					<li>Vazão, atraso, perda de pacotes, ...</li>
+				</ul></li>
+				<li><b>Gerenciamento de falhas</b>:
+				<ul>
+					<li>Detectar, registrar, reagir a eventos de falha.</li>
+					<li><i>e.g.</i>, interrupção de serviços.</li>
+				</ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li><b>Gerenciamento de configuração</b>:
+				<ul>
+					<li>Conhecer dispositivos administrados.</li>
+					<li>Consultar, alterar configurações de <i>hardware</i>, <i>software</i>.</li>
+				</ul></li>
+				<li><b>Gerenciamento de contabilização</b>:
+				<ul>
+					<li>Registrar, controlar acesso a recursos da rede.</li>
+				</ul></li>
+				<li><b>Gerenciamento de segurança</b>:
+				<ul>
+					<li>Detectar tentativas de ataques/invasões.</li>
+					<li>Restringir acesso a recursos.
+					<ul>
+						<li>Objetivando segurança.</li>
+					</ul></li>
+				</ul></li>
+			</ul>
+		</div>
+	</div>
+	</section>
+
+    <section>
+    <h1>Infraestrutura para o Gerenciamento de Redes</h1>
+    <div class="slideContent">
+    		<div class="column" style="width: 60%;">
+    			<ul>
+    				<li>Definições:</li>
+    			</ul>
+			<center>
+				<img src="imagens/Definicoes.svg" style="width: 80%;"/>
+			</center>
+    		</div>
+		<div class="column" style="width: 40%;">
+				<br>
+				<br>
+				<center>
+			   <div style="width: 90%; padding: 10px; border: 2px solid red; float: right; margin: 10px;">
+			   		<b>Dispositivos gerenciados</b> contêm <b>objetos gerenciados</b> cujos dados são reunidos em um <b><i>Management Information Base</i> (MIB)</b>.
+			   </div>
+				</center>
+				<ul>
+					<li>Outros componentes:
+					<ul>
+						<li><b>Entidade gerenciadora</b>.</li>
+						<li><b>Agente de gerenciamento</b>.</li>
+						<li><b>Protocolo de gerenciamento</b>.</li>
+					</ul></li>
+				</ul>
+		</div>
+    </div>
+    </section>
+
+    <section>
+    <h1>Padrões de Gerência de Rede</h1>
+    <div class="slideContent">
+    		<div class="column" style="width: 50%;">
+    			<ul>
+    				<li><span class="alert">OSI CMIP.</span>
+    				<ul>
+    					<li><i>Common Management Information Protocol.</i></li>
+					<li>Projetado nos anos 80: <i>o</i> padrão de gerência de redes unificado.</li>
+					<li>Padronização muito lenta.</li>
+    				</ul></li>
+    			</ul>
+    		</div>
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li><span class="alert">SNMP: <i>Simple Network Management Protocol</i></span>.
+				<ul>
+					<li>Raízes na Internet (SGMP).</li>
+					<li>Começou simples.</li>
+					<li>Rapidamente adotado, implantado.</li>
+					<li>Crescimento: tamanho, complexidade.</li>
+					<li>Atualmente: SNMPv3.</li>
+					<li>Padrão de fato para gerenciamento de redes.</li>
+				</ul></li>
+			</ul>
+		</div>
+    </div>
+    </section>
+
+    <section class="secao">
+    <div class="slideContent">
+    		<i>Framework</i> padrão de gerenciamento de redes na Internet
+    </div>
+    </section>
+
+    <section>
+    <h1>Visão Geral do SNMP: 4 Partes Chave</h1>
+    <div class="slideContent">
+    		<ul>
+    			<li><span class="alert"><i>Management Information Base</i> (MIB):</span>
+    			<ul>
+    				<li>Repositório distribuído de informações de gerenciamento de rede.</li>
+    			</ul></li>
+			<li><span class="alert"><i>Structure of Management Information</i> (SMI):</span>
+			<ul>
+				<li>Linguagem de definição de dados para objetivos MIB.</li>
+			</ul></li>
+			<li><span class="alert">Protocolo SNMP:</span>
+			<ul>
+				<li>Transporta comunicação entre objeto gerenciado e gerenciador, incluindo informações e comandos.</li>
+			</ul></li>
+			<li><span class="alert">Capacidades de segurança e administração.</span>
+			<ul>
+				<li>A grande adição no SNMPv3.</li>
+			</ul></li>
+    		</ul>
+    </div>
+    </section>
+
+    <section>
+    <h1>SMI: Linguagem de Definição de Dados</h1>
+    <div class="slideContent">
+    		<div class="column" style="width: 60%;">
+    			<ul>
+    				<li><span class="alert">Propósito:</span> sintaxe e semântica dos dados de gerência é bem definida, sem ambiguidade.
+    				<ul>
+    					<li>Tipos básicos:
+    					<ul>
+    						<li>Óbvios, chatos.</li>
+    					</ul></li>
+					<li>OBJECT-TYPE:
+					<ul>
+						<li>Tipo do dado, status, semântica do objeto gerenciado.</li>
+					</ul></li>
+					<li>MODULE-IDENTITY:
+					<ul>
+						<li>Agrupa objetos relacionados em um módulo MIB.</li>
+					</ul></li>
+    				</ul></li>
+    			</ul>
+    		</div>
+		<div class="column" style="width: 40%;">
+			<ul>
+				<li><span class="alert">Tipos Básicos:</span>
+				<ul>
+					<li>INTEGER.</li>
+					<li>Integer32.</li>
+					<li>Unsigned32.</li>
+					<li>OCTET STRING.</li>
+					<li>OBJECT IDENTIFIER.</li>
+					<li>IPaddress.</li>
+					<li>Counter32.</li>
+					<li>Counter64.</li>
+					<li>Gauge32.</li>
+					<li>Time Ticks.</li>
+					<li>Opaque.</li>
+				</ul></li>
+			</ul>
+		</div>
+    </div>
+    </section>
+
+    <section>
+    <h1>MIB SNMP</h1>
+    <div class="slideContent">
+    		<center>
+    			<img src="imagens/MIBSNMP.svg" style="width: 60%;"/>
+    		</center>
+    </div>
+    </section>
+
+    <section>
+    <h1>SMI: Exemplo de Objeto</h1>
+    <div class="slideContent">
+		<center>
+		<div style="text-align: left; width: 95%;">
+		<tt>
+ipSystemStatsInDelivers OBJECT-TYPE<br>
+&nbsp;&nbsp;&nbsp;&nbsp;SYNTAX     Counter32<br>
+&nbsp;&nbsp;&nbsp;&nbsp;MAX-ACCESS read-only<br>
+&nbsp;&nbsp;&nbsp;&nbsp;STATUS     current<br>
+&nbsp;&nbsp;&nbsp;&nbsp;DESCRIPTION<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The total number of datagrams successfully delivered to IP<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;user-protocols (including ICMP).<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;When tracking interface statistics, the counter of the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;interface to which these datagrams were addressed is<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;incremented.  This interface might not be the same as the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;input interface for some of the datagrams.<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Discontinuities in the value of this counter can occur at<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;re-initialization of the management system, and at other<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;times as indicated by the value of<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ipSystemStatsDiscontinuityTime."<br>
+&nbsp;&nbsp;&nbsp;&nbsp;::= { ipSystemStatsEntry 18 }<br>
+		</tt>
+		</div>
+		</center>
+    </div>
+    </section>
+
+    <section>
+    <h1>SMI: Exemplo de Módulo</h1>
+    <div class="slideContent">
+
+	  <center>
+	  <div style="text-align: left; width: 95%;">
+	  <tt>
+ipMIB MODULE-IDENTITY<br>
+&nbsp;&nbsp;&nbsp;&nbsp;LAST-UPDATED "200602020000Z"<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;   ORGANIZATION "IETF IPv6 MIB Revision Team"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;    CONTACT-INFO<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;          "Editor:<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;           Shawn A. Routhier<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;           Interworking Labs<br>
+...<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;   DESCRIPTION<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;          "The MIB module for managing IP and ICMP implementations, but<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;           excluding their management of IP routes.<br>
+...<br>
+<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;   REVISION      "200602020000Z"<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;   DESCRIPTION<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;          "The IP version neutral revision with added IPv6 objects for<br>
+...<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;   ::= { mib-2 48}
+	  </tt>
+	  </center>
+
+    </div>
+    </section>
+
+	<!-- Possível demonstração: fazer consulta SNMP para obter esta MIB. -->
+    <section>
+    <h1>Exemplo de MIB: Módulo UDP</h1>
+    <div class="slideContent">
+    		<style>
+			table#exemploMIB td {
+				padding: 10px;
+			}
+			table#exemploMIB th {
+
+				color: red;
+				background: none;
+				font-weight: normal;
+				border-bottom: 2px solid red;
+			}
+		</style>
+    		<table class="align" id="exemploMIB">
+    			<tr>
+				<th>Object ID</th>
+				<th>Nome</th>
+				<th>Tipo</th>
+				<th>Comentário</th>
+			</tr>
+			<tr>
+				<td>1.3.6.1.2.1.7.1</td>
+				<td>UDPInDatagrams</td>
+				<td>Counter32</td>
+				<td># total de datagramas entregues a este nó</td>
+			</tr>
+			<tr>
+				<td>1.3.6.1.2.1.7.2</td>
+				<td>UDPNoPorts</td>
+				<td>Counter32</td>
+				<td># de datagramas não entregues: não há aplicação na porta</td>
+			</tr>
+			<tr>
+				<td>1.3.6.1.2.1.7.3</td>
+				<td>UDPInErrors</td>
+				<td>Counter32</td>
+				<td># de datagramas não entregues: qualquer outra razão</td>
+			</tr>
+			<tr>
+				<td>1.3.6.1.2.1.7.4</td>
+				<td>UDPOutDatagrams</td>
+				<td>Counter32</td>
+				<td># de datagramas enviados</td>
+			</tr>
+			<tr>
+				<td>1.3.6.1.2.1.7.5</td>
+				<td>udpTable</td>
+				<td>SEQUENCE</td>
+				<td>Uma entrada para cada porta em uso por aplicações, apresenta # de porta e endereço IP</td>
+			</tr>
+    		</table>
+    </div>
+    </section>
+
+    <section>
+    <h1>SNMP: Nomeação</h1>
+    <div class="slideContent">
+    		<ul>
+    			<li><span class="alert">Pergunta:</span> como nomear todos os possíveis objetos (protocolos, dados, mais...) em todos os possíveis padrões de redes?</li>
+			<li><span class="alert">Resposta:</span> com a estrutura em árvore do ISO Object Identifier.
+			<ul>
+				<li>Nomeação hierárquica de todos os objetos.</li>
+				<li>Cada ponto de ramificação possui um nome e número.</li>
+			</ul></li>
+    		</ul>
+		<br>
+		<center>
+			<img src="imagens/OID.svg" style="width: 50%;"/>
+		</center>
+    </div>
+    </section>
+
+    <section>
+    <h1>Estrutura em Árvore do ISO Object Identifier</h1>
+    <div class="slideContent">
+    		<center>
+    			<img src="imagens/OIDTree.svg" style="width: 80%;"/>
+    		</center>
+    </div>
+    </section>
+
+	<!-- Possível demonstração: recebimento de trap. -->
+    <section>
+    <h1>Protocolo SNMP</h1>
+    <div class="slideContent">
+    		<ul>
+    			<li>Duas formas de enviar informações sobre MIBs ou comandos:</li>
+    		</ul>
+
+		<center>
+			<img src="imagens/SNMPModes.svg" style="width: 80%;"/>
+		</center>
+    </div>
+    </section>
+
+    <section>
+    <h1>Protocolo SNMP: Tipos de Mensagens</h1>
+    <div class="slideContent">
+    		<style>
+			table#SNMPMensagens {
+				   width: 80%;
+			}
+			table#SNMPMensagens td {
+				padding: 10px;
+				border-bottom: 2px solid red;
+			}
+			table#SNMPMensagens th {
+
+				padding: 10px;
+				color: red;
+				background: none;
+				font-weight: normal;
+				text-decoration: underline;
+			}
+		</style>
+		<center>
+    		<table class="align" id="SNMPMensagens">
+    			<tr>
+				<th style="width: 30%; text-align: right; border-right: 2px solid red;">Tipo de Mensagem</th>
+				<th style="text-align: left;">Função</th>
+			</tr>
+			<tr>
+				<td style="text-align: right; border-right: 2px solid red;">
+					GetRequest<br>
+					GetNextRequest<br>
+					GetBulkRequest
+				</td>
+				<td>Gerente para agente: &ldquo;me envie dados&rdquo; (uma instância específica, próximo da lista, bloco)</td>
+			</tr>
+			<tr>
+				<td style="text-align: right; border-right: 2px solid red;">InformRequest</td>
+				<td>Gerente para gerente: aqui está o valor da MIB.</td>
+			</tr>
+			<tr>
+				<td style="text-align: right; border-right: 2px solid red;">SetRequest</td>
+				<td>Gerente para agente: altere o valor da MIB.</td>
+			</tr>
+			<tr>
+				<td style="text-align: right; border-right: 2px solid red;">Response</td>
+				<td>Agente para gerente: valor, resposta a requisição.</td>
+			</tr>
+			<tr>
+				<td style="text-align: right; border-right: 2px solid red; border-bottom: none;">Trap</td>
+				<td style="border-bottom: none;">Agente para gerente: informar gerente de evento excepcional.</td>
+			</tr>
+    		</table>
+		</center>
+
+    </div>
+    </section>
+
+    <section>
+    <h1>Protocolo SNMP: Formato de Mensagem</h1>
+    <div class="slideContent">
+    		<center>
+    			<img src="imagens/SNMPMensagem.svg" style="width: 70%;"/>
+    		</center>
+    </div>
+    </section>
+
+    <section>
+    <h1>Protocolo SNMP: Segurança e Administração</h1>
+    <div class="slideContent">
+    		<ul>
+    			<li><span class="alert">Criptografia:</span> mensagem SNMP criptografada com DES.</li>
+			<li><span class="alert">Autenticação:</span> computa e envia MIC(m, k).
+			<ul>
+				<li>Hash da mensagem m com chave secreta k.</li>
+			</ul></li>
+			<li><span class="alert">Proteção contra ataques de repetição:</span> usa nonce.</li>
+			<li><span class="alert">Controle de acesso baseado em visões:</span>
+			<ul>
+				<li>Entidade SNMP mantém base de dados de permissões de acesso e políticas para vários usuários.</li>
+				<li>A própria base de dados é acessível na forma de um objeto gerenciado.</li>
+			</ul></li>
+    		</ul>
+    </div>
+    </section>
+
+	<section>
+	<h1>Resumo da Aula (I)...</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li>Gerência de redes:
+				<ul>
+					<li><b>Monitoramento</b>, análise, resposta do/ao <b>comportamento da rede</b>.</li>
+					<li>Redes são <b>sistemas complexos</b>, apresentam <b>problemas</b>.</li>
+					<li>Inicialmente, gerência era uma prática quase inexistente.</li>
+				</ul></li>
+				<li>Casos de uso:
+				<ul>
+					<li>Detecção de falha.</li>
+					<li>Monitoramento de serviços.</li>
+					<li>Monitoramento de tráfego.</li>
+					<li>Detecção de intrusão.</li>
+					<li>...</li>
+				</ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li>Áreas de gerenciamento:
+				<ul>
+					<li>Desempenho.</li>
+					<li>Falhas.</li>
+					<li>Configuração.</li>
+					<li>Contabilização.</li>
+					<li>Segurança.</li>
+				</ul></li>
+				<li>Infraestrutura formada por:
+				<ul>
+					<li>Dispositivos gerenciados.</li>
+					<li>Agente de gerenciamento.</li>
+					<li>Objetos gerenciados.</li>
+					<li>Entidade gerenciadora.</li>
+					<li>Protocolo de gerenciamento.</li>
+				</ul></li>
+			</ul>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Resumo da Aula (II)...</h1>
+	<div class="slideContent">
+		<ul>
+			<li>SNMP: padrão de fato.
+			<ul>
+				<li>Transporta informações de gerência.</li>
+				<li>Requisição/resposta ou <i>traps</i>.</li>
+				<li>Evoluiu através de 3 versões.</li>
+				<li>Recentemente, preocupação maior com segurança.</li>
+			</ul></li>
+			<li>MIBs: bases de dados de gerência.
+			<ul>
+				<li>Conjunto de informações de gerência.</li>
+				<li>Semântica, sintaxe definida através de SMI.</li>
+				<li>Organizadas hierarquicamente.
+				<ul>
+					<li><i>ISO Object Identifier</i>.</li>
+				</ul></li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Leitura e Exercícios Sugeridos</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Conceitos básicos de gerência:
+			<ul>
+				<li>Páginas 553 a 558 do Kurose (até Seção 9.2, inclusive).</li>
+				<li>Exercícios de fixação 1 a 4 do capítulo 9 do Kurose.</li>
+			</ul></li>
+			<li>SNMP, MIBs, SMI:</li>
+			<ul>
+				<li>Páginas 560 a 570 do Kurose (Seção 9.3).</li>
+				<li>Exercícios de fixação 5 e 6 do capítulo 9 do Kurose.</li>
+				<li>Problemas 1 a 5 do capítulo 9 do Kurose.</li>
+			</ul></li>
+			<li>Opcional: leitura da RFC 789.
+			<ul>
+				<li>Disponível em: <a href="https://tools.ietf.org/pdf/rfc789.pdf">https://tools.ietf.org/pdf/rfc789.pdf</a>.</li>
+				<li>Questão dissertativa 3 do capítulo 9 do Kurose.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Próxima Aula...</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Última aula (de conteúdo) do período.
+			<li>Encerraremos nossa discussão sobre gerência de redes.</li>
+			<li>Temas abordados:
+			<ul>
+				<li>Interoperabilidade de dados: ASN.1.</li>
+				<li>Exemplos práticos de gerência de redes.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<!-- {{{{ dzslides core
+	#
+	#
+	#     __  __  __       .  __   ___  __
+	#    |  \  / /__` |    | |  \ |__  /__`
+	#    |__/ /_ .__/ |___ | |__/ |___ .__/ core :€
+	#
+	#
+	# The following block of code is not supposed to be edited.
+	# But if you want to change the behavior of these slides,
+	# feel free to hack it!
+	#
+	-->
+
+    <!-- More CSS -->
+	<link href='../template/css/slides.css' id="slides" rel='stylesheet' type='text/css'>
+	<link href='../template/css/presentationSpecific2.css' id="presentationSpecific2" rel='stylesheet' type='text/css'>
+
+    <!-- More Javascript -->
+	<script type="text/javascript" src="../template/js/dz.js"></script>
+
+	<!-- More CSS -->
+	<link href='../template/css/notesSpecific.css' id="notesSpecific" rel='stylesheet' type='text/css'>
+	<link href='../template/css/printSpecific.css' id="printSpecific" rel='stylesheet' type='text/css'>
+</body>
+</html>
