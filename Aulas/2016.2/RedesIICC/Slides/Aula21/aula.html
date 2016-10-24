@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <!-- Meta info -->
+	<meta charset="utf-8">
+	<meta name="shortauthor" content="Diego Passos"/>
+	<meta name="shorttitle" content="Multimídia: RTP, RTCP, SIP"/>
+	<meta name="shortevent" content="Redes de Computadores II"/>
+	<title>Redes de Computadores II: Aula 21</title>
+
+    <!-- Math support -->
+	<script type="text/x-mathjax-config">
+		MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+			MathJax.InputJax.TeX.Definitions.number = /^(?:[0-9]+(?:\.[0-9]{3})*(?:\{,\}[0-9]*)*|\{,\}[0-9]+)/
+		});
+	</script>
+
+	<!--<script src="../../../../MathJax-2.6-latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>-->
+  <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+
+    <!-- Fonts -->
+  <link href='https://fonts.googleapis.com/css?family=Lora:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
+  <!--<link href='../../../../Fonts/Lora/lora.css' rel='stylesheet' type='text/css'>-->
+
+    <!-- CSS -->
+	<link href='../template/css/template.css' id="template" rel='stylesheet' type='text/css'>
+	<link href='../template/css/presentationSpecific.css' id="presentationSpecific" rel='stylesheet' type='text/css'>
+
+    <!-- Javascript -->
+	<script type="text/javascript" src="../template/js/audio.js"></script>
+</head>
+
+<body>
+    <!-- Audio handlers -->
+
+    <!-- Title Slide -->
+	<section>
+
+        <div class="slideContent">
+            <h1 class="title">Aula 21 - Multimídia: RTP, RTCP, SIP</h1>
+            <h2 class="author">Diego Passos</h2>
+            <h4 class="institution">Universidade Federal Fluminense</h4>
+            <h3 class="date">Redes de Computadores II</h3>
+        </div>
+
+	</section>
+
+    <!-- Content slides -->
+
+	<section>
+	<h1>Na Última Aula (I)...</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li>Redes de Distribuição de Conteúdo:
+				<ul>
+					<li>Conteúdos replicados em <b>vários servidores</b>.</li>
+					<li>Servidores <b>distribuídos geograficamente</b>.</li>
+					<li>Cada cliente é servidor por <b>bom servidor</b>.</li>
+					<li>Evita:
+					<ul>
+						<li><b>Ponto único de falha</b>.</li>
+						<li>Congestionamento gerado por <b>concentração do tráfego</b>.</li>
+						<li>Caminhos longos para certos clientes.</li>
+					</ul></li>
+				</ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li>Estudo de caso: Netflix.
+				<ul>
+					<li>Três tipos de servidores:
+					<ul>
+						<li>Registro/pagamento.</li>
+						<li>Navegação de catálogo.</li>
+						<li>Entrega de conteúdo.
+						<ul>
+							<li><b>CDN</b>.</li>
+						</ul></li>
+					</ul></li>
+					<li>Usa <i>streaming</i> <b>adaptativo</b>.</li>
+				</ul></li>
+				<li>VoIP:
+				<ul>
+					<li><b>Fortes requisitos</b> de latência.
+					<ul>
+						<li>Evitar prejuízo da conversação.</li>
+					</ul></li>
+					<li><b>Alternância</b> entre fala e silêncio.</li>
+					<li>Em período de fala, pacotes gerados (tipicamente) a cada 20 ms.
+					<ul>
+						<li>Pacotes pequenos, <b>overheads significativos</b>.</li>
+					</ul></li>
+				</ul></li>
+			</ul>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Na Última Aula (II)...</h1>
+	<div class="slideContent">
+		<ul>
+			<li>VoIP (mais):
+			<ul>
+				<li>Perda de pacotes:
+				<ul>
+					<li>Por perda <b>efetiva</b> do datagrama.</li>
+					<li>Ou simplesmente por <b>atraso excessivo</b>.</li>
+					<li>Certo grau de <b>tolerância</b>, varia com a codificação.</li>
+				</ul></li>
+				<li><i>Jitter</i>:
+				<ul>
+					<li>Dificulta gerência do atraso.
+					<ul>
+						<li>Sem <i>jitter</i>, bastaria <b>atraso de reprodução fixo</b>.</li>
+						<li>Com <i>jitter</i>, certos pacotes podem expirar (perdidos).</li>
+					</ul></li>
+					<li>Alternativa: atraso de reprodução <b>adaptativo</b>.
+					<ul>
+						<li>Estimar atraso, média movente.</li>
+						<li>Usar momentos de <b>silêncio</b> para alterar atraso de reprodução.</li>
+					</ul></li>
+				</ul></li>
+				<li>Perda de pacotes.
+				<ul>
+					<li>Requisitos temporais fortes, <b>retransmissões inviáveis</b>.</li>
+					<li>Soluções:
+					<ul>
+						<li>FEC 1: inserir <b>redundância, corrigir</b> erros.</li>
+						<li>FEC 2: transmitir fluxo adicional de <b>baixa qualidade</b>.</li>
+						<li><i>Interleaving</i>: transmitir partes de trechos de forma <i>embaralhada</i>.</li>
+					</ul></li>
+				</ul></li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section class="secao">
+	<div class="slideContent">
+		  Protocolos para Aplicações de Tempo Real
+	</div>
+	</section>
+
+		   <!-- Possível demonstração: interoperabilidade entre aplicações RTP. -->
+	<section>
+	<h1>Real-Time Protocol (RTP)</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+		    <ul>
+		        <li>RTP especifica estrutura para pacotes que carregam áudio, vídeo.</li>
+                <li>RFC 3550.</li>
+                <li>Pacotes RTP proveem:
+                <ul>
+                    <li>Identificação do tipo do <i>payload</i>.</li>
+                    <li>Números de sequência.</li>
+                    <li><i>Timestamps</i>.</li>
+                </ul></li>
+		    </ul>
+		</div>
+        <div class="column" style="width: 50%;">
+            <ul>
+                <li>RTP roda nos sistemas finais.</li>
+                <li>Pacotes encapsulados em segmentos UDP.</li>
+                <li>Interoperabilidade: se duas aplicações VoIP rodam sob RTP, elas podem ser capazes de interoperar.</li>
+            </ul>
+        </div>
+	</div>
+	</section>
+
+    <section>
+    <h1>RTP Roda Sobre UDP</h1>
+    <div style="top: 119px; position: absolute;">
+        <ul>
+            <li>Bibliotecas RTP proveem interface de camada de transporte que estende UDP:
+            <ul>
+                <li>Número de porta, endereços IP.</li>
+                <li>Identificação do tipo de <i>payload</i>.</li>
+                <li>Número de sequência.</li>
+                <li><i>Timestamp</i>.</li>
+            </ul></li>
+        </ul>
+    </div>
+    <img src="imagens/RTPStack.png" style="width: 30%; position: absolute; right: 5%; top: 35%;"/>
+    </section>
+
+    <section>
+    <h1>RTP: Exemplo</h1>
+    <div class="slideContent">
+        <div class="column" style="width: 50%;">
+            <ul>
+                <li><span class="alert">Exemplo:</span> enviar fluxo de voz de 64 kb/s usando codificação PCM sobre RTP.</li>
+                <li>Aplicação coleta dados codificados em trechos de 20 ms = 160 bytes.</li>
+                <li>Trecho de áudio + cabeçalho RTP formam pacote RTP, encapsulado em segmento UDP.</li>
+            </ul>
+        </div>
+        <div class="column" style="width: 50%;">
+            <ul>
+                <li>Cabeçalho RTP indica tipo de codificação de áudio em cada pacote.
+                <ul>
+                    <li>Transmissor pode alterar codificação durante a chamada.</li>
+                </ul></li>
+                <li>Cabeçalho RTP também contém números de sequência, <i>timestamps</i>.</li>
+            </ul>
+        </div>
+    </section>
+
+    <section>
+    <h1>RTP e QoS</h1>
+    <div class="slideContent">
+        <ul>
+            <li>RTP <b>não</b> provê qualquer mecanismo para garantir prazos de entrega dos pacotes ou qualquer outro requisito de QoS.</li>
+            <li>Encapsulamento RTP só é visto nos sistemas finais (<i>i.e.</i>, <b>não</b> é visto pelos roteadores intermediários).
+            <ul>
+                <li>Roteadores proveem serviço de melhor esforço.</li>
+                <li>Não há qualquer esforço especial para garantir entrega dos pacotes no prazo.
+                <ul>
+                	<li>Nem em ordem.</li>
+				<li>Alias, nem sequer a entrega é garantida!</li>
+                </ul></li>
+            </ul></li>
+        </ul>
+    </div>
+    </section>
+
+    <section>
+    <h1>Cabeçalho RTP (I)</h1>
+    <div class="slideContent">
+        <center>
+            <img src="imagens/RTPHeader.svg" style="width: 80%;"/>
+        </center>
+
+        <ul>
+            <li><span class="alert"><i>Payload type</i> (7 bits):</span> indica o tipo de codificação em uso.
+            <ul>
+                <li>Se o transmissor altera codificação, receptor é informado por este campo.
+                <ul>
+                    <li>Tipo 0: PCM &mu;law, 64 kb/s.</li>
+                    <li>Tipo 3: GSM, 13 kb/s.</li>
+                    <li>Tipo 7: LPC, 2.4 kb/s. </li>
+                    <li>Tipo 26: MJPEG.</li>
+                    <li>Tipo 31: H.261.</li>
+                    <li>Tipo 33: MPEG2.</li>
+                </ul></li>
+            </ul></li>
+            <li><span class="alert"><i>Sequence Number</i> (16 bits): incrementado em 1 a cada novo pacote RTP.</span>
+            <ul>
+                <li>Detecção de pacotes perdidos.</li>
+            </ul></li>
+        </ul>
+    </div>
+    </section>
+
+    <!-- Possível demonstração: captura de tráfego RTP. -->
+    <section>
+    <h1>Cabeçalho RTP (II)</h1>
+    <div class="slideContent">
+        <center>
+            <img src="imagens/RTPHeader.svg" style="width: 80%;"/>
+        </center>
+
+        <ul>
+            <li><span class="alert"><i>Timestamp</i> (32 bits):</span> momento em que primeiro byte deste trecho foi amostrado.
+            <ul>
+                <li>Para áudio, relógio do <i>timestamp</i> é incrementado em uma unidade a cada novo período de amostragem.
+                <ul>
+                    <li><i>e.g.</i>, a cada 125 &mu;s para uma frequência de 8 KHz.</li>
+                </ul></li>
+                <li>Se a aplicação gera trechos de 160 amostras, <i>timestamp</i> é aumentado em 160 unidades por pacote RTP <b>durante período de atividade</b>.
+                <ul>
+                    <li>Durante períodos de silêncio, relógio do <i>timestamp</i> continua sendo incrementado normalmente.</li>
+                </ul></li>
+            </ul></li>
+            <li><span class="alert"><i>SSRC</i> (32 bits):</span> identifica a fonte do fluxo RTP. Cada fluxo em uma seção RTP tem um SSRC único.
+            <ul>
+            	<li>Exemplo: um fluxo de áudio e outro de vídeo.</li>
+            </ul></li>
+        </ul>
+    </div>
+    </section>
+
+    <section>
+    <h1>Real-Time Control Protocol (RTCP)</h1>
+    <div class="slideContent">
+        <div class="column" style="width: 40%;">
+            <ul>
+                <li>Trabalha em conjunto com o RTP.</li>
+                <li>Cada participante em uma sessão RTP periodicamente envia pacotes de controle RTCP para todos os outros participantes.</li>
+            </ul>
+        </div>
+        <div class="column" style="width: 60%;">
+            <ul>
+                <li>Cada pacote RTCP contém relatórios do transmissor e/ou receptor.
+                <ul>
+                    <li>Reportam estatísticas úteis para a aplicação: # de pacotes enviados, # de pacotes perdidos, jitter.</li>
+                </ul></li>
+                <li><i>Feedback</i> usado para controlar o desempenho.
+                <ul>
+                    <li>Transmissor pode alterar transmissão com base neste <i>feedback</i>.</li>
+                </ul></li>
+            </ul>
+        </div>
+    </div>
+    </section>
+
+    <section>
+    <h1>RTCP: Vários Transmissores Multicast</h1>
+    <div class="slideContent">
+        <center>
+            <img src="imagens/RTCP.svg" style="width: 45%;"/>
+        </center>
+        <ul>
+            <li>Cada sessão RTP: tipicamente um único endereço multicast; todos os pacotes RTP/RTCP da sessão usam o endereço multicast.</li>
+            <li>Pacotes RTP, RTCP são diferenciados através dos números de porta.</li>
+            <li>Para limitar o tráfego, cada participante reduz o tráfego RTCP a medida que o número de participantes aumenta.</li>
+        </ul>
+    </div>
+    </section>
+
+    <section>
+    <h1>RTCP: Tipos de Pacotes</h1>
+    <div class="slideContent">
+        <div class="column" style="width: 50%;">
+            <ul>
+                <li><span class="alert">Pacotes de relatório do receptor:</span>
+                <ul>
+                    <li>Fração de pacotes perdidos.</li>
+                    <li>Último número de sequência.</li>
+                    <li>Jitter médio.</li>
+                </ul></li>
+                <li>Pacotes de relatório do transmissor:
+                <ul>
+                    <li>SSRC do fluxo RTP.</li>
+                    <li>Tempo atual.</li>
+                    <li>Número de pacotes enviados.</li>
+                    <li>Número de bytes enviados.</li>
+                </ul></li>
+            </ul>
+        </div>
+        <div class="column" style="width: 50%;">
+            <ul>
+                <li><span class="alert">Pacotes de descrição da fonte:</span>
+                <ul>
+                    <li>Endereço de e-mail do transmissor.</li>
+                    <li>Nome do transmissor.</li>
+                    <li>SSRC do fluxo RTP associado.</li>
+                </ul></li>
+                <li>Provê mapeamento entre SSRC e o nome do usuário/host.</li>
+            </ul>
+        </div>
+    </div>
+    </section>
+
+    <section>
+    <h1>RTCP: Sincronização de Fluxos</h1>
+    <div class="slideContent">
+        <div class="column" style="width: 50%;">
+            <ul>
+                <li>RTCP pode sincronizar vários fluxos de mídia diferentes em uma mesma sessão RTP.</li>
+                <li><i>e.g.</i>, aplicação de videoconferência: cada transmissor gera um fluxo de áudio e um fluxo de vídeo.</li>
+                <li><i>Timestamps</i> nos pacotes RTP associados ao relógio de amostragem do áudio/vídeo.
+                <ul>
+                    <li><b>Não</b> ao tempo de parede.</li>
+                </ul></li>
+            </ul>
+        </div>
+        <div class="column" style="width: 50%;">
+            <ul>
+                <li>Cada pacote de relatório do transmissor contém (para o pacote mais recente gerado no fluxo correspondente):
+                <ul>
+                    <li><i>Timestamp</i> do pacote RTP.</li>
+                    <li>Tempo de parede do momento de geração do pacote.</li>
+                </ul></li>
+                <li>Receptores casam informações para sincronizar reprodução de áudio e vídeo.</li>
+            </ul>
+        </div>
+    </div>
+    </section>
+
+    <!-- Possíveis demonstrações: captura de tráfego RTCP. Alteração proposital do conteúdo dos pacotes,
+    forçando efeitos como alterações de codecs, de-sincronização de fluxos, etc. -->
+    <section>
+    <h1>RTCP: Limitação da Banda Consumida</h1>
+    <div class="slideContent">
+        <div class="column" style="width: 50%;">
+            <ul>
+                <li><span class="alert">RTCP tenta limitar seu tráfego a 5% da banda da sessão.</span>
+                <ul>
+                    <li>Exemplo: um transmissor, enviando vídeo a 2 Mb/s.</li>
+                    <li>RTCP tenta limitar seu tráfego de controle a 100 kb/s.</li>
+                    <li>Limite é dividido na proporção de 75% para receptores e 25% para transmissor.</li>
+                </ul></li>
+            </ul>
+        </div>
+        <div class="column" style="width: 50%;">
+            <ul>
+                <li>Os 75 kb/s são igualmente divididos pelos receptores.
+                <ul>
+                    <li>Com R receptores, cada um pode gerar tráfego RTCP a 75/R kb/s.</li>
+                </ul></li>
+                <li>Transmissor pode enviar tráfego RTCP a taxa de 25 kb/s. </li>
+                <li>Participantes determinam período de transmissão dos pacotes RTCP calculando tamanho médio dos pacotes e dividindo pela taxa alocada.</li>
+            </ul>
+        </div>
+    </div>
+    </section>
+
+    <section>
+    <h1>SIP: Session Initiation Protocol [RFC 3261]</h1>
+    <div class="slideContent">
+        <ul>
+            <li><span class="alert">Visão a longo prazo:</span>
+            <ul>
+                <li>Todas as chamadas de telefone, videoconferências acontecem via Internet.</li>
+                <li>Pessoas identificadas por nome ou endereço de e-mail, ao invés de números de telefone.</li>
+                <li>É possível alcançar o destinatário (se ele assim deseja), independentemente de sua localização e de qual dispositivo IP ele usa no momento.</li>
+            </ul></li>
+        </ul>
+    </div>
+    </section>
+
+    <section>
+    <h1>Serviços SIP</h1>
+    <div class="slideContent">
+        <div class="column" style="width: 50%;">
+            <ul>
+                <li>SIP provê mecanismos para configuração de chamadas:
+                <ul>
+                    <li>Para que a origem permita ao destinatário saber que deseja estabelecer uma chamada.</li>
+                    <li>Para que origem e destinatário concordem sobre o tipo de mídia e codificação.</li>
+                    <li>Para terminar a chamada.</li>
+                </ul></li>
+            </ul>
+        </div>
+        <div class="column" style="width: 50%;">
+            <ul>
+                <li>Determina o endereço IP atual do destinatário.
+                <ul>
+                    <li>Mapeia identificador mnemônico ao IP atual.</li>
+                </ul></li>
+                <li>Gerenciamento de chamada:
+                <ul>
+                    <li>Adição de novos fluxos de mídia durante a chamada.</li>
+                    <li>Alteração da codificação durante a chamada.</li>
+                    <li>Convite a outros usuários.</li>
+                    <li>Transferência de chamadas, chamada em espera.</li>
+                </ul></li>
+            </ul>
+        </div>
+    </div>
+    </section>
+
+    <!-- Possível demonstração: captura de tráfego SIP. -->
+    <section>
+    <h1>Exemplo: Configuração de Chamada para Endereço IP Conhecido</h1>
+    <div class="slideContent">
+        <div class="column" style="width: 50%;">
+            <center>
+                <img src="imagens/SIPCall.svg" style="width: 90%;"/>
+            </center>
+        </div>
+        <div class="column" style="width: 50%;">
+            <br>
+            <br>
+            <ul>
+                <li>Mensagem SIP de convite gerada por Alice indica o seu número de porta, endereço IP, codificação preferencial (PCM &mu;law).</li>
+                <li>A mensagem <tt>200 OK</tt> gerada por Bob indica o seu número de porta, endereço IP, codificação preferencial (GSM).</li>
+                <li>Mensagens SIP podem ser enviadas por TCP ou UDP; no exemplo, é usado UDP.</li>
+                <li>Número de porta padrão do SIP é a 5060.</li>
+            </ul>
+        </div>
+    </div>
+    </section>
+
+    <section>
+    <h1>Configuração de Chamada (Mais)</h1>
+    <div class="slideContent">
+        <div class="column" style="width: 50%;">
+            <ul>
+                <li>Negociação de codificador:
+                <ul>
+                    <li>Suponha que Bob não possua o codificador PCM &mu;law.</li>
+                    <li>Bob responderá com a mensagem <tt>606 Not Acceptable Reply</tt>, listando suas codificações suportadas.
+                    <ul>
+                        <li>Alice pode, então, enviar uma nova mensagem de convite, anunciando uma codificação diferente.</li>
+                    </ul></li>
+                </ul></li>
+            </ul>
+        </div>
+        <div class="column" style="width: 50%;">
+            <ul>
+                <li>Rejeitando uma chamada:
+                <ul>
+                    <li>Bob pode rejeitar chamadas com respostas &ldquo;busy&rdquo;, &ldquo;gone&rdquo;, &ldquo;payment required&rdquo;, &ldquo;forbidden&rdquo;.</li>
+                </ul></li>
+                <li>Mídia pode ser transmitida via RTP ou algum outro protocolo.</li>
+            </ul>
+        </div>
+    </div>
+    </section>
+
+    <section>
+    <h1>Exemplo de uma Mensagem SIP</h1>
+    <div class="slideContent">
+        <div class="column" style="width: 55%;">
+            <div style="border: 1px solid #000; width=90%; margin-left: 5%;">
+                <tt>INVITE sip:bob@domain.com SIP/2.0<br>
+                Via: SIP/2.0/UDP 167.180.112.24<br>
+                From: sip:alice@hereway.com<br>
+                To: sip:bob@domain.com<br>
+                Call-ID: a2e3a@pigeon.hereway.com<br>
+                Content-Type: application/sdp<br>
+                Content-Length: 885<br>
+                <br>
+                c=IN IP4 167.180.112.24<br>
+                m=audio 38060 RTP/AVP 0</tt>
+            </div>
+            <ul>
+                <li>Notas:
+                <ul>
+                    <li>Sintaxe de mensagem HTTP.</li>
+                    <li>sdp = Session Description Protocol.</li>
+                    <li>Campo Call-ID é único para cada chamada.</li>
+                </ul></li>
+            </ul>
+        </div>
+        <div class="column" style="width: 45%;">
+            <ul>
+                <li>Aqui, não conhecemos o endereço IP de Bob.
+                <ul>
+                    <li>Servidores SIP intermediários são necessários.</li>
+                </ul></li>
+                <li>Alice envia e recebe mensagens SIP usando a porta padrão 5060.</li>
+                <li>Alice especifica no cabeçalho que o cliente SIP envia e recebe mensagens sobre UDP.</li>
+            </ul>
+        </div>
+    </div>
+    </section>
+
+    <section>
+    <h1>Tradução de Nomes, Localização de Usuários</h1>
+    <div class="slideContent">
+        <div class="column" style="width: 50%;">
+            <ul>
+                <li>Origem deseja chamar destinatário, mas conhece apenas o nome ou e-mail.</li>
+                <li>Precisa obter endereço IP do host atual do destinatário.
+                <ul>
+                    <li>Mobilidade.</li>
+                    <li>DHCP.</li>
+                    <li>Usuário possui vários dispositivos (PC, smartphone, ...).</li>
+                </ul></li>
+            </ul>
+        </div>
+        <div class="column" style="width: 50%;">
+            <ul>
+                <li>Resultado pode ser baseado em:
+                <ul>
+                    <li>Horário do dia (trabalho, casa).</li>
+                    <li>Origem da chamada (não quer o chefe ligando para a sua casa).</li>
+                    <li>Status do destinatário (chamadas podem ir para a secretária eletrônica, quando destinatário já está em outra ligação).</li>
+                </ul></li>
+            </ul>
+        </div>
+    </div>
+    </section>
+
+    <!-- TODO: verificar jargão em uso na versão em português do livro. -->
+    <section>
+    <h1>Registrador SIP</h1>
+    <div class="slideContent">
+        <ul>
+            <li>Uma das funcionalidades de um servidor SIP: <span class="alert">registrador</span>.
+            <ul>
+                <li>Quando Bob inicia seu cliente SIP, cliente envia mensagem de registro para o servidor de registro de Bob.</li>
+            </ul></li>
+            <li><span class="alert">Mensagem de registro:</span></li>
+        </ul>
+        <center>
+        <div style="border: 1px solid #000; width=90%; margin-left: 5%; text-align: left; width: 50%;">
+            <tt>
+            REGISTER sip:domain.com SIP/2.0<br>
+            Via: SIP/2.0/UDP 193.64.210.89<br>
+            From: sip:bob@domain.com<br>
+            To: sip:bob@domain.com<br>
+            Expires: 3600<br>
+            </tt>
+        </div>
+        </center>
+
+    </div>
+    </section>
+
+    <section>
+    <h1>Proxy SIP</h1>
+    <div class="slideContent">
+        <ul>
+            <li>Outra função do servidor SIP: <span class="alert">proxy</span>.</li>
+            <li>Alice envia mensagem de convite ao seu servidor proxy.
+            <ul>
+                <li>Contém endereço <tt>sip:bob@domain.com</tt>.</li>
+                <li>Proxy é responsável por rotear mensagens SIP para o destinatário, possivelmente através de outros proxies.</li>
+            </ul></li>
+            <li>Bob envia resposta de volta através da mesma sequência de proxies SIP.</li>
+            <li>Proxy retorna a resposta de Bob para Alice.
+            <ul>
+                <li>Contém o endereço IP de Bob.</li>
+            </ul></li>
+            <li>Proxy SIP é análogo a um DNS local mais o estabelecimento de uma conexão TCP.</li>
+        </ul>
+    </div>
+    </section>
+
+    <!-- TODO: melhorar imagem. -->
+    <section>
+    <h1>Exemplo do Protocolo SIP: jim@umass.edu Chama keith@poly.edu</h1>
+    <div class="slideContent">
+        <center>
+            <img src="imagens/SIPCall2.svg" style="width: 80%;"/>
+        </center>
+    </div>
+    </section>
+
+    <section>
+    <h1>Comparação com o H.323</h1>
+    <div class="slideContent">
+        <div class="column" style="width: 50%;">
+            <ul>
+                <li>H.323: outro protocolo de sinalização para multimídia interativa, em tempo real.</li>
+                <li>H.323: solução completa, integrada, composta de vários protocolos conferência multimídia: sinalização, registro, controle de admissão, transporte, codificação.</li>
+                <li>SIP: componente único. Funciona em conjunto com RTP, mas não é mandatório. Pode ser combinado com outros protocolos, serviços.</li>
+            </ul>
+        </div>
+        <div class="column" style="width: 50%;">
+            <ul>
+                <li>H.323 vem da ITU (telefonia).</li>
+                <li>SIP vem do IETF: empresta vários conceitos do HTTP.
+                <ul>
+                    <li>SIP tem &ldquo;cara&rdquo; de Web.</li>
+                    <li>H.323 tem &ldquo;cara&rdquo; de telefonia.</li>
+                </ul></li>
+                <li>SIP usa o princípio KISS: <span class="alert">K</span>eep <span class="alert">I</span>t <span class="alert">S</span>imple <span class="alert">S</span>tupid.</li>
+            </ul>
+        </div>
+    </div>
+    </section>
+
+	<section>
+	<h1>Resumo da Aula...</h1>
+	<div class="slideContent">
+        <div class="column" style="width: 50%;">
+            <ul>
+                <li>RTP: <i>Real-Time Protocol</i>.
+                <ul>
+                    <li>Define <b>estrutura</b> de pacote de áudio, vídeo.
+                    <ul>
+                        <li><i>Timestamp</i>, # de sequência, codificação, ...</li>
+                    </ul></li>
+                    <li>Roda <b>sobre UDP</b>.</li>
+                    <li>Padrão, permite <b>interoperabilidade</b>.</li>
+                    <li><b>Não provê garantias de entrega</b>.</li>
+                </ul></li>
+                <li>RTCP: <i>Real-Time Control Protocol</i>.
+                <ul>
+                    <li>Trabalha <b>em conjunto</b> com o RTP.</li>
+                    <li>Pacotes de controle são enviados <b>periodicamente</b>.
+                    <ul>
+                        <li>Transmissores e receptores.</li>
+                    </ul></li>
+                    <li>Estatísticas, informações ajudam em <b>sincronização, adaptação</b>.</li>
+                </ul></li>
+            </ul>
+        </div>
+        <div class="column" style="width: 50%;">
+            <ul>
+                <li>SIP: <i>Session Initiation Protocol</i>.
+                <ul>
+                    <li><b>Configuração</b> de chamadas.
+                    <ul>
+                        <li><b>Localização</b> do destinatário.</li>
+                        <li>Acordo sobre <b>codificações</b>.</li>
+                    </ul></li>
+                    <li><b>Gerenciamento</b> de chamadas.
+                    <ul>
+                        <li>Adição de <b>novos fluxos</b>.</li>
+                        <li>Alteração de <b>codificação</b>.</li>
+                        <li>Convide a <b>novos</b> usuários.</li>
+                        <li><b>Transferência</b> de chamadas.</li>
+                        <li><b>Chamada em espera</b>.</li>
+                    </ul></li>
+                    <li>Utiliza servidores para:
+                    <ul>
+                        <li>Proxy.</li>
+                        <li>Registro de localização de usuários.</li>
+                    </ul></li>
+                    <li>Simples, mensagens de texto, filosofias da web.</li>
+                </ul></li>
+            </ul>
+        </div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Leitura e Exercícios Sugeridos</h1>
+	<div class="slideContent">
+		<ul>
+			<li>RTP, RTCP, SIP, H.323:
+			<ul>
+				<li>Páginas 453 a 464 do Kurose (Seção 7.4).</li>
+				<li>Exercício de fixação 10, 11 e 12 do capítulo 7 do Kurose.</li>
+				<li>Problemas 15 a 20 do capítulo 7 do Kurose.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Próxima Aula...</h1>
+	<div class="slideContent">
+        <ul>
+            <li>Última aula sobre multimídia.</li>
+            <li>Discutiremos como a rede provê (ou poderia prover) suporte às aplicações.
+            <ul>
+                <li><i>i.e.</i>, dar garantias de <b>qualidade de serviço</b>.</li>
+                <li><i>e.g.</i>, atraso máximo, banda mínima, ...</li>
+            </ul></li>
+        </ul>
+	</div>
+	</section>
+
+	<!-- {{{{ dzslides core
+	#
+	#
+	#     __  __  __       .  __   ___  __
+	#    |  \  / /__` |    | |  \ |__  /__`
+	#    |__/ /_ .__/ |___ | |__/ |___ .__/ core :€
+	#
+	#
+	# The following block of code is not supposed to be edited.
+	# But if you want to change the behavior of these slides,
+	# feel free to hack it!
+	#
+	-->
+
+    <!-- More CSS -->
+	<link href='../template/css/slides.css' id="slides" rel='stylesheet' type='text/css'>
+	<link href='../template/css/presentationSpecific2.css' id="presentationSpecific2" rel='stylesheet' type='text/css'>
+
+    <!-- More Javascript -->
+	<script type="text/javascript" src="../template/js/dz.js"></script>
+
+	<!-- More CSS -->
+	<link href='../template/css/notesSpecific.css' id="notesSpecific" rel='stylesheet' type='text/css'>
+	<link href='../template/css/printSpecific.css' id="printSpecific" rel='stylesheet' type='text/css'>
+</body>
+</html>
