@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <!-- Meta info -->
+		<meta charset="utf-8">
+		<meta name="shortauthor" content="Diego Passos"/>
+		<meta name="shorttitle" content="NAT, ICMP, IPv6"/>
+		<meta name="shortevent" content="Redes de Computadores I"/>
+		<title>Redes de Computadores I: Aula 17</title>
+
+		<!-- Math support -->
+		<script type="text/x-mathjax-config">
+		MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+			MathJax.InputJax.TeX.Definitions.number = /^(?:[0-9]+(?:\.[0-9]{3})*(?:\{,\}[0-9]*)*|\{,\}[0-9]+)/
+		});
+		</script>
+		<!--<script src="js/plotly-latest.min.js"></script>-->
+		<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+		<!--<script src="../../../../MathJax-2.6-latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>-->
+		<script type="text/javascript" src="../template/js/dz_pre.js"></script>
+
+		<!-- Fonts -->
+		<link href='https://fonts.googleapis.com/css?family=Lora:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
+		<!--<link href='../../../../Fonts/Lora/lora.css' rel='stylesheet' type='text/css'>-->
+
+		<!-- CSS -->
+		<link href='../template/css/template.css' id="template" rel='stylesheet' type='text/css'>
+		<link href='../template/css/presentationSpecific.css' id="presentationSpecific" rel='stylesheet' type='text/css'>
+
+
+		<!-- Javascript -->
+		<!--
+		<script type="text/javascript" src="../template/js/audio.js"></script>
+		<script src="js/term.js" charset="utf-8"></script>
+    <script src="js/termcast.js" charset="utf-8"></script>
+		<link rel="stylesheet" href="css/googlecode.css">
+		<script src="js/highlight.pack.js"></script>
+		<script>
+			hljs.initHighlightingOnLoad();
+			hljs.configure({
+				tabReplace: '  '
+			});
+		</script>
+		-->
+</head>
+
+<body>
+    <!-- Audio handlers -->
+	<!--<audio src="audio/La.wav" id="La.wav" preload="auto"></audio>-->
+
+    <!-- Title Slide -->
+	<section>
+
+        <div class="slideContent">
+            <h1 class="title">Aula 17 - NAT, ICMP e IPv6</h1>
+            <h2 class="author">Diego Passos</h2>
+            <h4 class="institution">Universidade Federal Fluminense</h4>
+            <h3 class="date">Redes de Computadores I</h3>
+        </div>
+		<br>
+		<br>
+			<div style="width: 30%; float: right; padding-right: 2%;">
+			<p style="font-size: 18px; text-align: right;">Material adaptado a partir dos slides originais de J.F Kurose and K.W. Ross.</p>
+		</div>
+	</section>
+
+	<section>
+	<h1>Revisão da Última Aula...</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+		  <ul>
+		    <li><b>Protocolos da Camada de Rede:</b>
+		    <ul>
+		      <li>Vários contribuem.</li>
+		      <li>Protocolos de roteamento.</li>
+		      <li>IP.</li>
+		      <li>ICMP.</li>
+		    </ul></li>
+		    <li><b>Protocolo IP:</b>
+		    <ul>
+		      <li>Define convenções.</li>
+		      <li>Formato de datagrama.</li>
+		      <li>Endereçamento.</li>
+		    </ul></li>
+		    <li><b>Datagrama IP:</b>
+		    <ul>
+		      <li>Checksum apenas do cabeçalho.</li>
+		      <li>Campo de opções, tamanho variável.</li>
+		      <li>TTL (<i>time-to-live</i>).</li>
+		    </ul></li>
+				<li><b>Fragmentação:</b>
+				<ul>
+				  <li>Quebrar datagramas grandes.</li>
+				  <li>Adequa a limitações de cada enlace.</li>
+				  <li><span class="alert">Remontados apenas no destinatário</span>.</li>
+				</ul></li>
+		  </ul>
+		</div>
+		<div class="column" style="width: 50%;">
+		  <ul>
+		    <li><b>Endereçamento IP:</b>
+		    <ul>
+		      <li>32 bits.</li>
+		      <li><span class="alert">Associados a interfaces</span>.</li>
+		      <li><span class="alert">Prefixo identifica a sub-rede</span>.</li>
+		      <li>CIDR, máscara de sub-rede.</li>
+		    </ul></li>
+		    <li><b>DHCP:</b>
+		    <ul>
+		      <li>Protocolo de auto-configuração.</li>
+		      <li>Atribuição dinâmica de endereços IP.</li>
+					<li><span class="alert">Roteador de primeiro salto.</span></li>
+		      <li>E mais configurações.</li>
+		      <li>Cliente-servidor.</li>
+		      <li>Roda sobre UDP.</li>
+		      <li>Mensagens em <span class="alert"><i>broadcast</i></span>.</li>
+		    </ul></li>
+		    <li><b>Endereçamento hierárquico:</b>
+		    <ul>
+		      <li>Sub-redes são divididas.</li>
+		      <li>Novas sub-redes menores.</li>
+		      <li>Simplifica anúncio de rotas.</li>
+		    </ul></li>
+		  </ul>
+		</div>
+	</div>
+	</section>
+
+	<section class="secao">
+	<div class="slideContent">
+	  NAT
+	</div>
+	</section>
+
+	<section>
+	<h1>NAT: <i>Network Address Translation</i></h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/NAT.svg" style="width: 70%;"/>
+	  </center>
+		<div class="column" style="width: 50%;">
+		  <ul>
+		    <li><b>Todos</b> os datagramas <b>deixando</b> a rede local possuem o mesmo único endereço de origem: 138.76.29.7.
+		    <ul>
+		      <li>Diferenciação através do <span class="alert">número de porta de origem</span>.</li>
+		    </ul></li>
+		  </ul>
+		</div>
+		<div class="column" style="width: 50%;">
+		  <ul>
+		    <li>Datagramas com origem ou destino nesta rede possuem endereços de origem, destino da sub-rede 10.0.0/24.</li>
+		  </ul>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>NAT: Motivação</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>Rede local pode utilizar um único endereço, do ponto de vista do mundo externo.
+	    <ul>
+	      <li>Não é necessária uma faixa de endereços do ISP: um único endereço IP para todos os dispositivos.</li>
+	      <li>Pode-se alterar os endereços dos dispositivos locais sem notificação ao mundo externo.</li>
+	      <li>Pode-se mudar de ISP sem que os endereços dos dispositivos locais sejam alterados.</li>
+	      <li>Dispositivos dentro da rede local não são explicitamente endereçáveis, visíveis ao mundo externo.
+	      <ul>
+	        <li>Um (pequeno) benefício de segurança.</li>
+	      </ul></li>
+	    </ul></li>
+			<li>NAT consegue lidar com a <span class="alert">escassez de endereços IPv4</span>.</li>
+	  </ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>NAT: Implementação</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>Um roteador que realiza NAT precisa:
+	    <ul>
+	      <li><b>Datagramas que saem:</b> <span class="alert">substituir</span> <tt>(IP de origem, porta de origem)</tt> de cada datagrama para <tt>(IP do roteador, nova porta de origem)</tt>.
+	      <ul>
+	        <li>Nó remoto respoderá utilizando <tt>(IP roteador, nova porta de origem)</tt> como destino.</li>
+	      </ul></li>
+	      <li><b>Armazenar (na tabela NAT)</b> todo mapeamento feito entre <tt>(IP de origem, porta de origem)</tt> e <tt>(IP roteador, nova porta de origem)</tt>.</li>
+	      <li><b>Datagramas que chegam:</b> <span class="alert">substituir</span> <tt>(IP roteador, nova porta de origem)</tt> nos campos de destino do pacote por <tt>(IP de origem, porta de origem)</tt> armazenado na tabela NAT.</li>
+	    </ul></li>
+	  </ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>NAT: Exemplo</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/NATExemplo.svg" style="width: 80%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>NAT: Análise</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>Campo de número de porta: 16 bits.
+	    <ul>
+	      <li>65000 conexões simultâneas usando um único endereço IP!</li>
+	    </ul></li>
+	    <li>NAT é controverso:
+	    <ul>
+	      <li>Roteadores só deveriam processar até a camada 3 (camada de rede).</li>
+	      <li>NAT viola o argumento fim-a-fim.
+	      <ul>
+	        <li>Muitas vezes, o <span class="alert">NAT precisa ser levado em consideração por projetistas de aplicações</span>, <i>e.g.</i>, aplicações P2P.</li>
+	      </ul></li>
+	      <li>Escassez de endereços deve ser resolvida pela adoção do IPv6.</li>
+	    </ul></li>
+	  </ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>NAT <i>Traversal</i> (I)</h1>
+	<div class="slideContent">
+	  <div class="column" style="width: 50%;">
+	    <ul>
+	      <li>Cliente quer se conectar ao servidor com endereço 10.0.0.1.
+	      <ul>
+	        <li>Endereço 10.0.0.1 local para a LAN (cliente não pode usá-lo como endereço de destino).</li>
+	        <li>Apenas um endereço visível externamente: 138.76.29.7.</li>
+	      </ul></li>
+	      <li><b>Solução 1:</b> configurar NAT estaticamente para encaminhar conexões que chegam para uma dada porta para o servidor.
+	      <ul>
+	        <li><i>e.g.</i>, <tt>(138.76.29.7, porta 2500)</tt> sempre é traduzido (e encaminhado) para <tt>(10.0.0.1, porta 25000)</tt>.<td>
+	      </ul></li>
+	    </ul>
+	  </div>
+		<div class="column" style="width: 50%;">
+			<br>
+			<br>
+			<br>
+		  <center>
+		    <img src="imagens/NATTraversal.svg" style="width: 70%;"/>
+		  </center>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>NAT <i>Traversal</i> (II)</h1>
+	<div class="slideContent">
+	  <div class="column" style="width: 50%;">
+			<ul>
+			  <li><b>Solução 2:</b> <i>Internet Gateway Device Protocol</i> (IGD).
+			  <ul>
+			    <li>Parte do <i>Universal Plug and Play</i> (UPnP).</li>
+			  </ul></li>
+			  <li>Permite que <i>host</i> atrás de NAT:
+			  <ul>
+			    <li>Aprenda endereço IP público (138.76.29.7).</li>
+			    <li>Adicione/remova mapeamentos de porta (com tempos de <i>lease</i>).</li>
+			  </ul></li>
+			  <li><i>i.e.</i>, automatizar configuração estática dos mapeamentos do NAT.</li>
+			</ul>
+	  </div>
+	  <div class="column" style="width: 50%;">
+			<center>
+			  <img src="imagens/IGD.svg" style="width: 70%;"/>
+			</center>
+	  </div>
+	</div>
+	</section>
+
+	<section>
+	<h1>NAT <i>Traversal</i> (III)</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li><b>Solução 3:</b> <i>relaying</i> (usado, por exemplo, no Skype).
+	    <ul>
+	      <li>Cliente atrás do NAT estabelece conexão com <i>host</i> intermediário.</li>
+	      <li>Cliente externo se conecta ao mesmo <i>host</i> intermediário.</li>
+	      <li><i>Host</i> intermediário (<i>relay</i>) faz a ponte entre pacotes das duas conexões.</li>
+	    </ul></li>
+	  </ul>
+		<center>
+		  <img src="imagens/Relaying.svg" style="width: 70%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section class="secao">
+	<div class="slideContent">
+	  ICMP
+	</div>
+	</section>
+
+	<section>
+	<h1>ICMP: <i>Internet Control Message Protocol</i></h1>
+	<div class="slideContent">
+	  <div class="column" style="width: 50%;">
+			<ul>
+			  <li>Usado por <i>hosts</i> e roteadores para comunicar informações no nível de rede.
+			  <ul>
+			    <li>Reportar erros: <i>host</i>, rede, porta, protocolo inalcançáveis.</li>
+			    <li><i>Echo request/reply</i>: usado pelo utilitário <tt>ping</tt>.</li>
+			  </ul></li>
+			  <li>Protocolo de camada de rede, mas &ldquo;sobre o IP&rdquo;:
+			  <ul>
+			    <li>Mensagens ICMP transportadas em datagramas IP.</li>
+			  </ul></li>
+			  <li><b>Mensagem ICMP:</b> tipo, código, além dos primeiros 8 bytes do datagrama IP que causaram o erro.</li>
+			</ul>
+	  </div>
+	  <div class="column" style="width: 50%;">
+			<table>
+				<style media="screen">
+					th {
+						padding: 3px;
+					}
+				</style>
+				<tr>
+					<th>
+						Tipo
+					</th>
+					<th>
+						Código
+					</th>
+					<th>
+						Descrição
+					</th>
+				</tr>
+				<tr>
+					<td>0</td><td>0</td><td><i>echo reply</i></td>
+				</tr>
+				<tr>
+					<td>3</td><td>0</td><td>Rede de destino inalcançável</td>
+				</tr>
+				<tr>
+					<td>3</td><td>1</td><td><i>Host</i> de destino inalcançável</td>
+				</tr>
+				<tr>
+					<td>3</td><td>2</td><td>Protocolo de destino inalcançável</td>
+				</tr>
+				<tr>
+					<td>3</td><td>3</td><td>Porta de destino inalcançável</td>
+				</tr>
+				<tr>
+					<td>3</td><td>6</td><td>Rede de destino desconhecida</td>
+				</tr>
+				<tr>
+					<td>3</td><td>7</td><td><i>Host</i> de destino desconhecido</td>
+				</tr>
+				<tr>
+					<td>4</td><td>0</td><td><i>Source quench</i> (controle de congestionamento, não usada)</td>
+				</tr>
+				<tr>
+					<td>8</td><td>0</td><td><i>echo request</i></td>
+				</tr>
+				<tr>
+					<td>9</td><td>0</td><td>anúncio de rota</td>
+				</tr>
+				<tr>
+					<td>10</td><td>0</td><td>descoberta de rota</td>
+				</tr>
+				<tr>
+					<td>11</td><td>0</td><td>TTL expirado</td>
+				</tr>
+				<tr>
+					<td>12</td><td>0</td><td>Cabeçalho IP com erros</td>
+				</tr>
+			</table>
+	  </div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Traceroute e ICMP</h1>
+	<div class="slideContent">
+	  <div class="column" style="width: 50%;">
+			<ul>
+			  <li>Origem envia série de segmentos UDP para o destino.
+			  <ul>
+			    <li>Primeiro com TTL = 1.</li>
+			    <li>Segundo com TTL = 2, etc.</li>
+			    <li>Utiliza porta de destino pouco provável.</li>
+			  </ul></li>
+			  <li>Quando <i>n-ésimo</i> conjunto de datagramas chega ao <i>n-ésimo</i> roteador:
+			  <ul>
+			    <li>TTL expira, roteador descarta datagrama.</li>
+			    <li>Envia mensagem ICMP reportando erro à origem (tipo 11, código 0).</li>
+			    <li>Mensagem ICMP inclui nome e endereço IP do roteador.</li>
+			  </ul></li>
+			</ul>
+	  </div>
+	  <div class="column" style="width: 50%;">
+			<ul>
+			  <li>Quando mensagem ICMP chega, origem registra o RTT.</li>
+			  <li><b>Critério de parada:</b>
+			  <ul>
+			    <li>Segmento UDP eventualmente chega ao destinatário.</li>
+			    <li>Destinatário envia mensagem ICMP do tipo &ldquo;porta inalcançável&rdquo; (tipo 3, código 3).</li>
+			    <li>Origem para.</li>
+			  </ul></li>
+			</ul>
+	  </div>
+		<center>
+		  <img src="imagens/traceroute.svg" style="width: 70%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section class="secao">
+	<div class="slideContent">
+	  IPv6
+	</div>
+	</section>
+
+	<section>
+	<h1>IPv6: Motivação</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li><b>Motivação inicial: </b> espaço de endereçamento de 32 bits será esgotado em breve.
+	    <ul>
+	      <li><i>i.e.</i>, todos os endereços serão alocados.</li>
+	    </ul></li>
+	    <li>Motivações adicionais:
+	    <ul>
+	      <li>Formato do cabeçalho facilita e acelera o processamento/encaminhamento.</li>
+	      <li>Alterações no cabeçalho para facilitar QoS.</li>
+	    </ul></li>
+	    <li><b>Formato do datagrama IPv6</b>:
+	    <ul>
+	      <li>Cabeçalho de tamanho fixo, com 40 bytes.</li>
+	      <li>Não permite fragmentação.</li>
+	    </ul></li>
+	  </ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>IPv6: Formato do Datagrama</h1>
+	<div class="slideContent">
+		<ul>
+		  <li><b>pri:</b> identifica prioridade do datagrama em relação a outros gerados pela mesma origem.</li>
+		  <li><b>flow label:</b> identifica datagramas pertencentes a um mesmo &ldquo;fluxo&rdquo; (conceito de fluxo não é bem definido).</li>
+		  <li><b>next header:</b> identifica protocolo para a carga útil do pacote.</li>
+		</ul>
+	  <center>
+	    <img src="imagens/IPv6Datagrama.svg" style="width: 50%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Outras Mudanças em Relação ao IPv4</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li><b>Checksum:</b> completamente removido para reduzir tempo de processamento em cada salto.</li>
+	    <li><b>Opções:</b> permitidas, mas <span class="alert">fora do cabeçalho</span>, indicado pelo valor do campo <b>next header</b>.</li>
+	    <li><b>ICMPv6:</b> nova versão do ICMP.
+	    <ul>
+	      <li>Tipos de mensagem adicionais, <i>e.g.</i>, &ldquo;Pacote Muito Grande&rdquo;.</li>
+	      <li>Funções de gerenciamento de grupos multicast.</li>
+	    </ul></li>
+	  </ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Transição do IPv4 para o IPv6</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>Impossível atualizar todos os roteadores do mundo simultaneamente.
+	    <ul>
+	      <li>Não existe um &ldquo;dia oficial de migração&rdquo;.</li>
+	      <li>Como a rede pode operar com roteadores IPv4 e IPv6 misturados?</li>
+	    </ul></li>
+	    <li><b>Tunelamento:</b> datagramas IPv6 carregados como carga útil em datagramas IPv4 encaminhados por roteadores IPv4.</li>
+	  </ul>
+		<br>
+		<center>
+		  <img src="imagens/Tunelamento.svg" style="width: 70%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Tunelamento</h1>
+	  <center>
+	    <img src="imagens/Tunelamento2.svg" style="width: 70%;"/>
+	  </center>
+	</section>
+
+	<section>
+	<h1>Tunelamento</h1>
+	  <center>
+	    <img src="imagens/Tunelamento32.svg" style="width: 70%;"/>
+	  </center>
+	</section>
+
+	<section>
+	<h1>IPv6: Adoção</h1>
+	<div class="slideContent">
+		<ul>
+		  <li>Estimativas do US National Institute of Standards [2013]:
+		  <ul>
+		    <li>~3% dos roteadores IP da indústria.</li>
+		    <li>~11% dos roteadores do governo americano.</li>
+		  </ul></li>
+		  <li><b>Tempo (muito!) longo para implantação, uso.</b>
+		  <ul>
+		    <li>20 anos e contando!</li>
+		    <li>Pense nas mudanças no nível de aplicação nos últimos 20 anos: web, facebook, Netflix, ...</li>
+		    <li><span class="alert">Por quê?</span></li>
+		  </ul></li>
+		</ul>
+	</div>
+	</section>
+	<section>
+	<h1>Resumo da Aula...</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 55%;">
+			<ul>
+			  <li><b>NAT</b>:
+			  <ul>
+			    <li>Tradução de endereços.</li>
+			    <li>Rede local <i>vs.</i> rede externa.</li>
+					<li>Endereços privados <i>vs.</i> públicos, roteáveis.</li>
+			    <li>Pacote sai: IP e porta de origem alterados.</li>
+			    <li>Pacote entra: IP e porta de destino são alterados.</li>
+					<li>Tabela NAT: armazana mapeamentos.</li>
+			  </ul></li>
+			  <li>NAT: Motivação.
+			  <ul>
+			    <li><span class="alert">Escassez de IPs</span>.</li>
+			    <li>Independência dos endereços do ISP.</li>
+			    <li>Segurança.</li>
+			  </ul></li>
+			  <li>NAT <i>Traversal</i>:
+			  <ul>
+			    <li>Conexão de fora para dentro do NAT.</li>
+			    <li>Entradas estáticas na tabela.</li>
+			    <li>Protocolo IGD.</li>
+			    <li><i>Relaying</i> (aplicação).</li>
+			  </ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 45%;">
+		  <ul>
+		    <li><b>ICMP:</b>
+		    <ul>
+		      <li>Gerência do IP.</li>
+		      <li>Informações, condições de erro.</li>
+		      <li>Diversas tipos de mensagens.</li>
+					<li>Suporte a algumas ferramentas usuais.</li>
+		    </ul></li>
+		    <li><b>IPv6: Motivações.</b>
+		    <ul>
+		      <li>Mais endereços.</li>
+		      <li>Menor <i>overhead</i> de processamento.</li>
+		    </ul></li>
+		    <li><b>IPv6: diferenças</b>.
+		    <ul>
+		      <li>Cabeçalho fixo.</li>
+		      <li>Fragmentação não permitida.</li>
+		      <li>Melhor suporte a QoS.</li>
+		      <li>ICMPv6.</li>
+		    </ul></b></li>
+		    <li><b>IPv6: Transição.</b>
+		    <ul>
+		      <li>Gradual, coexistência com IPv4.</li>
+		      <li>Solução: tunelamento.</li>
+		    </ul></li>
+		  </ul>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Próxima Aula...</h1>
+	<div class="slideContent">
+		<ul>
+		  <li>Iniciaremos a última parte da disciplina: roteamento.</li>
+		  <li>Na aula que vem:
+		  <ul>
+		    <li>Introdução aos protocolos de roteamento.</li>
+		    <li>Classificação dos protocolos.</li>
+		    <li>Protocolos baseados em estado de enlace.</li>
+		  </ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<!-- {{{{ dzslides core
+	#
+	#
+	#     __  __  __       .  __   ___  __
+	#    |  \  / /__` |    | |  \ |__  /__`
+	#    |__/ /_ .__/ |___ | |__/ |___ .__/ core :€
+	#
+	#
+	# The following block of code is not supposed to be edited.
+	# But if you want to change the behavior of these slides,
+	# feel free to hack it!
+	#
+	-->
+
+    <!-- More CSS -->
+	<link href='../template/css/slides.css' id="slides" rel='stylesheet' type='text/css'>
+	<link href='../template/css/presentationSpecific2.css' id="presentationSpecific2" rel='stylesheet' type='text/css'>
+
+    <!-- More Javascript -->
+	<script type="text/javascript" src="../template/js/dz.js"></script>
+
+	<!-- More CSS -->
+	<link href='../template/css/notesSpecific.css' id="notesSpecific" rel='stylesheet' type='text/css'>
+	<link href='../template/css/printSpecific.css' id="printSpecific" rel='stylesheet' type='text/css'>
+</body>
+</html>

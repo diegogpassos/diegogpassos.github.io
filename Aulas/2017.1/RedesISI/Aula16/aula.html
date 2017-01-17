@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <!-- Meta info -->
+		<meta charset="utf-8">
+		<meta name="shortauthor" content="Diego Passos"/>
+		<meta name="shorttitle" content="IP e DHCP"/>
+		<meta name="shortevent" content="Redes de Computadores I"/>
+		<title>Redes de Computadores I: Aula 16</title>
+
+		<!-- Math support -->
+		<script type="text/x-mathjax-config">
+		MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+			MathJax.InputJax.TeX.Definitions.number = /^(?:[0-9]+(?:\.[0-9]{3})*(?:\{,\}[0-9]*)*|\{,\}[0-9]+)/
+		});
+		</script>
+		<!--<script src="js/plotly-latest.min.js"></script>-->
+		<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+		<!--<script src="../../../../MathJax-2.6-latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>-->
+		<script type="text/javascript" src="../template/js/dz_pre.js"></script>
+
+		<!-- Fonts -->
+		<link href='https://fonts.googleapis.com/css?family=Lora:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
+		<!--<link href='../../../../Fonts/Lora/lora.css' rel='stylesheet' type='text/css'>-->
+
+		<!-- CSS -->
+		<link href='../template/css/template.css' id="template" rel='stylesheet' type='text/css'>
+		<link href='../template/css/presentationSpecific.css' id="presentationSpecific" rel='stylesheet' type='text/css'>
+
+
+		<!-- Javascript -->
+		<!--
+		<script type="text/javascript" src="../template/js/audio.js"></script>
+		<script src="js/term.js" charset="utf-8"></script>
+    <script src="js/termcast.js" charset="utf-8"></script>
+		<link rel="stylesheet" href="css/googlecode.css">
+		<script src="js/highlight.pack.js"></script>
+		<script>
+			hljs.initHighlightingOnLoad();
+			hljs.configure({
+				tabReplace: '  '
+			});
+		</script>
+		-->
+</head>
+
+<body>
+    <!-- Audio handlers -->
+	<!--<audio src="audio/La.wav" id="La.wav" preload="auto"></audio>-->
+
+    <!-- Title Slide -->
+	<section>
+
+        <div class="slideContent">
+            <h1 class="title">Aula 16 - Protocolos IP e DHCP</h1>
+            <h2 class="author">Diego Passos</h2>
+            <h4 class="institution">Universidade Federal Fluminense</h4>
+            <h3 class="date">Redes de Computadores I</h3>
+        </div>
+		<br>
+		<br>
+			<div style="width: 30%; float: right; padding-right: 2%;">
+			<p style="font-size: 18px; text-align: right;">Material adaptado a partir dos slides originais de J.F Kurose and K.W. Ross.</p>
+		</div>
+	</section>
+
+	<section>
+	<h1>Revisão da Última Aula...</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+		  <ul>
+		    <li><b>Roteadores: arquitetura</b>.
+		    <ul>
+		      <li>Plano de controle: protocolos de roteamento.</li>
+		      <li>Plano de encaminhamento: portas, malha de comutação.</li>
+		    </ul></li>
+		    <li><b>Portas de entrada:</b>
+		    <ul>
+		      <li>Terminação do enlace físico.</li>
+		      <li>Camada de enlace.</li>
+		      <li>Decisões de comutação, <span class="alert">fila</span>.</li>
+					<li><i>Head-of-line Blocking</i>.</li>
+		    </ul></li>
+		    <li><b>Malha de comutação:</b>
+		    <ul>
+		      <li>Transporta pacotes de entradas para saída.</li>
+		      <li><span class="alert">Memória, barramento, rede de interconexão</span>.</li>
+					<li>Taxa de comutação.</li>
+		    </ul></li>
+		    <li><b>Portas de saída:</b>
+		    <ul>
+		      <li><span class="alert">Fila</span>, atraso, perdas.</li>
+		    </ul></li>
+		  </ul>
+		</div>
+		<div class="column" style="width: 50%;">
+		  <ul>
+		    <li><b><i>Buffers</i>: tamanho.</b>
+		    <ul>
+		      <li>Objetivo: absorver variações temporárias.</li>
+		      <li><i>Buffer</i> excessivo &rarr; atrasos altos, mascara congestionamento.</li>
+		    </ul></li>
+		    <li><b>Políticas de enfileiramento:</b>
+		    <ul>
+		      <li>Descarte e escalonamento.</li>
+		      <li>Impacto em QoS, TCP.</li>
+		    </ul></li>
+		    <li><b>Políticas de Escalonamento:</b>
+		    <ul>
+		      <li>FIFO, <i>Priority Scheduling</i>, <i>Round-Robin</i>.</li>
+		      <li>Esfomeação <i>vs.</i> Justiça <i>vs.</i> Simplicidade.</li>
+		    </ul></li>
+		    <li><b>Políticas de Descarte:</b>
+		    <ul>
+		      <li><i>Drop-tail, Drop-head</i>, RED.</li>
+		      <li>Sincronização.</li>
+		      <li>Detecção adiantada de congestionamento.</li>
+		    </ul></li>
+		  </ul>
+		</div>
+	</div>
+	</section>
+
+	<section class="secao">
+	<div class="slideContent">
+	  Protocolo IP: Datagramas
+	</div>
+	</section>
+
+	<section>
+	<h1>A Camada de Rede na Internet</h1>
+	<div class="slideContent">
+		<ul>
+		  <li>Funções da camada de rede de <i>hosts</i> e roteadores.</li>
+		</ul>
+		<br>
+	  <center>
+	    <img src="imagens/InternetCamadaDeRede.svg" style="width: 70%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Formato do Datagrama (I)</h1>
+	<div class="slideContent">
+	  <div class="column" style="width: 50%;">
+			<ul>
+			  <li><b>version:</b> número de versão.
+			  <ul>
+			    <li><i>e.g.</i>, versão 4, versão 6.</li>
+			  </ul></li>
+			  <li><b>header length:</b> comprimento do cabeçalho, em bytes.
+			  <ul>
+			    <li>Cabeçalho tem tamanho variável.</li>
+			    <li>Vide campo <b>options</b>.</li>
+			  </ul></li>
+			  <li><b>type of service:</b> &ldquo;classe&rdquo; do dado encapsulado.
+			  <ul>
+			    <li><i>e.g.</i>, tráfego de tempo real, melhor esforço.</li>
+			  </ul></li>
+			  <li><b>length:</b> tamanho total do datagrama.
+			  <ul>
+			    <li>Cabeçalho + carga útil.</li>
+					<li>Tamanho máximo: 65535 bytes.</li>
+			  </ul></li>
+			  <li><b>identifier, flags, fragment offset:</b> usados para fragmentação.
+			  <ul>
+			    <li>Mais em breve.</li>
+			  </ul></li>
+			</ul>
+	  </div>
+	  <div class="column" style="width: 50%;">
+			<center>
+			  <img src="imagens/IPFormato.svg" style="width: 70%;"/>
+			</center>
+	  </div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Formato do Datagrama (II)</h1>
+	<div class="slideContent">
+	  <div class="column" style="width: 50%;">
+			<ul>
+				<li><b>time to live:</b> número máximo de saltos que datagrama pode percorrer.
+				<ul>
+				  <li>Decrementado a cada roteador.</li>
+				  <li>Usado, por exemplo, em caso de <i>loops</i> de roteamento.</li>
+				</ul></li>
+				<li><b>upper layer:</b> indica protocolo responsável pela carga útil.
+				<ul>
+				  <li><i>e.g.</i>, TCP, UDP, IP.</li>
+				</ul></li>
+				<li><b>header checksum:</b> verificação de integridade <span class="alert">apenas do cabeçalho</span>.</li>
+				<li><b>endereços de origem e destino:</b> 32 bits cada.</li>
+				<li><b>options:</b> opções de tratamento do datagrama.
+				<ul>
+				  <li><i>e.g.</i>, <i>timestamp</i>, gravar rota, especificação de caminho.</li>
+				</ul></li>
+			</ul>
+	  </div>
+	  <div class="column" style="width: 50%;">
+			<center>
+			  <img src="imagens/IPFormato.svg" style="width: 70%;"/>
+			</center>
+	  </div>
+	</div>
+	</section>
+
+	<section>
+	<h1>IP: Fragmentação, Remontagem de Datagramas (I)</h1>
+	<div class="slideContent">
+	  <div class="column" style="width: 50%;">
+			<ul>
+			  <li>Enlaces de rede têm um MTU (<i>Maximum Transmission Unit</i>).
+			  <ul>
+			    <li>Maior quadro que pode ser transmitido pelo enlace.</li>
+			    <li>Tecnologias diferentes têm MTUs diferentes.</li>
+			  </ul></li>
+			  <li>Datagramas IP grandes são divididos (&ldquo;fragmentados&rdquo;) na rede.
+			  <ul>
+			    <li>Um datagrama quebrado em vários datagramas.</li>
+			    <li>&ldquo;Remontados&rdquo; <span class="alert">apenas no destinatário final</span>.</li>
+			    <li>Bits do cabeçalho IP são usados para identificar e ordenar fragmentos de um mesmo datagrama original.</li>
+			  </ul></li>
+			</ul>
+	  </div>
+	  <div class="column" style="width: 50%;">
+			<br>
+			<br>
+			<br>
+			<center>
+			  <img src="imagens/IPFragmentacao1.svg" style="width: 90%;"/>
+			</center>
+
+	  </div>
+	</div>
+	</section>
+
+	<section>
+	<h1>IP: Fragmentação, Remontagem de Datagramas (II)</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 40%;">
+		<ul>
+		  <li>Exemplo:
+		  <ul>
+		    <li>Datagrama de 4000 bytes.</li>
+		    <li>MTU = 1500 bytes.</li>
+		  </ul></li>
+		  <li><b>Cuidado!</b> O campo <i>offset</i> da fragmentação <span class="alert">é contado em unidade de 8 bytes</span>.</li>
+			<li><b>Além disso:</b> MTU considera o tamanho do datagrama inteiro, <span class="alert">incluindo cabeçalho.</span></li>
+		</ul>
+		</div>
+		<div class="column" style="width: 60%;">
+			<center>
+			  <img src="imagens/IPFragmentacao2.svg" style="width: 80%;"/>
+			</center>
+		</div>
+	</div>
+	</section>
+
+	<section class="secao">
+	<div class="slideContent">
+	  IP: Endereçamento (IPv4)
+	</div>
+	</section>
+
+	<section>
+	<h1>Endereçamento IP: Introdução (I)</h1>
+	<div class="slideContent">
+	  <div class="column" style="width: 50%;">
+			<ul>
+			  <li><b>Endereço IP:</b> identificador de 32 bits para <span class="alert">interfaces</span> de <i>hosts</i>, roteadores.</li>
+			  <li><b>Interface:</b> conexão entre <i>host</i>/roteador e enlace físico.
+			  <ul>
+			    <li>Roteadores tipicamente possuem múltplas interfaces.</li>
+			    <li><i>Host</i> tipicamente possui uma ou duas interfaces (<i>e.g.</i>, Ethernet cabeada e IEEE 802.11 sem fio).</li>
+			  </ul></li>
+			  <li><span class="alert">Endereços IP associados a cada interface</span>.</li>
+			</ul>
+	  </div>
+	  <div class="column" style="width: 50%;">
+			<center>
+			  <img src="imagens/IPEnderecamento1.svg" style="width: 90%;"/>
+			</center>
+	  </div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Endereçamento IP: Introdução (II)</h1>
+	<div class="slideContent">
+	  <div class="column" style="width: 50%;">
+			<ul>
+			  <li><span class="alert">Pergunta:</span> como as interfaces se conectam?</li>
+			  <li><span class="alert">Resposta:</span> tópico dos capítulos 5 e 6.
+			  <ul>
+			    <li>Redes II.</li>
+			  </ul></li>
+			  <li>Interfaces cabeadas Ethernet se conectam através de <i>switches</i> Ethernet.</li>
+			  <li>Interfaces Wi-Fi se conectam através de estações base Wi-Fi.</li>
+			  <li><span class="alert">Por enquanto:</span> não é preciso se preocupar com a interconexão de interfaces.</li>
+			</ul>
+	  </div>
+	  <div class="column" style="width: 50%;">
+			<center>
+			  <img src="imagens/IPEnderecamento2.svg" style="width: 90%;"/>
+			</center>
+
+	  </div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Sub-redes (I)</h1>
+	<div class="slideContent">
+	  <div class="column" style="width: 50%;">
+			<ul>
+			  <li><b>Endereço IP: duas partes</b>.
+			  <ul>
+			    <li>Porção da <span class="alert">sub-rede</span>: bits mais significativos (<i>i.e.</i>, mais à esquerda).</li>
+			    <li>Porção do <i>host</i>: bits menos significativos (<i>i.e.</i>, mais à direita).</li>
+			  </ul></li>
+			  <li><b>O que é uma sub-rede?</b>
+			  <ul>
+			    <li>Interfaces de dispositivos com a mesma porção da sub-rede nos seus endereços IP.</li>
+			    <li>Podem se alcançar diretamente, <span class="alert">sem o intermédio de um roteador</span>.</li>
+			  </ul></li>
+			</ul>
+	  </div>
+	  <div class="column" style="width: 50%;">
+			<center>
+			  <img src="imagens/Subrede.svg" style="width: 70%;"/>
+			</center>
+	  </div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Sub-redes (II)</h1>
+	<div class="slideContent">
+	  <div class="column" style="width: 50%;">
+			<ul>
+			  <li><span class="alert">Receita:</span>
+			  <ul>
+			    <li>Para determinar as sub-redes, desconecte as interfaces de seu <i>host</i> ou roteador, criando ilhas de redes isoladas.</li>
+					<li>Cada rede isolada é uma <span class="alert">sub-rede</span>.</li>
+			  </ul></li>
+				<li><span class="alert">Corolário:</span> roteadores interconectam sub-redes.</li>
+			</ul>
+	  </div>
+	  <div class="column" style="width: 50%;">
+			<center>
+			  <img src="imagens/Subrede2.svg" style="width: 70%;"/>
+			</center>
+	  </div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Sub-redes (III)</h1>
+	<div class="slideContent">
+	  <div class="column" style="width: 45%;">
+			<ul>
+			  <li><b>Quantas sub-redes?</b></li>
+			</ul>
+	  </div>
+	  <div class="column" style="width: 55%;">
+			<center>
+			  <img src="imagens/Subrede3.svg" style="width: 90%;"/>
+			</center>
+
+	  </div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Quantos Bits Identificam a Sub-rede?</h1>
+	<div class="slideContent">
+		<ul>
+		  <li>Recapitulando: endereço IP é dividido em duas partes.
+		  <ul>
+		    <li>Porção da sub-rede (bits mais significativos).</li>
+		    <li>Porção do <i>host</i> (bits menos significativos).</li>
+		  </ul></li>
+		  <li><span class="alert">Pergunta:</span> quantos bits em cada porção?
+		  <ul>
+		    <li>Um endereço IP tem 32 bits <b>no total</b>.</li>
+		    <li>Mas como eles são divididos nas duas porções?</li>
+				<li>Note que <b>nem toda sub-rede precisa ser do mesmo tamanho</b>.</li>
+		  </ul></li>
+		  <li>Duas alternativas:
+		  <ul>
+		    <li>Endereçamento baseado em classes (usado originalmente).</li>
+		    <li>CIDR (usado atualmente).</li>
+		  </ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Endereçamento Baseado em Classes</h1>
+	<div class="slideContent">
+		<ul>
+		  <li>Ideia básica: definimos sub-redes com propósitos diferentes.
+		  <ul>
+		    <li><b>Classe A</b>: redes &ldquo;grandes&rdquo;.
+		    <ul>
+		      <li>Porção da sub-rede com 8 bits, sempre iniciados por 0.</li>
+		      <li><span class="math inline">\(2^{24} = 16777216\)</span> endereços.</li>
+		    </ul></li>
+		    <li><b>Classe B</b>: redes &ldquo;médias&rdquo;.
+		    <ul>
+		      <li>Porção da sub-rede com 16 bits, sempre iniciados por 10.</li>
+		      <li><span class="math inline">\(2^{16} = 65536\)</span> endereços.</li>
+		    </ul></li>
+		    <li><b>Classe C</b>: redes &ldquo;pequenas&rdquo;.
+		    <ul>
+		      <li>Porção da sub-rede com 24 bits, sempre iniciados por 110.</li>
+		      <li><span class="math inline">\(2^{8} = 256\)</span> endereços.</li>
+		    </ul></li>
+				<li><b>Classes D (Multicast) e E (Reservado)</b>: outros usos.
+				<ul>
+				  <li>Endereços iniciados por 1110 e 1111, respectivamente.</li>
+				</ul></li>
+		  </ul></li>
+			<li>Exemplos:
+			<ul>
+			  <li>10.151.0.1 é de classe A (começa por 0), porção da sub-rede é <tt>00001010</tt>.</li>
+			  <li>200.20.15.156 é de classe C (começa por 110), porção da sub-rede é <tt>11001000 00010100 00001111</tt>.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Endereçamento Baseado em Classes: Problemas</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>Três tamanhos não são suficientes.
+	    <ul>
+	      <li>Pouca granularidade.</li>
+	    </ul></li>
+	    <li>Grande sub-utilização do espaço de endereçamento.</li>
+	    <li>Por exemplo: suponha que a UFF precise conectar 1000 dispositivos em uma sub-rede.
+	    <ul>
+	      <li>Sub-rede de classe C é muito pequena: apenas 256 endereços.</li>
+	      <li>Solução: atribuir uma sub-rede de classe B.</li>
+	      <li>Resultado: 65536 - 1000 = 64536 endereços ociosos.
+	      <ul>
+	        <li>Mas <b>alocados</b>!</li>
+	      </ul></li>
+	    </ul></li>
+	  </ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>CIDR</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li><span class="alert">CIDR: C</span>lassless <span class="alert">I</span>nter<span class="alert">D</span>omain <span class="alert">R</span>outing.
+	    <ul>
+	      <li>Porção de sub-rede de tamanho arbitrário.</li>
+	      <li>Formato de endereço: <span class="alert">a.b.c.d/x</span>, onde x é o # de bits na porção da sub-rede.</li>
+	    </ul></li>
+	  </ul>
+		<br>
+		<center>
+		  <img src="imagens/CIDR.svg" style="width: 45%;"/>
+		</center>
+		<br>
+		<ul>
+			<li>Convenciona-se que o endereço IP com todos os bits da porção do <i>host</i> iguais a zero seja denominado o <span class="alert">&ldquo;endereço da rede&rdquo;</span>.</li>
+			<li>Se porção do <i>host</i> só contém 1's, trata-se do <span class="alert">endereço de broadcast</span>.</li>
+		  <li>Porção da sub-rede é comumente chamada de <span class="alert">prefixo</span>.</li>
+			<li>O x, portanto, é o <span class="alert">tamanho do prefixo</span>.</li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>CIDR: Máscara de Sub-rede</h1>
+	<div class="slideContent">
+		<ul>
+		  <li>Notação alternativa:
+		  <ul>
+		    <li>Número de 32 bits tal que um <i>and</i> bit-a-bit entre o endereço de um <i>host</i> e a máscará resulte no endereço da rede.</li>
+				<li>Exemplo:
+				<ul>
+				  <li><i>Host</i> tem endereço 200.20.10.89.</li>
+				  <li>Máscara de sub-rede é 255.255.255.224.</li>
+				  <li>Endereço da rede: 200.20.10.64.</li>
+				</ul></li>
+		  </ul></li>
+		</ul>
+		<center>
+			<style media="screen">
+				table, td, tr {
+					border: none;
+				}
+				td {
+					padding: 10px;
+				}
+			</style>
+		  <table>
+				<tr>
+			  	<td></td><td>200.20.10.89</td> <td>=</td><td><tt>11001000 00010100 00001010 01011001</tt></td>
+				</tr>
+				<tr>
+			  	<td>&and;</td><td>255.255.255.255.224</td> <td>=</td><td><tt>11111111 11111111 11111111 11100000</tt></td>
+				</tr>
+				<tr style="border-top: 2px solid #000;">
+			  	<td>=</td><td>200.20.10.64</td> <td>=</td><td><tt>11001000 00010100 00001010 01000000</tt></td>
+				</tr>
+		  </table>
+		</center>
+		<br>
+		<ul>
+		  <li>Na prática, máscaras são uma sequência de 1's seguida de uma sequência de 0's.
+		  <ul>
+		    <li>Tamanho da sequência de 1's é o tamanho do prefixo na notação CIDR.</li>
+		  </ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>CIRD e Tamanhos de Sub-Redes</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>O CIDR permite sub-redes de tamanhos arbitrários?
+	    <ul>
+	      <li><span class="alert">Não, ainda há restrições de granularidade</span>.</li>
+	    </ul></li>
+	    <li>Exemplos:
+	    <ul>
+	      <li>Prefixo de 27 bits &mdash; <span class="math inline">\(2^{5} = 32\)</span> endereços.</li>
+	      <li>Prefixo de 26 bits &mdash; <span class="math inline">\(2^{6} = 64\)</span> endereços.</li>
+	      <li>Prefixo de 25 bits &mdash; <span class="math inline">\(2^{7} = 128\)</span> endereços.</li>
+	      <li>Prefixo de 24 bits &mdash; <span class="math inline">\(2^{8} = 256\)</span> endereços.</li>
+				<li>...</li>
+	    </ul></li>
+			<li>Mas há bem mais <b>opções</b>.</li>
+	  </ul>
+	</div>
+	</section>
+
+	<section class="secao">
+	<div class="slideContent">
+	  DHCP
+	</div>
+	</section>
+
+	<section>
+	<h1>Endereços IP: Como Conseguir Um?</h1>
+	<div class="slideContent">
+		<ul>
+		  <li><span class="alert">Pergunta:</span> como um <i>host</i> obtém seu endereço IP?</li>
+		  <li>Algumas possibilidades:
+		  <ul>
+		    <li>Configurado de maneira <b>estática</b> pelo administrador do sistema em um arquivo.
+		    <ul>
+		      <li>Windows: painel de controle &rarr; Redes &rarr; Configuração &rarr; TCP/IP &rarr; Propriedades.</li>
+		      <li>UNIX: <tt>/etc/rc.config</tt>.</li>
+		    </ul></li>
+		    <li><span class="alert">DHCP: D</span>ynamic <span class="alert">H</span>ost <span class="alert">C</span>onfiguration <span class="alert">P</span>rotocol.
+		    <ul>
+		      <li>Obtém configuração dinamicamente diretamente de um servidor.</li>
+		      <li>&ldquo;plug-and-play&rdquo;.</li>
+		    </ul></li>
+		  </ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>DHCP: <i>Dynamic Host Configuration Protocol</i></h1>
+	<div class="slideContent">
+	  <ul>
+	    <li><b>Objetivo:</b> permitir que <i>host</i> dinamicamente obtenha seu endereço IP de um servidor da rede quando se conecta a ela.
+	    <ul>
+	      <li>Endereços atribuídos pelo servidor em esquema de &ldquo;empréstimo&rdquo; (<i>lease</i>).</li>
+	      <li>Dispositivo pode renovar sua <i>lease</i> durante o uso.</li>
+	      <li>Permite reutilização de endereços (dispositivos só possuem endereço enquanto conectados à rede/ligados).</li>
+	      <li>Dá suporte a usuários móveis que querem se conectar a rede (mais detalhes em Redes II).</li>
+	    </ul></li>
+	    <li><b>Visão geral do DHCP:</b>
+	    <ul>
+	      <li><i>Host</i> envia mensagem do tipo <span class="alert">&ldquo;DHCP discover&rdquo;</span> em <b><i>broadcast</i></b> [opcional].</li>
+	      <li>Servidor DHCP responde com um <span class="alert">&ldquo;DHCP offer&rdquo;</span>[opcional].</li>
+	      <li><i>Host</i> requisita endereço IP com mensagem <span class="alert">&ldquo;DHCP request&rdquo;</span>.</li>
+	      <li>Servidor DHCP envia endereço com mensagem <span class="alert">&ldquo;DHCP ack&rdquo;</span>.</li>
+	    </ul></li>
+	  </ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Cenário de Cliente-Servidor DHCP</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/DHCP.svg" style="width: 70%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>DHCP: Interação Típica</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/DHCPInteracao.svg" style="width: 60%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>DHCP: Mais que Apenas Endereços IP</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>DHCP pode retornar mais que apenas um endereço IP adequado para aquela sub-rede.
+	    <ul>
+	      <li>Endereço IP do <span class="alert">roteador de primeiro salto</span>.
+	      <ul>
+	        <li>Também chamado de <span class="alert">gateway padrão</span>.</li>
+	      </ul></li>
+	      <li>Nome e endereço IP do servidor DNS local.</li>
+	      <li>Máscara de sub-rede.</li>
+	      <li>...</li>
+	    </ul></li>
+	  </ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>DHCP: Exemplo (I)</h1>
+	<div class="slideContent">
+	  <div class="column" style="width: 50%;">
+			<center>
+			  <img src="imagens/DHCPExemplo.svg" style="width: 70%;"/>
+			</center>
+	  </div>
+	  <div class="column" style="width: 50%;">
+			<ul>
+			  <li>Laptop se conecta à rede e precisa do seu endereço IP, endereço do roteador de primeiro salto, endereço do servidor DNS: utilizar DHCP.</li>
+			  <li>Requisição DHCP encapsulada em UDP, encapsulado em IP, encapsulado em 802.3 (Ethernet).</li>
+			  <li>Quadro Ethernet enviado em <i>broadcast</i> na rede local, recebido (em particular) no roteador rodando o servidor DHCP.</li>
+			  <li>Ethernet demultiplexado para IP, demultiplexado para UDP, demultiplexado para DHCP.</li>
+			</ul>
+	  </div>
+	</div>
+	</section>
+
+	<section>
+	<h1>DHCP: Exemplo (II)</h1>
+	<div class="slideContent">
+	  <div class="column" style="width: 50%;">
+			<center>
+			  <img src="imagens/DHCPExemplo2.svg" style="width: 70%;"/>
+			</center>
+
+	  </div>
+	  <div class="column" style="width: 50%;">
+			<ul>
+			  <li>Servidor DHCP formula um DHCP Ack contendo o endereço IP do cliente, endereço do roteador de primeiro salto, nome e endereço do servidor de DNS.</li>
+			  <li>Mensagem é encapsulada e enviada para o cliente.</li>
+			  <li>Cliente passa a saber seu endereço IP, endereço do servidor DNS, endereço IP do roteador de primeiro salto.</li>
+			</ul>
+	  </div>
+	</div>
+	</section>
+
+	<section>
+	<h1>DHCP: Saída de Captura do Wireshark</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/DHCPCaptura.svg" style="width: 90%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section class="secao">
+	<div class="slideContent">
+	  Endereçamento Hierárquico
+	</div>
+	</section>
+
+	<section>
+	<h1>Endereçamento IP: Como Obter Um?</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li><span class="alert">Pergunta:</span> como <b>a rede</b> obtém seus endereços?
+	    <ul>
+	      <li><i>i.e.</i>, seu prefixo.</li>
+	    </ul></li>
+	    <li><span class="alert">Resposta:</span> é alocada uma porção do espaço de endereços do seu ISP.
+	    <ul>
+	      <li>Uma <b>sub-rede menor</b>, contida na sub-rede do ISP, é alocada.</li>
+	    </ul></li>
+	    <li>Exemplo:</li>
+	  </ul>
+		<center>
+			<style media="screen">
+				td {
+					padding-top: 1px;
+				}
+			</style>
+			<table>
+				<tr style="border-bottom: 2px solid #000;">
+					<td>
+						Bloco do ISP
+					</td>
+					<td>
+						<tt><u>11001000 00010111 0001</u>0000 00000000</tt>
+					</td>
+					<td>
+						200.23.16.0/20
+					</td>
+				</tr>
+				<tr>
+					<td>
+						Organização 1
+					</td>
+					<td>
+						<tt><u>11001000 00010111 0001000</u>0 00000000</tt>
+					</td>
+					<td>
+						200.23.16.0/23
+					</td>
+				</tr>
+				<tr>
+					<td>
+						Organização 2
+					</td>
+					<td>
+						<tt><u>11001000 00010111 0001001</u>0 00000000</tt>
+					</td>
+					<td>
+						200.23.18.0/23
+					</td>
+				</tr>
+				<tr>
+					<td>
+						Organização 3
+					</td>
+					<td>
+						<tt><u>11001000 00010111 0001010</u>0 00000000</tt>
+					</td>
+					<td>
+						200.23.20.0/23
+					</td>
+				</tr>
+				<tr>
+					<td>
+						...
+					</td>
+					<td>
+						...
+					</td>
+					<td>
+						...
+					</td>
+				</tr>
+				<tr>
+					<td>
+						Organização 7
+					</td>
+					<td>
+						<tt><u>11001000 00010111 0001111</u>0 00000000</tt>
+					</td>
+					<td>
+						200.23.30.0/23
+					</td>
+				</tr>
+			</table>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Endereçamento Hierárquico: Agregação de Rotas (I)</h1>
+	<div class="slideContent">
+		<ul>
+		  <li>Endereçamento hierárquico permite o anúncio eficiente de informações de roteamento.</li>
+		</ul>
+		<br>
+	  <center>
+	    <img src="imagens/RoteamentoHierarquico1.svg" style="width: 70%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Endereçamento Hierárquico: Agregação de Rotas (II)</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Suponha que a organização 1 mude de ISP, mas queira manter seus endereços.</li>
+		  <li>Agora, o ISPs-R-Us tem rota <span class="alert">mais específica</span> para organização 1.</li>
+			<li>Endereçamento hierárquico + casamento por prefixo mais longo.</li>
+		</ul>
+		<br>
+	  <center>
+	    <img src="imagens/RoteamentoHierarquico2.svg" style="width: 70%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Endereçamento IP: Última Palavra...</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li><span class="alert">Pergunta:</span> como um ISP obtém um bloco de endereços?</li>
+	    <li><span class="alert">Resposta:</span> ICANN: Internet Corporation for Assigned Names and Numbers.
+	    <ul>
+	      <li><tt>http://www.icann.org/</tt></li>
+	      <li>Aloca endereços.</li>
+	      <li>Gerencia DNS.</li>
+	      <li>Atribui nomes de domínios, resolve disputas.</li>
+	    </ul></li>
+	  </ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Resumo da Aula...</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+		  <ul>
+		    <li><b>Protocolos da Camada de Rede:</b>
+		    <ul>
+		      <li>Vários contribuem.</li>
+		      <li>Protocolos de roteamento.</li>
+		      <li>IP.</li>
+		      <li>ICMP.</li>
+		    </ul></li>
+		    <li><b>Protocolo IP:</b>
+		    <ul>
+		      <li>Define convenções.</li>
+		      <li>Formato de datagrama.</li>
+		      <li>Endereçamento.</li>
+		    </ul></li>
+		    <li><b>Datagrama IP:</b>
+		    <ul>
+		      <li>Checksum apenas do cabeçalho.</li>
+		      <li>Campo de opções, tamanho variável.</li>
+		      <li>TTL (<i>time-to-live</i>).</li>
+		    </ul></li>
+				<li><b>Fragmentação:</b>
+				<ul>
+				  <li>Quebrar datagramas grandes.</li>
+				  <li>Adequa a limitações de cada enlace.</li>
+				  <li><span class="alert">Remontados apenas no destinatário</span>.</li>
+				</ul></li>
+		  </ul>
+		</div>
+		<div class="column" style="width: 50%;">
+		  <ul>
+		    <li><b>Endereçamento IP:</b>
+		    <ul>
+		      <li>32 bits.</li>
+		      <li><span class="alert">Associados a interfaces</span>.</li>
+		      <li><span class="alert">Prefixo identifica a sub-rede</span>.</li>
+		      <li>CIDR, máscara de sub-rede.</li>
+		    </ul></li>
+		    <li><b>DHCP:</b>
+		    <ul>
+		      <li>Protocolo de auto-configuração.</li>
+		      <li>Atribuição dinâmica de endereços IP.</li>
+					<li><span class="alert">Roteador de primeiro salto.</span></li>
+		      <li>E mais configurações.</li>
+		      <li>Cliente-servidor.</li>
+		      <li>Roda sobre UDP.</li>
+		      <li>Mensagens em <span class="alert"><i>broadcast</i></span>.</li>
+		    </ul></li>
+		    <li><b>Endereçamento hierárquico:</b>
+		    <ul>
+		      <li>Sub-redes são divididas.</li>
+		      <li>Novas sub-redes menores.</li>
+		      <li>Simplifica anúncio de rotas.</li>
+		    </ul></li>
+		  </ul>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Próxima Aula...</h1>
+	<div class="slideContent">
+		<ul>
+		  <li>Discutiremos dois protocolos e uma técnica muito popular:
+		  <ul>
+		    <li>NAT: permite que vários dispositivos compartilhem um mesmo endereço IP.</li>
+		    <li>ICMP: protocolo de gerência/sinalização associado ao IP.</li>
+		    <li>IPv6: próxima (ou atual) versão do protocolo IP.</li>
+		  </ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<!-- {{{{ dzslides core
+	#
+	#
+	#     __  __  __       .  __   ___  __
+	#    |  \  / /__` |    | |  \ |__  /__`
+	#    |__/ /_ .__/ |___ | |__/ |___ .__/ core :€
+	#
+	#
+	# The following block of code is not supposed to be edited.
+	# But if you want to change the behavior of these slides,
+	# feel free to hack it!
+	#
+	-->
+
+    <!-- More CSS -->
+	<link href='../template/css/slides.css' id="slides" rel='stylesheet' type='text/css'>
+	<link href='../template/css/presentationSpecific2.css' id="presentationSpecific2" rel='stylesheet' type='text/css'>
+
+    <!-- More Javascript -->
+	<script type="text/javascript" src="../template/js/dz.js"></script>
+
+	<!-- More CSS -->
+	<link href='../template/css/notesSpecific.css' id="notesSpecific" rel='stylesheet' type='text/css'>
+	<link href='../template/css/printSpecific.css' id="printSpecific" rel='stylesheet' type='text/css'>
+</body>
+</html>

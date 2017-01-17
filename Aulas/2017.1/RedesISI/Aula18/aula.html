@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <!-- Meta info -->
+		<meta charset="utf-8">
+		<meta name="shortauthor" content="Diego Passos"/>
+		<meta name="shorttitle" content="Roteamento: Introdução e LS"/>
+		<meta name="shortevent" content="Redes de Computadores I"/>
+		<title>Redes de Computadores I: Aula 18</title>
+
+		<!-- Math support -->
+		<script type="text/x-mathjax-config">
+		MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+			MathJax.InputJax.TeX.Definitions.number = /^(?:[0-9]+(?:\.[0-9]{3})*(?:\{,\}[0-9]*)*|\{,\}[0-9]+)/
+		});
+		</script>
+		<!--<script src="js/plotly-latest.min.js"></script>-->
+		<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+		<!--<script src="../../../../MathJax-2.6-latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>-->
+		<script type="text/javascript" src="../template/js/dz_pre.js"></script>
+
+		<!-- Fonts -->
+		<link href='https://fonts.googleapis.com/css?family=Lora:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
+		<!--<link href='../../../../Fonts/Lora/lora.css' rel='stylesheet' type='text/css'>-->
+
+		<!-- CSS -->
+		<link href='../template/css/template.css' id="template" rel='stylesheet' type='text/css' media="all">
+		<link href='../template/css/presentationSpecific.css' id="presentationSpecific" rel='stylesheet' type='text/css' media="all">
+
+
+		<!-- Javascript -->
+		<!--
+		<script type="text/javascript" src="../template/js/audio.js"></script>
+		<script src="js/term.js" charset="utf-8"></script>
+    <script src="js/termcast.js" charset="utf-8"></script>
+		<link rel="stylesheet" href="css/googlecode.css">
+		<script src="js/highlight.pack.js"></script>
+		<script>
+			hljs.initHighlightingOnLoad();
+			hljs.configure({
+				tabReplace: '  '
+			});
+		</script>
+		-->
+		<script src="js/snap.svg-min.js" charset="utf-8"></script>
+		<script src="js/Grafos.js" charset="utf-8"></script>
+
+</head>
+
+<body>
+    <!-- Audio handlers -->
+	<!--<audio src="audio/La.wav" id="La.wav" preload="auto"></audio>-->
+
+    <!-- Title Slide -->
+	<section>
+
+        <div class="slideContent">
+            <h1 class="title">Aula 18 - Roteamento: Introdução, Algoritmos de Estado de Enlace</h1>
+            <h2 class="author">Diego Passos</h2>
+            <h4 class="institution">Universidade Federal Fluminense</h4>
+            <h3 class="date">Redes de Computadores I</h3>
+        </div>
+		<br>
+		<br>
+			<div style="width: 30%; float: right; padding-right: 2%;">
+			<p style="font-size: 18px; text-align: right;">Material adaptado a partir dos slides originais de J.F Kurose and K.W. Ross.</p>
+		</div>
+	</section>
+
+	<section>
+	<h1>Revisão da Última Aula...</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 52%;">
+			<ul>
+			  <li><b>NAT</b>:
+			  <ul>
+			    <li>Tradução de endereços.</li>
+			    <li>Rede local <i>vs.</i> rede externa.</li>
+					<li>Endereços privados <i>vs.</i> públicos, roteáveis.</li>
+			    <li>Pacote sai: IP e porta de origem alterados.</li>
+			    <li>Pacote entra: IP e porta de destino são alterados.</li>
+					<li>Tabela NAT: armazana mapeamentos.</li>
+			  </ul></li>
+			  <li>NAT: Motivação.
+			  <ul>
+			    <li><span class="alert">Escassez de IPs</span>.</li>
+			    <li>Independência dos endereços do ISP.</li>
+			    <li>Segurança.</li>
+			  </ul></li>
+			  <li>NAT <i>Traversal</i>:
+			  <ul>
+			    <li>Conexão de fora para dentro do NAT.</li>
+			    <li>Entradas estáticas na tabela.</li>
+			    <li>Protocolo IGD.</li>
+			    <li><i>Relaying</i> (aplicação).</li>
+			  </ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 48%;">
+		  <ul>
+		    <li><b>ICMP:</b>
+		    <ul>
+		      <li>Gerência do IP.</li>
+		      <li>Informações, condições de erro.</li>
+		      <li>Diversas tipos de mensagens.</li>
+					<li>Suporte a algumas ferramentas usuais.</li>
+		    </ul></li>
+		    <li><b>IPv6: Motivações.</b>
+		    <ul>
+		      <li>Mais endereços.</li>
+		      <li>Menor <i>overhead</i> de processamento.</li>
+		    </ul></li>
+		    <li><b>IPv6: diferenças</b>.
+		    <ul>
+		      <li>Cabeçalho fixo.</li>
+		      <li>Fragmentação não permitida.</li>
+		      <li>Melhor suporte a QoS.</li>
+		      <li>ICMPv6.</li>
+		    </ul></b></li>
+		    <li><b>IPv6: Transição.</b>
+		    <ul>
+		      <li>Gradual, coexistência com IPv4.</li>
+		      <li>Solução: tunelamento.</li>
+		    </ul></li>
+		  </ul>
+		</div>
+	</div>
+	</section>
+
+	<section class="secao">
+	<div class="slideContent">
+	  Roteamento: Introdução
+	</div>
+	</section>
+
+	<section>
+	<h1>Sinergia entre Roteamento e Encaminhamento</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/DatagramasTabelaRoteamento.svg" style="width: 70%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Abstração de Grafo</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/GrafoAbstracao.svg" style="width: 40%;"/>
+	  </center>
+		<ul>
+		  <li>Grafo: G = (N, E).</li>
+		  <li>N = conjunto de roteadores = {u, v, w, x, y, z}.</li>
+		  <li>E = conjunto de enlaces = {(u,v), (u,x), (v,x), (v,w), (x,w), (x,y), (w,y), (w,z), (y,z)}</li>
+		</ul>
+		<center>
+		<div class="block" style="width:900px;">
+		    <div class="blockTitle" style="width: 100%;">
+		        <p>Nota</p>
+		    </div>
+		    <div class="blockBody">
+		        Grafos são uma abstração útil em outros contextos de redes de computadores, <i>e.g.</i>, P2P, onde N é o conjunto de pares e E é o o conjunto de conexões TCP.
+		    </div>
+		</div>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Abstração de Grafo: Custos</h1>
+	<div class="slideContent">
+		<div style="height: 300px;">
+		  <div class="column" style="width: 50%;">
+				<center>
+				  <img src="imagens/GrafoAbstracao.svg" style="width: 70%;"/>
+				</center>
+		  </div>
+		  <div class="column" style="width: 50%;">
+				<ul>
+				  <li><span class="math inline">\(c(x, x^\prime) = \)</span> custo do enlace <span class="math inline">\((x, x^\prime)\)</span>.
+				  <ul>
+				    <li><i>e.g.</i>, <span class="math inline">\(c(w, z) = 5\)</span>.</li>
+				  </ul></li>
+				  <li>Custo pode ser sempre 1, ou inversamente proporcional à banda, ou inversamente proporcional ao congestionamento.</li>
+				</ul>
+		  </div>
+		</div>
+		<br>
+		<ul>
+		  <li>Custo de um caminho <span class="math inline">\((x_1, x_2, x_3, ..., x_p) = c(x_1, x_2) + c(x_2, x_3) + ... + c(x_{p-1{}}, x_p)\)</span></li>
+		</ul>
+		<center>
+			<div style="border: 2px solid #c33; width: 90%; text-align: left; padding: 10px;">
+				<span class="alert">Pergunta chave:</span> qual é o caminho de <b>custo mínimo</b> entre u e z?
+				<br>
+				<span class="alert">Algoritmo de roteamento:</span> algoritmo que encontra o caminho de custo mínimo.
+			</div>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Classificação de Algoritmos de Roteamento</h1>
+	<div class="slideContent">
+	  <div class="column" style="width: 55%;">
+			<ul>
+			  <li><span class="alert">Perguta:</span> informação global ou decentralizada?</li>
+			  <li><b>Global:</b>
+			  <ul>
+			    <li>Todos os roteadores tem <span class="alert">visão completa da topologia, custos de enlaces.</span></li>
+			    <li>Algoritmos baseados em &ldquo;Estado de Enlace&rdquo;.
+			    <ul>
+			      <li><i>Link State</i>, em inglês.</li>
+			    </ul></li>
+			  </ul></li>
+			  <li><b>Decentralizada:</b>
+			  <ul>
+			    <li>Roteador <span class="alert">conhece vizinhos</span> fisicamente conectados por enlaces, custos dos enlaces para vizinhos.</li>
+			    <li>Processo iterativo de computação, troca de informação com vizinhos.</li>
+			    <li>Algoritmos baseados em &ldquo;Vetor de Distâncias&rdquo;.
+			    <ul>
+			      <li><i>Distance Vector</i>, em inglês.</li>
+			    </ul></li>
+			  </ul></li>
+			</ul>
+	  </div>
+	  <div class="column" style="width: 45%;">
+			<ul>
+			  <li><span class="alert">Pergunta:</span> estático ou dinâmico?</li>
+			  <li><b>Estático:</b> rotas mudam pouco com o tempo.</li>
+			  <li><b>Dinâmico:</b> rotas mudam rapidamente.
+			  <ul>
+			    <li>Em resposta a mudanças nos custos dos enlaces.</li>
+			    <li>Atualização periódica.</li>
+			  </ul></li>
+				<li><span class="alert">Pergunta:</span> pró-ativo ou reativo?</li>
+				<li><b>Pró-ativo:</b> rotas encontradas antes de serem necessárias.</li>
+				<li><b>Reativo:</b> rotas encontradas sob demanda.</li>
+			</ul>
+	  </div>
+	</div>
+	</section>
+
+	<section class="secao">
+	<div class="slideContent">
+	  Algoritmos Baseados em Estado de Enlaces
+	</div>
+	</section>
+
+	<section>
+	<h1>Um Algoritmo de Roteamento Baseado em Estado de Enlaces</h1>
+	<div class="slideContent">
+	  <div class="column" style="width: 53%;">
+			<ul>
+			  <li><b>Algoritmo de Dijkstra:</b>
+			  <ul>
+			    <li>Topologia da rede, custos dos enlaces conhecidos por todos os nós.
+			    <ul>
+			      <li>Conseguido através da difusão do &ldquo;estado dos enlaces&rdquo;.</li>
+			      <li>Todos os nós tem a mesma informação.
+			      <ul>
+			        <li>Ou deveriam ter.</li>
+			      </ul></li>
+			      <li>Computa caminho de custo mínimo de um nó (&ldquo;origem&rdquo;) para todos os outros nós.
+			      <ul>
+			        <li>Resulta na tabela de roteamento para aquele nó.</li>
+			      </ul></li>
+			      <li>Iterativo: depois de k iterações, conhece o caminho mínimo para k destinos.</li>
+			    </ul></li>
+			  </ul></li>
+			</ul>
+	  </div>
+	  <div class="column" style="width: 47%;">
+			<ul>
+			  <li><b>Notação:</b>
+			  <ul>
+			    <li><span class="alert"><span class="math inline">\(c(x,y)\)</span>:</span> custo do enlace do nó x para nó y.
+			    <ul>
+			      <li>infinito, se x e y não são vizinhos.</li>
+			    </ul></li>
+			    <li><span class="alert"><span class="math inline">\(D(v)\)</span>:</span> custo atualmente conhecido para o caminho da origem até v.</li>
+					<li><span class="alert"><span class="math inline">\(p(v)\)</span>:</span> predecessor de v no caminho da origem para v.</li>
+					<li><span class="alert"><span class="math inline">\(N^\prime\)</span>:</span> conjunto de nós para os quais definitivamente conhecemos o melhor custo.</li>
+			  </ul></li>
+			</ul>
+	  </div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Algoritmo de Dijkstra</h1>
+	<div class="slideContent">
+		<style media="screen">
+			table, td, tr {
+				border: none;
+			}
+			td {
+				padding-left: 10px;
+				padding-right: 10px;
+				padding-top: 5px;
+			}
+		</style>
+		<!--<center>-->
+		  <table style="margin-left: 60px;">
+		  	<tr>
+		  		<td>1</td><td><span class="math inline">\(N^\prime \leftarrow \{u\}\)</span></td><td style="color: #666;">// Caminho para origem é trivial</td>
+		  	</tr>
+		  	<tr>
+		  		<td>2</td><td><span class="math inline">\(\forall v \in N\)</span></td><td style="color: #666;">// Para os demais nós</td>
+		  	</tr>
+		  	<tr>
+		  		<td>3</td><td>&nbsp;&nbsp;&nbsp;&nbsp;<b>se</b> <span class="math inline">\((u, v) \in E\)</span></td><td style="color: #666;">// É vizinho da origem?</td>
+		  	</tr>
+		  	<tr>
+		  		<td>4</td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>então</b> <span class="math inline">\(D(v) \leftarrow c(u,v)\)</span></td><td style="color: #666;">// Conhecemos um caminho</td>
+		  	</tr>
+		  	<tr>
+		  		<td>5</td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>senão</b> <span class="math inline">\(D(v) = \infty\)</span></td><td style="color: #666;">// Ainda sem caminho</td>
+		  	</tr>
+		  	<tr>
+		  		<td>6</td><td></td>
+		  	</tr>
+		  	<tr>
+		  		<td>7</td><td><b>Repita</b></td><td style="color: #666;">// Loop principal</td>
+		  	</tr>
+		  	<tr>
+		  		<td>8</td><td>&nbsp;&nbsp;&nbsp;&nbsp;Encontre <span class="math inline">\(w \not\in N^\prime\)</span> tal que D(w) seja mínimo</td><td style="color: #666;">// Melhor caminho provisório</td>
+		  	</tr>
+		  	<tr>
+		  		<td>9</td><td>&nbsp;&nbsp;&nbsp;&nbsp;<span class="math inline">\(N^\prime\leftarrow N^\prime\cup\{w\}\)</span></td><td style="color: #666;">// Se torna definitivo</td>
+		  	</tr>
+		  	<tr>
+		  		<td>10</td><td>&nbsp;&nbsp;&nbsp;&nbsp;<span class="math inline">\(\forall v\)</span> tal que <span class="math inline">\(v \not\in N^\prime \land (w, v) \in E\)</span></td><td style="color: #666;">// Vizinhos de w ainda provisórios</td>
+		  	</tr>
+		  	<tr>
+		  		<td>11</td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="math inline">\(D(v) \leftarrow min(D(v), D(w) + c(w, v))\)</span></td><td style="color: #666;">// Anterior ou passando por w?</td>
+		  	</tr>
+		  	<tr>
+		  		<td>12</td><td><b>Até que </b> <span class="math inline">\(N^\prime = N\)</span></td><td style="color: #666;">// Até adição de todos os nós</td>
+		  	</tr>
+		  </table>
+		<!--</center>-->
+	</div>
+	</section>
+
+	<section>
+	<h1>Algoritmo de Dijkstra: Exemplo</h1>
+	<div class="slideContent">
+		<div style="height: 400px;">
+			<div class="column" style="width: 60%;">
+				<style media="screen">
+					.circle {
+						width:60px;
+						height:40px;
+						border-radius:50%;
+						border: 2px solid #c33;
+						line-height:40px;
+						text-align:center;
+					}
+				</style>
+				<table>
+			  	<tr><td></td><td></td><td><span class="math inline">\(D(v)\)</span><td><span class="math inline">\(D(w)\)</span></td><td><span class="math inline">\(D(x)\)</span></td><td><span class="math inline">\(D(y)\)</span></td><td><span class="math inline">\(D(z)\)</span></td></tr>
+			  	<tr style="border-bottom: 4px solid #33a;"><td>Passo</td><td><span class="math inline">\(N^\prime\)</span></td><td><span class="math inline">\(p(v)\)</span></td><td><span class="math inline">\(p(w)\)</span></td><td><span class="math inline">\(p(x)\)</span></td><td><span class="math inline">\(p(y)\)</span></td><td><span class="math inline">\(p(z)\)</span></td></tr>
+			  	<tr style="border-bottom: 2px solid #33a;"><td>0</td><td>u</td><td style="text-align: center;">7,u</td><td style="text-align: center;"><center><div class="circle">3,u</div></center></td><td style="text-align: center;">5,u</td><td style="text-align: center;"><span class="math inline">\(\infty\)</span></td><td style="text-align: center;"><span class="math inline">\(\infty\)</span></td></tr>
+			  	<tr style="border-bottom: 2px solid #33a;"><td>1</td><td>uw</td><td style="text-align: center;">6,w</td><td></td><td><center><div class="circle">5,u</div></center></td><td style="text-align: center;">11,w</td><td style="text-align: center;"><span class="math inline">\(\infty\)</span></td></tr>
+			  	<tr style="border-bottom: 2px solid #33a;"><td>2</td><td>uwx</td><td style="text-align: center;"><center><div class="circle">6,w</div></center></td><td style="text-align: center;"></td><td style="text-align: center;"></td><td style="text-align: center;">11,w</td><td style="text-align: center;">14,x</td></tr>
+			  	<tr style="border-bottom: 2px solid #33a;"><td>3</td><td>uwxv</td><td style="text-align: center;"></td><td style="text-align: center;"></td><td style="text-align: center;"></td><td style="text-align: center;"><center><div class="circle">10,v</div></center></td><td style="text-align: center;">14,x</td></tr>
+			  	<tr style="border-bottom: 2px solid #33a;"><td>4</td><td>uwxvy</td><td style="text-align: center;"></td><td style="text-align: center;"></td><td style="text-align: center;"></td><td style="text-align: center;"></td><td style="text-align: center;"><center><div class="circle">12,y</div></center></td></tr>
+			  	<tr style="border-bottom: 2px solid #33a; line-height: 45px;"><td>5</td><td>uwxvyz</td><td></td><td></td><td></td><td></td><td></td></tr>
+			  </table>
+			</div>
+			<div class="column" style="width: 40%;">
+			  <center>
+			    <img src="imagens/DijkstraExemplo1.svg" style="width: 100%;"/>
+			  </center>
+			</div>
+		</div>
+		<br>
+		<center>
+		<div class="block" style="width:1150px;">
+				<div class="blockTitle" style="width: 100%;">
+						<p>Notas</p>
+				</div>
+				<div class="blockBody">
+						<ul>
+							<li>Constrói uma <b>árvore de caminhos de custo mínimo</b> percorrendo predecessores.</li>
+							<li>Podem existir empates. Critério de desempate é arbitrário.</li>
+						</ul>
+				</div>
+		</div>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Algoritmo de Dijkstra: Outro Exemplo (I)</h1>
+	<div class="slideContent">
+		<center>
+			<table>
+				<tr style="border-bottom: 4px solid #33a;"><td>Passo</td><td><span class="math inline">\(N^\prime\)</span></td><td><span class="math inline">\(D(v),p(v)\)</span></td><td><span class="math inline">\(D(w),p(w)\)</span></td><td><span class="math inline">\(D(x),p(x)\)</span></td><td><span class="math inline">\(D(y),p(y)\)</span></td><td><span class="math inline">\(D(z),p(z)\)</span></td></tr>
+				<tr style="border-bottom: 2px solid #33a;"><td>0</td><td>u</td><td style="text-align: center;">2,u</td><td style="text-align: center;">5,u</td><td style="text-align: center;"><center><div class="circle">1,u</div></center></td><td style="text-align: center;"><span class="math inline">\(\infty\)</span></td><td style="text-align: center;"><span class="math inline">\(\infty\)</span></td></tr>
+				<tr style="border-bottom: 2px solid #33a;"><td>1</td><td>ux</td><td style="text-align: center;">2,u</td><td style="text-align: center;">4,x</td><td style="text-align: center;"></td><td style="text-align: center;"><center><div class="circle">2,x</div></center></td><td style="text-align: center;"><span class="math inline">\(\infty\)</span></td></tr>
+				<tr style="border-bottom: 2px solid #33a;"><td>2</td><td>uxy</td><td style="text-align: center;"><center><div class="circle">2,u</div></center></td><td style="text-align: center;">3,y</td><td style="text-align: center;"></td><td style="text-align: center;"></td><td style="text-align: center;">4,y</td></tr>
+				<tr style="border-bottom: 2px solid #33a;"><td>3</td><td>uxyv</td><td style="text-align: center;"></td><td style="text-align: center;"><center><div class="circle">3,y</div></center></td><td style="text-align: center;"></td><td style="text-align: center;"></td><td style="text-align: center;">4,y</td></tr>
+				<tr style="border-bottom: 2px solid #33a;"><td>4</td><td>uxyvw</td><td style="text-align: center;"></td><td style="text-align: center;"></td><td style="text-align: center;"></td><td style="text-align: center;"></td><td style="text-align: center;"><center><div class="circle">4,y</div></center></td></tr>
+				<tr style="border-bottom: 2px solid #33a; line-height: 45px;"><td>5</td><td>uxyvwz</td><td></td><td></td><td></td><td></td><td></td></tr>
+			</table>
+			<br>
+			<img src="imagens/DijkstraExemplo2.svg" style="width: 30%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Algoritmo de Dijkstra: Outro Exemplo (II)</h1>
+	<div class="slideContent">
+	  	<div class="column" style="width: 50%;">
+	  	  <ul>
+	  	    <li>Árvore de caminhos de menor custo formada a partir de u:</li>
+	  	  </ul>
+				<br>
+				<center>
+				  <img src="imagens/Arvore.svg" style="width: 70%;"/>
+				</center>
+	  	</div>
+			<div class="column" style="width: 50%;">
+			  <ul>
+			    <li>Tabela de roteamento resultante:</li>
+			  </ul>
+				<br>
+				<center>
+					<table>
+						<tr style="border-bottom: 2px solid #33c;">
+							<td style="border-right: 2px solid #33c; text-align: center;">
+								Destino
+							</td>
+							<td>
+								Enlace
+							</td>
+						</tr>
+						<tr>
+							<td style="border-right: 2px solid #33c; text-align: center;">
+								v
+							</td>
+							<td>
+								(u,v)
+							</td>
+						</tr>
+						<tr>
+							<td style="border-right: 2px solid #33c; text-align: center;">
+								x
+							</td>
+							<td>
+								(u,x)
+							</td>
+						</tr>
+						<tr>
+							<td style="border-right: 2px solid #33c; text-align: center;">
+								y
+							</td>
+							<td>
+								(u,x)
+							</td>
+						</tr>
+						<tr>
+							<td style="border-right: 2px solid #33c; text-align: center;">
+								w
+							</td>
+							<td>
+								(u,x)
+							</td>
+						</tr>
+						<tr>
+							<td style="border-right: 2px solid #33c; text-align: center;">
+								z
+							</td>
+							<td>
+								(u,x)
+							</td>
+						</tr>
+					</table>
+				</center>
+			</div>
+	</div>
+	</section>
+<!--
+	<section>
+	<h1>Crie seu Exemplo</h1>
+	<div class="slideContent">
+		<center>
+			<div style="border: 2px solid #333; width: 550px;">
+				<svg id="DijkstraArbitrario" style="width: 550px; height: 280px;"></svg>
+				<script type="text/javascript">
+
+				var s = Snap("#DijkstraArbitrario");
+
+				var nodes = [];
+				nodes.push(DrawNode(s, 50, 150, 'A'));
+				nodes.push(DrawNode(s, 200, 45, 'B'));
+				nodes.push(DrawNode(s, 200, 150, 'C'));
+				nodes.push(DrawNode(s, 200, 255, 'D'));
+				nodes.push(DrawNode(s, 350, 150, 'E'));
+				nodes.push(DrawNode(s, 500, 150, 'F'));
+
+				DrawEdge(s, nodes[0], nodes[1], '3');
+				DrawEdge(s, nodes[0], nodes[2], '1');
+				DrawEdge(s, nodes[0], nodes[3], '5');
+				DrawEdge(s, nodes[1], nodes[2], '1');
+				DrawEdge(s, nodes[1], nodes[4], '7');
+				DrawEdge(s, nodes[1], nodes[5], '2');
+				DrawEdge(s, nodes[2], nodes[3], '3');
+				DrawEdge(s, nodes[2], nodes[4], '5');
+				DrawEdge(s, nodes[3], nodes[4], '5');
+				DrawEdge(s, nodes[4], nodes[5], '8');
+
+				for (var i = 0; i < nodes.length; i++) {
+
+					nodes[i][0].drag(moveNode, null, null);
+					nodes[i][0].mouseover(function(){console.log('qweqe');});
+				}
+				</script>
+			</div>
+		</center>
+	</div>
+	</section>
+-->
+	<section>
+	<h1>Algoritmo de Dijkstra: Discussão</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li><b>Complexidade do algoritmo:</b> com <span class="math inline">\(n\)</span> nós.
+	    <ul>
+	      <li>Cada iteração: verifica todos os possíveis nós <span class="math inline">\(w \not\in N^\prime\)</span>.</li>
+	      <li><span class="math inline">\(\frac{n(n+1)}{2}\)</span> comparações: <span class="math inline">\(O(n^2)\)</span>.</li>
+	      <li>Implementações mais eficientes são possíveis: <span class="math inline">\(O(n\cdot log\;n)\)</span>.</li>
+	    </ul></li>
+	    <li><b>Podem ocorrer oscilações:</b>
+	    <ul>
+	      <li><i>e.g.</i> custos dos enlaces iguais a quantidade de tráfego transportado:</li>
+	    </ul></li>
+	  </ul>
+		<br>
+		<center>
+			<img src="imagens/Oscilacao.svg" style="width: 80%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Resumo da Aula...</h1>
+	<div class="slideContent">
+		<ul>
+		  <li><b>Roteamento:</b>
+		  <ul>
+		    <li>Encontrar caminhos fim-a-fim.</li>
+		    <li><span class="alert">Construir tabela de roteamento</span>.
+		    <ul>
+		      <li>Consultada no encaminhamento.</li>
+		    </ul></li>
+		  </ul></li>
+		  <li><b>Grafos</b>: usados como abstração para representar a rede.
+		  <ul>
+		    <li>Roteadores são nós.</li>
+		    <li>Enlaces são arestas.</li>
+		    <li>Podem ter pesos: <span class="alert">medida de qualidade do enlace</span>.
+		    <ul>
+		      <li>Relacionado a banda, atraso, congestionamento, ...</li>
+		    </ul></li>
+		  </ul></li>
+		  <li><b>Classificações:</b>
+		  <ul>
+		    <li>Estado de Enlace <i>vs.</i> Vetor de Distâncias.</li>
+		    <li>Dinâmico <i>vs.</i> Estático.</li>
+		  </ul></li>
+		  <li><b>Roteamento baseado em Estado de Enlaces:</b>
+		  <ul>
+		    <li>Algoritmo de Dijkstra.</li>
+		  </ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Próxima Aula...</h1>
+	<div class="slideContent">
+		<ul>
+		  <li>Prosseguiremos o estudo sobre roteamento.</li>
+		  <li>Mais dois temas:
+		  <ul>
+		    <li>Algoritmos baseados em Vetor de Distâncias.</li>
+		    <li>Roteamento hierárquico.</li>
+		  </ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Exercícios</h1>
+	<div class="slideContent">
+	  <ol>
+	    <li>Execute o Algoritmo de Dijkstra a partir do nó D do grafo abaixo:</li>
+			<center>
+			  <!--<img src="imagens/ExercicioDijkstra.svg" style="width: 70%;"/>-->
+				<svg id="ExercicioDijkstra" style="width: 550px; height: 280px;"></svg>
+				<script type="text/javascript">
+
+					var s = Snap("#ExercicioDijkstra");
+					var grafoExercicio = new Grafo(s);
+
+					var nA = grafoExercicio.DrawNode(50, 150, 'A');
+					var nB = grafoExercicio.DrawNode(200, 45, 'B');
+					var nC = grafoExercicio.DrawNode(200, 150, 'C');
+					var nD = grafoExercicio.DrawNode(200, 255, 'D');
+					var nE = grafoExercicio.DrawNode(350, 150, 'E');
+					var nF = grafoExercicio.DrawNode(500, 150, 'F');
+
+					grafoExercicio.DrawEdge(nA, nB, '3');
+					grafoExercicio.DrawEdge(nA, nC, '1');
+					grafoExercicio.DrawEdge(nA, nD, '5');
+					grafoExercicio.DrawEdge(nB, nC, '1');
+					grafoExercicio.DrawEdge(nB, nE, '7');
+					grafoExercicio.DrawEdge(nB, nF, '2');
+					grafoExercicio.DrawEdge(nC, nD, '3');
+					grafoExercicio.DrawEdge(nC, nE, '5');
+					grafoExercicio.DrawEdge(nD, nE, '5');
+					grafoExercicio.DrawEdge(nE, nF, '8');
+				</script>
+			</center>
+	    <li>Suponha que uma instituição possua a sub-rede <tt>199.67.44.0/22</tt>. A instituição é dividida em 5 departamentos, com as seguintes necessidades:
+	    <ul>
+	      <li><b>Departamento A:</b> 50 <i>hosts</i>.</li>
+	      <li><b>Departamento B:</b> 400 <i>hosts</i>.</li>
+	      <li><b>Departamento C:</b> 50 <i>hosts</i>.</li>
+	      <li><b>Departamento D:</b> 32 <i>hosts</i>.</li>
+	    </ul></li>
+			<br>
+	    Projete uma divisão do bloco de endereços em sub-redes menores que atendam às necessidades dos departamentos <b>evitando desperdício de endereço</b>. Assuma que cada <i>host</i> demanda exatamente um endereço IP.
+	  </ol>
+	</div>
+	</section>
+	<!-- {{{{ dzslides core
+	#
+	#
+	#     __  __  __       .  __   ___  __
+	#    |  \  / /__` |    | |  \ |__  /__`
+	#    |__/ /_ .__/ |___ | |__/ |___ .__/ core :€
+	#
+	#
+	# The following block of code is not supposed to be edited.
+	# But if you want to change the behavior of these slides,
+	# feel free to hack it!
+	#
+	-->
+
+    <!-- More CSS -->
+	<link href='../template/css/slides.css' id="slides" rel='stylesheet' type='text/css' media="all">
+	<link href='../template/css/presentationSpecific2.css' id="presentationSpecific2" rel='stylesheet' type='text/css' media="all">
+
+    <!-- More Javascript -->
+	<script type="text/javascript" src="../template/js/dz.js"></script>
+
+	<!-- More CSS -->
+	<link href='../template/css/notesSpecific.css' id="notesSpecific" rel='stylesheet' type='text/css' media="all">
+	<link href='../template/css/printSpecific.css' id="printSpecific" rel='stylesheet' type='text/css'>
+</body>
+</html>

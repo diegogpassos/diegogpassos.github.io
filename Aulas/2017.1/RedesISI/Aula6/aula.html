@@ -1,0 +1,989 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <!-- Meta info -->
+		<meta charset="utf-8">
+		<meta name="shortauthor" content="Diego Passos"/>
+		<meta name="shorttitle" content="Cookies, Web Caches, FTP, E-mail"/>
+		<meta name="shortevent" content="Redes de Computadores I"/>
+		<title>Redes de Computadores I: Aula 6</title>
+
+		<!-- Math support -->
+		<script type="text/x-mathjax-config">
+		MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+			MathJax.InputJax.TeX.Definitions.number = /^(?:[0-9]+(?:\.[0-9]{3})*(?:\{,\}[0-9]*)*|\{,\}[0-9]+)/
+		});
+		</script>
+		<script src="js/plotly-latest.min.js"></script>
+		<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+		<!--<script src="../../../../MathJax-2.6-latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>-->
+		<script type="text/javascript" src="../template/js/dz_pre.js"></script>
+
+		<!-- Fonts -->
+		<link href='https://fonts.googleapis.com/css?family=Lora:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
+		<!--<link href='../../../../Fonts/Lora/lora.css' rel='stylesheet' type='text/css'>-->
+
+		<!-- CSS -->
+		<link href='../template/css/template.css' id="template" rel='stylesheet' type='text/css'>
+		<link href='../template/css/presentationSpecific.css' id="presentationSpecific" rel='stylesheet' type='text/css'>
+
+
+		<!-- Javascript -->
+		<script type="text/javascript" src="../template/js/audio.js"></script>
+		<script src="js/term.js" charset="utf-8"></script>
+    <script src="js/termcast.js" charset="utf-8"></script>
+</head>
+
+<body>
+    <!-- Audio handlers -->
+	<!--<audio src="audio/La.wav" id="La.wav" preload="auto"></audio>-->
+
+    <!-- Title Slide -->
+	<section>
+
+        <div class="slideContent">
+            <h1 class="title">Aula 6 - HTTP (Cookies, Web Caches), FTP, E-mail</h1>
+            <h2 class="author">Diego Passos</h2>
+            <h4 class="institution">Universidade Federal Fluminense</h4>
+            <h3 class="date">Redes de Computadores I</h3>
+        </div>
+
+	<br>
+	<br>
+	<div style="width: 30%; float: right; padding-right: 2%;">
+	<p style="font-size: 18px; text-align: right;">Material adaptado a partir dos slides originais de J.F Kurose and K.W. Ross.</p>
+	</div>
+	</section>
+
+	<section>
+	<h1>Revisão da Última Aula (I)...</h1>
+	<div class="slideContent">
+        <div class="column" style="width: 55%;">
+            <ul>
+                <li>Aplicações de rede: programas <span class="alert">distribuídos</span>.
+                <ul>
+                    <li>&ldquo;Partes&rdquo; rodam em computadores diferentes.</li>
+                    <li>Processos se comunicam através de trocas de mensagens.</li>
+                    <li>Executadas apenas nos <i>hosts</i>.</li>
+                </ul></li>
+                <li>Arquitetura <span class="alert">Cliente-servidor</span>:
+                <ul>
+                    <li>Servidor dedicado, sempre ligado.</li>
+                    <li>Endereço permanente.</li>
+                    <li><span class="alert">Cliente se comunica apenas com servidor</span>.</li>
+                </ul></li>
+                <li>Arquitetura <span class="alert"><i>peer-to-peer</i></span>:
+                <ul>
+                    <li><span class="alert">Clientes podem se comunicar diretamente</span>.</li>
+                    <li>Conteúdos, serviços requisitados de outros pares.</li>
+                    <li>Mais complexo, mas com melhor <span class="alert">escalabilidade</span>.</li>
+                </ul></li>
+            </ul>
+        </div>
+        <div class="column" style="width: 45%;">
+            <ul>
+                <li>Sockets:
+                <ul>
+                    <li>&ldquo;Janela&rdquo; entre aplicação e transporte.</li>
+                    <li>Processos identificados por números de porta.</li>
+                </ul></li>
+
+                <li>Protocolos de aplicação:
+                <ul>
+                    <li>Tipos de mensagens.</li>
+                    <li>Sintaxe, semântica.</li>
+                    <li>Regras sobre como reagir a eventos.</li>
+                </ul></li>
+                <li>Aplicações diferentes têm necessidades diferentes.
+                <ul>
+                    <li>Dão origem a <span class="alert">modelos de serviço</span> diferentes.</li>
+                    <li>UDP e TCP.</li>
+                </ul></li>
+                <li>Web:
+                <ul>
+                    <li>Acesso a objetos hipermídia.</li>
+                    <li>Referenciam outros objetos.</li>
+                </ul></li>
+            </ul>
+        </div>
+	</div>
+	</section>
+
+    <section>
+    <h1>Revisão da Última Aula (II)...</h1>
+    <div class="slideContent">
+         <ul>
+                <li>HTTP:
+                <ul>
+                    <li>Cliente-servidor.</li>
+                    <li>Requisição e resposta.</li>
+                    <li>Roda sobre TCP.</li>
+                    <li><i>Stateless.</i></li>
+                    <li>Baseado em texto.</li>
+                </ul></li>
+                <li>HTTP: persistente <i>vs.</i> não-persistente.
+                <ul>
+                    <li>Um objeto por conexão <i>vs.</i> múltiplos objetos em uma única conexão.</li>
+                </ul></li>
+                <li>HTTP: tipos de requisição.
+                <ul>
+                    <li><tt>GET, HEAD, POST</tt>.</li>
+                </ul></li>
+        </ul>
+    </div>
+    </section>
+
+    <section class="secao">
+    <div class="slideContent">
+        Cookies
+    </div>
+    </section>
+
+    <section>
+    <h1>Estado do Usuário no Servidor: Cookies</h1>
+    <div class="slideContent">
+        <div class="column" style="width: 50%;">
+            <ul>
+                <li>Muitos <i>sites</i> utilizam cookies.</li>
+                <li><b>Quatro componentes:</b>
+                <ol>
+                    <li>Entrada de cabeçalho relativa aos cookies na mensagem de resposta HTTP.</li>
+                    <li>Entrada de cabeçalho relativa aos cookies na mensagem de requisição HTTP.</li>
+                    <li>Arquivo de cookies mantido no <i>host</i> do usuário e gerenciado pelo <i>browser</i>.</li>
+                    <li>Base de dados no <i>backend</i> do <i>site</i>.</li>
+                </ol></li>
+            </ul>
+        </div>
+        <div class="column" style="width: 50%;">
+            <ul>
+                <li><b>Exemplo:</b>
+                <ul>
+                    <li>Susan sempre acessa a Internet de seu PC.</li>
+                    <li>Visita site específico de comércio eletrônico pela primeira vez.</li>
+                    <li>Quando requisição HTTP inicial chega ao servidor, <i>site</i> cria:
+                    <ul>
+                        <li>ID único.</li>
+                        <li>Entrada na base de dados associada ao ID.</li>
+                    </ul></li>
+                </ul></li>
+            </ul>
+        </div>
+    </div>
+    </section>
+
+    <section>
+    <h1>Cookies: Mantendo Estado</h1>
+    <div class="slideContent">
+        <center>
+            <img src="imagens/Cookies.svg" style="width: 70%;"/>
+        </center>
+    </div>
+    </section>
+
+    <section>
+    <h1>Cookies (Mais)</h1>
+    <div class="slideContent">
+        <div style="height: 250px;">
+            <div class="column" style="width: 50%;">
+                <ul>
+                    <li><b>Para que cookies podem ser utilizados:</b>
+                    <ul>
+                        <li>Autorização.</li>
+                        <li>&ldquo;Carrinhos de compra&rdquo;.</li>
+                        <li>Recomendações.</li>
+                        <li>Estado da sessão do usuário (<i>e.g.</i>, webmail).</li>
+                    </ul></li>
+                </ul>
+            </div>
+            <div class="column" style="width: 50%;">
+                <center>
+                    <div class="block" style="width:550px;">
+                        <div class="blockTitle" style="width: 100%;">
+                            <p>Nota: cookies e privacidade</p>
+                        </div>
+                        <div class="blockBody">
+                            <ul>
+                                <li>Cookies permitem que <i>sites</i> aprendam muito sobre você.</li>
+                                <li>Você pode fornecer nome e e-mail para <i>sites</i>.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </center>
+            </div>
+        </div>
+        <br>
+        <div>
+        <ul>
+            <li><b>Como manter &ldquo;estado&rdquo;:</b>
+            <ul>
+                <li>Sistemas finais mantém estado no transmissor, receptor ao longo de várias transações.</li>
+                <li>Cookies: mensagens HTTP carregam estado.</li>
+            </ul></li>
+        </ul>
+        </div>
+    </div>
+    </section>
+
+    <section class="secao">
+    <div class="slideContent">
+        Web Caches
+    </div>
+    </section>
+
+    <section>
+    <h1>Web Caches (Servidores Proxy)</h1>
+    <div class="slideContent">
+        <ul>
+            <li><b>Objetivo:</b> satisfazer requisição do cliente sem envolver servidor original do conteúdo.</li>
+        </ul>
+
+        <div class="column" style="width: 45%;">
+            <ul>
+                <li>Usuário configura <i>browser</i>: acessos web via cache.</li>
+                <li><i>Browser</i> envia todas as requisições HTTP ao cache.
+                <ul>
+                    <li>Objetos em cache: retornados imediatamente.</li>
+                    <li>Caso contrário, cache requisita objeto do servidor, retorna objeto ao cliente.</li>
+                </ul></li>
+            </ul>
+        </div>
+
+        <div class="column" style="width: 55%;">
+            <center>
+                <img src="imagens/WebCacheProxy.svg" style="width: 90%;"/>
+            </center>
+        </div>
+    </div>
+    </section>
+
+    <section>
+    <h1>Mais sobre Web Caches</h1>
+    <div class="slideContent">
+        <div class="column" style="width: 45%;">
+            <ul>
+                <li>Cache age tanto como servidor, quanto como cliente.
+                <ul>
+                    <li>Servidor para a requisição original.</li>
+                    <li>Cliente para o servidor original do conteúdo.</li>
+                </ul></li>
+                <li>Tipicamente, cache é instalado na rede de acesso ou pelo ISP.</li>
+            </ul>
+        </div>
+
+        <div class="column" style="width: 55%;">
+            <ul>
+                <li><b>Por que usar um web cache?</b>
+                <ul>
+                    <li>Reduzir o <span class="alert">tempo de resposta</span> para o cliente.</li>
+                    <li>Reduzir o <span class="alert">tráfego no enlace de acesso</span> da instituição.</li>
+                    <li>Internet densamente populada por cache: permite que provedores de conteúdo &ldquo;pobres&rdquo; entregue conteúdo de forma efetiva.
+                    <ul>
+                        <li>P2P também.</li>
+                    </ul></li>
+                </ul></li>
+            </ul>
+        </div>
+    </div>
+    </section>
+
+    <section>
+    <h1>Web Cache: Exemplo</h1>
+    <div class="slideContent">
+        <div class="column" style="width: 58%;">
+            <ul>
+                <li><b>Hipóteses:</b>
+                <ul>
+                    <li>Tamanho médio dos objetos: 100 kb.</li>
+                    <li>Taxa média de requisição do <i>browsers</i>: 15/s.
+                    <ul>
+                        <li>Taxa média para os <i>browsers</i>: 1,5 Mb/s.</li>
+                    </ul></li>
+                    <li>RTT do roteador de borda para qualquer servidor: 2s.</li>
+                    <li>Capacidade do enlace de acesso: 1,54 Mb/s.</li>
+                </ul></li>
+                <li><b>Consequências:</b>
+                <ul>
+                    <li>Utilização da LAN: 0,15%.</li>
+                    <li>Utilização do enlace de acesso: <span class="alert">99%</span>!</li>
+                    <li>Atraso total = Atraso da Internet + atraso do roteador de borda + atraso da LAN.
+                    <ul>
+                        <li>= 2s + minutos + <span class="math inline">\(\mu s\)</span></li>
+                    </ul></li>
+                </ul></li>
+            </ul>
+        </div>
+        <div class="column" style="width: 42%;">
+            <center>
+                <img src="imagens/WebCacheExemplo.svg" style="width: 80%;"/>
+            </center>
+        </div>
+    </div>
+    </section>
+
+    <section>
+    <h1>Web Cache: Exemplo (Enlace de Maior Capacidade)</h1>
+    <div class="slideContent">
+        <div style="height: 520px;">
+        <div class="column" style="width: 58%;">
+            <ul>
+                <li><b>Hipóteses:</b>
+                <ul>
+                    <li>Tamanho médio dos objetos: 100 kb.</li>
+                    <li>Taxa média de requisição do <i>browsers</i>: 15/s.
+                    <ul>
+                        <li>Taxa média para os <i>browsers</i>: 1,5 Mb/s.</li>
+                    </ul></li>
+                    <li>RTT do roteador de borda para qualquer servidor: 2s.</li>
+                    <li>Capacidade do enlace de acesso: <strike> 1,54 </strike> 154 Mb/s.</li>
+                </ul></li>
+                <li><b>Consequências:</b>
+                <ul>
+                    <li>Utilização da LAN: 0,15%.</li>
+                    <li>Utilização do enlace de acesso: <span class="alert"><strike> 99% </strike></span> 0,99%.</li>
+                    <li>Atraso total = Atraso da Internet + atraso do roteador de borda + atraso da LAN.
+                    <ul>
+                        <li>= 2s + <strike>minutos</strike> ms + <span class="math inline">\(\mu s\)</span></li>
+                    </ul></li>
+                </ul></li>
+            </ul>
+        </div>
+        <div class="column" style="width: 42%;">
+            <center>
+                <img src="imagens/WebCacheExemplo2.svg" style="width: 80%;"/>
+            </center>
+        </div>
+        </div>
+        <ul>
+            <li><b>Custo:</b> aumento na capacidade do enlace de acesso (não é barato!).</li>
+        </ul>
+    </div>
+    </section>
+
+    <section>
+    <h1>Web Cache: Exemplo (Solução com Web Cache, I)</h1>
+    <div class="slideContent">
+        <div style="height: 480px;">
+        <div class="column" style="width: 58%;">
+            <ul>
+                <li><b>Hipóteses:</b>
+                <ul>
+                    <li>Tamanho médio dos objetos: 100 kb.</li>
+                    <li>Taxa média de requisição do <i>browsers</i>: 15/s.
+                    <ul>
+                        <li>Taxa média para os <i>browsers</i>: 1,5 Mb/s.</li>
+                    </ul></li>
+                    <li>RTT do roteador de borda para qualquer servidor: 2s.</li>
+                    <li>Capacidade do enlace de acesso: 1,54 Mb/s.</li>
+                </ul></li>
+                <li><b>Consequências:</b>
+                <ul>
+                    <li>Utilização da LAN: 0,15%.</li>
+                    <li>Utilização do enlace de acesso: <span class="alert">?</span></li>
+                    <li>Atraso total = <span class="alert">?</span></li>
+                </ul></li>
+            </ul>
+            <center>
+                <div style="width: 60%;">
+                <span class="alert">Como calcular utilização do enlace de acesso, atraso?</span>
+                </div>
+            </center>
+        </div>
+        <div class="column" style="width: 42%;">
+            <center>
+                <img src="imagens/WebCacheExemplo3.svg" style="width: 80%;"/>
+            </center>
+        </div>
+        </div>
+        <ul>
+            <li><b>Custo:</b> web cache (barato!).</li>
+        </ul>
+    </div>
+    </section>
+
+    <section>
+    <h1>Web Cache: Exemplo (Solução com Web Cache, II)</h1>
+    <div class="slideContent">
+        <div class="column" style="width: 58%;">
+            <ul>
+                <li><b>Calculando a utilização do enlace de acesso e atraso com cache.</b>
+                <ul>
+                    <li>Assuma que a taxa de acerto (<i>hit rate</i>) é 0,4.
+                    <ul>
+                        <li>40% das requisições satisfeitas no cache, 60% precisam ir à origem.</li>
+                    </ul></li>
+                    <li>Utilização do enlace de acesso:
+                    <ul>
+                        <li>60% das requisições usam o enlace.</li>
+                        <li><span class="math inline">\(0{,}6\times 1{,}5 = 0,9\)</span>&nbsp;Mb/s de tráfego.</li>
+                        <li>Utilização: <span class="math inline">\(\frac{0{,}9}{1{,}54} = 0{,}58\)</span>.</li>
+                    </ul></li>
+                    <li>Atraso total:
+                    <ul>
+                        <li><span class="math inline">\(0{,}6\times\)</span> (atraso da origem) + <span class="math inline">\(0{,}4\times\)</span> (atraso do cache).</li>
+                        <li><span class="math inline">\(0{,}6\times 2{,}01 + 0{,}4\times (ms) \approx 1{,}2\)</span> s.</li>
+                        <li>Menos que com enlace de 154 Mb/s (e mais barato!)</li>
+                    </ul></li>
+                </ul></li>
+            </ul>
+        </div>
+        <div class="column" style="width: 42%;">
+            <center>
+                <img src="imagens/WebCacheExemplo3.svg" style="width: 80%;"/>
+            </center>
+        </div>
+    </div>
+    </section>
+
+    <section>
+    <h1>GET Condicional</h1>
+    <div class="slideContent">
+        <div class="column" style="width: 50%;">
+            <ul>
+                <li><b>Objetivo:</b> não enviar objeto se cache tem versão atualizada.
+                <ul>
+                    <li>Não há atraso de envio do objeto.</li>
+                    <li>Reduz utilização do enlace de acesso.</li>
+                </ul></li>
+                <li>Cache: especifica data da cópia local na requisição HTTP.</li>
+                <br>
+                <center>
+                    <tt>If-modified-since: &lt;data&gt;</tt>
+                </center>
+                <br>
+                <li>Servidor: resposta não contém objeto se cópia está atualizada.</li>
+                <br>
+                <center>
+                    <tt>HTTP/1.0 304 Not Modified</tt>
+                </center>
+                <br>
+            </ul>
+        </div>
+        <div class="column" style="width: 50%;">
+            <center>
+                <img src="imagens/ConditionalGET.svg" style="width: 80%;"/>
+            </center>
+        </div>
+    </div>
+    </section>
+
+		<section>
+		<h1>GET Condicional: Exemplo</h1>
+		<div class="slideContent">
+		  <div class="column" style="width: 50%;">
+				<div id="termcastGETCondicional" style="margin-left: 3px;"></div>
+		  </div>
+			<div class="column" style="width: 50%;">
+			  <ul>
+			    <li>Primeira requisição:
+			    <ul>
+			      <li>Data especificada posterior à última modificação do objeto.</li>
+			      <li>Servidor envia cabeçalhos, mas não conteúdo.</li>
+			      <li>Código 304 (<tt>Not Modified</tt>).</li>
+			    </ul></li>
+			    <li>Segunda requisição:
+			    <ul>
+			      <li>Data de um dia antes.</li>
+			      <li>Servidor envia objeto, como em um <tt>GET</tt> &ldquo;normal&rdquo;.</li>
+			    </ul></li>
+			    <li><b>Detalhe:</b> versão 1.1 do HTTP especificada nas requisições.
+			    <ul>
+			      <li>Resultado: conexão persistente utilizada por padrão.</li>
+						<li>Ambas as requisições feitas em uma única conexão.</li>
+			    </ul></li>
+			  </ul>
+			</div>
+		</div>
+		</section>
+
+		<script type="text/javascript">
+        var TermCast1;
+        DzAddPostInitFunction(function() {
+
+            TermCast1 = new TermCast(document.getElementById('termcastGETCondicional'), 'terminalSessions/GetCondicional.json');
+        });
+    </script>
+
+    <section class="secao">
+    <div class="slideContent">
+        FTP
+    </div>
+    </section>
+
+    <section>
+    <h1>FTP: <i>File Transfer Protocol</i></h1>
+    <div class="slideContent">
+        <center>
+            <img src="imagens/FTP.svg" style="width: 50%;"/>
+        </center>
+        <br>
+        <ul>
+            <li>Transfere arquivos de/para <i>host</i> remoto.</li>
+            <li>Arquitetura Cliente-Servidor.
+            <ul>
+                <li><span class="alert">Cliente:</span> lado que inicia transferência (seja de ou para <i>host</i> remoto).</li>
+                <li><span class="alert">Servidor:</span> <i>host</i> remoto.</li>
+            </ul></li>
+            <li>FTP: RFC 959.</li>
+            <li>Servidor FTP: escuta, por padrão, na porta 21.</li>
+        </ul>
+    </div>
+    </section>
+
+    <section>
+    <h1>FTP: Conexões de Controle e Dados Separadas</h1>
+    <div class="slideContent">
+        <div class="column" style="width: 50%;">
+            <ul>
+                <li>Cliente FTP contacta servidor na porta 21, usando TCP.</li>
+                <li>Cliente autorizado através da conexão de controle.</li>
+                <li>Cliente navega diretórios remotos, envia comandos pela conexão de controle.</li>
+                <li>Quando servidor recebe comando de transferência da arquivo, <span class="alert">servidor</span> abre 2ª conexão TCP (para arquivo) para o cliente.</li>
+                <li>Depois de transferir arquivo, servidor fecha conexão de dados.</li>
+            </ul>
+        </div>
+        <div class="column" style="width: 50%;">
+            <center>
+                <img src="imagens/FTPOutOfBand.svg" style="width: 80%;"/>
+            </center>
+            <br>
+            <ul>
+                <li>Servidor abre nova conexão TCP para cada arquivo enviado.</li>
+                <li>Conexão dedicada para controle: comunicação <span class="alert">&ldquo;fora-de-banda&rdquo;</span>.</li>
+                <li>Servidor FTP precisa manter &ldquo;estado&rdquo;.
+                <ul>
+                    <li>Diretório corrente, autenticação.</li>
+                </ul></li>
+            </ul>
+        </div>
+    </div>
+    </section>
+
+    <section>
+    <h1>FTP: Comandos e Respostas</h1>
+    <div class="slideContent">
+        <div class="column" style="width: 50%;">
+            <ul>
+                <li><b>Exemplos de comandos:</b>
+                <ul>
+                    <li>Enviados como texto ASCII pela conexão de controle.</li>
+                    <li><tt>USER username</tt>.</li>
+                    <li><tt>PASS password</tt>.</li>
+                    <li><tt>LIST</tt>.
+                    <ul>
+                        <li>Retorna lista dos arquivos no diretório corrente.</li>
+                    </ul></li>
+                    <li><tt>RETR filename</tt>.
+                    <ul>
+                        <li><i>Download</i> do arquivo.</li>
+                    </ul></li>
+                    <li><tt>STOR filename</tt>.
+                    <ul>
+                        <li><i>Upload</i> do arquivo.</li>
+                    </ul></li>
+                </ul></li>
+            </ul>
+        </div>
+        <div class="column" style="width: 50%;">
+            <ul>
+                <li><b>Exemplos de códigos de retorno:</b>
+                <ul>
+                    <li>Código de <i>status</i> e descrição (como no HTTP).</li>
+                    <li><tt>331 Username OK, password required</tt>.</li>
+                    <li><tt>125 data connection already open; transfer starting</tt>.</li>
+                    <li><tt>425 Can't open data connection</tt>.</li>
+                    <li><tt>452 Error writing file</tt>.</li>
+                </ul></li>
+            </ul>
+        </div>
+    </div>
+    </section>
+
+    <section class="secao">
+    <div class="slideContent">
+        E-mail
+    </div>
+    </section>
+
+    <section>
+    <h1>E-mail</h1>
+    <div class="slideContent">
+        <div class="column" style="width: 50%;">
+            <ul>
+                <li><b>Três grandes componentes:</b>
+                <ul>
+                    <li><i>User agents</i>.</li>
+                    <li>Servidores de e-mail.</li>
+                    <li>SMTP: <i>Simple Mail Transfer Protocol</i>.</li>
+                </ul></li>
+                <li><b>User agent</b>:
+                <ul>
+                    <li>Também conhecido como &ldquo;leitor de e-mail&rdquo;.</li>
+                    <li>Criação, edição, leitura de mensagens de e-mail.</li>
+                    <li><i>e.g.</i>, Outlook, Thunderbird, cliente de e-mail do iPhone.</li>
+                    <li>Mensagens enviadas, recebidas armazenadas no servidor.</li>
+                </ul></li>
+            </ul>
+        </div>
+        <div class="column" style="width: 50%;">
+            <center>
+                <img src="imagens/ServicoDeEmail.svg" style="width: 70%;"/>
+            </center>
+        </div>
+    </div>
+    </section>
+
+    <section>
+    <h1>E-mail: Servidores de E-mail</h1>
+    <div class="slideContent">
+        <div class="column" style="width: 50%;">
+            <br>
+            <br>
+            <ul>
+                <li><b>Servidores de e-mail:</b>
+                <ul>
+                    <li><span class="alert">Caixa de e-mail:</span> contém mensagens que chegam para o usuário.</li>
+                    <li><span class="alert">Fila de mensagens:</span> contém mensagens a serem enviadas.</li>
+                    <li><span class="alert">Protocolo SMTP:</span> comunicação entre servidores de e-mail para envio de mensagens.
+                    <ul>
+                        <li>Cliente: servidor que envia mensagem.</li>
+                        <li>Servidor: servidor que recebe mensagem.</li>
+                    </ul></li>
+                </ul></li>
+            </ul>
+        </div>
+        <div class="column" style="width: 50%;">
+            <center>
+                <img src="imagens/ServicoDeEmail.svg" style="width: 70%;"/>
+            </center>
+    </div>
+    </section>
+
+    <section>
+    <h1>E-mail: SMTP [RFC 2821]</h1>
+    <div class="slideContent">
+        <ul>
+            <li>Utiliza TCP para transferir mensagens de forma confiável entre cliente e servidor, porta 25.</li>
+            <li>Transferência direta: do servidor do destinatário diretamente para o servidor do remetente.</li>
+            <li>Protocolo em três fases:
+            <ul>
+                <li><i>Handshaking</i> (apresentação).</li>
+                <li>Transferência da mensagens.</li>
+                <li>Encerramento.</li>
+            </ul></li>
+            <li>Interação do tipo comando/resposta (similar ao FTP, HTTP).
+            <ul>
+                <li><span class="alert">Comandos:</span> texto ASCII.</li>
+                <li><span class="alert">Resposta:</span> código de <i>status</i> e descrição.</li>
+            </ul></li>
+            <li>Mensagens necessariamente em ASCII de 7 bits.</li>
+        </ul>
+    </div>
+    </section>
+
+    <section>
+    <h1>Cenário: Alice Envia Mensagem para Bob</h1>
+    <div class="slideContent">
+        <div style="height: 280px;">
+            <div class="column" style="width: 50%;">
+                <ol>
+                    <li>Alice usa <i>user agent</i> para criar mensagem para <tt>bob@someschool.edu</tt>.</li>
+                    <li>O <i>user agent</i> de Alice envia mensagem ao seu servidor de e-mail (de Alice); mensagem é enfileirada.</li>
+                    <li>No servidor de Alice, lado cliente do SMTP abre conexão TCP para o servidor de Bob.</li>
+                </ol>
+            </div>
+            <div class="column" style="width: 50%;">
+                <ol start="4">
+                    <li>Mensagem de Alice é enviada pela conexão TCP.</li>
+                    <li>Servidor de e-mail de Bob coloca mensagem na caixa de entrada de Bob.</li>
+                    <li>Bob usa seu <i>user agent</i> para ler a mensagem.</li>
+                </ol>
+            </div>
+        </div>
+        <br>
+        <center>
+            <img src="imagens/EnvioDeEmail.svg" style="width: 70%;"/>
+        </center>
+    </div>
+    </section>
+
+    <section>
+    <h1>Exemplo de Interação SMTP</h1>
+    <div class="slideContent">
+        <center>
+            <div style="text-align: left; width: 80%;" >
+            <tt style="text-align: left;">
+                S: 220 hamburger.edu<br>
+                C: HELO crepes.fr<br>
+                S: 250 Hello crepes.fr, pleased to meet you<br>
+                C: MAIL FROM: &lt;alice@crepes.fr&gt;<br>
+                S: 250 alice@crepes.fr... Sender ok<br>
+                C: RCPT TO: &lt;bob@hamburger.edu&gt;<br>
+                S: 250 bob@hamburger.edu ... Recipient ok<br>
+                C: DATA<br>
+                S: 354 Enter mail, end with &ldquo;.&rdquo;. on a line by itself<br>
+                C: Do you like ketchup?<br>
+                C: How about pickles?<br>
+                C: .<br>
+                S: 250 Message accepted for delivery<br>
+                C: QUIT<br>
+                S: 221 hamburger.edu closing connection<br>
+            </tt>
+            </div>
+        </center>
+    </div>
+    </section>
+
+    <section>
+    <h1>Experimente uma Interação SMTP Você Mesmo</h1>
+    <div class="slideContent">
+        <ul>
+            <li><tt>telnet servername 25</tt></li>
+            <li>Espere uma resposta 220 do servidor.</li>
+            <li>Digite comandos <tt>HELO, MAIL FROM, RCPT TO, DATA, QUIT</tt>.</li>
+        </ul>
+        <br>
+        <br>
+        <center>
+            <span class="alert">Permite que você envie e-mail sem usar um cliente.</span>
+        </center>
+    </div>
+    </section>
+
+    <section>
+    <h1>SMTP: Útimos Comentários</h1>
+    <div class="slideContent">
+        <div class="column" style="width: 50%;">
+            <ul>
+                <li>SMTP utiliza conexões persistentes.</li>
+                <li>SMTP requer que mensagem seja composta apenas de caracteres ASCII de 7 bits.</li>
+                <li>Servidor utiliza <tt>CRLF.CRLF</tt> para determinar o fim da mensagem.</li>
+            </ul>
+        </div>
+        <div class="column" style="width: 50%;">
+            <ul>
+                <li><b>Comparação com o HTTP:</b>
+                <ul>
+                    <li>HTTP: <i>pull</i>.</li>
+                    <li>SMTP: <i>push</i>.</li>
+                    <li>Ambos têm mensagens em ASCII, códigos de <i>status</i>.</li>
+                    <li>HTTP: cada objeto encapsulado em sua própria mensagem de resposta.</li>
+                    <li>SMTP: múltiplos objetos enviados em mensagem de múltiplas partes.</li>
+                </ul></li>
+            </ul>
+        </div>
+    </div>
+    </section>
+
+    <section>
+    <h1>Formato da Mensagem de E-mail</h1>
+    <div class="slideContent">
+        <div class="column" style="width: 50%;">
+            <ul>
+                <li>SMTP: protocolo para troca de mensagens de e-mail.</li>
+                <li>RFC 822: padrão para formato das mensagens.
+                <ul>
+                    <li>Linhas de cabeçalho, <i>e.g.</i>:
+                    <ul>
+                        <li><tt>To:</tt></li>
+                        <li><tt>From:</tt></li>
+                        <li><tt>Subject:</tt></li>
+                        <li><span class="alert">Diferentes dos comandos <tt>MAIL FROM, RCPT TO</tt> do SMTP!</span></li>
+                    </ul></li>
+                    <li>Corpo: a &ldquo;mensagem em si&rdquo;.
+                    <ul>
+                        <li>Apenas caracteres ASCII.</li>
+                    </ul></li>
+                </ul></li>
+            </ul>
+        </div>
+        <div class="column" style="width: 50%;">
+            <br>
+            <br>
+            <center>
+                <img src="imagens/EmailFormato.svg" style="width: 70%;"/>
+            </center>
+        </div>
+    </div>
+    </section>
+
+    <section>
+    <h1>Protocolos de Acesso a E-mails</h1>
+    <div class="slideContent">
+        <center>
+            <img src="imagens/EmailAcesso.svg" style="width: 75%;"/>
+        </center>
+        <br>
+        <ul>
+            <li><span class="alert">SMTP:</span> entrega mensagem ao servidor do destinatário.</li>
+            <li>Protocolo de acesso de e-mail: destinatário obtém suas mensagens do seu servidor.
+            <ul>
+                <li><span class="alert">POP:</span> <i>Post Office Protocol</i> [RFC 1939]: autorização, <i>download</i>.</li>
+                <li><span class="alert">IMAP:</span> <i>Internet Mail Access Protocol</i> [RFC 1730]: mais funcionalidades, incluindo manipulação de mensagens armazenadas no servidor.</li>
+                <li><span class="alert">HTTP:</span> gmail, hotmail, Yahoo! Mail, etc.</li>
+            </ul></li>
+        </ul>
+    </div>
+    </section>
+
+    <section>
+    <h1>O Protocolo POP3</h1>
+    <div class="slideContent">
+        <div class="column" style="width: 50%;">
+            <ul>
+                <li><b>Fase de autorização:</b>
+                <ul>
+                    <li>Comandos do cliente:
+                    <ul>
+                      <li><b>user:</b> declara o nome do usuário.</li>
+                      <li><b>pass:</b> senha.</li>
+                    </ul>Servidor responde:
+                    <ul>
+                      <li><b>+OK</b></li>
+                      <li><b>-ERR</b></li>
+                    </ul></li>
+                </ul></li>
+                <li><b>Fase de transações:</b>
+                <ul>
+                    <li>Cliente:
+                    <ul>
+                      <li><b>list:</b> lista números das mensagens.</li>
+                      <li><b>retr:</b> obtém mensagem por número.</li>
+                      <li><b>dele:</b> apaga mensagem.</li>
+                      <li><b>quit:</b> encerra comunicação.</li>
+                    </ul></li>
+                </ul></li>
+            </ul>
+        </div>
+				<div class="column" style="width: 50%;">
+				    <img src="imagens/POP3.svg" style="width: 95%;"/>
+				</div>
+    </div>
+    </section>
+
+		</section>
+    <section>
+    <h1>POP3 (Mais) e IMAP</h1>
+    <div class="slideContent">
+        <div class="column" style="width: 50%;">
+						<ul>
+						  <li><b>Mais sobre o POP3:</b>
+						  <ul>
+						    <li>Exemplo anterior usa POP3 no modo &ldquo;download and delete&rdquo;.</li>
+						    <li>Mensagens são baixadas para <i>host</i> do Bob e apagadas do servidor.</li>
+						    <li>Há também o modo &ldquo;download and keep&rdquo;: cópias são deixadas no servidor.</li>
+						    <li>POP3 é <i>stateless</i> entre sessões.</li>
+						  </ul></li>
+						</ul>
+        </div>
+        <div class="column" style="width: 50%;">
+						<ul>
+						  <li><b>IMAP:</b>
+						  <ul>
+						    <li>Mantém mensagens apenas no servidor.</li>
+						    <li>Permite ao usuário organizar mensagens em pastas.</li>
+						    <li>Mantém estado entre sessões do usuário.
+						    <ul>
+						      <li>Nomes de pastas e mapeamentos de mensagens para pastas.</li>
+						    </ul></li>
+						  </ul></li>
+						</ul>
+        </div>
+    </div>
+    </section>
+
+	<section>
+	<h1>Resumo da Aula...</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+		  <ul>
+		    <li><b>Cookies:</b>
+		    <ul>
+		      <li>Artifício para armazenar estado.</li>
+		      <li><span class="alert">Pequenos</span> pedaços de informação <span class="alert">pelo cliente.</span></li>
+		      <li>Servidor pede ao cliente que armazene cookie.</li>
+		      <li>Cliente envia cookies em todas as requisições para o servidor.</li>
+					<li>Normalmente, cookie guarda ID do usuário.</li>
+		    </ul></li>
+				<li>Web caches:
+				<ul>
+				  <li>Cache para conteúdos web.</li>
+				  <li>Evita requisição para fora da rede.</li>
+				  <li>Reduz uso do enlace de acesso.</li>
+				  <li>Reduz atraso na resposta à requisição.</li>
+				  <li>Pode ocasionar <span class="alert">inconsistência dos dados</span>.</li>
+				</ul></li>
+		  </ul>
+		</div>
+		<div class="column" style="width: 50%;">
+		  <ul>
+		    <li><b>FTP:</b> transferência de arquivos.</li>
+		    <li><span class="alert">Comunicação fora-de-banda.</span>
+		    <ul>
+		      <li><i>i.e.</i>, controle separado dos dados.</li>
+		    </ul></li>
+		    <li>E-mail:
+		    <ul>
+		      <li>Componentes: <i>user agent</i>, servidor, SMTP.</li>
+		      <li>SMTP: protocolo de envio de e-mail.
+		      <ul>
+		        <li>Cliente para servidor e servidor para servidor.</li>
+			      <li>Mensagens ASCII.</li>
+						<li>Roda sobre TCP, porta 25.</li>
+		      </ul></li>
+		    </ul></li>
+		    <li>POP3 e IMAP.
+		    <ul>
+		      <li>Acesso, gerenciamento da caixa de entrada.</li>
+		      <li>POP3 é mais simples, IMAP mais complexo.</li>
+		    </ul></li>
+		  </ul>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Próxima Aula...</h1>
+	<div class="slideContent">
+		<ul>
+		  <li>Estudaremos um protocolo de camada de aplicação que implementa uma funcionalidade <span class="alert">fundamental</span> na Internet: DNS.
+		  <ul>
+		    <li>O que é.</li>
+		    <li>Tipos de mensagem.</li>
+		    <li>Processo de resolução.</li>
+		    <li>Tipos de registro.</li>
+		  </ul></li>
+		  <li>Também falaremos mais sobre aplicações P2P.
+		  <ul>
+		    <li>Estudo de caso: Bit Torrent.</li>
+		  </ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<!-- {{{{ dzslides core
+	#
+	#
+	#     __  __  __       .  __   ___  __
+	#    |  \  / /__` |    | |  \ |__  /__`
+	#    |__/ /_ .__/ |___ | |__/ |___ .__/ core :€
+	#
+	#
+	# The following block of code is not supposed to be edited.
+	# But if you want to change the behavior of these slides,
+	# feel free to hack it!
+	#
+	-->
+
+    <!-- More CSS -->
+	<link href='../template/css/slides.css' id="slides" rel='stylesheet' type='text/css'>
+	<link href='../template/css/presentationSpecific2.css' id="presentationSpecific2" rel='stylesheet' type='text/css'>
+
+    <!-- More Javascript -->
+	<script type="text/javascript" src="../template/js/dz.js"></script>
+
+	<!-- More CSS -->
+	<link href='../template/css/notesSpecific.css' id="notesSpecific" rel='stylesheet' type='text/css'>
+	<link href='../template/css/printSpecific.css' id="printSpecific" rel='stylesheet' type='text/css'>
+</body>
+</html>
