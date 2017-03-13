@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <!-- Meta info -->
+	<meta charset="utf-8">
+	<meta name="shortauthor" content="Diego Passos"/>
+	<meta name="shorttitle" content="A Internet e sua Arquitetura"/>
+	<meta name="shortevent" content="Redes de Computadores"/>
+	<title>Redes de Computadores: Aula 1</title>
+
+    <!-- Math support -->
+	<script type="text/x-mathjax-config">
+		MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+			MathJax.InputJax.TeX.Definitions.number = /^(?:[0-9]+(?:\.[0-9]{3})*(?:\{,\}[0-9]*)*|\{,\}[0-9]+)/
+		});
+	</script>
+	<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+	<script src="../../../../../MathJax-2.6-latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+
+    <!-- Fonts -->
+	<link href='https://fonts.googleapis.com/css?family=Lora:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
+	<link href='../../../../../Fonts/Lora/lora.css' rel='stylesheet' type='text/css'>
+
+    <!-- CSS -->
+	<link href='../template/css/template.css' id="template" rel='stylesheet' type='text/css'>
+	<link href='../template/css/presentationSpecific.css' id="presentationSpecific" rel='stylesheet' type='text/css'>
+
+    <!-- Javascript -->
+	<script type="text/javascript" src="../template/js/audio.js"></script>
+</head>
+
+<body>
+    <!-- Audio handlers -->
+	<!--<audio src="audio/La.wav" id="La.wav" preload="auto"></audio>-->
+
+    <!-- Title Slide -->
+	<section>
+
+        <div class="slideContent">
+            <h1 class="title">Aula 2 - A Internet e Sua Arquitetura</h1>
+            <h2 class="author">Diego Passos</h2>
+            <h4 class="institution">Universidade Federal Fluminense</h4>
+            <h3 class="date">Redes de Computadores</h3>
+        </div>
+
+	<br>
+	<br>
+	<div style="width: 30%; float: right; padding-right: 2%;">
+	<p style="font-size: 18px; text-align: right;">Material adaptado a partir dos slides originais de J.F Kurose and K.W. Ross.</p>
+	</div>
+	</section>
+
+    <!-- Content slides -->
+	<section class="secao">
+	<div class="slideContent">
+		Conceitos Básicos
+	</div>
+	</section>
+
+	<section>
+	<h1>O Que É a Internet: Componentes</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 15%;">
+			<img src="imagens/InternetNutsAndBoltsLegenda.svg" style="width: 90%;"/>
+		</div>
+		<div class="column" style="width: 45%;">
+			<ul>
+				<li>Milhões de dispositivos computacionais conectados:
+				<ul>
+					<li><span class="alert">Hosts</span> = <span class="alert">Sistemas finais</span>.</li>
+					<li>Executam <span class="alert">aplicações de rede</span>.</li>
+				</ul></li>
+				<br>
+				<br>
+				<br>
+				<li><span class="alert">Enlaces de comunicação</span>.
+				<ul>
+					<li>Fibra óptica, cobre, rádio, satélite, ...</li>
+					<li>Características variadas.</li>
+				</ul></li>
+				<br>
+				<br>
+				<li><span class="alert">Comutadores de pacotes:</span>
+				<ul>
+					<li>Encaminham pacotes (unidade de dados).</li>
+					<li>Roteadores e <i>switches</i>.</li>
+				</ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 40%;">
+			<img src="imagens/InternetNutsAndBolts.svg" style="width: 90%;"/>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Aplicações &ldquo;Divertidas&rdquo; da Internet</h1>
+	<div class="slideContent">
+		<center>
+			<img src="imagens/FunInternetApps.svg" style="width: 70%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>O Que É a Internet: &ldquo;Rede de Redes&rdquo;</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 60%;">
+			<br>
+			<br>
+			<br>
+			<br>
+			<ul>
+				<li>Internet: Rede de Redes.
+				<ul>
+					<li>Conjunto de <span class="alert">ISPs</span> conectados.</li>
+				</ul></li>
+				<li><span class="alert">Protocolos</span> controlam recebimento, envio de mensagens.
+				<ul>
+					<li><i>e.g.</i>, TCP, IP, HTTP, Skype, IEEE 802.11.</li>
+				</ul></li>
+				<li><span class="alert">Padrões da Internet.</span>
+				<ul>
+					<li>RFC: <i>Request For Comments</i>.</li>
+					<li>IETF: <i>Internet Engineering Task Force</i>.</li>
+				</ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 40%;">
+			<center>
+				<img src="imagens/InternetNutsAndBolts.svg" style="width: 90%;"/>
+			</center>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>O Que É a Internet: Visão de Serviço</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 60%;">
+			<br>
+			<br>
+			<br>
+			<ul>
+				<li><span class="alert">Infraestrutura que provê serviços às aplicações</span>:
+				<ul>
+					<li>Web, VoIP, email, jogos, comércio eletrônico, redes sociais, ...</li>
+				</ul></li>
+				<li><span class="alert">Provê interface de programação às aplicações</span>:
+				<ul>
+					<li>Chamadas que permitem a aplicações transmissoras e receptoras &ldquo;conectar-se&rdquo; à Internet.</li>
+					<li>Múltiplas opções de serviço, análogo ao serviço de correio.</li>
+				</ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 40%;">
+			<center>
+				<img src="imagens/InternetNutsAndBolts.svg" style="width: 90%;"/>
+			</center>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Estrutura da Internet: Rede de Redes (I)</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Sistemas finais se conectam à Internet via <span class="alert">ISPs de acesso</span>.
+			<ul>
+				<li>ISP = <i>Internet Service Provider</i> (Provedor de Acesso).</li>
+				<li>ISP de acesso: residencias, empresas, universidades.</li>
+			</ul></li>
+			<li>ISPs de acesso precisar ser interconectados de alguma forma.
+			<ul>
+				<li>De forma que quaisquer dois <i>hosts</i> possam trocar informações.</li>
+			</ul></li>
+			<li>Rede resultante é muito complexa.
+			<ul>
+				<li>Evolução guiada por <span class="alert">fatores econômicos</span>, <span class="alert">políticas nacionais</span>.</li>
+			</ul></li>
+			<li>Vamos usar uma abordagem incremental para entender a estrutura atual da Internet.</li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Estrutura da Internet: Rede de Redes (II)</h1>
+	<div class="slideContent">
+		<ul>
+			<li><span class="alert">Pergunta:</span> como conectar <b>milhões</b> de ISPs?</li>
+		</ul>
+		<center>
+			<img src="imagens/EstruturaDaInternet1.svg" style="width: 75%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Estrutura da Internet: Rede de Redes (III)</h1>
+	<div class="slideContent">
+		<ul>
+			<li><span class="alert">Opção 1:</span> conectar cada ISP a todos os outros diretamente?</li>
+		</ul>
+		<center>
+			<img src="imagens/EstruturaDaInternet2.svg" style="width: 75%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Estrutura da Internet: Rede de Redes (IV)</h1>
+	<div class="slideContent">
+		<ul>
+			<li><span class="alert">Opção 2:</span> conectar cada ISP a um ISP Global?
+			<ul>
+				<li>ISP de acesso e global possuem acordo comercial.</li>
+			</ul></li>
+		</ul>
+		<center>
+			<img src="imagens/EstruturaDaInternet3.svg" style="width: 75%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Estrutura da Internet: Rede de Redes (V)</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Mas se um ISP global é um modelo de negócio viável, haverá competidores...</li>
+		</ul>
+		<center>
+			<img src="imagens/EstruturaDaInternet4.svg" style="width: 75%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Estrutura da Internet: Rede de Redes (VI)</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Mas se um ISP global é um modelo de negócio viável, haverá competidores...
+			<ul>
+				<li>... que precisarão se interconectar de alguma forma.</li>
+			</ul></li>
+		</ul>
+		<center>
+			<img src="imagens/EstruturaDaInternet5.svg" style="width: 75%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Estrutura da Internet: Rede de Redes (VII)</h1>
+	<div class="slideContent">
+		<ul>
+			<li>E talvez também haja espaço para <span class="alert">ISPs regionais</span>.
+			<ul>
+				<li>Interconectam ISPs de acesso aos ISPs globais.</li>
+			</ul></li>
+		</ul>
+		<center>
+			<img src="imagens/EstruturaDaInternet6.svg" style="width: 75%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Estrutura da Internet: Rede de Redes (VIII)</h1>
+	<div class="slideContent">
+		<ul>
+			<li>E, quem sabe, <span class="alert">provedores de conteúdo</span> também queiram suas próprias redes.
+			<ul>
+				<li>Abrangência global, aproximam conteúdo dos usuários.</li>
+			</ul></li>
+		</ul>
+		<center>
+			<img src="imagens/EstruturaDaInternet7.svg" style="width: 75%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Estrutura da Internet: Hierarquia dos ISPs</h1>
+	<div class="slideContent">
+		<center>
+			<img src="imagens/HierarquiaISPs.svg" style="width: 70%;"/>
+		</center>
+		<ul>
+			<li>No topo: pequeno número de grandes redes bem conectadas.
+			<ul>
+				<li>ISPs comerciais <span class="alert">&ldquo;tier-1&rdquo;</span> (<i>e.g.</i>, Level 3, Sprint, AT&amp;T), abrangência nacional e internacional.</li>
+				<li><span class="alert">Redes de provedores de conteúdo</span> (<i>e.g.</i>, Google): redes privadas, conectando <i>data centers</i> à Internet, geralmente pulando ISPs tier-1 e regionais.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Estrutura da Internet: ISPs <i>tier-1</i> (<i>e.g.</i>, Sprint) e POPs</h1>
+	<div class="slideContent">
+		<center>
+			<img src="imagens/POP.svg" style="width: 75%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>O Que É um Protocolo?</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 45%;">
+			<ul>
+				<li><span class="alert">Protocolos humanos:</span>
+				<ul>
+					<li>&ldquo;Que horas são?&rdquo;</li>
+					<li>&ldquo;Posso fazer uma pergunta?&rdquo;</li>
+					<li>Apresentações.</li>
+				</ul></li>
+				<li>Mensagens específicas são enviadas.</li>
+				<li>Ações específicas são tomadas quando mensagens são recebidas, ou em outros eventos.</li>
+			</ul>
+		</div>
+
+		<div class="column" style="width: 55%;">
+			<ul>
+				<li><span class="alert">Protocolos de rede:</span>
+				<ul>
+					<li>Computadores, ao invés de humanos.</li>
+					<li>Toda comunicação na Internet é governada por protocolos.</li>
+				</ul></li>
+				<li><span class="alert">Garantem interoperabilidade</span> entre dispositivos heterogêneos.</li>
+			</ul>
+			<br>
+			<center>
+				<div style="width: 70%; border: 2px solid #19836E;">
+					Protocolos definem o <span class="alert">formato e a ordem</span> de <span class="alert">mensagens enviadas, recebidas</span> entre as entidades de rede, e quais <span class="alert">ações são tomadas</span> em cada evento.
+				</div>
+			</center>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>O Que São Protocolos: Exemplos</h1>
+	<div class="slideContent">
+		<center>
+			<img src="imagens/ExemploProtocolos.svg" style="width: 70%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Enlaces de Comunicação</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Ou <i>links</i>, em inglês.</li>
+			<li>Interconectam <span class="alert">dois ou mais</span> dispositivos computacionais.
+			<ul>
+				<li>Ponto-a-ponto <i>vs.</i> compartilhados.</li>
+			</ul></li>
+			<li>Variam em termos de:
+			<ul>
+				<li>Meio físico.</li>
+				<li>Taxa de transmissão.</li>
+				<li>Comprimento/tempo de propagação.</li>
+				<li>Probabilidade de falhas na transmissão.</li>
+				<li>...</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Enlaces de Comunicação: Meio Físico (I)</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 55%;">
+			<ul>
+				<li>O que existe &ldquo;entre&rdquo; transmissor e receptor.</li>
+				<li>Transporta os bits.
+				<ul>
+					<li>Valor do bit transmitido corresponde a alguma <span class="alert">grandeza física mensurável</span>.
+					<ul>
+						<li>Tensão em um par de fios, intensidade luminosa, frequência de uma onda sonora, ...</li>
+					</ul></li>
+					<li>Transmissor manipula a grandeza, receptor a monitora.</li>
+				</ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 45%;">
+			<ul>
+				<li><span class="alert">Meios guiados:</span>
+				<ul>
+					<li>Sinal se <span class="alert">propaga</span> ao longo de um meio solido.</li>
+					<li>Sinal é (praticamente) &ldquo;confinado&rdquo; ao meio.</li>
+				</ul></li>
+				<li><span class="alert">Meios não-guiados:</span>
+				<ul>
+					<li>Sinal se propaga de forma livre.</li>
+					<li>Tende a se espalhar pelo espaço.</li>
+				</ul></li>
+			</ul>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Enlaces de Comunicação: Meio Físico (II)</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li><span class="alert">Par-trançado:</span>
+				<ul>
+					<li>Dois fios de cobre com isolamento.
+					<ul>
+						<li>Categoria 5: Ethernet de 100 Mb/s, 1 Gb/s.</li>
+						<li>Categoria 6: Ethernet de 10 Gb/s.</li>
+					</ul></li>
+					<br>
+					<center>
+						<img src="imagens/CAT-6.svg" style="width: 60%;"/>
+					</center>
+				</ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li><span class="alert">Cabo coaxial:</span>
+				<ul>
+					<li>Dois condutores de cobre concêntricos.</li>
+					<li>Bidirecional.</li>
+					<li>Banda larga:
+					<ul>
+						<li>Múltiplos canais em um mesmo cabo.</li>
+						<li>HFC.</li>
+					</ul></li>
+				</ul></li>
+				<br>
+				<center>
+					<img src="imagens/Coaxial.svg" style="width: 60%;"/>
+				</center>
+			</ul>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Enlaces de Comunicação: Meio Físico</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 55%;">
+			<ul>
+				<li><span class="alert">Fibra óptica:</span>
+				<ul>
+					<li>Fibra de vidro carregando pulsos de luz, cada pulso um bit.</li>
+					<li>Altas velocidade de transmissão ponto-a-ponto: dezenas a centenas de Gb/s.
+					<ul>
+						<li>Em laboratório, 15,5 Tb/s em enlace de 7000 Km.</li>
+					</ul></li>
+					<li>Baixa ocorrência de erros de transmissão.
+					<ul>
+						<li>Enlaces longos, com poucos repetidores.</li>
+						<li>Imune a interferências eletromagnéticas.</li>
+					</ul></li>
+				</ul></li>
+				<br>
+				<center>
+					<img src="imagens/FibraOptica.svg" style="width: 50%;"/>
+				</center>
+			</ul>
+		</div>
+		<div class="column" style="width: 45%;">
+			<ul>
+				<li><span class="alert">Rádio:</span>
+				<ul>
+					<li>Sinal transportado no espectro eletromagnético.</li>
+					<li>Sem &ldquo;cabos&rdquo;.</li>
+					<li>Bidirecional.</li>
+					<li>Susceptível a diversos fenômenos do ambiente:
+					<ul>
+						<li>Reflexão.</li>
+						<li>Obstrução.</li>
+						<li>Interferência.</li>
+					</ul></li>
+				</ul></li>
+				<li>Diversos tipos:
+				<ul>
+					<li>Microondas terrestres.</li>
+					<li>LAN (<i>e.g.</i>, Wi-Fi).</li>
+					<li>WAN (<i>e.g.</i>, 3G, 4G, WiMax).</li>
+					<li>Satélite.</li>
+				</ul></li>
+			</ul>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Enlaces de Comunicação: Taxa de Transmissão</h1>
+	<div class="slideContent">
+		<ul>
+			<li>O quão rapidamente os bits são &ldquo;colocados&rdquo; no canal.
+			<ul>
+				<li><i>e.g.</i>, o quão rápidos são os pulsos em uma fibra óptica.</li>
+			</ul></li>
+			<li>Também chamada de: capacidade do enlace, banda, largura de banda.</li>
+			<li>Quanto maior a taxa de transmissão, <span class="alert">menor o tempo necessário para transmitir um pacote</span>.
+			<ul>
+				<li>Para um pacote de L bits, enlace de capacidade R b/s:</li>
+				<br>
+				<center>
+				Tempo para colocar bits no canal <span class="math inline"> = \(\frac{L (bits)}{R (bits/s)}\)</span>
+				</center>
+				<br>
+			</ul></li>
+			<li><span class="alert">Importante: este tempo não é o tempo total de transmissão do pacote pelo enlace!!!</span></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Enlaces de Comunicação: Propagação</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Uma vez colocado no enlace, bit <b>não</b> chega instantaneamente no receptor.</li>
+			<li>Ele precisa se <span class="alert">propagar</span> pelo meio de transmissão.
+			<ul>
+				<li><i>e.g.</i>, uma onda sonora que se propaga no ar a 340 m/s.</li>
+			</ul></li>
+			<li>Cada meio de transmissão tem sua velocidade de propagação do sinal.
+			<ul>
+				<li>Depende do tipo de sinal, características do meio, ...</li>
+			</ul></li>
+			<li>Dado o <span class="alert">comprimento do canal (d)</span> e velocidade de propagação (s), tem-se o tempo de propagação:</li>
+			<br>
+			<center>
+				Tempo de propagação de um bit <span class="math inline">\(= \frac{d}{s}\)</span>
+			</center>
+			<br>
+			<li><span class="alert">Importante: completamente independente da capacidade do enlace e do número de bits do pacote!!!</span></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Enlaces de Comunicação: Probabilidade de Falha</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Toda transmissão em um enlace <span class="alert">pode falhar</span>.
+			<ul>
+				<li>Interferências, mau-contato, falhas de <i>hardware</i>, ...</li>
+			</ul></li>
+			<li>Por qualquer motivo, receptor <span class="alert">não é capaz de entender conteúdo do pacote</span>.</li>
+			<li>Em redes de <span class="alert">comutação de pacotes</span>, pacote transmitido é <span class="alert">completamente perdido</span>.</li>
+			<li>Alguns enlaces são mais propensos a falhas que outros.
+			<ul>
+				<li><i>e.g.</i>, enlaces de rádio são muito propensos, enlaces de fibra óptica são pouco propensos.</li>
+			</ul></li>
+			<li>Transmissões mal-sucedidas reduzem o desempenho do enlace.</li>
+		</ul>
+	</div>
+	</section>
+
+	<section class="secao">
+	<div class="slideContent">
+		Arquitetura da Internet
+	</div>
+	</section>
+
+	<section>
+	<h1>Olhando Mais de Perto para a Estrutura da Rede</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 60%;">
+			<br>
+			<ul>
+				<li>Internet pode ser dividida em duas &ldquo;zonas&rdquo;:
+				<ul>
+					<li>Borda da rede.</li>
+					<li>Núcleo da rede.</li>
+				</ul></li>
+				<li><span class="alert">Borda da rede:</span>
+				<ul>
+					<li><i>Hosts</i>: clientes e servidores.</li>
+					<li>Redes de acesso: interconectam <i>hosts</i> ao resto da Internet.</li>
+				</ul></li>
+				<li><span class="alert">Núcleo da rede:</span>
+				<ul>
+					<li>Roteadores interconectados.</li>
+					<li>Rede de redes.</li>
+				</ul></li>
+				<li><span class="alert">Roteadores de borda:</span> conectam elementos da borda ao núcleo da Internet.</li>
+			</ul>
+		</div>
+
+		<div class="column" style="width: 40%;">
+			<center>
+				<img src="imagens/InternetNutsAndBolts.svg" style="width: 90%;"/>
+			</center>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Borda da Rede: <i>Hosts</i></h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li>Executam as aplicações.</li>
+				<li>Aplicações geram mensagens.</li>
+				<li><i>Host</i> quebra mensagem em unidades menores, chamadas <span class="alert">pacotes</span>.</li>
+				<li>Pacotes são transmitidos através do enlace <span class="alert">na sua taxa de transmissão.</span></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50%;">
+			<center>
+				<img src="imagens/Host.svg" style="width: 90%;"/>
+			</center>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Borda da Rede: Redes de Acesso</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 60%;">
+			<br>
+			<br>
+			<br>
+			<ul>
+				<li>Interconectam <i>hosts</i> ao roteador de borda.
+				<ul>
+					<li>Redes de acesso residenciais.</li>
+					<li>Redes de acesso institucionais (Universidades, empresas).</li>
+					<li>Redes de acesso móveis.</li>
+				</ul></li>
+				<li>Aspectos importantes:
+				<ul>
+					<li>Capacidade da rede de acesso.</li>
+					<li>Dedicada ou compartilhada?</li>
+				</ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 40%;">
+			<center>
+				<img src="imagens/Borda.svg" style="width: 90%;"/>
+			</center>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Redes de Acesso: DSL</h1>
+	<div class="slideContent">
+		<center>
+			<img src="imagens/DSL.svg" style="width: 75%;"/>
+		</center>
+		<ul>
+			<li>Utiliza infraestrutura de telefonia <span class="alert">existente</span> até o DSLAM.
+			<ul>
+				<li>Dados vão para a Internet.</li>
+				<li>Voz vai para a rede telefônica.</li>
+			</ul></li>
+			<li>&le; 3.3 Mb/s de taxa <i>upstream</i>.</li>
+			<li>&le; 24 Mb/s de taxa <i>downstream</i>.</li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Redes de Acesso: HFC (I)</h1>
+	<div class="slideContent">
+		<center>
+			<img src="imagens/HFC1.svg" style="width: 65%;"/>
+		</center>
+		<br>
+		<ul>
+			<li><span class="alert">Multiplexação por divisão na frequência:</span> diferentes canais transmitidos em diferentes bandas de frequência.</li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Redes de Acesso: HFC (II)</h1>
+	<div class="slideContent">
+		<center>
+			<img src="imagens/HFC2.svg" style="width: 65%;"/>
+		</center>
+		<br>
+		<ul>
+			<li><span class="alert">HFC:</span> <i>Hybrid Fiber Coax</i>.
+			<ul>
+				<li>Assimetria: até 30 Mb/s de <i>download</i>, 2 Mb/s de <i>upload</i>.</li>
+			</ul></li>
+			<li>Rede híbrida de cabos coaxiais, fibra óptica, conecta casas a roteador do ISP.
+			<ul>
+				<li>Casas <span class="alert">compartilham rede de acesso</span> até a central.</li>
+				<li>Diferente do DSL, que possui acesso dedicado.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Redes de Acesso: Redes Sem Fio</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Rede de acesso sem fio compartilhada conecta <i>hosts</i> a roteador.
+			<ul>
+				<li>Através de <span class="alert">estação base</span>, também denominada &ldquo;ponto de acesso&rdquo;.</li>
+			</ul></li>
+		</ul>
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li><span class="alert">LANs sem fio</span>:
+				<ul>
+					<li>Normalmente usadas dentro de edifícios (dezenas de metros).</li>
+					<li>IEEE 802.11b/g/n/ac: 11 Mb/s, 54 Mb/s, 300 Mb/s, 1,69 Gb/s.</li>
+				</ul></li>
+			</ul>
+			<br>
+			<center>
+				<img src="imagens/80211.svg" style="width: 60%;"/>
+			</center>
+		</div>
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li><span class="alert">WAN sem fio</span>:
+				<ul>
+					<li>Providas por operadoras de celular (dezenas de quilômetros).</li>
+					<li>Entre 1 e 10 Mb/s.</li>
+					<li>3G, 4G: LTE.</li>
+				</ul></li>
+			</ul>
+			<br>
+			<center>
+				<img src="imagens/3G.svg" style="width: 60%;"/>
+			</center>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Redes de Acesso Institucionais</h1>
+	<div class="slideContent">
+		<center>
+			<img src="imagens/RedeInstitucional.svg" style="width: 70%;"/>
+		</center>
+		<ul>
+			<li>Tipicamente usadas em empresas, universidades.</li>
+			<li>Taxas de transmissão de 10 Mb/s, 100 Mb/s, 1 Gb/s, 10 Gb/s.</li>
+			<li>Hoje, <i>hosts</i> comumente se conectam a <i>switches</i> Ethernet.
+			<ul>
+				<li>Outro tipo de comutador, tópico de Redes II.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Redes de Acesso Domésticas</h1>
+	<div class="slideContent">
+		<center>
+			<img src="imagens/HomeNetwork.svg" style="width: 70%;"/>
+		</center>
+	</div>
+	</section>
+
+    <section>
+    <h1>Núcleo da Rede</h1>
+    <div class="slideContent">
+        <div class="column" style="width: 60%;">
+            <br>
+            <br>
+            <ul>
+                <li>Malha de <span class="alert">roteadores</span> interconectados.
+                <ul>
+                    <li>Malha = múltiplos caminhos possíveis.</li>
+                </ul></li>
+                <li><span class="alert">Comutação de pacotes:</span> <i>hosts</i> quebram mensagens das aplicações em <span class="alert">pacotes</span>.
+                <ul>
+                    <li>Pacotes <span class="alert">encaminhados</span> de um roteador para o próximo, passando pelos enlaces entre origem e destino.</li>
+                    <li>Cada pacote transmitido na capacidade máxima do enlace.</li>
+                </ul></li>
+            </ul>
+        </div>
+        <div class="column" style="width: 40%;">
+            <center>
+                <img src="imagens/Nucleo.svg" style="width: 90%;"/>
+            </center>
+        </div>
+    </div>
+    </section>
+
+    <section>
+    <h1>Núcleo da Rede: Encaminhamento <i>vs.</i> Roteamento</h1>
+    <div class="slideContent">
+        <div class="column" style="width: 50%;">
+            <ul>
+                <li><span class="alert">Roteamento:</span> determina rota entre origem e destino usada pelos pacotes.
+                <ul>
+                    <li>Algoritmos de roteamento.</li>
+                </ul></li>
+            </ul>
+            <center>
+                <img src="imagens/Roteamento.svg" style="width: 60%;"/>
+            </center>
+        </div>
+
+        <div class="column" style="width: 50%;">
+            <ul>
+                <li><span class="alert">Encaminhamento:</span> mover pacotes de um <span class="alert">enlace de entrada</span> para um <span class="alert">enlace de saída</span> do roteador.</li>
+            </ul>
+            <center>
+                <img src="imagens/Encaminhamento.svg" style="width: 90%;"/>
+            </center>
+        </div>
+    </div>
+    </section>
+
+    <section>
+    <h1>Rotas na Internet (I)</h1>
+    <div class="slideContent">
+        <ul>
+            <li>Com o que rotas &ldquo;reais&rdquo; da Internet se parecem?</li>
+            <li><span class="alert">traceroute:</span> programa capaz de &ldquo;descobrir&rdquo; rotas usadas por pacotes entre uma origem e um destino.</li>
+            <li>Para cada <span class="alert">salto</span> i:
+            <ul>
+                <li>Envia pacote até o i-<i>ésimo</i> roteador no caminho.</li>
+                <li>Roteador intermediário retorna resposta.</li>
+                <li>Transmissor cronometra intervalo entre transmissão e resposta.</li>
+                <li>Processo é repetido três vezes.</li>
+            </ul></li>
+        </ul>
+        <br>
+        <center>
+            <img src="imagens/Caminho.svg" style="width: 70%;"/>
+        </center>
+    </div>
+    </section>
+
+    <section>
+    <h1>Rotas na Internet (II)</h1>
+    <div class="slideContent">
+        <ul>
+            <li>Exemplo: de <tt>gaia.cs.umass.edu</tt> para <tt>www.eurecom.fr</tt>.</li>
+        </ul>
+        <br>
+        <p style="font-size: 14pt; line-height: 0.9; margin-left: 10%; margin-right: 10%; border: 2px solid #555;">
+        <tt>
+        1 cs-gw (128.119.240.254) 1 ms 1 ms 2 ms<br>
+        2 border1-rt-fa5-1-0.gw.umass.edu (128.119.3.145) 1 ms 1 ms 2 ms<br>
+        3 cht-vbns.gw.umass.edu (128.119.3.130) 6 ms 5 ms 5 ms<br>
+        4 jn1-at1-0-0-19.wor.vbns.net (204.147.132.129) 16 ms 11 ms 13 ms<br>
+        5 jn1-so7-0-0-0.wae.vbns.net (204.147.136.136) 21 ms 18 ms 18 ms<br>
+        6 abilene-vbns.abilene.ucaid.edu (198.32.11.9) 22 ms 18 ms 22 ms<br>
+        7 nycm-wash.abilene.ucaid.edu (198.32.8.46) 22 ms 22 ms 22 ms <br>
+        8 62.40.103.253 (62.40.103.253) 104 ms 109 ms 106 ms<br>
+        9 de2-1.de1.de.geant.net (62.40.96.129) 109 ms 102 ms 104 ms<br>
+        10 de.fr1.fr.geant.net (62.40.96.50) 113 ms 121 ms 114 ms<br>
+        11 renater-gw.fr1.fr.geant.net (62.40.103.54) 112 ms 114 ms 112 ms<br>
+        12 nio-n2.cssi.renater.fr (193.51.206.13) 111 ms 114 ms 116 ms<br>
+        13 nice.cssi.renater.fr (195.220.98.102) 123 ms 125 ms 124 ms<br>
+        14 r3t2-nice.cssi.renater.fr (195.220.98.110) 126 ms 126 ms 124 ms<br>
+        15 eurecom-valbonne.r3t2.ft.net (193.48.50.54) 135 ms 128 ms 133 ms<br>
+        16 194.214.211.25 (194.214.211.25) 126 ms 128 ms 126 ms<br>
+        17 * * *<br>
+        18 * * *<br>
+        19 fantasia.eurecom.fr (193.55.113.142) 132 ms 128 ms 136 ms
+        </tt>
+        </p>
+    </div>
+    </section>
+
+    <section>
+    <h1>Uma &ldquo;Foto&rdquo; da Internet</h1>
+    <div class="slideContent">
+        <center>
+            <img src="imagens/InternetTopology.jpg" style="width: 80%;"/><br>
+        </center>
+            <p style="font-size: 10pt; margin-left: 8%;">(Fonte: http://www.research.att.com/export/sites/att_labs/groups/infovis/news/img/ATT_Labs_InternetMap_0730_10.pdf)</p>
+    </div>
+    </section>
+
+	<!-- {{{{ dzslides core
+	#
+	#
+	#     __  __  __       .  __   ___  __
+	#    |  \  / /__` |    | |  \ |__  /__`
+	#    |__/ /_ .__/ |___ | |__/ |___ .__/ core :€
+	#
+	#
+	# The following block of code is not supposed to be edited.
+	# But if you want to change the behavior of these slides,
+	# feel free to hack it!
+	#
+	-->
+
+    <!-- More CSS -->
+	<link href='../template/css/slides.css' id="slides" rel='stylesheet' type='text/css'>
+	<link href='../template/css/presentationSpecific2.css' id="presentationSpecific2" rel='stylesheet' type='text/css'>
+
+    <!-- More Javascript -->
+	<script type="text/javascript" src="../template/js/dz.js"></script>
+
+	<!-- More CSS -->
+	<link href='../template/css/notesSpecific.css' id="notesSpecific" rel='stylesheet' type='text/css'>
+	<link href='../template/css/printSpecific.css' id="printSpecific" rel='stylesheet' type='text/css'>
+</body>
+</html>
