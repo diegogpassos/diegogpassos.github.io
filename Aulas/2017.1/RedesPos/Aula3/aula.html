@@ -1,0 +1,1437 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <!-- Meta info -->
+	<meta charset="utf-8">
+	<meta name="shortauthor" content="Diego Passos"/>
+	<meta name="shorttitle" content="Filosofias de Projeto e Métricas"/>
+	<meta name="shortevent" content="Redes de Computadores"/>
+	<title>Redes de Computadores: Aula 3</title>
+
+    <!-- Math support -->
+	<script type="text/x-mathjax-config">
+		MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+			MathJax.InputJax.TeX.Definitions.number = /^(?:[0-9]+(?:\.[0-9]{3})*(?:\{,\}[0-9]*)*|\{,\}[0-9]+)/
+		});
+	</script>
+	<script src="js/plotly-latest.min.js"></script>
+	<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+	<script src="../../../../../MathJax-2.6-latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+
+    <!-- Fonts -->
+	<link href='https://fonts.googleapis.com/css?family=Lora:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
+	<link href='../../../../../Fonts/Lora/lora.css' rel='stylesheet' type='text/css'>
+
+    <!-- CSS -->
+	<link href='../template/css/template.css' id="template" rel='stylesheet' type='text/css'>
+	<link href='../template/css/presentationSpecific.css' id="presentationSpecific" rel='stylesheet' type='text/css'>
+
+    <!-- Javascript -->
+	<script type="text/javascript" src="../template/js/audio.js"></script>
+</head>
+
+<body>
+    <!-- Audio handlers -->
+	<!--<audio src="audio/La.wav" id="La.wav" preload="auto"></audio>-->
+
+    <!-- Title Slide -->
+	<section>
+
+        <div class="slideContent">
+            <h1 class="title">Aula 3 - Internet: Filosofias de Projeto e Métricas de Desempenho</h1>
+            <h2 class="author">Diego Passos</h2>
+            <h4 class="institution">Universidade Federal Fluminense</h4>
+            <h3 class="date">Redes de Computadores</h3>
+        </div>
+
+	<br>
+	<br>
+	<div style="width: 30%; float: right; padding-right: 2%;">
+	<p style="font-size: 18px; text-align: right;">Material adaptado a partir dos slides originais de J.F Kurose and K.W. Ross.</p>
+	</div>
+	</section>
+
+    <section class="secao">
+    <div class="slideContent">
+        Filosofias e Princípios de Projeto da Internet
+    </div>
+    </section>
+
+    <section>
+    <h1>Princípios e Filosofias: Motivação</h1>
+    <div class="slideContent">
+        <ul>
+            <li><span class="alert">Administração descentralizada:</span>
+            <ul>
+                <li>A Internet é, em princípio, um esforço coletivo.
+                <ul>
+                </ul></li>
+                <li>Múltiplas entidades <span class="alert">colaboram</span> para um objetivo maior.
+                <ul>
+                    <li>Interconexão entre elementos computacionais.</li>
+                </ul></li>
+            </ul></li>
+            <li>Mas estas entidades possuem metodologias, objetivos individuais diferentes.
+            <ul>
+                <li>Algumas vezes conflitantes.</li>
+            </ul></li>
+            <li>Necessidade de <span class="alert">uniformização</span>.
+            <ul>
+                <li>Estabelecimento de princípios básicos seguidos por todos.</li>
+            </ul></li>
+        </ul>
+    </div>
+    </section>
+
+    <section>
+    <h1>Heterogeneidade</h1>
+    <div class="slideContent">
+        <ul>
+            <li>Por <span class="alert">projeto</span>, a Internet é heterogênea.
+            <ul>
+                <li><i>e.g.</i>, enlaces de tecnologias, capacidades diferentes.</li>
+                <li><i>e.g.</i>, ISPs com políticas diferentes.</li>
+                <li><i>e.g.</i>, dispositivos computacionais com arquiteturas diferentes.</li>
+            </ul></li>
+            <li>Consequências:
+            <ul>
+                <li>São necessários protocolos <span class="alert">comuns a todos os dispositivos</span>.
+                <ul>
+                    <li>Uma suíte de protocolos da Internet.</li>
+                </ul></li>
+                <li>Estes protocolos devem ser <span class="alert">flexíveis</span>.
+                <ul>
+                    <li><i>i.e.</i>, não devem assumir muitas características da rede.</li>
+                </ul></li>
+            </ul></li>
+        </ul>
+    </div>
+    </section>
+
+    <section>
+    <h1>O Argumento Fim-a-Fim (I)</h1>
+    <div class="slideContent">
+        <ul>
+            <li>Argumento apresentado por David Clark em 1981.
+            <ul>
+                <li>Chefe do desenvolvimento da arquitetura de protocolos na Internet entre 1981 e 1989.</li>
+            </ul></li>
+            <li>Guiou o desenvolvimento arquitetural da Internet.
+            <ul>
+                <li>Embora haja exceções.</li>
+            </ul></li>
+        </ul>
+
+        <center>
+            <div class="block" style="width:1100px;">
+                <div class="blockTitle" style="width: 100%;">
+                    <p>Argumento Fim-a-Fim</p>
+                </div>
+                <div class="blockBody">
+                    Uma funcionalidade só pode ser implementada de forma <b>correta e completa</b> se isto for feito com o auxílio das aplicações executadas nas pontas do sistema de comunicação.
+                </div>
+            </div>
+        </center>
+    </div>
+    </section>
+
+    <section>
+    <h1>O Argumento Fim-a-Fim (II)</h1>
+    <div class="slideContent">
+        <ul>
+            <li>Exemplo: transmissão de um arquivo entre dois computadores.</li>
+            <li>Hipóteses:
+            <ul>
+                <li>Computadores interconectados por uma rede de comunicação.</li>
+                <li>Arquivo transmitido quebrado em uma série de pacotes.</li>
+                <li>Pacotes podem ser entregues pela rede com erros.</li>
+                <li>Pacotes podem ser completamente perdidos e descartados.</li>
+            </ul></li>
+            <li>Objetivo:
+            <ul>
+                <li>Garantir que arquivo chegue <b>íntegro</b> ao destinatário.</li>
+            </ul></li>
+        </ul>
+    </div>
+    </section>
+
+    <section>
+    <h1>O Argumento Fim-a-Fim (III)</h1>
+    <div class="slideContent">
+        <ul>
+            <li>Primeira abordagem: rede &ldquo;garantirá&rdquo; a integridade dos dados.
+            <ul>
+                <li>Todo roteador/<i>host</i>, ao receber um pacote por um enlace, verificará sua integridade.
+                <ul>
+                    <li>Como?</li>
+                </ul></li>
+                <li>Caso pacote não seja íntegro, roteador/<i>host</i> requisitará uma <span class="alert">retransmissão</span>.</li>
+                <li>A rede também garantirá que pacotes <span class="alert">não cheguem fora de ordem</span>.</li>
+            </ul></li>
+            <li>Pergunta: isto é suficiente?</li>
+        </ul>
+    </div>
+    </section>
+
+    <section>
+    <h1>O Argumento Fim-a-Fim (IV)</h1>
+    <div class="slideContent">
+        <ul>
+            <li>Não, por uma série de motivos.
+            <ul>
+                <li>Quem garante que arquivo que saiu do <i>host</i> estava originalmente íntegro?</li>
+                <li>Quem garante que verificação de integridade dos pacotes não falhou?</li>
+                <li>Quem garante que as implementações dos roteadores/<i>hosts</i> estão corretas?</li>
+                <li>Em resumo: em última instância, receptor <span class="alert">ainda precisa verificar integridade</span>.</li>
+            </ul></li>
+            <li>Além disso, <span class="alert">é desejável que a rede faça este tipo de função?</span>
+            <ul>
+                <li>Adiciona complexidade.</li>
+                <li>Assume certas funcionalidades de <span class="alert">todos os roteadores intermediários</span>.
+                <ul>
+                    <li>Mas a rede é heterogênea!</li>
+                </ul></li>
+                <li>Tem <span class="alert">efeitos colaterais indesejados</span> para certas aplicações.</li>
+            </ul></li>
+        </ul>
+    </div>
+    </section>
+
+    <section>
+    <h1>O Argumento Fim-a-Fim (V)</h1>
+    <div class="slideContent">
+        <ul>
+            <li><span class="alert">Alternativa:</span> deixar que sistemas finais lidem com o problema.
+            <ul>
+                <li>Façam as verificações.</li>
+                <li>Requisitem retransmissões, se necessário.
+                <ul>
+                    <li>A partir do <i>host</i> de origem!</li>
+                </ul></li>
+            </ul></li>
+            <li>Vantagem:
+            <ul>
+                <li>Já que as pontas precisam da funcionalidade, esta é mantida <span class="alert">apenas lá</span>.</li>
+                <li>Não há redundância de implementações.</li>
+            </ul></li>
+        </ul>
+    </div>
+    </section>
+
+    <section>
+    <h1>O Argumento Fim-a-Fim: Desempenho</h1>
+    <div class="slideContent">
+        <ul>
+            <li>Nunca há vantagens em se implementar funcionalidades nas redes?
+            <ul>
+                <li>Pode haver, por conta de desempenho.</li>
+                <li>Exemplo: pode ser mais rápido retransmitir pacotes por um único enlace que em um caminho fim-a-fim.</li>
+                <li>Há exemplos destas <span class="alert">otimizações</span> na Internet.</li>
+            </ul></li>
+            <li>Mas como princípio geral, estas são evitadas.</li>
+        </ul>
+    </div>
+    </section>
+
+    <section>
+    <h1>O Argumento Fim-a-Fim: Analogias</h1>
+    <div class="slideContent">
+        <ul>
+            <li>RISC <i>vs.</i> CISC.
+            <ul>
+                <li>Processador (rede) deve implementar um grande número de funcionalidades?</li>
+                <li>Ou apenas um subconjunto básico, suficiente?
+                <ul>
+                    <li>Emulando instruções (funcionalidades) mais complexexas em <i>software</i> (nos <i>hosts</i>).</li>
+                </ul></li>
+            </ul></li>
+            <li>Navalha de Occam.
+            <ul>
+                <li>Princípio lógico que guia a escolha de explicações para fenômenos.</li>
+                <li>Se há múltiplas explicações plausíveis, opta-se pela mais simples.</li>
+            </ul></li>
+        </ul>
+    </div>
+    </section>
+
+    <section>
+    <h1>O Argumento Fim-a-Fim: Inteligência nas Bordas</h1>
+    <div class="slideContent">
+        <ul>
+            <li>Consequência direta: na Internet, procura-se manter a complexidade nas bordas.
+            <ul>
+                <li>&ldquo;Inteligência nas bordas&rdquo;.</li>
+                <li>&ldquo;Núcleo simples&rdquo;.</li>
+            </ul></li>
+            <li>Núcleo processa volume enorme de pacotes.
+            <ul>
+                <li>Mantê-lo simples, especializado, <span class="alert">rápido</span>.</li>
+                <li>Objetivo maior: <span class="alert">escalabilidade</span>.</li>
+            </ul></li>
+            <li>Volume de tráfego nas bordas é menor.
+            <ul>
+                <li>Processamentos mais complexos são mais viáveis.</li>
+                <li>Escalabilidade não é tão problemática.</li>
+            </ul></li>
+            <li>Oposição às redes telefônicas.
+            <ul>
+                <li>Núcleo complexo, bordas simples.</li>
+            </ul></li>
+        </ul>
+    </div>
+    </section>
+
+    <section>
+    <h1>Princípio KISS</h1>
+    <div class="slideContent">
+        <ul>
+            <li>KISS: <i>Keep It Simple, Stupid!</i></li>
+            <li>Princípio originado na Marinha Americana, na década de 1960.
+            <ul>
+                <li>Incorporado nas filosofias que guiam a Internet.</li>
+            </ul></li>
+        </ul>
+
+        <center>
+            <div class="block" style="width:1100px;">
+                <div class="blockTitle" style="width: 100%;">
+                    <p>Princípio KISS</p>
+                </div>
+                <div class="blockBody">
+                    Sistemas funcionam melhor quando são mantidos simples. Logo, simplicidade deve ser um objetivo de projeto, evitando complexidades desnecessárias.
+                </div>
+            </div>
+        </center>
+
+        <ul>
+            <li>Aplicado à Internet:
+            <ul>
+                <li>Protocolos &ldquo;simples&rdquo;.
+                <ul>
+                    <li>Relativamente, falando.</li>
+                </ul></li>
+                <li>Fáceis de implementar, depurar.
+                <ul>
+                    <li>Relativamente, falando.</li>
+                </ul></li>
+            </ul></li>
+        </ul>
+    </div>
+    </section>
+
+		<section class="secao">
+		<div class="slideContent">
+			Comutação de Pacotes
+		</div>
+		</section>
+
+		<section>
+		<h1>Comutação de Pacotes: Conceitos Básicos</h1>
+		<div class="slideContent">
+			<div class="column" style="width: 55%;">
+				<br>
+				<br>
+				<ul>
+					<li><i>Hosts</i> quebram dados em <span class="alert">pacotes</span>.
+					<ul>
+						<li>Pacotes são a unidade fundamental de transferência.</li>
+					</ul></li>
+					<li>Pacotes são <span class="alert">encaminhados</span> por comutadores.
+					<ul>
+						<li>Passam por sequência de enlaces, formando um caminho ou <span class="alert">rota</span>.</li>
+					</ul></li>
+					<li>Sempre que pacote é transmitido por enlace, <span class="alert">transmissão utiliza toda a capacidade do enlace</span>.</li>
+				</ul>
+			</div>
+			<div class="column" style="width: 45%;">
+				<center>
+					<img src="imagens/Nucleo.svg" style="width: 70%;"/>
+				</center>
+			</div>
+		</div>
+		</section>
+
+		<section>
+		<h1>Comutação de Pacotes: <i>Store-and-Forward</i> (I)</h1>
+		<div class="slideContent">
+			<center>
+				<img src="imagens/StoreAndForward.svg" style="width: 70%;"/>
+			</center>
+
+			<div class="column" style="width: 50%;">
+				<ul>
+					<li>São necessários <span class="math inline">\(\frac{L}{R}\)</span> segundos para transmitir (&ldquo;colocar no enlace&rdquo;) pacote de <span class="math inline">\(L\)</span> bits em enlace de capacidade <span class="math inline">\(R\)</span>.</li>
+					<li><span class="alert">Store-and-Forward:</span> pacote precisa ser recebido por <span class="alert">completo</span> antes transmissão começar no próximo enlace.
+					<ul>
+						<li>Comutador recebe pacote <span class="alert">inteiro</span>, armazena em memória, processa, ...</li>
+					</ul></li>
+				</ul>
+			</div>
+			<div class="column" style="width: 50%;">
+				<ul>
+					<li><span class="alert">Consequência:</span> tempo total até o destinatário é <span class="math inline">\(\frac{2L}{R}\)</span>.
+					<ul>
+						<li>Ignorando tempo de propagação.</li>
+					</ul></li>
+					<li>Exemplo numérico:
+					<ul>
+						<li><span class="math inline">\(L = 4~MB\)</span>.</li>
+						<li><span class="math inline">\(R = 2~Mb/s\)</span>.</li>
+						<li>Tempo de transmissão por um enlace: 16&nbsp;s.</li>
+						<li>Para transmissão <span class="alert">fim-a-fim</span>: 32&nbsp;s.</li>
+					</ul></li>
+				</ul>
+			</div>
+		</div>
+		</section>
+
+		<section>
+		<h1>Comutação de Pacotes: <i>Store-and-Forward</i> (II)</h1>
+		<div class="slideContent">
+			<ul>
+				<li>Contra-exemplo:</li>
+			</ul>
+			<center>
+				<img src="imagens/NotStoreAndForward.svg" style="width: 70%;"/>
+			</center>
+		</div>
+		</section>
+
+		<section>
+		<h1>Comutação de Pacotes: <i>Store-and-Forward</i> (III)</h1>
+		<div class="slideContent">
+
+			<ul>
+				<li>Por que comutador não pode transmitir logo que recebe primeiros bits?</li>
+				<li>Por que esperar que o pacote chegue completamente?</li>
+				<li>Alguns motivos:
+				<ul>
+					<li>Processamentos são necessários.
+					<ul>
+						<li>Encaminhamento, verificação de integridade, ...</li>
+					</ul></li>
+					<li>Enlace de saída pode estar ocupado com outro pacote.
+					<ul>
+						<li>Pacote que chega pode ter que <span class="alert">esperar</span>.</li>
+					</ul></li>
+				</ul></li>
+			</ul>
+			<center>
+				<img src="imagens/EnlaceOcupado.svg" style="width: 40%;"/>
+			</center>
+		</div>
+		</section>
+
+		<section>
+		<h1>Comutação de Pacotes: Enfileiramento e Descartes</h1>
+		<div class="slideContent">
+			<center>
+				<img src="imagens/Enfileiramento.svg" style="width: 70%;"/>
+			</center>
+
+			<ul>
+				<li><span class="alert">Enfileiramento:</span> pacotes são armazenados em uma <span class="alert">fila</span>.</li>
+				<li>Aguardam oportunidade de transmissão.</li>
+				<li>Se a <span class="alert">taxa de chegada</span> é maior que a capacidade de escoamento, fila tende a crescer.</li>
+				<li>Mas o tamanho da fila é limitado (<span class="alert">Por que?</span>).
+				<ul>
+					<li>Quando a capacidade é excedida, pacotes são <span class="alert">descartados</span>.</li>
+				</ul></li>
+			</ul>
+		</div>
+		</section>
+
+		<section>
+		<h1>Alternativa: Comutação de Circuitos (I)</h1>
+		<div class="slideContent">
+			<div class="column" style="width: 60%;">
+				<ul>
+					<li>Recursos fim-a-fim são <span class="alert">alocados, reservados</span> para uma &ldquo;chamada&rdquo; entre origem e destino.
+					<ul>
+						<li>No exemplo, cada &ldquo;enlace&rdquo; contém 4 circuitos independentes.
+						<ul>
+							<li>Chamada segundo circuito do enlace de cima, primeiro circuito do enlace da direita.</li>
+						</ul></li>
+						<li>Recursos são dedicados: uma vez alocados, ninguém mais os utiliza.
+						<ul>
+							<li>Desempenho de circuito, garantido.</li>
+						</ul></li>
+						<li>Recursos ficam <span class="alert">ociosos</span> se não usados pela chamada.</li>
+						<li>Comumente utilizado em redes de telefonia.</li>
+					</ul></li>
+				</ul>
+			</div>
+			<div class="column" style="width: 40%;">
+				<center>
+					<img src="imagens/ComutacaoCircuitos.svg" style="width: 95%;"/>
+				</center>
+			</div>
+		</div>
+		</section>
+
+		<section>
+		<h1>Alternativa: Comutação de Circuitos (II)</h1>
+		<div class="slideContent">
+			<center>
+				<img src="imagens/Switchboard.jpg" style="width: 70%;"/>
+			</center>
+		</div>
+		</section>
+
+		<section>
+		<h1>Comutação de Circuitos: Multiplexação</h1>
+		<div class="slideContent">
+			<ul>
+				<li>Não necessariamente precisamos de circuitos fisicamente separados entre cada comutador.</li>
+				<li>Chamadas podem ser <span class="alert">multiplexadas</span> em um mesmo meio físico.</li>
+				<li>Dois exemplos comuns:
+				<ul>
+					<li>Multiplexação por Divisão no Tempo (TDM).</li>
+					<li>Multiplexação por Divisão na Frequência (FDM).</li>
+				</ul></li>
+			</ul>
+
+			<center>
+				<img src="imagens/FDMvsTDM.svg" style="width: 50%;"/>
+			</center>
+		</div>
+		</section>
+
+		<section>
+		<h1>Comutação de Pacotes: Multiplexação Estatística (I)</h1>
+		<div class="slideContent">
+			<ul>
+				<li>Na comutação de pacotes, também há multiplexação.
+				<ul>
+					<li>Multiplexação ocorre &ldquo;naturalmente&rdquo;.
+					<li>Pacotes de usuários distintos são transmitidos de forma intercalada.</li>
+					<li>Ordem depende da chegada (geralmente aleatória) dos pacotes no comutador.</li>
+				</ul></li>
+			</ul>
+			<div class="column" style="width: 45%;">
+				<ul>
+					<li><span class="alert">Pergunta:</span> quantos usuários podem compartilhar um único enlace de saída?</li>
+					<li>Exemplo: enlace de saída de 1&nbsp;Mb/s.</li>
+					<li>&ldquo;Prometemos&rdquo; 100&nbsp;kb/s a cada usuário <span class="alert">quando ativos</span>.
+					<ul>
+						<li>Hipótese: cada usuário ativo apenas 10% do tempo.</li>
+					</ul></li>
+					<li><span class="alert">Comutação de circuitos:</span>
+					<ul>
+						<li>Alocações fixas, recursos reservados.</li>
+						<li>No máximo, 10 usuários.</li>
+					</ul></li>
+				</ul>
+			</div>
+
+			<div class="column" style="width: 55%;">
+				<center>
+					<img src="imagens/MultiplexacaoEstatisticaCenario.svg" style="width: 75%;"/>
+				</center>
+				<ul>
+					<li><span class="alert">Comutação de pacotes:</span>
+					<ul>
+						<li>Recursos ociosos podem ser utilizados por outros usuários.</li>
+						<li>Logo: espera-se poder colocar <span class="alert">mais de 10</span> usuários!</li>
+					</ul></li>
+					<li>Mas qual é o valor exato de N?</li>
+				</ul>
+			</div>
+		</div>
+		</section>
+
+		<section>
+		<h1>Comutação de Pacotes: Multiplexação Estatística (II)</h1>
+		<div class="slideContent">
+			<ul>
+				<li>Enlace de 1&nbsp;Mb/s, 100&nbsp;kb/s para cada usuário = no máximo 10 usuários <span class="alert">simultâneos</span>.</li>
+				<li>Digamos que haja <span class="math inline">\(N = 35\)</span> usuários.
+				<ul>
+					<li>Qual a <span class="alert">probabilidade</span> de que mais de 10 estejam ativos simultaneamente?</li>
+					<li>Considerando certas simplificações implícitas.</li>
+				</ul></li>
+				<li>Um usuário <span class="alert">qualquer</span> fica ativo com probabilidade <span class="math inline">\(p = 10\%\)</span>.</li>
+			</ul>
+			<br>
+			<div class="column" style="width: 33%;">
+				<center>
+					<b>1 dado usuário ativo</b><br>
+					<b>(demais desativos)</b>
+					<br>
+					<br>
+					<br>
+					<span class="math inline">\(p\cdot(1-p)^{34}\)</span>
+				</center>
+			</div>
+			<div class="column" style="width: 33%;">
+				<center>
+					<b>2 dados usuários ativos</b><br>
+					<b>(demais desativos)</b>
+					<br>
+					<br>
+					<br>
+					<span class="math inline">\(p^2\cdot(1-p)^{33}\)</span>
+				</center>
+			</div>
+			<div class="column" style="width: 33%;">
+				<center>
+					<b>k dados usuários ativos</b><br>
+					<b>(demais desativos)</b>
+					<br>
+					<br>
+					<br>
+					<span class="math inline">\(p^k\cdot(1-p)^{(N-k)}\)</span>
+				</center>
+			</div>
+
+		</div>
+		</section>
+
+		<section>
+		<h1>Comutação de Pacotes: Multiplexação Estatística (III)</h1>
+		<div class="slideContent">
+			<ul>
+				<li>Note que com 35 usuários, há múltiplas combinações de <span class="math inline">\(k\)</span> usuários que podem estar ativos simultaneamente.
+				<ul>
+					<li>P/ <span class="math inline">\(k = 1\)</span>, 35 combinações.</li>
+					<li>P/ <span class="math inline">\(k = 2\)</span>, <span class="math inline">\(\frac{35\cdot 34}{2} = 595\)</span> combinações.</li>
+					<li>...</li>
+					<li>P/ <span class="math inline">\(k\)</span> em geral, <span class="math inline">\({35}\choose{k}\)</span> combinações.</li>
+				</ul></li>
+			</ul>
+			<br>
+			<div class="column" style="width: 33%;">
+				<center>
+					<b>1 usuário ativo</b><br>
+					<b>(demais desativos)</b>
+					<br>
+					<br>
+					<br>
+					<span class="math inline">\(35\cdot p\cdot(1-p)^{34}\)</span>
+				</center>
+			</div>
+			<div class="column" style="width: 33%;">
+				<center>
+					<b>2 usuários ativos</b><br>
+					<b>(demais desativos)</b>
+					<br>
+					<br>
+					<br>
+					<span class="math inline">\(595\cdot p^2\cdot(1-p)^{33}\)</span>
+				</center>
+			</div>
+			<div class="column" style="width: 33%;">
+				<center>
+					<b>k usuários ativos</b><br>
+					<b>(demais desativos)</b>
+					<br>
+					<br>
+					<br>
+					<span class="math inline">\({{35}\choose{k}}\cdot p^k\cdot(1-p)^{(35-k)}\)</span>
+				</center>
+			</div>
+
+		</div>
+		</section>
+
+		<section>
+		<h1>Comutação de Pacotes: Multiplexação Estatística (IV)</h1>
+		<div class="slideContent">
+			<ul>
+				<li>Voltando ao problema original: probabilidade de mais de 10 ativos.</li>
+			</ul>
+			<br>
+			<center>
+				<span class="math inline">\(Pr(k > 10) = \sum\limits^{35}_{i=11}{{{35}\choose{i}}\cdot p^i\cdot(1-p)^{(35-i)}} \approx 0{,}00042\)</span>
+			</center>
+			<br>
+			<ul>
+				<li>Resumindo:
+				<ul>
+					<li>Mesmo com 35 usuários, entregamos a banda prometida 99,958% do tempo.</li>
+					<li><span class="alert">Número muito maior de usuários</span> que na comutação de circuitos.</li>
+					<li>Percentual de falha &ldquo;aceitável&rdquo;.</li>
+				</ul></li>
+				<li>Mas o que acontece se mudarmos os parâmetros?
+				<ul>
+					<li><i>e.g.</i>, aumentarmos N, aumentarmos p, ou reduzirmos a capacidade do enlace?</li>
+				</ul></li>
+			</ul>
+		</div>
+		</section>
+
+		<section>
+    <h1>Comutação de Pacotes: Multiplexação Estatística (V)</h1>
+    <div class="slideContent">
+
+         <div class="column" style="width: 50%;">
+             <center>
+                 <br>
+		<center>
+			<span class="math inline">\(Pr(k > x) = \sum\limits^{N}_{i=x}{{{N}\choose{i}}\cdot p^i\cdot(1-p)^{(N-i)}}\)</span>
+		</center>
+                 <br>
+                 <span class="alert">Parâmetros</span>
+                 <div style="border: 2px solid #7B7; width: 60%;">
+                     <table class="align">
+                         <tr>
+                             <td>k:</td>
+                             <td><input id="MultiplexacaoEstatisticaInputk" value="10" style="height: 25px; font-size: 20px;"></input></td>
+                         </tr>
+                         <tr>
+                             <td>N:</td>
+                             <td><input id="MultiplexacaoEstatisticaInputN" value="35"  style="height: 25px; font-size: 20px;"></input></td>
+                         </tr>
+                         <tr>
+                             <td>p:</td>
+                             <td><input id="MultiplexacaoEstatisticaInputp" value="0.1" style="height: 25px; font-size: 20px;"></input></td>
+                         </tr>
+                     </table>
+                     <input type="button" onclick="MultiplexacaoEstatisticaplot();" value="Recalcular"  style="height: 25px; font-size: 20px;"></input>
+                 </div>
+             </center>
+             <ul>
+                 <li>Onde:
+                 <ul>
+                     <li>k: máximo de usuários simultâneos.
+                     <ul>
+                         <li>Depende da capacidade do enlace/rede e da banda para cada usuário.</li>
+                     </ul></li>
+                     <li>N: número total de usuários.</li>
+                     <li>p: probabilidade de um dado usuário estar ativo.</li>
+                 </ul></li>
+             </ul>
+         </div>
+         <div class="column" style="width: 50%;">
+             <center>
+                 <div id="MultiplexacaoEstatisticaGraph1" style="width: 550px; height: 225px;"></div>
+                 <div id="MultiplexacaoEstatisticaGraph2" style="width: 550px; height: 225px;"></div>
+                 <div id="MultiplexacaoEstatisticaGraph3" style="width: 550px; height: 225px;"></div>
+             </center>
+         </div>
+
+        <script type="text/javascript" charset="utf-8">
+
+            function MultiplexacaoEstatisticaCDF(n, k, p) {
+
+                var i;
+                var res = 0;
+                var comb = 1;
+                var probSel = 1;
+                var probNotSel = Math.pow(1-p, n);
+
+                for (i = 0; i <= k; i++) {
+
+                    res = res +  comb * probSel * probNotSel;
+                    comb = comb * (n-i) / (i + 1);
+                    probSel = probSel * p;
+                    probNotSel = probNotSel / (1-p);
+                }
+
+                return(res);
+            }
+
+             var MultiplexacaoEstatisticaLayout1 = {
+                font: {
+
+                    family: "helvetica, sans-serif",
+                    size: 14
+                },
+                yaxis: {
+                    title: "Prob. de Falha",
+                    showgrid: false,
+                    showline: true,
+                    ticks: "outside",
+                    range: [0, 1]
+                },
+                xaxis: {
+                    title: "N",
+                    showgrid: false,
+                    showline: true,
+                    showzeroline: false,
+                    nticks: 4,
+                    ticks: "outside",
+                },
+                margin: {                           // update the left, bottom, right, top margin
+                    l: 50, b: 65, r: 2, t: 5
+                },
+                height: 200,
+                width: 500
+            };
+
+             var MultiplexacaoEstatisticaLayout2 = {
+                font: {
+
+                    family: "helvetica, sans-serif",
+                    size: 14
+                },
+                yaxis: {
+                    title: "Prob. de Falha",
+                    showgrid: false,
+                    showline: true,
+                    ticks: "outside",
+                    range: [0, 1]
+                },
+                xaxis: {
+                    title: "p",
+                    showgrid: false,
+                    showline: true,
+                    showzeroline: false,
+                    nticks: 4,
+                    ticks: "outside",
+                },
+                margin: {                           // update the left, bottom, right, top margin
+                    l: 50, b: 65, r: 2, t: 5
+                },
+                height: 200,
+                width: 500
+            };
+
+             var MultiplexacaoEstatisticaLayout3 = {
+                font: {
+
+                    family: "helvetica, sans-serif",
+                    size: 14
+                },
+                yaxis: {
+                    title: "Prob. de Falha",
+                    showgrid: false,
+                    showline: true,
+                    ticks: "outside",
+                    range: [0, 1]
+                },
+                xaxis: {
+                    title: "k",
+                    showgrid: false,
+                    showline: true,
+                    showzeroline: false,
+                    nticks: 4,
+                    ticks: "outside",
+                },
+                margin: {                           // update the left, bottom, right, top margin
+                    l: 50, b: 65, r: 2, t: 5
+                },
+                height: 200,
+                width: 500
+            };
+
+	    var Nmax = 150;
+
+            function MultiplexacaoEstatisticareplot() {
+
+                var N = document.getElementById('MultiplexacaoEstatisticaInputN').value;
+                var k = document.getElementById('MultiplexacaoEstatisticaInputk').value;
+                var p = document.getElementById('MultiplexacaoEstatisticaInputp').value;
+                var x = [];
+                var y = [];
+                var i;
+
+                for (i = 1; i < Nmax; i++) {
+
+                    x[i] = i;
+                    y[i] = 1 - MultiplexacaoEstatisticaCDF(i, k, p);
+                }
+
+                var data = [{
+                    y: y,
+                    x: x,
+                    line: { width: 2, color: 'red' },
+                    uid: "00abaa"
+                }];
+
+                Plotly.newPlot(MultiplexacaoEstatisticaGraph1, data, MultiplexacaoEstatisticaLayout1);
+                Plotly.newPlot(MultiplexacaoEstatisticaGraph2, data, MultiplexacaoEstatisticaLayout2);
+                Plotly.newPlot(MultiplexacaoEstatisticaGraph3, data, MultiplexacaoEstatisticaLayout3);
+             }
+
+	     function MultiplexacaoEstatisticaplot() {
+
+                var N = document.getElementById('MultiplexacaoEstatisticaInputN').value;
+                var k = document.getElementById('MultiplexacaoEstatisticaInputk').value;
+                var p = document.getElementById('MultiplexacaoEstatisticaInputp').value;
+                var x = [];
+                var y = [];
+                var i;
+
+                for (i = 1; i < Nmax; i++) {
+
+                    x[i] = i;
+                    y[i] = 1 - MultiplexacaoEstatisticaCDF(i, k, p);
+                }
+
+                var data = [{
+                    y: y,
+                    x: x,
+                    line: { width: 2, color: 'red' },
+                    uid: "00abaa"
+                }];
+
+                Plotly.newPlot(MultiplexacaoEstatisticaGraph1, data, MultiplexacaoEstatisticaLayout1);
+
+		x = [];
+		y = [];
+                for (i = 0; i <= 100; i++) {
+
+                    x[i] = i;
+                    y[i] = 1 - MultiplexacaoEstatisticaCDF(N, k, i / 100);
+                }
+
+                var data = [{
+                    y: y,
+                    x: x,
+                    line: { width: 2, color: 'red' },
+                    uid: "00abaa"
+                }];
+
+
+                Plotly.newPlot(MultiplexacaoEstatisticaGraph2, data, MultiplexacaoEstatisticaLayout2);
+
+		x = [];
+		y = [];
+                for (i = 1; i <= N; i++) {
+
+                    x[i] = i;
+                    y[i] = 1 - MultiplexacaoEstatisticaCDF(N, i, p);
+                }
+
+                var data = [{
+                    y: y,
+                    x: x,
+                    line: { width: 2, color: 'red' },
+                    uid: "00abaa"
+                }];
+
+                Plotly.newPlot(MultiplexacaoEstatisticaGraph3, data, MultiplexacaoEstatisticaLayout3);
+             }
+
+            MultiplexacaoEstatisticaplot();
+          </script>
+
+
+    </div>
+    </section>
+
+	<section>
+	<h1>Comutação de Pacotes: Enfileiramento e Atraso (I)</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Já sabemos que enfileiramento pode levar a descarte de pacotes.
+			<ul>
+				<li>Pacote chega ao comutador, não há mais espaço disponível no <i>buffer</i>.</li>
+			</ul></li>
+			<li>Mas o enfileiramento tem outra consequência: <span class="alert">o aumento no atraso</span>.</li>
+			<li>Pacote enfileirado precisa aguardar que todos os pacotes a sua frente sejam transmitidos.
+			<ul>
+				<li>Maiores filas &#x2192; maior tempo de espera.</li>
+			</ul></li>
+			<li><i>e.g.</i>, assumindo que cada pacote leve 10&nbsp;ms para ser transmitido.
+			<ul>
+				<li>Com 5 pacotes na fila, 50&nbsp;ms.</li>
+				<li>Com 100 pacotes na fila, 1&nbsp;s.</li>
+			</ul></li>
+		</ul>
+
+		<center>
+			<img src="imagens/PerdaAtraso.svg" style="width: 50%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Comutação de Pacotes: Enfileiramento e Atraso (II)</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li>Sejam:
+				<ul>
+					<li><span class="math inline">\(R\)</span>: capacidade do enlace (b/s).</li>
+					<li><span class="math inline">\(L\)</span>: tamanho dos pacotes (b).</li>
+					<li><span class="math inline">\(a\)</span>: taxa de chegada de pacotes (p/s).</li>
+				</ul></li>
+				<li>Logo, <span class="math inline">\(L\cdot a\)</span> é a taxa de chegada em b/s.</li>
+				<li>Se:
+				<ul>
+					<li><span class="math inline">\(\frac{L\cdot a}{R} \approx 0\)</span>, pacotes esperam pouco na fila.</li>
+					<li><span class="math inline">\(\frac{L\cdot a}{R} \rightarrow 1\)</span>, pacotes esperam muito na fila.</li>
+					<li><span class="math inline">\(\frac{L\cdot a}{R} > 1\)</span>, mais trabalho que o comutador consegue suportar &#x2192; tempo de espera &ldquo;infinito&rdquo;.
+					<ul>
+						<li><i>i.e.</i>, descarte de pacotes inevitável!</li>
+					</ul></li>
+				</ul></li>
+			</ul>
+		</div>
+
+		<div class="column" style="width: 50%;">
+			<center>
+				<img src="imagens/AtrasoEnfileiramento.png" style="width: 80%;"/>
+			</center>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Comutação de Pacotes: Reordenação</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 55%;">
+		<ul>
+			<li>Outra característica da comutação de pacotes.</li>
+			<li>Pacotes podem &ldquo;mudar de ordem&rdquo;.
+			<ul>
+				<li><i>i.e.</i>, pacote transmitido antes, pode chegar depois.</li>
+			</ul></li>
+			<li>Razão mais comum: caminhos distintos.
+			<ul>
+				<li>Decisão de como encaminhar pacote é (normalmente) do comutador.</li>
+				<li>Guiada por um processo de <span class="alert">roteamento</span>.</li>
+				<li>Roteamento pode mudar escolhas <span class="alert">dinamicamente</span>.</li>
+			</ul></li>
+		</ul>
+		</div>
+		<div class="column" style="width: 45%;">
+		<center>
+			<img src="imagens/Reordenacao.svg" style="width: 90%;"/>
+		</center>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Comutação de Pacotes <i>vs.</i> Comutação de Circuitos</h1>
+	<div class="slideContent">
+		<ul>
+			<li><span class="alert">Pergunta:</span> Qual abordagem é melhor?</li>
+			<li><span class="alert">Resposta:</span> depende do cenário, objetivos.</li>
+			<li>Comutação de pacotes funciona bem para tráfego em <span class="alert">rajada</span>.
+			<ul>
+				<li>Permite compartilhamento melhor dos recursos.</li>
+				<li>Não necessita de estabelecimento de chamada.</li>
+			</ul></li>
+			<li>Mas pode resultar em <span class="alert">congestionamento excessivo</span>.
+			<ul>
+				<li>Filas longas, descartes de pacotes, atrasos.</li>
+				<li>Não podemos <span class="alert">prometer</span> muita coisa.</li>
+			</ul></li>
+			<li>Certas aplicações precisam de garantias.
+			<ul>
+				<li>Como prover garantias em uma rede de comutação de pacotes?</li>
+				<li>Problema ainda em aberto (Redes II).</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Comutação de Circuitos: Quem Lida com os Problemas?</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Usamos a Internet todos os dias para transmitir arquivos.</li>
+			<li>Obviamente, queremos que estes arquivos cheguem perfeitos, <span class="alert">íntegros</span> no destinatário.</li>
+			<li>Como isso é possível, se a rede pode descartar, reordenar pacotes?</li>
+			<li><span class="alert">Resposta:</span> os terminais precisam lidar com isso.
+			<ul>
+				<li><i>i.e., implantar mecanismos de recuperação.</i></li>
+				<li><span class="alert">Assumindo que isto seja desejável</span>.</li>
+				<li>Argumento fim-a-fim, inteligência nas bordas.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section class="secao">
+	<div class="slideContent">
+		Métricas de Desempenho
+	</div>
+	</section>
+
+	<section>
+	<h1>Métricas de Desempenho em Redes</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Há <span class="alert">quatro</span> métricas clássicas de desempenho em redes:
+			<ul>
+				<li>Atraso: tempo que pacote leva para sair de um ponto do sistema até outro.</li>
+				<li>Perda de pacotes: fração dos pacotes transmitidos que são descartados.</li>
+				<li>Vazão: o quão rapidamente dados são transmitidos entre uma origem e um destino.</li>
+				<li><i>Jitter</i>: variação do atraso.</li>
+			</ul></li>
+			<li>Fim-a-fim <i>vs.</i> por salto:
+			<ul>
+				<li>Métricas podem ser definidas a cada salto/enlace.</li>
+				<li>Mas também podem ser calculadas considerando a comunicação fim-a-fim.
+				<ul>
+					<li>Desde o nó de origem até o nó de destino.</li>
+				</ul></li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Quatro Fontes de Atraso (I)</h1>
+	<div class="slideContent">
+		<center>
+			<img src="imagens/FontesDeAtraso.svg" style="width: 70%;"/>
+
+			<div style="width: 45%; border: 2px solid #A00;">
+				<span class="math inline">\(d_{nodal} = d_{proc} + d_{fila} + d_{trans} + d_{prop}\)</span>
+			</div>
+		</center>
+
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li><span class="alert"><span class="math inline">\(d_{proc}\)</span>: atraso de processamento.</span>
+				<ul>
+					<li>Verificar integridade.</li>
+					<li>Determinar enlace de saída.</li>
+					<li>...</li>
+					<li>Geralmente, &lt; ms</li>
+				</ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li><span class="alert"><span class="math inline">\(d_{fila}\)</span>: atraso de enfileiramento.</span>
+				<ul>
+					<li>Tempo que pacote aguarda a fila para ser transmitido.</li>
+					<li>Depende do nível de congestionamento do roteador.</li>
+				</ul></li>
+			</ul>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Quatro Fontes de Atraso (II)</h1>
+	<div class="slideContent">
+		<center>
+			<img src="imagens/FontesDeAtraso.svg" style="width: 70%;"/>
+
+			<div style="width: 45%; border: 2px solid #A00;">
+				<span class="math inline">\(d_{nodal} = d_{proc} + d_{fila} + d_{trans} + d_{prop}\)</span>
+			</div>
+		</center>
+
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li><span class="alert"><span class="math inline">\(d_{trans}\)</span>: atraso de transmissão.</span>
+				<ul>
+					<li>L: comprimento do pacote (bits).</li>
+					<li>R: capacidade do enlace (b/s).</li>
+					<li><span class="math inline">\(d_{trans} = \frac{L}{R}\)</span>.</li>
+				</ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li><span class="alert"><span class="math inline">\(d_{prop}\)</span>: atraso de propagação.</span>
+				<ul>
+					<li>d: comprimento do meio físico.</li>
+					<li>s: velocidade de propagação do sinal no meio.</li>
+					<li><span class="math inline">\(d_{prop} = \frac{d}{s}\)</span>.</li>
+				</ul></li>
+			</ul>
+		</div>
+		<br>
+		<center>
+			<span class="math inline">\(d_{trans}\)</span> e <span class="math inline">\(d_{prop}\)</span> são <span class="alert">muito diferentes!</span></li>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Atraso de Transmissão <i>vs.</i> Atraso de Propagação (I)</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Analogia de caravana:</li>
+		</ul>
+		<center>
+			<img src="imagens/Caravana.svg" style="width: 70%;"/>
+		</center>
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li>Carros &ldquo;se propagam&rdquo; a 100 Km/h.</li>
+				<li>Cabine de pedágio leva 12 segundos para servir carro.
+				<ul>
+					<li>Tempo de &ldquo;transmissão de um bit&rdquo;.</li>
+					<li>&ldquo;Taxa de transmissão&rdquo;: <span class="math inline">\(\frac{1}{12}\) carros/s.</span></li>
+				</ul></li>
+				<li>Carro &#126; bit, caravana &#126; pacote.</li>
+				<li><span class="alert">Pergunta: quanto tempo até a caravana estar toda enfileirada na segunda cabine?</span></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li>Tempo para &ldquo;colocar&rdquo; toda a caravana na estrada = <span class="math inline">\(12\cdot 10 = 120\)</span> segundos.</li>
+				<li>Tempo para que o último carro se propague da primeira para a segunda cabine = <span class="math inline">\(\frac{100~km}{100~km/h} = 1\)</span> hora.</li>
+				<li><span class="alert">Ou 62 minutos.</span></li>
+			</ul>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Atraso de Transmissão <i>vs.</i> Atraso de Propagação (II)</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Analogia de caravana:</li>
+		</ul>
+		<center>
+			<img src="imagens/Caravana.svg" style="width: 70%;"/>
+		</center>
+		<ul>
+			<li>Suponha que agora carros propaguem a 1000 km/h.</li>
+			<li>E cabines agora levam um minuto para servir cada carro.</li>
+			<li><span class="alert">Pergunta: um ou mais carros chegarão à segunda cabine antes que todos sejam servidos pela primeira?</span>
+			<ul>
+				<li><span class="alert">Sim!</span> Depois de 7 minutos, primeiro carro chega à segunda cabine.
+				<ul>
+					<li>Mas três ainda serão servidos pela primeira.</li>
+				</ul></li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Atraso de Transmissão <i>vs.</i> Atraso de Propagação (III)</h1>
+	<div class="slideContent">
+
+        <div class="column" style="width: 40%;">
+
+            <div style="border: 2px solid #4A4; width: 95%; margin-left: 10px; padding-bottom: 10px;">
+                <center>
+                    <table class="align" style="margin-bottom: 10px;">
+                        <tr>
+                            <td style="width: 80%;">Atraso de Propagação (ms)</td>
+                            <td><input id="AnimacaoPropagacaoVsTransmissaoProp" value="200" size=5 style="font-size: 24px;"></input></td>
+                        </tr>
+                        <tr>
+                            <td>Taxa de Transmissão (kb/s)</td>
+                            <td><input id="AnimacaoPropagacaoVsTransmissaoTaxa" value="120" size=5 style="font-size: 24px;"></input></td>
+                        </tr>
+                        <tr>
+                            <td>Tamanho do Pacote (B)</td>
+                            <td><input id="AnimacaoPropagacaoVsTransmissaoTam" value="1000" size=5 style="font-size: 24px;"></input></td>
+                        </tr>
+                    </table>
+                    <input type="button" onclick="PropagacaoVsTransmissaoStart();" value="Transmitir" style="font-size: 28px; font-family: 'Lora', sans-serif;"></input>
+                </center>
+            </div>
+
+        </div>
+
+        <div class="column" style="width: 60%;">
+            <center>
+                <svg id="AnimacaoPropagacaoVsTransmissao" style="width: 600px; height: 90px;"></svg>
+                <br>
+                <br>
+                <p id="AnimacaoPropagacaoVsTransmissaoTempo">t = 0 ms</p><br>
+            </center>
+            <span id="AnimacaoPropagacaoVsTransmissaoStat1">Último bit é colocado no canal em t = </span><br>
+            <span id="AnimacaoPropagacaoVsTransmissaoStat2">Primeiro bit chega ao receptor em t = </span><br>
+            <span id="AnimacaoPropagacaoVsTransmissaoStat3">Último bit chega ao receptor em t = </span>
+        </div>
+
+		<script src="js/snap.svg-min.js"></script>
+		<script type="text/javascript">
+			Snap.load("imagens/AnimacaoPropagacaoVsTransmissao.svg", function(f) {
+				var s = Snap("#AnimacaoPropagacaoVsTransmissao");
+				s.prepend(f.select("g"));
+			});
+
+            var PropagacaoVsTransmissaoTimer;
+
+            function PropagacaoVsTransmissaoUpdateTime() {
+
+                var time = document.getElementById('AnimacaoPropagacaoVsTransmissaoTempo');
+                var t = parseInt(time.innerHTML.split(' ')[2]);
+
+                t = t + 100;
+                time.innerHTML = "t = " + t + " ms";
+            }
+
+            function PropagacaoVsTransmissaoEnd() {
+
+                var time = document.getElementById('AnimacaoPropagacaoVsTransmissaoTempo');
+                var linkBW_kbps = parseInt(document.getElementById('AnimacaoPropagacaoVsTransmissaoTaxa').value);
+                var propSpeed_ms = parseInt(document.getElementById('AnimacaoPropagacaoVsTransmissaoProp').value);
+                var packetSize_B = parseInt(document.getElementById('AnimacaoPropagacaoVsTransmissaoTam').value);
+
+                window.clearTimeout(PropagacaoVsTransmissaoTimer);
+                document.getElementById('AnimacaoPropagacaoVsTransmissaoStat1').innerHTML = "Último bit é colocado no canal em t = " + (Math.floor((packetSize_B * 8 / linkBW_kbps) * 100) / 100) + " ms";
+                document.getElementById('AnimacaoPropagacaoVsTransmissaoStat2').innerHTML = "Primeiro bit chega ao receptor em t = " + (Math.floor(propSpeed_ms * 100) / 100) + " ms";
+                document.getElementById('AnimacaoPropagacaoVsTransmissaoStat3').innerHTML = "Último bit chega ao receptor em t = " + (Math.floor((packetSize_B * 8 / linkBW_kbps + propSpeed_ms) * 100) / 100) + " ms";
+            }
+
+			function PropagacaoVsTransmissaoStart() {
+
+                // Conversão de unidades:
+                // * Cada s de tempo real corresponde a 100ms de tempo simulado.
+                // * Cada 4 kb/s de capacidade do enlace equivalem a 1px de largura.
+				var s = Snap("#AnimacaoPropagacaoVsTransmissao");
+				var linkBegin = 135; // Em px.
+				var linkEnd = 465; // Em px.
+
+                var link = s.select("#link");
+                var linkBW_kbps = document.getElementById('AnimacaoPropagacaoVsTransmissaoTaxa').value;
+                var linkBW = linkBW_kbps / 4;
+                link.attr({height: 0.606283755227 * (linkBW + 1.32), y: 0.606283755227 * (30.937 - (linkBW - 29.5) / 2) + 102.95758}); // Correção por causa da reescala da figura.
+
+                var propSpeed_ms = document.getElementById('AnimacaoPropagacaoVsTransmissaoProp').value;
+				var propSpeed = (linkEnd - linkBegin) / (propSpeed_ms * 10); // Em px/ms
+
+				var packet = s.rect(135, 28.2 - (linkBW - 29.5) / 2, 0, linkBW);
+                packet.attr({fill: '#33A'})
+				var packetSize_B = document.getElementById('AnimacaoPropagacaoVsTransmissaoTam').value;
+				var packetSize = 8 * packetSize_B / (linkBW_kbps) * 10 * propSpeed;
+
+                document.getElementById('AnimacaoPropagacaoVsTransmissaoTempo').innerHTML = "t = 0 ms";
+                PropagacaoVsTransmissaoTimer = window.setInterval(PropagacaoVsTransmissaoUpdateTime, 1000);
+                document.getElementById('AnimacaoPropagacaoVsTransmissaoStat1').innerHTML = "Último bit é colocado no canal em t = ";
+                document.getElementById('AnimacaoPropagacaoVsTransmissaoStat2').innerHTML = "Primeiro bit chega ao receptor em t = ";
+                document.getElementById('AnimacaoPropagacaoVsTransmissaoStat3').innerHTML = "Último bit chega ao receptor em t = ";
+
+                if (packetSize <= linkEnd - linkBegin) {
+
+                    packet.animate({width: packetSize}, packetSize/propSpeed, null,
+                            function() {
+                                packet.animate({x: linkEnd - packetSize}, (linkEnd - packetSize - linkBegin) / propSpeed, null,
+                                        function() {
+                                            packet.animate({width: 0}, packetSize/propSpeed);
+                                            packet.animate({x: linkEnd}, packetSize/propSpeed);
+                                            window.setTimeout(function(){PropagacaoVsTransmissaoEnd();}, packetSize/propSpeed);
+                                        }
+                                        );
+                            }
+                    );
+                }
+                else {
+
+                    packet.animate({width: linkEnd - linkBegin}, (linkEnd - linkBegin)/propSpeed, null,
+                            function() {
+                                window.setTimeout(function() {
+                                    packet.animate({width: 0}, (linkEnd - linkBegin)/propSpeed);
+                                    packet.animate({x: linkEnd}, (linkEnd - linkBegin)/propSpeed);
+                                    window.setTimeout(function() {PropagacaoVsTransmissaoEnd();}, (linkEnd - linkBegin)/propSpeed);
+                                }, ((packetSize_B * 8 / linkBW_kbps) - propSpeed_ms) * 10);
+                            }
+                    );
+
+                }
+			}
+
+		</script>
+	</div>
+	</section>
+
+	<section>
+	<h1>Perdas de Pacotes</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Filas (ou <i>buffers</i>) têm capacidade finita.</li>
+			<li>Pacote que chega a um <i>buffer</i> causa descarte.
+			<ul>
+				<li>Do pacote recém chegado ou de outro.</li>
+				<li>Também conhecido como <span class="alert">perda</span>.</li>
+			</ul></li>
+			<li>Pacotes perdidos <span class="alert">podem</span> ser retransmitidos.
+			<ul>
+				<li>Pelo nó anterior (menos comum).</li>
+				<li>Pela origem (mais comum).</li>
+			</ul></li>
+		</ul>
+		<center>
+			<img src="imagens/Perdas.svg" style="width: 70%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Vazão (I)</h1>
+	<div class="slideContent">
+		<ul>
+			<li><span class="alert">Vazão:</span> taxa (bits/unidade de tempo) na qual bits são transferidos entre origem e destino.
+			<ul>
+				<li><span class="alert">Instantânea:</span> vazão em um ponto no tempo.</li>
+				<li><span class="alert">Média:</span> taxa considerando um período mais longo.</li>
+			</ul></li>
+			<li>Vazão do fluxo <i>vs.</i> taxa de transmissão do fluxo.
+			<ul>
+				<li>Aplicação pode gerar pacotes a uma taxa alta e vazão ser limitada pela rede.</li>
+				<li>Rede pode ter capacidade alta, mas aplicação pode gerar fluxo com baixa taxa.</li>
+			</ul></li>
+		</ul>
+		<center>
+			<img src="imagens/Vazao1.svg" style="width: 70%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Vazão (II)</h1>
+	<div class="slideContent">
+		<center>
+			<img src="imagens/Vazao2.svg" style="width: 70%;"/>
+			<br>
+			<center>
+				<div class="block" style="width:1100px;">
+					<div class="blockTitle" style="width: 100%;">
+						<p>Enlace de Gargalo</p>
+					</div>
+					<div class="blockBody">
+						Enlace no caminho fim-a-fim que <span class="alert">restringe</span> vazão fim-a-fim.
+					</div>
+				</div>
+			</center>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Cenário de Vazão na Internet</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<br>
+			<br>
+			<br>
+			<br>
+			<ul>
+				<li>Vazão fim-a-fim por conexão: <span class="math inline">\(min\left(R_c, R_s, \frac{R}{10}\right)\)</span></li>
+				<li>Na prática: <span class="math inline">\(R_c\)</span> ou <span class="math inline">\(R_s\)</span> são normalmente os gargalos.</li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50%;">
+			<center>
+				<img src="imagens/VazaoInternet.svg" style="width: 90%;"/>
+			</center>
+		</div>
+	</div>
+	</section>
+
+	<!-- {{{{ dzslides core
+	#
+	#
+	#     __  __  __       .  __   ___  __
+	#    |  \  / /__` |    | |  \ |__  /__`
+	#    |__/ /_ .__/ |___ | |__/ |___ .__/ core :€
+	#
+	#
+	# The following block of code is not supposed to be edited.
+	# But if you want to change the behavior of these slides,
+	# feel free to hack it!
+	#
+	-->
+
+    <!-- More CSS -->
+	<link href='../template/css/slides.css' id="slides" rel='stylesheet' type='text/css'>
+	<link href='../template/css/presentationSpecific2.css' id="presentationSpecific2" rel='stylesheet' type='text/css'>
+
+    <!-- More Javascript -->
+	<script type="text/javascript" src="../template/js/dz.js"></script>
+
+	<!-- More CSS -->
+	<link href='../template/css/notesSpecific.css' id="notesSpecific" rel='stylesheet' type='text/css'>
+	<link href='../template/css/printSpecific.css' id="printSpecific" rel='stylesheet' type='text/css'>
+</body>
+</html>
