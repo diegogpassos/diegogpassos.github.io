@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <!-- Meta info -->
+	<meta charset="utf-8">
+	<meta name="shortauthor" content="Diego Passos"/>
+	<meta name="shorttitle" content="Enlace: Protocolos de Acesso Múltiplo"/>
+	<meta name="shortevent" content="Redes de Computadores"/>
+	<title>Redes de Computadores: Aula 19</title>
+
+    <!-- Math support -->
+	<script type="text/x-mathjax-config">
+		MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+			MathJax.InputJax.TeX.Definitions.number = /^(?:[0-9]+(?:\.[0-9]{3})*(?:\{,\}[0-9]*)*|\{,\}[0-9]+)/
+		});
+	</script>
+	<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+	<!--<script src="../../../../MathJax-2.6-latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>-->
+
+    <!-- Fonts -->
+	<link href='https://fonts.googleapis.com/css?family=Lora:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
+	<!--<link href='../../../../Fonts/Lora/lora.css' rel='stylesheet' type='text/css'>-->
+
+    <!-- CSS -->
+	<link href='../template/css/template.css' id="template" rel='stylesheet' type='text/css'>
+	<link href='../template/css/presentationSpecific.css' id="presentationSpecific" rel='stylesheet' type='text/css'>
+
+    <!-- Javascript -->
+	<script type="text/javascript" src="../template/js/audio.js"></script>
+</head>
+
+<body>
+    <!-- Audio handlers -->
+	<!--<audio src="audio/La.wav" id="La.wav" preload="auto"></audio>-->
+
+    <!-- Title Slide -->
+	<section>
+
+        <div class="slideContent">
+            <h1 class="title">Aula 19 - Camada de Enlace: Protocolos de Acesso Múltiplo</h1>
+            <h2 class="author">Diego Passos</h2>
+            <h4 class="institution">Universidade Federal Fluminense</h4>
+            <h3 class="date">Redes de Computadores</h3>
+        </div>
+
+	</section>
+
+    <!-- Content slides -->
+<!--
+	<section>
+	<h1>Na Última Aula...</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 45%;">
+			<ul>
+				<li>Responsabilidade da camada de enlace:
+				<ul>
+					<li>Transportar pacotes entre nós <b>diretamente conectados</b>.</li>
+				</ul></li>
+				<li>Serviços (potencialmente) providos pela camada de enlace:
+				<ul>
+					<li>Encapsulamento em <b>quadros</b>.</li>
+					<li>Gerência do <b>acesso ao meio</b> de transmissão</li>
+					<li><b>Endereçamento</b>.</li>
+					<li><b>Entrega confiável</b>.</li>
+					<li><b>Detecção de erros</b> (e, possivelmente, <b>correção</b>).</li>
+					<li><b>Controle de fluxo</b>.</li>
+				</ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 55%;">
+			<ul>
+				<li>Métodos de detecção/correção de erros:
+				<ul>
+					<li>Baseados na inserção de <b>bits de redundância</b>.</li>
+					<li>São probabilísticos (<i>i.e.</i>, <b>podem falhar</b>).</li>
+					<li>Quanto mais redundância, menor probabilidade de falha.
+					<ul>
+						<li>Mas maior o <i>overhead</i>.</li>
+					</ul></li>
+					<li>Vários tipos, com diferentes capacidades:
+					<ul>
+						<li>Detecção apenas: <i>e.g.</i>, bit de paridade, checksum, CRC.</li>
+						<li>Detecção e correção: <i>e.g.</i>, paridade bidimensional.</li>
+					</ul></li>
+					<li>Capacidade de correção de erros através de bits redundantes:
+					<ul>
+						<li><b>FEC</b>: <i>Forward Error Correction</i>.</li>
+					</ul></li>
+				</ul></li>
+			</ul>
+		</div>
+	</div>
+	</section>
+-->
+	   <section>
+		   <h1>Enlaces (e Protocolos) de Acesso Múltiplo</h1>
+		   <div class="slideContent">
+
+		  <ul>
+			 <li> Dois tipos de &ldquo;enlaces&rdquo;:
+			 <ul>
+				<li> Ponto-a-ponto.
+				<ul>
+				    <li> PPP para acesso discado.</li>
+				    <li> Link ponto-a-ponto entre <i>switch</i> e <i>host</i> Ethernet.</li>
+				</ul>
+	   </li>
+				<li> <b>Difusão/Broadcast (cabo ou meio compartilhado).</b>
+				<ul>
+				    <li> Ethernet original.</li>
+				    <li> <i>Upload</i> em redes HFC.</li>
+				    <li> 802.11 (Wi-Fi).</li>
+				</ul>
+	   </li>
+			 </ul>
+	   </li>
+		  </ul>
+
+		  <center>
+	   <img src="imagens/ProtocolosCompartilhados_opt.svg" style="width: 80% ;"/>
+		  </center>
+		   </div>
+	   </section>
+
+	   <section>
+		   <h1>Protocolos de Acesso Múltiplo</h1>
+		   <div class="slideContent">
+
+		  <ul>
+			 <li> Único canal de comunicação em difusão.</li>
+			 <li> Transmissões simultâneas por dois ou mais nós &rArr; interferência.
+			 <ul>
+				<li> <b>Colisão</b>, quando nó recebe dois sinais misturados.</li>
+			 </ul>
+	   </li>
+		  </ul>
+		  <center>
+		  <div class="block" style="width:1000px;">
+		   <div class="blockTitle" style="width: 100%;">
+			   <p>Protocolo de Acesso Múltiplo</p>
+		   </div>
+		   <div class="blockBody">
+			 <ul>
+				<li> Algoritmo (possivelmente distribuído) que define como nós compartilham o meio de transmissão.
+				<ul>
+				    <li> <i>i.e.</i>, quando cada nó pode transmitir.</li>
+				</ul>
+	   </li>
+				<li> <b>Normalmente</b>, comunicação usada para a coordenação usa o próprio canal compartilhado.
+				<ul>
+				    <li> Sem comunicação fora-de-banda.</li>
+				</ul>
+	   </li>
+			 </ul>
+		   </div>
+	   </div>
+		  </center>
+		   </div>
+	   </section>
+
+	   <section>
+		   <h1>Protocolo de Acesso Múltiplo Ideal</h1>
+		   <div class="slideContent">
+
+		  <ul>
+			 <li> <b>Dado</b>: canal de comunicação compartilhado com capacidade de <span class="math inline">\(R\)</span>&nbsp;b/s.</li>
+			 <li> <b>Características desejadas</b>:
+			 <ul>
+				<li> Quando um nó quer transmitir, pode enviar dados à taxa <span class="math inline">\(R\)</span>.</li>
+				<li> Quando <span class="math inline">\(M\)</span> nós querem transmitir, cada um obtém uma taxa <b>média</b> de <span class="math inline">\(\frac{R}{M}\)</span>.</li>
+				<li> Totalmente descentralizado.
+				<ul>
+				    <li> Não há nó especial para coordenação.</li>
+				    <li> Não necessita de sincronização entre nós.</li>
+				</ul>
+	   </li>
+				<li> Simples.</li>
+			 </ul>
+	   </li>
+		  </ul>
+		   </div>
+	   </section>
+
+	   <section>
+		   <h1>Taxinomia de Protocolos MAC: Três Grandes Categorias</h1>
+		   <div class="slideContent">
+
+		  <center>
+		  <div class="block" style="width:1000px;">
+		   <div class="blockTitle" style="width: 100%;">
+			   <p>Particionamento de Canal</p>
+		   </div>
+		   <div class="blockBody">
+			 <ul>
+				<li> Divide o canal em &ldquo;pedaços&rdquo; menores.
+				<ul>
+				    <li> <i>Slots</i> de tempo, frequências diferentes, códigos diferentes.</li>
+				</ul>
+	   </li>
+				<li> Pedaços são alocados para uso exclusivo dos nós.</li>
+			 </ul>
+		   </div>
+	   </div>
+	   <br>
+		  <div class="block" style="width:1000px;">
+		   <div class="blockTitle" style="width: 100%;">
+			   <p>Acesso Aleatório</p>
+		   </div>
+		   <div class="blockBody">
+			 <ul>
+				<li> Canal não é dividido, colisões podem ocorrer.</li>
+				<li> Utilizam-se métodos para &ldquo;recuperação&rdquo; de colisões.</li>
+			 </ul>
+		   </div>
+	   </div>
+
+	   <br>
+		  <div class="block" style="width:1000px;">
+		   <div class="blockTitle" style="width: 100%;">
+			   <p>Acesso Alternado (&ldquo;Taking-turns&rdquo;)</p>
+		   </div>
+		   <div class="blockBody">
+			 <ul>
+			 	<li> Ou &ldquo;revezamento&rdquo;.</li>
+				<li> Nós se alternam no acesso ao meio.</li>
+				<li> Nós com mais dados podem usar o meio por mais tempo.</li>
+			 </ul>
+		   </div>
+	   </div>
+		  </center>
+		   </div>
+	   </section>
+
+	   <section>
+		   <h1>Protocolos de Particionamento de Canal: TDMA</h1>
+		   <div class="slideContent">
+
+		  <ul>
+			 <li> <i>Time Division Multiple Access</i>.
+			 <ul>
+				<li> Acesso ao canal feito em &ldquo;rodadas&rdquo;.</li>
+				<li> Cada estação ganha um <i>slot</i> de duração fixa a cada rodada.
+				<ul>
+				    <li> Duração suficiente para transmissão de quadro.</li>
+				</ul>
+	   </li>
+				<li> Em <i>Slots</i> não usados, canal ocioso.</li>
+				<li> Exemplo com 6 estações:
+				<ul>
+				    <li> 1, 3 e 4 têm quadros a transmitir.</li>
+				    <li> 2, 5 e 6 não usam seus <i>slots</i>.</li>
+				</ul>
+	   </li>
+			 </ul>
+	   </li>
+		  </ul>
+
+		  <center>
+	   <img src="imagens/tdma_opt.svg" style="width: 60% ;"/>
+		  </center>
+		   </div>
+	   </section>
+
+	   <section>
+		   <h1>Protocolos de Particionamento de Canal: FDMA</h1>
+		   <div class="slideContent">
+
+		  <ul>
+			 <li> <i>Frequency Division Multiple Access</i>.
+			 <ul>
+				<li> Canal dividido em bandas de frequência.</li>
+				<li> Cada estação ganha uma frequência fixa.
+				<ul>
+				    <li> Estações podem transmitir simultaneamente, desde que em frequências diferentes.</li>
+				</ul>
+	   </li>
+				<li> Se uma estação não utiliza sua frequência durante um intervalo, esta fica ociosa.</li>
+				<li> Exemplo com 6 estações:
+				<ul>
+				    <li> 1, 3 e 4 têm quadros a transmitir.</li>
+				    <li> 2, 5 e 6 não usam suas frequências.</li>
+				</ul>
+	   </li>
+			 </ul>
+	   </li>
+		  </ul>
+
+		  <center>
+	   <img src="imagens/fdma_opt.svg" style="width: 60% ;"/>
+		  </center>
+		   </div>
+	   </section>
+
+	   <section>
+		   <h1>Protocolos de Acesso Aleatório</h1>
+		   <div class="slideContent">
+
+		  <ul>
+			 <li> Quando nó tem quadros a transmitir, usa o canal &ldquo;inteiro&rdquo;.</li>
+			 <li> Não há coordenação prévia entre nós.</li>
+			 <li> Se dois ou mais nós transmitem ao mesmo tempo, há <b>colisão</b>.</li>
+			 <li> Um protocolo MAC de acesso aleatório especifica:
+			 <ul>
+				<li> Como determinar ocorrência de colisões.</li>
+				<li> Como se recuperar de colisões.
+				<ul>
+				    <li> <i>e.g.</i>, via retransmissão do quadro.</li>
+				</ul>
+	   </li>
+			 </ul>
+	   </li>
+			 <li> Exemplos de protocolos de acesso aleatório:
+			 <ul>
+				<li> Slotted ALOHA.</li>
+				<li> ALOHA.</li>
+				<li> CSMA, CSMA/CD, CSMA/CA.</li>
+			 </ul>
+	   </li>
+		  </ul>
+		   </div>
+	   </section>
+
+	   <section>
+		   <h1>Slotted ALOHA (I)</h1>
+		   <div class="slideContent">
+
+
+	   <div class="column" style="width: 50% ;">
+				<ul>
+				    <li> Hipóteses:
+				    <ul>
+					   <li> Todos os quadros têm mesmo tamanho.</li>
+					   <li> Tempo é discretizado em <i>slots</i> de duração fixa.
+					   <ul>
+						  <li> Suficiente para a transmissão de um quadro.</li>
+					   </ul>
+	   </li>
+					   <li> Nós só começam a transmitir no início de <i>slots</i>.</li>
+					   <li> Nós estão sincronizados.
+					   <ul>
+						  <li> <i>i.e.</i>, sabem quando começa e termina um <i>slot</i>.</li>
+					   </ul>
+	   </li>
+					   <li> Se dois ou mais nós transmitem em um <i>slot</i>, todos detectam a colisão.</li>
+				    </ul>
+	   </li>
+				</ul>
+			 </div>
+	   <div class="column" style="width: 50% ;">
+				<ul>
+				    <li> Operação:
+				    <ul>
+					   <li> Quando nó possui quadro, transmite no início do próximo <i>slot</i>.</li>
+					   <li> <b>Se não houve colisão</b>, nó pode enviar novo quadro no próximo <i>slot</i>.</li>
+					   <li> <b>Se houve colisão</b>, nó retransmite o quadro nos <i>slots</i> subsequentes até o sucesso.
+					   <ul>
+						  <li> A cada novo <i>slot</i>, nó tenta retransmissão com probabilidade <span class="math inline">\(p\)</span>.</li>
+					   </ul>
+	   </li>
+				    </ul>
+	   </li>
+				</ul>
+			 </div>
+
+		   </div>
+	   </section>
+
+	   <section>
+		   <h1>Slotted ALOHA (II)</h1>
+		   <div class="slideContent">
+
+		  <center>
+	   <img src="imagens/slottedAloha_opt.svg" style="width: 60% ;"/>
+		  </center>
+
+
+	   <div class="column" style="width: 50% ;">
+				<ul>
+				    <li> Pontos positivos:
+				    <ul>
+					   <li> Com um único nó ativo, este pode usar toda a capacidade do canal.</li>
+					   <li> Altamente decentralizado: requer apenas sincronização de <i>slots</i>.</li>
+					   <li> Simples.</li>
+				    </ul>
+	   </li>
+				</ul>
+			 </div>
+	   <div class="column" style="width: 50% ;">
+				<ul>
+				    <li> Pontos Negativos:
+				    <ul>
+					   <li> Colisões, desperdiçando <i>slots</i>.</li>
+					   <li> Se nós podem detectar colisões em menos tempo que a duração de um <i>slot</i>, retransmissão poderia ser feita antes.</li>
+					   <li> Requer sincronização de relógio.</li>
+				    </ul>
+	   </li>
+				</ul>
+			 </div>
+
+
+		   </div>
+	   </section>
+
+	   <section>
+		   <h1>Slotted ALOHA: Eficiência (I)</h1>
+		   <div class="slideContent">
+
+
+	   <div class="column" style="width: 50% ;">
+				<ul>
+				    <li> <b>Eficiência</b>: fração de <i>slots</i> bem sucedidos <b>a longo prazo</b>.
+			 <ul>
+				<li> Considerando muitos nós, todos com muitos quadros a enviar.</li>
+			 </ul>
+	   </li>
+				    <li> Suponha <span class="math inline">\(N\)</span> nós com <i>backlog</i> infinito.
+				    <ul>
+					   <li> <i>i.e.</i>, sempre há quadros a enviar.</li>
+				    </ul>
+	   </li>
+				    <li> Cada nó tenta transmissão em um <i>slot</i> com probabilidade <span class="math inline">\(p\)</span>.</li>
+				    <li> Sucesso ocorre quando apenas um nó tenta transmitir no <i>slot</i>:</li>
+				    <br><center><span class="math">\(P(\mbox{Sucesso}) = p(1-p)^{N-1}\)</span><center>
+				</ul>
+			 </div>
+	   <div class="column" style="width: 50% ;">
+				<ul>
+				    <li> Mas se há <span class="math inline">\(N\)</span> nós:</li>
+					   <br><center><span class="math">\(\boxed{Efic(p) = N\cdot p(1-p)^{N-1}}\)</span><center>
+				</ul>
+				<center>
+	   <img src="imagens/aloha_effic_param.png" style="width: 90% ;"/>
+				</center>
+			 </div>
+
+
+		   </div>
+	   </section>
+
+	   <section>
+		   <h1>Slotted ALOHA: Eficiência (II)</h1>
+		   <div class="slideContent">
+
+
+	   <div class="column" style="width: 50% ;">
+				<ul>
+				    <li> Eficiência máxima depende de <span class="math inline">\(p\)</span>.</li>
+				    <li> Valor ótimo de <span class="math inline">\(p\)</span> depende de N.
+				    <ul>
+					   <li> Quanto mais nós, menor o <span class="math inline">\(p\)</span> ideal.</li>
+					   <li> Faz sentido?</li>
+				    </ul>
+	   </li>
+				    <li> Qual é o <span class="math inline">\(p\)</span> ideal para um dado <span class="math inline">\(N\)</span>?
+				    <ul>
+					   <li> Máximo ocorre quando <span class="math inline">\(Efic^\prime(p) = 0\)</span>:</li>
+				    </ul>
+	   </li>
+				</ul>
+				<span class="math">\begin{eqnarray*}
+					0 & = & N(1-p)^{N-1}\\
+					  & - & N\cdot(N-1)\cdot p(1-p)^{N-2}\\
+					0 & = & (1-p) - (N-1)p\\
+					p & = & \frac{1}{N}\\
+				\end{eqnarray*}</span>
+			 </div>
+	   <div class="column" style="width: 50% ;">
+				<ul>
+				    <li> Logo:</li>
+				    <center><span class="math">\(\boxed{MaxEfic(N) = \left(1 - \frac{1}{N}\right)^{N-1}}\)</span></center>
+				</ul>
+				<center>
+	   <img src="imagens/aloha_effic_max.png" style="width: 90% ;"/>
+				</center>
+			 </div>
+
+		   </div>
+	   </section>
+
+	   <section>
+		   <h1>ALOHA Puro (Unslotted)</h1>
+		   <div class="slideContent">
+
+		  <ul>
+			 <li> Unslotted Aloha: mais simples, sem sincronização.
+			 <ul>
+				<li> Quando quadro chega, transmite imediatamente.</li>
+				<li> Em caso de colisão, nós aguardam tempo aleatório antes de tentar novamente.</li>
+			 </ul>
+	   </li>
+			 <li> Probabilidade de colisão aumenta.
+			 <ul>
+				<li> Quadro enviado em <span class="math inline">\(t_0\)</span> colide com quadros enviados em <span class="math inline">\([t_0 - 1, t_0 + 1]\)</span>.</li>
+			 </ul>
+	   </li>
+		  </ul>
+
+
+	   <div class="column" style="width: 55% ;">
+				<center>
+	   <img src="imagens/unslottedAloha.png" style="width: 90% ;"/>
+				</center>
+			 </div>
+	   <div class="column" style="width: 45% ;">
+				<ul>
+				    <li> Resultado: <b>eficiência é ainda mais baixa.</b></li>
+				    <li> No máximo 18%!</li>
+				</ul>
+			 </div>
+
+		   </div>
+	   </section>
+
+	   <section>
+		   <h1>CSMA</h1>
+		   <div class="slideContent">
+
+
+	   <div class="column" style="width: 50% ;">
+		  <ul>
+			 <li> <i>Carrier Sense Multiple Access</i>: ouça antes de transmitir.
+			 <ul>
+				<li> Se o meio está ocioso, transmita o quadro inteiro.</li>
+				<li> Se o meio está ocupado, transmita mais tarde.</li>
+			 </ul>
+	   </li>
+			 <li> Analogia da comunicação humana:
+			 <ul>
+				<li> Não interrompa os outros.</li>
+			 </ul>
+	   </li>
+			 <li> Evita totalmente as colisões?
+			 <ul>
+				<li> Não! O atraso de propagação pode fazer um nó não perceber uma transmissão.</li>
+				<li> Em caso de colisão, todo o quadro é perdido.</li>
+			 </ul>
+	   </li>
+		  </ul>
+			 </div>
+	   <div class="column" style="width: 50% ;">
+	   <img src="imagens/CSMACollision.png" style="width: 90% ;"/>
+			 </div>
+
+		   </div>
+	   </section>
+
+	   <section>
+		   <h1>CSMA/CD</h1>
+		   <div class="slideContent">
+
+
+		  <div style="width: 100%; height: 380px;">
+	   <div class="column" style="width: 60% ;">
+				<ul>
+				    <li> <i>Carrier Sense Multiple Access with Collision Detection</i>.
+				    <ul>
+					   <li> Mesmo princípio básico do CSMA: ouvir antes de transmitir.</li>
+					   <li> Durante a transmissão, nó checa por colisões.
+					   <ul>
+						  <li> Detecção rápida.</li>
+					   </ul>
+	   </li>
+					   <li> Em caso de colisão, transmissão é abortada.
+					   <ul>
+						  <li> Reduz desperdício do canal.</li>
+					   </ul>
+	   </li>
+					   <li> Analogia de comunicação humana: interlocutor educado.</li>
+				    </ul>
+	   </li>
+				</ul>
+			 </div>
+	   <div class="column" style="width: 40% ;">
+	   <img src="imagens/ColisaoCSMACD2.png" style="width: 95% ;"/>
+			 </div>
+
+		</div>
+		  <ul>
+			 <li> Detecção de colisões.
+			 <ul>
+				<li> Simples em redes cabeadas: medir intensidade do sinal, comparar sinal transmitido e recebido.</li>
+				<li> Difícil em redes sem fio: potência do sinal transmitido é muito maior que do sinal recebido.</li>
+			 </ul>
+	   </li>
+		  </ul>
+		   </div>
+	   </section>
+
+	   <section>
+		   <h1>O Algoritmo do CSMA/CD no Ethernet</h1>
+		   <div class="slideContent">
+
+		  <ol>
+			 <li> Interface recebe pacote da camada de rede, cria quadro.</li>
+			 <li> Se o canal está livre, começa a transmissão do quadro.
+			 <ul>
+				<li> Caso contrário, aguarda canal se tornar ocioso.</li>
+				<li> E então transmite.</li>
+			 </ul>
+	   </li>
+			 <li> Se a transmissão é completada sem que se tenha detectado uma colisão, processo termina.</li>
+			 <li> Se durante a transmissão uma colisão é detectada, transmissão é abortada e <b>interface envia sinal de jamming</b>.
+			 <ul>
+				<li> Por quê?</li>
+			 </ul>
+	   </li>
+			 <li> Depois de abortar, interface entra em <b><i>backoff</i> binário (exponencial)</b>.
+			 <ul>
+				<li> Após a <i>n-ésima</i> colisão, sorteia valor inteiro <span class="math inline">\(k\)</span> no intervalo <span class="math inline">\([0, 2^n - 1]\)</span>.</li>
+				<li> Aguarda um tempo igual a <span class="math inline">\(k\cdot 512\)</span> <i>durações de bit</i> e volta ao passo 2.</li>
+				<li> Mais colisões <span class="math inline">\(\implies\)</span> maiores <i>backoffs</i>.</li>
+			 </ul>
+	   </li>
+		  </ol>
+		   </div>
+	   </section>
+
+	   <section>
+		   <h1>CSMA/CD: Eficiência</h1>
+		   <div class="slideContent">
+
+
+	   <div class="column" style="width: 50% ;">
+				<ul>
+				    <li> <span class="math inline">\(t_{prop}\)</span>: tempo máximo de propagação entre dois nós.</li>
+				    <li> <span class="math inline">\(t_{trans}\)</span>: tempo de transmissão de quadro.</li>
+				</ul>
+			  <center>
+				<span class="math">\(\boxed{\mbox{eficiência} = \frac{1}{1+\frac{5t_{prop}}{t_{trans}}}}\)</span>
+			  </center>
+				<ul>
+				    <li> Eficiência tende a 1 se:
+				    <ul>
+					   <li> <span class="math inline">\(t_{prop}\)</span> tende a 0; ou</li>
+					   <li> <span class="math inline">\(t_{trans}\)</span> tende a infinito.</li>
+				    </ul>
+	   </li>
+				    <li> Melhor que o Aloha.
+				    <ul>
+					   <li> Além de simples, barato e decentralizado.</li>
+				    </ul>
+	   </li>
+				</ul>
+			 </div>
+	   <div class="column" style="width: 50% ;">
+				<center>
+	   <img src="imagens/CSMACDEffic.png" style="width: 90% ;"/>
+				</center>
+			 </div>
+
+		   </div>
+	   </section>
+
+	   <section>
+		   <h1>Protocolos de Acesso Alternado</h1>
+		   <div class="slideContent">
+
+		  <ul>
+			 <li> <b>Protocolos de Particionamento de Canal</b>:
+			 <ul>
+				<li> Compartilhamento é <b>eficiente</b> e <b>justo</b> sob <b>altas cargas</b>.</li>
+				<li> Mas <b>ineficiente</b> para <b>cargas baixas</b>.
+				<ul>
+				    <li> Atraso no acesso ao canal.</li>
+				    <li> Banda alocada de apenas <span class="math inline">\(1/N\)</span>, mesmo com um único nó ativo.</li>
+				</ul>
+	   </li>
+			 </ul>
+	   </li>
+			 <li> <b>Protocolos de Acesso Aleatório</b>:
+			 <ul>
+				<li> Eficientes sob <b>baixa carga</b>.</li>
+				<li> Mas sob <b>alta carga</b>: <b>colisões</b>.</li>
+			 </ul>
+	   </li>
+			 <li> <b>Protocolos de Acesso Alternado</b>:
+			 <ul>
+				<li> Tentativa: combinar o melhor dos dois mundos!</li>
+			 </ul>
+	   </li>
+		  </ul>
+		   </div>
+	   </section>
+
+	   <section>
+		   <h1>Acesso Alternado: Polling</h1>
+		   <div class="slideContent">
+
+
+	   <div class="column" style="width: 50% ;">
+				<ul>
+				    <li> Nó mestre &ldquo;convida&rdquo; nós subordinados para transmitir alternadamente.</li>
+				    <li> Normalmente usado com dispositivos subordinados &ldquo;sem inteligência&rdquo;.</li>
+				</ul>
+			   <br>
+				<center>
+	   <img src="imagens/polling2.svg" style="width: 90% ;"/>
+				</center>
+			 </div>
+	   <div class="column" style="width: 40% ;">
+				<center>
+	   <img src="imagens/polling_opt.svg" style="width: 90% ;"/>
+				</center>
+			  <ul>
+				    <li> Potenciais problemas:
+				    <ul>
+					   <li> <i>Overhead</i> do <i>polling</i>.</li>
+					   <li> Latência.</li>
+					   <li> Ponto único de falha.</li>
+				    </ul>
+	   </li>
+			  </ul>
+
+			 </div>
+
+		   </div>
+	   </section>
+
+	   <section>
+		   <h1>Acesso Alternado: Passagem de Token</h1>
+		   <div class="slideContent">
+
+
+	   <div class="column" style="width: 50% ;">
+			   <br>
+				<ul>
+				    <li> Token: representa o controle do canal.
+				    <ul>
+					   <li> Nó com token tem direito de transmitir.</li>
+					   <li> Após uso (ou não), nó repassa o token.
+					   <ul>
+						  <li> Mensagem ou sinal transmitido no próprio canal.</li>
+					   </ul>
+	   </li>
+				    </ul>
+	   </li>
+				    <li> Potenciais problemas:
+				    <ul>
+					   <li> <i>Overhead</i> de passagem do token.</li>
+					   <li> Latência.</li>
+					   <li> Ponto único de falha.
+					   <ul>
+						  <li> O token.</li>
+					   </ul>
+	   </li>
+				    </ul>
+	   </li>
+				</ul>
+			 </div>
+	   <div class="column" style="width: 40% ;">
+				<center>
+	   <img src="imagens/tokenPassing_opt.svg" style="width: 90% ;"/>
+				</center>
+			 </div>
+
+		   </div>
+	   </section>
+
+	   <section>
+		   <h1>DOCSIS (I)</h1>
+		   <div class="slideContent">
+
+		  <ul>
+			 <li> <i>Data Over Cable Service Interface Specification</i>.</li>
+		  </ul>
+
+		  <center>
+	   <img src="imagens/Cable1_opt.svg" style="width: 70% ;"/>
+		  </center>
+
+		  <ul>
+			 <li> <b>Múltiplos canais</b> (compartilhados) de <i>downlink</i> (40&nbsp;Mb/s).
+			 <ul>
+				<li> Todos usados pelo CMTS (<i>Cable Modem Termination System</i>).</li>
+			 </ul>
+	   </li>
+			 <li> <b>Múltiplos canais</b> de <i>uplink</i> (30&nbsp;Mb/s).
+			 <ul>
+				<li> <b>Acesso múltiplo:</b> todos os usuários competem por <i>slots</i> em certos canais de <i>uplink</i>.</li>
+			 </ul>
+	   </li>
+		  </ul>
+		   </div>
+	   </section>
+
+	   <section>
+		   <h1>DOCSIS (II)</h1>
+		   <div class="slideContent">
+
+		  <center>
+	   <img src="imagens/Cable2_opt.svg" style="width: 70% ;"/>
+		  </center>
+
+		  <ul>
+			 <li> FDM no <i>uplink</i> e <i>downlink</i>.</li>
+			 <li> TDM em canais de <i>uplink</i>:
+			 <ul>
+				<li> Alguns <i>slots</i> atribuídos, outros para contenção.
+				<ul>
+				    <li> Atribuição especificada por um <i>MAP frame</i>.</li>
+				</ul>
+	   </li>
+			 </ul>
+	   </li>
+		  </ul>
+		   </div>
+	   </section>
+
+	   <section>
+		   <h1>Resumo dos Protocolos de Acesso ao Meio</h1>
+		   <div class="slideContent">
+
+		  <ul>
+			 <li> <b>Particionamento de canal</b>, por tempo, frequência ou código.
+			 <ul>
+				<li> TDMA, FDMA, CDMA.</li>
+			 </ul>
+	   </li>
+			 <li> <b>Acesso aleatório</b>.
+			 <ul>
+				<li> ALOHA, S&mdash;ALOHA, CSMA, CSMA/CD.</li>
+				<li> Carrier Sense (Detecção de Portadora): fácil em certas tecnologias (cabeadas), difícil em outras (sem fio).</li>
+				<li> CSMA/CD usado no Ethernet.</li>
+				<li> CSMA/CA usado no 802.11 (Wi-Fi).</li>
+			 </ul>
+	   </li>
+			 <li> <b>Acesso alternado</b>.
+			 <ul>
+				<li> Polling, passagem de token.</li>
+				<li> Bluetooth, FDDI, Token Ring.</li>
+			 </ul>
+	   </li>
+		  </ul>
+		   </div>
+	   </section>
+<!--
+	<section>
+	<h1>Resumo da Aula...</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 40%;">
+			<ul>
+				<li>Enlaces ponto-a-ponto <i>vs.</i> compartilhados.
+				<ul>
+					<li>Ou de difusão ou <i>broadcast.</i></li>
+				</ul></li>
+				<li>Transmissões simultâneas em enlace compartilhado podem gerar <b>colisões</b>.
+				<ul>
+					<li>Sinais se &ldquo;misturam&rdquo; no receptor.</li>
+					<li>Impossível entender mensagens.</li>
+				</ul></li>
+				<li>Protocolo de acesso múltiplo: <b>coordena acesso a meio</b> compartilhado.
+				<ul>
+					<li><i>i.e.</i>, determina <b>quando</b> nó pode transmitir.</li>
+				</ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 60%;">
+			<ul>
+				<li>Três tipos básicos:
+				<ul>
+					<li><b>Particionamento de canal</b>: <i>e.g.</i>, TDMA, FDMA.
+					<ul>
+						<li>Cada nó ganha &ldquo;pedaço&rdquo; isolado do canal.</li>
+						<li>Recurso não utilizado por nó fica <b>ocioso</b>.</li>
+					</ul></li>
+					<li><b>Acesso alternado</b>: <i>e.g.</i>, passagem de token.
+					<ul>
+						<li>Nós recebem oportunidade de usar o meio.</li>
+						<li>Oferta de oportunidade de transmissão para nó reduz eficiência.</li>
+					</ul></li>
+					<li><b>Acesso aleatório</b>: <i>e.g.</i>, Aloha, CSMA/CD.
+					<ul>
+						<li>Sem divisão, nós acessam quando julgam poderem.</li>
+						<li><b>Colisões podem ocorrer, devem ser tratadas.</b></li>
+						<li>Colisões reduzem eficiência.</li>
+						<li>Quanto <b>mais nós, mais provável</b> é a ocorrência de colisões.</li>
+					</ul></li>
+				</ul></li>
+			</ul>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Leitura e Exercícios Sugeridos</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Protocolos de acesso múltiplo:
+			<ul>
+				<li>Páginas 328 a 337 do Kurose (Seção 5.3 até Subseção 5.3.3, inclusive).</li>
+				<li>Exercícios de fixação 4, 5 e 7 do capítulo 5 do Kurose.</li>
+				<li>Problemas 10 (itens a e b) e 13 do capítulo 5 do Kurose.</li>
+			</ul></li>
+			<li>CSMA/CD, especificamente:
+			<ul>
+				<li>Páginas 346 a 349 do Kurose (Subseção 5.5.2).</li>
+				<li>Exercício de fixação 14 do capítulo 5 do Kurose.</li>
+				<li>Problemas 17, 18, 19, 20, 21 e 26 do capítulo 5 do Kurose.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Próxima Aula...</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Mais sobre camada de enlace.</li>
+			<li>Três tópicos:
+			<ul>
+				<li>Endereçamento.
+				<ul>
+					<li>Por que outro endereçamento?</li>
+					<li>Diferenças para o endereçamento IP.</li>
+				</ul></li>
+				<li>ARP.
+				<ul>
+					<li>Como fazer endereçamentos co-existirem?</li>
+					<li>Como o protocolo funciona?</li>
+				</ul></li>
+				<li>Ethernet.
+				<ul>
+					<li>O padrão para LANs.</li>
+					<li>Histórico, características, funcionamento, ...</li>
+				</ul></li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+-->
+	<!-- {{{{ dzslides core
+	#
+	#
+	#     __  __  __       .  __   ___  __
+	#    |  \  / /__` |    | |  \ |__  /__`
+	#    |__/ /_ .__/ |___ | |__/ |___ .__/ core :€
+	#
+	#
+	# The following block of code is not supposed to be edited.
+	# But if you want to change the behavior of these slides,
+	# feel free to hack it!
+	#
+	-->
+
+    <!-- More CSS -->
+	<link href='../template/css/slides.css' id="slides" rel='stylesheet' type='text/css'>
+	<link href='../template/css/presentationSpecific2.css' id="presentationSpecific2" rel='stylesheet' type='text/css'>
+
+    <!-- More Javascript -->
+	<script type="text/javascript" src="../template/js/dz.js"></script>
+
+	<!-- More CSS -->
+	<link href='../template/css/notesSpecific.css' id="notesSpecific" rel='stylesheet' type='text/css'>
+	<link href='../template/css/printSpecific.css' id="printSpecific" rel='stylesheet' type='text/css'>
+</body>
+</html>

@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <!-- Meta info -->
+	<meta charset="utf-8">
+	<meta name="shortauthor" content="Diego Passos"/>
+	<meta name="shorttitle" content="Enlace: Endereçamento, ARP, Ethernet"/>
+	<meta name="shortevent" content="Redes de Computadores"/>
+	<title>Redes de Computadores: Aula 20</title>
+
+    <!-- Math support -->
+	<script type="text/x-mathjax-config">
+		MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+			MathJax.InputJax.TeX.Definitions.number = /^(?:[0-9]+(?:\.[0-9]{3})*(?:\{,\}[0-9]*)*|\{,\}[0-9]+)/
+		});
+	</script>
+	<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+	<!--<script src="../../../../MathJax-2.6-latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>-->
+
+    <!-- Fonts -->
+	<link href='https://fonts.googleapis.com/css?family=Lora:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
+	<!--<link href='../../../../Fonts/Lora/lora.css' rel='stylesheet' type='text/css'>-->
+
+    <!-- CSS -->
+	<link href='../template/css/template.css' id="template" rel='stylesheet' type='text/css'>
+	<link href='../template/css/presentationSpecific.css' id="presentationSpecific" rel='stylesheet' type='text/css'>
+
+    <!-- Javascript -->
+	<script type="text/javascript" src="../template/js/audio.js"></script>
+</head>
+
+<body>
+    <!-- Audio handlers -->
+	<!--<audio src="audio/La.wav" id="La.wav" preload="auto"></audio>-->
+
+    <!-- Title Slide -->
+	<section>
+
+        <div class="slideContent">
+            <h1 class="title">Aula 20 - Camada de Enlace: Endereçamento, ARP, Ethernet</h1>
+            <h2 class="author">Diego Passos</h2>
+            <h4 class="institution">Universidade Federal Fluminense</h4>
+            <h3 class="date">Redes de Computadores</h3>
+        </div>
+
+	</section>
+
+    <!-- Content slides -->
+<!--
+	<section>
+	<h1>Na Última Aula...</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 45%;">
+			<ul>
+				<li>Enlace ponto-a-ponto: conecta dois nós diretamente.
+				<ul>
+					<li>Se for <b>full-duplex</b>, não há risco de <b>colisões</b>.</li>
+				</ul></li>
+				<li>Enlace compartilhado: múltiplos nós concorrem pelo uso.
+				<ul>
+					<li>Transmissões simultâneas levam a <b>colisões</b>.</li>
+					<li>Quadros são perdidos.</li>
+				</ul></li>
+				<li>Solução para uso de enlaces compartilhados: <b>protocolos de acesso múltiplo</b>.
+				<ul>
+					<li><b>Coordenam</b> uso do enlace pelos nós.</li>
+					<li><b>Quando</b> cada nó pode transmitir?</li>
+				</ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 55%;">
+			<ul>
+				<li>Três tipos básicos:
+				<ul>
+					<li><b>Particionamento de canal</b>: canal é &ldquo;quebrado&rdquo; em &ldquo;pedaços&rdquo; isolados.
+					<ul>
+						<li>Podem ser usados simultaneamente sem colisão.</li>
+					</ul></li>
+					<li><b>Acesso alternado</b>: nós recebem a chance de usar o meio exclusivamente.
+					<ul>
+						<li>Coordenação necessária.</li>
+						<li>Dar oportunidade a nós que não querem transmitir reduz eficiência.</li>
+					</ul></li>
+					<li><b>Acesso aleatório</b>: nós decidem localmente quando usar o meio.
+					<ul>
+						<li><b>Colisões podem ocorrer, devem ser tratadas.</b></li>
+						<li>Quando há colisões, eficiência cai.</li>
+						<li>Quanto mais nós, mais provável é a ocorrência de colisões.</li>
+					</ul></li>
+				</ul></li>
+			</ul>
+		</div>
+	</div>
+	</section>
+
+-->
+	    <section>
+	    <h1>Endereços MAC (I)</h1>
+	    <div class="slideContent">
+
+		    <ul>
+			    <li> <b>Endereços IP.</b>
+			    <ul>
+				    <li> Endereço da camada de rede.</li>
+				    <li> Atribuído a uma interface.</li>
+				    <li> Usado para encaminhamento na camada 3.</li>
+			    </ul>
+			    </li>
+			    <li> <b>Endereço MAC (ou físico).</b>
+			    <ul>
+				    <li> Usado <b>localmente</b> na comunicação de quadros entre interfaces conectadas fisicamente.
+				    <ul>
+					    <li> Na mesma &ldquo;sub-rede&rdquo;, no contexto do IP.</li>
+				    </ul>
+				    </li>
+				    <li> Na maioria das LANs, possui 48 bits.</li>
+				    <li> <i>Hardcoded</i> em ROM ou configurável via <i>software</i>.</li>
+				    <li> Exemplo:
+				    <ul>
+					    <li> 1A-2F-BB-76-09-AD (outra notação comum: 1A:2F:BB:76:09:AD)</li>
+					    <li> Pares de algarismos hexadecimais, cada um é um octeto.</li>
+				    </ul>
+				    </li>
+			    </ul>
+			    </li>
+		    </ul>
+	    </div>
+	    </section>
+
+	    <!-- Aqui cabe uma captura de tráfego mostrando como o sniffer é capaz de traduzir prefixos MAC para fabricantes.-->
+	    <section>
+	    <h1>Endereços MAC (II)</h1>
+	    <div class="slideContent">
+
+
+		    <div class="column" style="width: 55% ;">
+			    <ul>
+				    <li> Cada adaptador em uma LAN tem um endereço MAC único.</li>
+			    </ul>
+			    <center>
+				    <img src="imagens/LAN_opt.svg" style="width: 95% ;"/>
+			    </center>
+		    </div>
+		    <div class="column" style="width: 45% ;">
+			    <ul>
+				    <li> Alocação de endereços MAC feita pelo IEEE.</li>
+				    <li> Fabricantes compram porções do espaço de endereçamento.
+				    <ul>
+					    <li> Garante unicidade.</li>
+					    <li> Geralmente, prefixo determina fabricante.</li>
+				    </ul>
+				    </li>
+				    <li> MAC <i>vs.</i> IP: portabilidade.
+				    <ul>
+					    <li> MAC é plano: interface pode ser movida entre LANs.</li>
+					    <li> IP é hierárquico: depende da sub-rede específica.</li>
+				    </ul>
+				    </li>
+			    </ul>
+		    </div>
+
+	    </div>
+	    </section>
+
+		<!-- Demonstração: exibir tabela ARP. Exibir ARPing.-->
+		<!-- Falar de ARP Proxy? -->
+	    <section>
+	    <h1>ARP: Resolução de Endereços</h1>
+	    <div class="slideContent">
+
+
+		    <div class="column" style="width: 50% ;">
+
+			    <center>
+				    <img src="imagens/LAN2_opt.svg" style="width: 90% ;"/>
+			    </center>
+		    </div>
+		    <div class="column" style="width: 50% ;">
+			    <div style="border: 1px solid #000; width: 90%; padding: 20px; text-align: center;">
+				    <span class="alert">Pergunta:</span> Como determinar o MAC da interface sabendo o IP?
+			    </div>
+			    <br>
+			    <ul>
+				    <li> <span class="alert">Tabela ARP:</span> cada nó IP (roteador, host) em uma LAN possui uma.
+				    <ul>
+					    <li> Mapeamento IP &hArr; MAC:</li>
+					    <center>
+						    <tt>&lt; IP; MAC; TTL&gt;</tt>
+					    </center>
+					    <li> TTL (<i>Time To Live</i>): validade da entrada (<i>e.g.</i>, esquecida após 20 min).</li>
+				    </ul>
+				    </li>
+			    </ul>
+		    </div>
+
+	    </div>
+	    </section>
+
+	    <!-- Ao final deste slide, poderia fazer demonstrações com a tabela ARP do laptop.-->
+	    <section>
+	    <h1>O Protocolo ARP: Dentro de uma LAN</h1>
+	    <div class="slideContent">
+
+
+		    <div class="column" style="width: 60% ;">
+			    <ul>
+				    <li> <b>A</b> deseja enviar datagrama para <b>B</b>.
+				    <ul>
+					    <li> Mas MAC de <b>B</b> não está na tabela ARP de <b>A</b>.</li>
+				    </ul>
+				    </li>
+				    <li> <b>A</b> gera um <i>ARP Query</i> contendo o IP de <b>B</b>.
+				    <ul>
+					    <li> Endereço MAC de destino: <tt>FF:FF:FF:FF:FF:FF</tt> (<b><i>broadcast</i></b>).</li>
+					    <li> Todos os nós da LAN recebem o ARP Query.
+					    <ul>
+						    <li> Em particular, <b>B</b>.</li>
+					    </ul>
+					    </li>
+				    </ul>
+				    </li>
+				    <li> <b>B</b> gera um <i>ARP Reply</i>.
+				    <ul>
+					    <li> Quadro <b><i>unicast</i></b>.</li>
+					    <li> MAC de origem: de <b>B</b>.</li>
+					    <li> MAC de destino: de <b>A</b>.</li>
+				    </ul>
+				    </li>
+			    </ul>
+		    </div>
+		    <div class="column" style="width: 40% ;">
+			    <ul>
+				    <li> Tabela ARP é uma <i>cache</i>: mapeamentos são guardados até ficarem antigos.
+				    <ul>
+					    <li> <i>Soft State</i>: informação expira se não é renovada.</li>
+				    </ul>
+				    </li>
+				    <li> O ARP é um protocolo &ldquo;plug&mdash;and&mdash;play&rdquo;.
+				    <ul>
+					    <li> Tabela é criada automaticamente.</li>
+					    <li> Sem intervenção ou configuração do administrador.</li>
+				    </ul>
+				    </li>
+			    </ul>
+		    </div>
+
+	    </div>
+	    </section>
+
+	    <section>
+	    <h1>ARP e Roteamento: Enviando Pacote para Outra LAN</h1>
+	    <div class="slideContent">
+
+		    <ul>
+			    <li> <span class="alert">Passo a passo:</span> envio de pacote de <b>A</b> para <b>B</b> usando <b>R</b>.
+			    <ul>
+				    <li> Foco no endereçamento &mdash; nas camadas de rede (datagrama) e enlace (quadro).</li>
+				    <li> Assumindo que:
+				    <ul>
+					    <li> <b>A</b> sabe IP de <b>B</b>.</li>
+					    <li> <b>A</b> sabe IP do roteador de primeiro salto <b>R</b> (como?).</li>
+					    <li> <b>A</b> sabe o MAC de <b>R</b> (como?).</li>
+				    </ul>
+				    </li>
+			    </ul>
+			    </li>
+		    </ul>
+
+		    <center>
+			    <img src="imagens/ARPMultihop1_opt.svg" style="width: 70% ;"/>
+		    </center>
+	    </div>
+	    </section>
+
+	    <section>
+	    <h1>ARP e Roteamento: Enviando Pacote para Outra LAN</h1>
+	    <div class="slideContent">
+
+		    <ul>
+			    <li> <b>A</b> cria datagrama IP com origem <b>A</b>, destino <b>B</b>.</li>
+			    <li> <b>A</b> encapsula datagrama em quadro com MAC de <b>R</b> como destino, e de <b>A</b> como origem.</li>
+		    </ul>
+
+		    <center>
+			    <img src="imagens/ARPMultihop2_opt.svg" style="width: 70% ;"/>
+		    </center>
+	    </div>
+	    </section>
+
+	    <section>
+	    <h1>ARP e Roteamento: Enviando Pacote para Outra LAN</h1>
+	    <div class="slideContent">
+
+		    <ul>
+			    <li> Quadro é enviado de <b>A</b> para <b>R</b> através do enlace.</li>
+			    <li> <b>R</b> recebe quadro, extrai datagrama, e o repassa para o IP.</li>
+		    </ul>
+
+		    <center>
+			    <img src="imagens/ARPMultihop3_opt.svg" style="width: 70% ;"/>
+		    </center>
+	    </div>
+	    </section>
+
+	    <section>
+	    <h1>ARP e Roteamento: Enviando Pacote para Outra LAN</h1>
+	    <div class="slideContent">
+
+		    <ul>
+			    <li> <b>R</b> encaminha datagrama com IP de origem de <b>A</b> e IP de destino de <b>B</b>.</li>
+			    <li> <b>R</b> encapsula datagrama em quadro com MAC de <b>B</b> como destino, e MAC de <b>R</b> como origem.</li>
+		    </ul>
+
+		    <center>
+			    <img src="imagens/ARPMultihop4_opt.svg" style="width: 70% ;"/>
+		    </center>
+	    </div>
+	    </section>
+
+	    <section>
+	    <h1>ARP e Roteamento: Enviando Pacote para Outra LAN</h1>
+	    <div class="slideContent">
+
+		    <ul>
+			    <li> <b>B</b> recebe o quadro e extrai datagrama.</li>
+			    <li> Em <b>B</b>, camada de rede verifica que datagrama é destinado ao próprio nó.</li>
+		    </ul>
+
+		    <center>
+			    <img src="imagens/ARPMultihop5_opt.svg" style="width: 70% ;"/>
+		    </center>
+	    </div>
+	    </section>
+
+	    <section class="secao">
+	    <div class="slideContent">
+		    Redes Locais (LANs): Ethernet
+	    </div>
+	    </section>
+
+	    <section>
+	    <h1>Ethernet</h1>
+	    <div class="slideContent">
+
+		    <ul>
+			    <li> Tecnologia &ldquo;dominante&rdquo; para LANs cabeadas.
+			    <ul>
+				    <li> Barata: interface Gigabit Ethernet por R$ 30,00.</li>
+				    <li> Primeira tecnologia para LANs amplamente utilizada.</li>
+				    <li> Mais simples e barata que alternativas: <i>e.g.</i>, Token LANs, ATM.</li>
+				    <li> Acompanhou evolução das taxas de transmissão: 10&nbsp;Mb/s &mdash; 10&nbsp;Gb/s.</li>
+			    </ul>
+			    </li>
+		    </ul>
+
+		    <center>
+			    <img src="imagens/metcalfe.png" style="width: 40% ;"/><br>
+			    <p class="scriptsize">Esboço do Ethernet feito por Metcalfe.</p>
+		    </center>
+	    </div>
+	    </section>
+
+	    <section>
+	    <h1>Ethernet: Topologia Física</h1>
+	    <div class="slideContent">
+
+		    <ul>
+			    <li> <span class="alert">Barramento:</span> popular até meados dos anos 90.
+			    <ul>
+				    <li> Todos os nós no mesmo <b>domínio de colisão</b>.
+				    <ul>
+					    <li> Transmissões podem colidir umas com as outras.</li>
+				    </ul>
+				    </li>
+			    </ul>
+			    </li>
+			    <li> <span class="alert">Estrela:</span> prevalecente hoje.
+			    <ul>
+				    <li> Elemento ativo no centro: <b><i>switch</i></b>.</li>
+				    <li> Cada cabo conectando o <i>switch</i> a um nó roda um protocolo Ethernet (separado).
+				    <ul>
+					    <li> Colisões são impossíveis.</li>
+				    </ul>
+				    </li>
+			    </ul>
+			    </li>
+		    </ul>
+
+		    <center>
+			    <img src="imagens/Ethernet_opt.svg" style="width: 70% ;"/>
+		    </center>
+	    </div>
+	    </section>
+
+	<section>
+	<h1>Ethernet: Hubs</h1>
+	<div class="slideContent">
+			<ul>
+				<li>Comum no final da década de 90.</li>
+				<li>Topologia estrela, mas hub era o intermediário.
+				<ul>
+					<li>Ao invés de um <i>switch</i>.</li>
+				</ul></li>
+				<li>Sinal recebido em uma porta era <b>regenerado</b> e replicado para as demais.</li>
+				<li>Domínio de colisão <b>único</b>.</li>
+				<li>Assim como nos barramentos, <b>colisões eram possíveis!</b>
+				<ul>
+					<li>Hub + cabos = meio de difusão.</li>
+				</ul></li>
+			</ul>
+	</div>
+	</section>
+
+	    <section>
+	    <h1>Estrutura de um Quadro Ethernet (I)</h1>
+	    <div class="slideContent">
+
+		    <ul>
+			    <li> Interface encapsula datagrama IP (ou qualquer outro protocolo de rede) em quadro Ethernet.
+			    <ul>
+			    	<li>De 46 a 1500 bytes.</li>
+				<li>Por que tamanhos máximo e mínimo?</li>
+				<li>O que ocorre se o datagrama é maior ou menor?</li>
+			    </ul></li>
+		    </ul>
+
+		    <center>
+			    <img src="imagens/QuadroEthernet_opt.svg" style="width: 60% ;"/>
+		    </center>
+
+		    <ul>
+			    <li> <span class="alert">Preâmbulo</span>:
+			    <ul>
+				    <li> 7 bytes com o padrão <tt>10101010</tt> seguidos de 1 byte com o padrão <tt>10101011</tt>.</li>
+				    <li> Usado para sincronizar transmissor e receptor.</li>
+			    </ul>
+			    </li>
+		    </ul>
+	    </div>
+	    </section>
+
+	    <!-- Vale a pena falar de modo promíscuo aqui?-->
+	    <section>
+	    <h1>Estrutura de um Quadro Ethernet (II)</h1>
+	    <div class="slideContent">
+
+		    <ul>
+			    <li> <span class="alert">Endereços</span>: origem e destino, 6 bytes cada.
+			    <ul>
+				    <li> Interface filtra quadros recebidos pelo endereço de destino.</li>
+				    <li> Se endereço é o MAC da interface, ou de <i>broadcast</i>, pacote é desencapsulado e passado para cima.</li>
+				    <li> Caso contrário, quadro é descartado.</li>
+			    </ul>
+			    </li>
+			    <li> <span class="alert">Tipo</span>: indica protocolo da camada superior (tipicamente IP, mas também pode ser IPX, AppleTalk, ...).</li>
+			    <li> <span class="alert">CRC</span>: verificação de integridade.
+			    <ul>
+				    <li> Erros detectados: quadro é descartado.</li>
+			    </ul>
+			    </li>
+		    </ul>
+
+		    <center>
+			    <img src="imagens/QuadroEthernet_opt.svg" style="width: 60% ;"/>
+		    </center>
+
+	    </div>
+	    </section>
+
+	    <section>
+	    <h1>Ethernet: Não Confiável, Sem Conexão</h1>
+	    <div class="slideContent">
+
+		    <ul>
+			    <li> <span class="alert">Sem Conexão</span>: não há <i>handshake</i> entre estações transmissora e receptora.
+			    <ul>
+				    <li> Transmissor simplesmente transmite quadro.</li>
+			    </ul>
+			    </li>
+			    <li> <span class="alert">Não confiável</span>: receptor não envia <i>acks</i> ou <i>nacks</i> ao transmissor.
+			    <ul>
+				    <li> Dados encapsulados em quadros perdidos só recuperados por camada superior.
+				    <ul>
+					    <li> <i>e.g.</i>, via retransmissões do TCP.</li>
+				    </ul>
+				    </li>
+			    </ul>
+			    </li>
+			    <li> <span class="alert">Protoloco de acesso ao meio</span>: CSMA/CD com backoff binário exponencial (unslotted).</li>
+		    </ul>
+	    </div>
+	    </section>
+
+	    <section>
+	    <h1>Padrões Ethernet 802.3: Camadas Física e de Enlace (I)</h1>
+	    <div class="slideContent">
+
+		    <ul>
+			    <li> <span class="alert">Vários</span> padrões Ethernet diferentes:
+			    <ul>
+				    <li> Em comum, protocolo de acesso ao meio e formato de quadro.</li>
+				    <li> Mas taxas de transmissão diferentes: 2&nbsp;Mb/s, 10&nbsp;Mb/s, 100&nbsp;Mb/s, 1&nbsp;Gb/s, 10&nbsp;Gb/s.</li>
+				    <li> Meios de transmissão também diferentes: fibra óptica, cabos de cobre.</li>
+			    </ul>
+			    </li>
+		    </ul>
+
+		    <center>
+			    <img src="imagens/PadroesEthernet_opt.svg" style="width: 50% ;"/>
+		    </center>
+	    </div>
+	    </section>
+
+	<section>
+	<h1>Padrões Ethernet 802.3: Camadas Física e de Enlace (II)</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<center>
+				<img src="imagens/EthernetParTrancado.jpg" style="width: 70%;"/>
+				<br>
+				Cabo de par trançado, conector RJ45.
+			</center>
+
+		</div>
+		<div class="column" style="width: 50%;">
+			<center>
+				<img src="imagens/EthernetCoaxial.jpg" style="width: 50%;"/>
+				<br>
+				Cabo coaxial, conector BNC.
+				<br>
+				<br>
+				<img src="imagens/ConectorT_BNC.jpg" style="width: 50%;"/>
+				<br>
+				Conector tipo T, BNC.
+			</center>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Padrões Ethernet 802.3: Camadas Física e de Enlace (III)</h1>
+	<div class="slideContent">
+		<center>
+			<img src="imagens/EthernetFibraLC.jpg" style="width: 50%;"/>
+			<br>
+			Fibra óptica, conector LC.
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Padrões Ethernet 802.3: Comprimento Máximo</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Comprimento dos <b>segmentos</b> do Ethernet é limitado pelos padrões.
+			<ul>
+				<li>Por que?</li>
+				<li>Segmentos <i>vs.</i> cabo?</li>
+			</ul></li>
+			<li>Exemplos:
+			<ul>
+				<li>10Base2 (Ethernet 10 Mb/s, cabo coaxial fino), máximo de 185 metros.</li>
+				<li>10Base5 (Ethernet 10 Mb/s, cabo coaxial mais grosso), máximo de 500 metros.</li>
+				<li>100BaseT (Fast Ethernet [100 Mb/s], par trançado), máximo de 100 metros.</li>
+				<li>1000BaseLX10 (Gigabit Ethernet [1000 Mb/s], fibra óptica), máximo de 10 quilômetros.</li>
+			</ul></li>
+			<li>Repetidores podem ser usados para interconectar segmentos.
+			<ul>
+				<li>Pouco comum hoje, geralmente substituídos por <i>switches</i>.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+<!--
+	<section>
+	<h1>Resumo da Aula...</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li>Endereçamento e ARP:
+				<ul>
+					<li>Endereço MAC, <b>diferente</b> do IP:
+					<ul>
+						<li><b>Único</b> para cada interface produzida.</li>
+						<li><b>Plano</b>: <i>i.e.</i>, não hierárquico.</li>
+						<li><b>Garante portabilidade</b>: <i>i.e.</i>, pode-se conectar interface a qualquer rede.</li>
+						<li>Usado na comunicação entre dois dispositivos <b>diretamente conectados</b>.</li>
+					</ul></li>
+					<li>Há <b>mapeamento</b> entre endereços MAC e IP.
+					<ul>
+						<li>Uma interface possui um IP e um certo MAC.</li>
+						<li>Camada de enlace precisa <b>traduzir</b> um IP para um MAC.</li>
+						<li>Função do protocolo ARP.</li>
+					</ul></li>
+				</ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li>Ethernet: tecnologia padrão para LANs cabeadas.
+				<ul>
+					<li><b>Simples, barato</b>.</li>
+					<li>Amplamente <b>difundido</b>.</li>
+					<li><b>Acompanhou evolução</b> das taxas de transmissão.</li>
+				</ul></li>
+				<li>Ethernet original utilizava topologia em <b>barramento</b>.</li>
+				<li>Atualmente, o mais comum é a topologia <b>estrela</b>.
+				<ul>
+					<li>Elemento ativo no centro: <b>switch</b>.</li>
+					<li>Colisões são <b>impossíveis</b>.</li>
+				</ul></li>
+				<li>Quadro Ethernet possui:
+				<ul>
+					<li><b>Preâmbulo.</b></li>
+					<li><b>Endereços de 6 bytes.</b></li>
+					<li><b>CRC.</b></li>
+				</ul></li>
+				<li>Serviço <b>sem conexão, não confiável.</b></li>
+				<li>Emprega o <b>CSMA/CD</b>.</li>
+			</ul>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Leitura e Exercícios Sugeridos</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Endereçamento e ARP:
+			<ul>
+				<li>Páginas 338 a 343 do Kurose (Seção 5.4).</li>
+				<li>Exercícios de fixação 8, 9 e 10 do capítulo 5 do Kurose.</li>
+				<li>Problemas 14, 15 e 16 do capítulo 5 do Kurose.</li>
+			</ul></li>
+			<li>Ethernet:
+			<ul>
+				<li>Páginas 343 a 350 do Kurose (Seção 5.5, exceto Subseção 5.5.2, já coberta na aula anterior).</li>
+				<li>Problema 23 do capítulo 5 do Kurose.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Próxima Aula...</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Tópico muito importante nas redes Ethernet:
+			<ul>
+				<li>Switches.
+				<ul>
+					<li>O que são?</li>
+					<li>Como funcionam?</li>
+					<li>Interconexão entre múltiplos switches.</li>
+				</ul></li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+-->
+	<!-- {{{{ dzslides core
+	#
+	#
+	#     __  __  __       .  __   ___  __
+	#    |  \  / /__` |    | |  \ |__  /__`
+	#    |__/ /_ .__/ |___ | |__/ |___ .__/ core :€
+	#
+	#
+	# The following block of code is not supposed to be edited.
+	# But if you want to change the behavior of these slides,
+	# feel free to hack it!
+	#
+	-->
+
+    <!-- More CSS -->
+	<link href='../template/css/slides.css' id="slides" rel='stylesheet' type='text/css'>
+	<link href='../template/css/presentationSpecific2.css' id="presentationSpecific2" rel='stylesheet' type='text/css'>
+
+    <!-- More Javascript -->
+	<script type="text/javascript" src="../template/js/dz.js"></script>
+
+	<!-- More CSS -->
+	<link href='../template/css/notesSpecific.css' id="notesSpecific" rel='stylesheet' type='text/css'>
+	<link href='../template/css/printSpecific.css' id="printSpecific" rel='stylesheet' type='text/css'>
+</body>
+</html>

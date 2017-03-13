@@ -1,0 +1,1495 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <!-- Meta info -->
+	<meta charset="utf-8">
+	<meta name="shortauthor" content="Diego Passos"/>
+	<meta name="shorttitle" content="Enlace: Introdução, Correção de Erros"/>
+	<meta name="shortevent" content="Redes de Computadores"/>
+	<title>Redes de Computadores: Aula2</title>
+
+    <!-- Math support -->
+	<script type="text/x-mathjax-config">
+		MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+			MathJax.InputJax.TeX.Definitions.number = /^(?:[0-9]+(?:\.[0-9]{3})*(?:\{,\}[0-9]*)*|\{,\}[0-9]+)/
+		});
+	</script>
+	<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+	<!--<script src="../../../../MathJax-2.6-latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>-->
+
+    <!-- Fonts -->
+	<link href='https://fonts.googleapis.com/css?family=Lora:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
+	<!--<link href='../../../../Fonts/Lora/lora.css' rel='stylesheet' type='text/css'>-->
+
+
+    <!-- CSS -->
+	<link href='../template/css/template.css' id="template" rel='stylesheet' type='text/css'>
+	<link href='../template/css/presentationSpecific.css' id="presentationSpecific" rel='stylesheet' type='text/css'>
+
+    <!-- Javascript -->
+	<script type="text/javascript" src="../template/js/audio.js"></script>
+</head>
+
+<body>
+    <!-- Audio handlers -->
+	<!--<audio src="audio/La.wav" id="La.wav" preload="auto"></audio>-->
+
+    <!-- Title Slide -->
+	<section>
+
+        <div class="slideContent">
+            <h1 class="title">Aula 18 - Camada de Enlace: Introdução e Correção de Erros</h1>
+            <h2 class="author">Diego Passos</h2>
+            <h4 class="institution">Universidade Federal Fluminense</h4>
+            <h3 class="date">Redes de Computadores</h3>
+        </div>
+
+	</section>
+
+    <!-- Content slides -->
+<!--
+	<section>
+	<h1>Camada de Enlace</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Tema do capítulo 5 do livro (Kurose).</li>
+			<li>Objeto das próximas 7 aulas da disciplina.</li>
+			<li>Objetivos:
+			 <ul>
+				   <li> Entender os princípios dos serviços da camada de enlace (ou MAC).
+				   <ul>
+					   <li> Correção e detecção de erros.</li>
+					   <li> Uso de canais compartilhados: acesso múltiplo.</li>
+					   <li> Endereçamento na camada de enlace.</li>
+					   <li> Redes locais: Ethernet e VLANs.</li>
+				   </ul>
+				   </li>
+				   <li> Implementação de diversas tecnologias da camada de enlace.</li>
+			 </ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Agenda do Capítulo</h1>
+	<div class="slideContent">
+		<ul>
+			<li> Introdução e serviços.</li>
+			<li> Detecção e correção de erros.</li>
+			<li> Protocolos de acesso múltiplo.</li>
+			<li> Redes locais:
+			<ul>
+				<li> Endereçamento, ARP.</li>
+				<li> Ethernet.</li>
+				<li> <i>Switches</i>.</li>
+				<li> VLANs.</li>
+			</ul>
+			</li>
+
+			<li> Redes de <i>Data Centers</i>.</li>
+			<li> Exemplo: uma requisição web.</li>
+		</ul>
+	</div>
+	</section>
+-->
+	<section class="secao">
+	<div class="slideContent">
+		Introdução e Serviços
+	</div>
+	</section>
+
+	<section>
+	<h1>Introdução</h1>
+	<div class="slideContent">
+
+
+		<div class="column" style="width: 60% ;">
+			<ul>
+				<li> Terminologia:
+				<ul>
+					<li> Roteadores e <i>hosts</i>: <b>nós</b>.</li>
+					<li> Canais de comunicação conectando nós adjacentes: <b>enlaces ou links</b>.
+					<ul>
+						<li> Sem fio.</li>
+						<li> Cabeados.</li>
+					</ul>
+					</li>
+					<li> Pacote do nível 2: <b>quadro</b>, encapsula o datagrama.</li>
+				</ul>
+				</li>
+			</ul>
+			<br>
+			<center>
+				<div class="block" style="width:550px;">
+					<div class="blockTitle" style="width: 100%;">
+						<p>Responsabilidade</p>
+					</div>
+					<div class="blockBody">
+						Transferência dos datagramas entre nós conectados fisicamente por um enlace.
+					</div>
+				</div>
+			</center>
+		</div>
+		<div class="column" style="width: 40% ;">
+			<center>
+				<img src="imagens/Terminologia_opt.svg" style="width: 90% ;"/>
+			</center>
+		</div>
+
+	</div>
+	</section>
+
+	<section>
+	<h1>Contextualização</h1>
+	<div class="slideContent">
+
+
+		<div class="column" style="width: 50% ;">
+			<ul>
+				<li> Datagramas são transmitidos por diferentes enlaces e protocolos.
+				<ul>
+					<li> <i>e.g.</i>, Ethernet, ADSL, 802.11, <i>Frame Relay</i>, ...</li>
+				</ul>
+				</li>
+				<li> Protocolos têm suas diferenças.
+				<ul>
+					<li> Podem ou não prover certos serviços.</li>
+					<li> <i>e.g.</i>, transmissão confiável.</li>
+				</ul>
+				</li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50% ;">
+			<ul>
+				<li> Analogia de transporte de pessoas:
+				<ul>
+					<li> Viagem de Niterói para Gramado.
+					<ul>
+						<li> Taxi até o aeroporto.</li>
+						<li> Avião até Porto Alegre.</li>
+						<li> Ônibus até Gramado.</li>
+					</ul>
+					</li>
+				</ul>
+				</li>
+				<li> Turista = datagrama.</li>
+				<li> Trechos da viagem = enlaces.</li>
+				<li> Meio de transporte = protocolo.</li>
+				<li> Agência de viagem = algoritmo de roteamento.</li>
+			</ul>
+		</div>
+
+
+	</div>
+	</section>
+
+	<section>
+	<h1>Serviços da Camada de Enlace (I)</h1>
+	<div class="slideContent">
+
+		<ul>
+			<li> <b>Encapsulamento</b>.
+			<ul>
+				<li> Encapsula datagrama em um <b>quadro</b>.</li>
+				<li> Adiciona informações relevantes à camada de enlace.
+				<ul>
+					<li> <i>Header</i> (cabeçalho), <i>trailer</i>.</li>
+				</ul>
+				</li>
+			</ul>
+			</li>
+		</ul>
+
+		<center>
+			<img src="imagens/Encapsulamento.png" style="width: 50% ;"/>
+		</center>
+
+		<ul>
+			<li> <b>Acesso ao enlace</b>.
+			<ul>
+				<li> Meio <b>dedicado</b> <i>vs.</i> <b>compartilhado</b>.</li>
+				<li> Se múltiplos nós competem, necessitam <b>coordenação</b>.</li>
+			</ul>
+			</li>
+		</ul>
+
+	</div>
+	</section>
+
+	<section>
+	<h1>Serviços da Camada de Enlace (II)</h1>
+	<div class="slideContent">
+
+		<ul>
+			<li> Endereçamento.
+			<ul>
+				<li> <b>Endereço MAC</b>.</li>
+				<li> Identifica origem, destino no cabeçalho do quadro.
+				<ul>
+					<li> Em algumas redes, pode haver mais elementos endereçados.</li>
+				</ul>
+				</li>
+				<li> <b>Diferente do endereçamento da camada de rede.</b>
+				<ul>
+					<li> <i>e.g.</i>, endereço IP.</li>
+				</ul>
+				</li>
+			</ul>
+			</li>
+			<li> Entrega confiável de dados.
+			<ul>
+				<li> Já estudado em Redes I (camada de transporte, TCP).</li>
+				<li> Pouco usado em enlaces com poucos erros: fibras ópticas, alguns tipos de par-trançado.</li>
+				<li> Importante para enlaces sem fio: altas taxas de erro.
+				<ul>
+					<li> <b>Por que implementar no nível de enlace e fim a fim?</b></li>
+				</ul>
+				</li>
+			</ul>
+			</li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Serviços da Camada de Enlace (III)</h1>
+	<div class="slideContent">
+
+
+		<div class="column" style="width: 50% ;">
+			<ul>
+				<li> Detecção de erros.
+				<ul>
+					<li> Erros causados por atenuação de sinal, ruído.</li>
+					<li> Receptor deve ser capaz de detectá-los.
+					<ul>
+						<li> Pede retransmissão ou descarta o quadro.</li>
+					</ul>
+					</li>
+				</ul>
+				</li>
+				<li> Correção de erros.
+				<ul>
+					<li> Passo além do anterior.</li>
+					<li> Receptor identifica <b>e corrige</b> erros.
+					<ul>
+						<li> <b>Sem necessitar de retransmissões</b>.</li>
+					</ul>
+					</li>
+				</ul>
+				</li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50% ;">
+			<ul>
+				<li> Controle de fluxo.
+				<ul>
+					<li> Evitar afogar o receptor.</li>
+					<li> Também discutido no contexto do TCP.</li>
+					<li> Mas aqui, entre dois nós adjacentes.</li>
+				</ul>
+				</li>
+				<li> Transmissão <b>full-duplex</b> ou <b>half-duplex</b>.
+				<ul>
+					<li> <i>Duplex</i> = transmissões em ambos os sentidos.</li>
+					<li> <i>Half-duplex</i> = um de cada vez.</li>
+					<li> <i>Full-duplex</i> = simultaneamente.</li>
+				</ul>
+				</li>
+			</ul>
+		</div>
+
+	</div>
+	</section>
+
+	<section>
+	<h1>Onde a Camada de Enlace é Implementada?</h1>
+	<div class="slideContent">
+
+
+		<div class="column" style="width: 60% ;">
+			<br>
+			<ul>
+				<li> Presente em todos os nós.</li>
+				<li> Implementada no <b>adaptador de rede</b>.
+				<ul>
+					<li> Ou placa de rede.</li>
+					<li> Ou NIC.</li>
+				</ul>
+				</li>
+				<li> Exemplos de adaptadores de rede:
+				<ul>
+					<li> Placa Ethernet, placa 802.11.</li>
+					<li> Implementam tanto a camada de enlace, quanto camada física.</li>
+				</ul>
+				</li>
+				<li> Adaptadores se conectam a barramentos.
+				<ul>
+					<li> PCI, USB, ...</li>
+				</ul>
+				</li>
+				<li> Implementação pode também envolver <i>software</i>, <i>firmware</i>.</li>
+			</ul>
+		</div>
+		<div class="column" style="width: 40% ;">
+			<img src="imagens/Implementacao_opt.svg" style="width: 90% ;"/>
+		</div>
+
+	</div>
+	</section>
+
+	<section>
+	<h1>Comunicação entre Adaptadores</h1>
+	<div class="slideContent">
+
+		<center>
+			<img src="imagens/ComunicacaoAdaptadores_opt.svg" style="width: 70% ;"/>
+		</center>
+
+
+		<div class="column" style="width: 50% ;">
+			<ul>
+				<li> Transmissor:
+				<ul>
+					<li> Encapsula datagrama em quadro.</li>
+					<li> Adiciona informações para verificação/correção de erros, controle de fluxo, transmissão confiável, ...</li>
+				</ul>
+				</li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50% ;">
+			<ul>
+				<li> Receptor:
+				<ul>
+					<li> Verifica/recupera erros, transmissão confiável de dados, ...</li>
+					<li> Extrai datagrama, repassa para camadas superiores.</li>
+				</ul>
+				</li>
+			</ul>
+		</div>
+
+	</div>
+	</section>
+
+	<section class="secao">
+	<div class="slideContent">
+		Detecção e Correção de Erros
+	</div>
+	</section>
+
+	<section>
+	<h1>Detecção de Erros</h1>
+	<div class="slideContent">
+
+
+		<div class="column" style="width: 50% ;">
+			<ul>
+				<li> EDC: bits de detecção e correção de erros.
+				<ul>
+					<li> Redundância.</li>
+				</ul>
+				</li>
+				<li> D: dados protegidos pela redundância.
+				<ul>
+					<li> Pode incluir campos de cabeçalho.</li>
+				</ul>
+				</li>
+				<li> Detecção de erros é probabilística.
+				<ul>
+					<li> Pode falhar, mas geralmente com probabilidade baixa.</li>
+					<li> Quanto mais bits no EDC, menor a probabilidade.</li>
+				</ul>
+				</li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50% ;">
+			<center>
+				<img src="imagens/DeteccaoDeErros1.png" style="width: 90% ;"/>
+			</center>
+		</div>
+
+	</div>
+	</section>
+
+	<section>
+	<h1>Paridade</h1>
+	<div class="slideContent">
+
+
+		<div class="column" style="width: 40% ;">
+			<ul>
+				<li> Um único bit de paridade:</li>
+			</ul>
+			<center>
+				<img src="imagens/paridade1bit.png" style="width: 70% ;"/>
+			</center>
+			<br>
+			<ul>
+				<li>Paridade par <i>vs.</i> paridade ímpar.</li>
+			</ul>
+		</div>
+		<div class="column" style="width: 60% ;">
+			<ul>
+				<li> Paridade bi-dimensional:</li>
+			</ul>
+			<center>
+				<img src="imagens/paridadeBidimensional.svg" style="width: 65% ;"/>
+			</center>
+		</div>
+
+
+	</div>
+	</section>
+
+	<section>
+	<h1>Paridade: Detecção <i>vs.</i> Correção</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Ambas a paridade simples e a bi-dimensional garantem a <b>detecção</b> de certos tipos de erro.
+			<ul>
+				<li>Paridade simples detecta erros quando há um número <b>ímpar</b> de bits errados.</li>
+				<li>Paridade bi-dimensional consegue, <b>adicionalmente</b>, detectar alguns casos de erros com número <b>par</b> de bits errados.</li>
+			</ul></li>
+			<li>Mas funcionalidade da paridade simples para neste ponto.
+			<ul>
+				<li><i>i.e.</i>, não é possível saber qual ou quais bits estão errados.</li>
+			</ul></li>
+			<li>Já a paridade bi-dimensional tem a capacidade de <b>corrigir</b> certos tipos de erro.
+			<ul>
+				<li>Quais?</li>
+			</ul></li>
+			<li>Se há um único bit errado, receptor <b>sabe</b> exatamente <b>onde</b> está o erro e <b>pode corrigi-lo</b>.
+			<ul>
+				<li>Sem necessidade de retransmissão.</li>
+				<li>Capacidade conhecida como <b>FEC</b> (<i>Forward Error Correction</i>).</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Internet Checksum (Revisão)</h1>
+	<div class="slideContent">
+
+		<ul>
+			<li> <b>Objetivo:</b> detectar &ldquo;erros&rdquo; (<i>e.g.</i>, bits com valor trocado) no pacote transmitido.
+			<ul>
+				<li> Usado por protocolos de transporte.</li>
+			</ul>
+			</li>
+		</ul>
+
+
+		<div class="column" style="width: 50% ;">
+			<ul>
+				<li> <b>Transmissor</b>
+				<ul>
+					<li> Trata mensagem como sequência de números de 16 bits.</li>
+					<li> Números são somados em complemento a 1.
+					<ul>
+						<li> Vai-um é somado de volta ao número.</li>
+						<li> Ao final, bits são invertidos.</li>
+					</ul>
+					</li>
+					<li> Resultado é armazenado na mensagem.</li>
+				</ul>
+				</li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50% ;">
+			<ul>
+				<li> <b>Receptor</b>
+				<ul>
+					<li> Computa o checksum da mensagem recebida.</li>
+					<li> Compara o valor computado com o valor encontrado na mensagem.
+					<ul>
+						<li> Diferentes? Erro detectado.</li>
+						<li> Iguais? Nenhum erro <b>detectado</b> (mas não há mesmo erros?).</li>
+					</ul>
+					</li>
+				</ul>
+				</li>
+			</ul>
+		</div>
+
+
+	</div>
+	</section>
+
+	<section>
+	<h1>Internet Checksum: Exemplos</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+				<script type="text/javascript" >
+					var exemploLanternaASCII = '';
+					var exemploLanternaTempo;
+
+					function exemploChecksumZeraTabelaEntrada(l) {
+
+						var tabela = document.getElementById('exemploChecksumInputBits');
+						var tr, td;
+						var i, j;
+
+						tabela.innerHTML = "";
+						for (var i = 0; i < l; i++) {
+
+							if (i % 2 == 0) {
+
+								tr = document.createElement('tr');
+								tabela.appendChild(tr);
+
+								if (i > 0) {
+
+									td = document.createElement('td');
+									tr.appendChild(td);
+									td.style.width = "15px";
+									td.innerHTML = "+";
+								}
+								else {
+
+									td = document.createElement('td');
+									tr.appendChild(td);
+									td.style.width = "15px";
+									td.innerHTML = "";
+								}
+							}
+							else {
+
+								td = document.createElement('td');
+								tr.appendChild(td);
+								td.style.width = "15px";
+							}
+
+							for (j = 0; j < 8; j++) {
+
+								td = document.createElement('td');
+								tr.appendChild(td);
+								td.id = 'checksumInputByte' + i + 'Bit' + j;
+								td.style.width = "15px";
+								td.style.height = "15px";
+								td.style.textAlign = "center";
+							}
+
+							if (i % 2 == 1) {
+
+								td = document.createElement('td');
+								tr.appendChild(td);
+								td.style.width = "190px";
+								td.innerHTML = "&nbsp;&nbsp;&nbsp;(bytes " + (i+1) + " e " + (i) + ")";
+
+								if (i == 3 || (i > 3)) {
+
+									tr.style.borderBottom = "2px solid #000";
+
+									tr = document.createElement('tr');
+									tabela.appendChild(tr);
+									tr.style.color = "#11c";
+
+									td = document.createElement('td');
+									tr.appendChild(td);
+									td.style.width = "15px";
+									td.id = 'checksumInputParcelaCarry' + ((i-3)/2) + 'Bit0';
+									td.innerHTML = "0";
+
+									for (j = 0; j < 16; j++) {
+
+										if (j == 8) {
+
+											td = document.createElement('td');
+											tr.appendChild(td);
+											td.style.width = "15px";
+										}
+
+										td = document.createElement('td');
+										tr.appendChild(td);
+										td.id = 'checksumInputParcelaCarry' + ((i-3)/2) + 'Bit' + (j+1);
+										td.style.width = "15px";
+										td.style.height = "15px";
+										td.style.textAlign = "center";
+										td.innerHTML = "1";
+									}
+
+									td = document.createElement('td');
+									tr.appendChild(td);
+									td.style.width = "210px";
+									td.innerHTML = "&nbsp;&nbsp;&nbsp;(com vai-1)";
+
+									tr = document.createElement('tr');
+									tabela.appendChild(tr);
+									tr.style.color = "#c11";
+
+									td = document.createElement('td');
+									tr.appendChild(td);
+									td.style.width = "15px";
+									td.innerHTML = "";
+
+									for (j = 0; j < 16; j++) {
+
+										if (j == 8) {
+
+											td = document.createElement('td');
+											tr.appendChild(td);
+											td.style.width = "15px";
+										}
+
+										td = document.createElement('td');
+										tr.appendChild(td);
+										td.id = 'checksumInputParcela' + ((i-3)/2) + 'Bit' + j;
+										td.style.width = "15px";
+										td.style.height = "15px";
+										td.style.textAlign = "center";
+										td.innerHTML = "1";
+									}
+
+									td = document.createElement('td');
+									tr.appendChild(td);
+									td.style.width = "190px";
+
+									if (i < l - 1)
+										td.innerHTML = "&nbsp;&nbsp;&nbsp;(parcela)";
+									else
+										td.innerHTML = "&nbsp;&nbsp;&nbsp;(total)";
+
+								}
+							}
+						}
+
+						tr.style.borderBottom = "2px solid #000";
+						tr.children[0].innerHTML = "~";
+
+						tr = document.createElement('tr');
+						tabela.appendChild(tr);
+						tr.style.color = "#1c1";
+
+						td = document.createElement('td');
+						tr.appendChild(td);
+						td.style.width = "15px";
+						td.innerHTML = "";
+
+						for (j = 0; j < 16; j++) {
+
+							if (j == 8) {
+
+								td = document.createElement('td');
+								tr.appendChild(td);
+								td.style.width = "15px";
+							}
+
+							td = document.createElement('td');
+							tr.appendChild(td);
+							td.id = 'checksumInputFinalBit' + j;
+							td.style.width = "15px";
+							td.style.height = "15px";
+							td.style.textAlign = "center";
+							td.innerHTML = "0";
+						}
+
+						td = document.createElement('td');
+						tr.appendChild(td);
+						td.style.width = "190px";
+						td.innerHTML = "&nbsp;&nbsp;&nbsp;(checksum)";
+					}
+
+					function exemploChecksumPreencheTabelaParcelaCarry(parcela, valor) {
+
+						var base2;
+						var bit;
+						var td;
+						var i;
+
+						base2 = valor.toString(2);
+						var padLen = 17 - base2.length;
+						for (i = 0; i < padLen; i++) base2 = "0" + base2;
+
+						for (bit = 0; bit < 17; bit++) {
+							td = document.getElementById('checksumInputParcelaCarry' + parcela + 'Bit' + bit);
+							td.innerHTML = base2.charAt(bit);
+						}
+					}
+
+					function exemploChecksumPreencheTabelaParcelaSemCarry(parcela, valor) {
+
+						var base2;
+						var bit;
+						var td;
+						var i;
+
+						base2 = valor.toString(2);
+						var padLen = 16 - base2.length;
+						for (i = 0; i < padLen; i++) base2 = "0" + base2;
+
+						for (bit = 0; bit < 16; bit++) {
+							td = document.getElementById('checksumInputParcela' + parcela + 'Bit' + bit);
+							td.innerHTML = base2.charAt(bit);
+						}
+					}
+
+					function exemploChecksumPreencheTabelaFinal(valor) {
+
+						var base2;
+						var bit;
+						var td;
+						var i;
+
+						base2 = valor.toString(2);
+						var padLen = 16 - base2.length;
+						for (i = 0; i < padLen; i++) base2 = "0" + base2;
+
+						for (bit = 0; bit < 16; bit++) {
+							td = document.getElementById('checksumInputFinalBit' + bit);
+							td.innerHTML = base2.charAt(bit);
+						}
+					}
+
+					function exemploChecksumPreencheTabelaEntrada(s) {
+
+						var byte, bit;
+						var ascii;
+						var entradaTabela;
+						var i;
+
+						if (s.length % 2 == 0)
+							exemploChecksumZeraTabelaEntrada(s.length);
+						else
+							exemploChecksumZeraTabelaEntrada(s.length + 1);
+
+						for (byte = 0; byte < s.length; byte += 2) {
+
+							if (byte + 1 < s.length) {
+
+								ascii = s.charCodeAt(byte + 1).toString(2);
+								var padLen = 8 - ascii.length;
+								for (i = 0; i < padLen; i++) ascii = "0" + ascii;
+							}
+							else {
+
+								ascii = "00000000";
+							}
+
+							for (bit = 0; bit < 8; bit++) {
+								entradaTabela = document.getElementById('checksumInputByte' + byte + 'Bit' + bit);
+								entradaTabela.innerHTML = ascii.charAt(bit);
+							}
+
+							ascii = s.charCodeAt(byte).toString(2);
+							var padLen = 8 - ascii.length;
+							for (i = 0; i < padLen; i++) ascii = "0" + ascii;
+
+							for (bit = 0; bit < 8; bit++) {
+								entradaTabela = document.getElementById('checksumInputByte' + (byte+1) + 'Bit' + bit);
+								entradaTabela.innerHTML = ascii.charAt(bit);
+							}
+
+						}
+					}
+
+					function exemploChecksum(input) {
+
+						var saida = document.getElementById('exemploChecksumSaida');
+						var entrada = document.getElementById('exemploChecksumEntrada');
+						var s = entrada.value;
+						var i;
+						var sum = 0;
+						var par = 0;
+
+						exemploChecksumPreencheTabelaEntrada(s);
+
+						for (i = 0; i < s.length; i += 2) {
+
+							if (i + 1 < s.length)
+								par = (s.charCodeAt(i + 1) << 8);
+							par += s.charCodeAt(i);
+							sum += par;
+							if (i > 0) {
+
+								exemploChecksumPreencheTabelaParcelaCarry(i / 2 - 1, sum);
+							}
+
+							if (sum >= 65536)
+								sum -= 65535
+
+							if (i > 0) {
+
+								exemploChecksumPreencheTabelaParcelaSemCarry(i / 2 - 1, sum);
+							}
+
+						}
+
+						sum = 65535 - sum;
+						exemploChecksumPreencheTabelaFinal(sum);
+						saida.value = ('0000' + sum.toString(16)).slice(-4);
+					}
+				</script>
+			<ul>
+			  <li>Experimente o cálculo do <i>checksum</i> de algumas mensagens (<i>strings</i>):</li>
+			</ul>
+			<center>
+			<div style="width: 60%; border: 2px solid #000; padding-bottom: 10px;">
+			<table class="align" style="width: 90%;">
+				<tr>
+					<td style="width: 90%;">Mensagem</td>
+					<td><input type="text" id="exemploChecksumEntrada" name="exemploChecksumEntrada" value="RedesII" size="10" maxlength="10" style="font-size: 80%; padding: 0.5%;"/></td>
+				</tr>
+				<tr>
+					<td>Checksum</td>
+					<td><input type="text" readonly="true" id="exemploChecksumSaida" name="exemploChecksumSaida" value="a219" size="10" maxlength="4" style="font-size: 80%; padding: 0.5%;" /></td>
+				</tr>
+			</table>
+			<br>
+			<input type="submit" name="exemploChecksumCalcular" value="Calcular" style="padding: 0.5%; font-size: 90%; font-family: 'Lora', sans-serif;" onClick="exemploChecksum();"/>
+			<br>
+			</div>
+			</center>
+			<ul>
+				<li>Sugestão: calcule o <i>checksum</i> de &ldquo;casa&rdquo;.
+				<ul>
+					<li>Resultado: 0x3d29.</li>
+					<li>Em ASCII: 0x3D &#8594; &ldquo;=&rdquo;.</li>
+					<li>Em ASCII: 0x29 &#8594; &ldquo;)&rdquo;.</li>
+				</ul></li>
+				<li><span class="alert">Pergunta:</span> qual é o <i>checksum</i> de &ldquo;casa)=&rdquo;?</li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50%;">
+			<div style="width: 100%; height: 450px;">
+			  <table class="align" id="exemploChecksumInputBits">
+			  </table>
+			</div>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Internet Checksum: Detecção <i>vs.</i> Correção</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Checksum só é capaz de <b>detectar</b> erros.</li>
+			<li>Mas não é capaz de <b>corrigir</b> erros.</li>
+			<li>Caso típico:
+			<ul>
+				<li>Mensagem chega ao receptor.</li>
+				<li>Receptor calcula o checksum.</li>
+				<li>Valor calculado é comparado ao recebido.</li>
+				<li>Valores são diferentes &rArr; mensagem é <b>completamente descartada</b>.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Internet Checksum: Falso Negativo</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li>Checksum pode não detectar certos erros.
+				<ul>
+					<li><i>i.e.</i>, pode considerar certa uma mensagem com erros.</li>
+				</ul></li>
+				<li>Em outras palavras: mensagem errada pode ter o mesmo checksum da mensagem certa!</li>
+				<li>Exemplo (com pequenas strings):
+				<ul>
+					<li>&ldquo;testar&rdquo; - 0xb3b6</li>
+					<li>&ldquo;tfssar&rdquo; - 0xb3b6</li>
+					<li>&ldquo;settar&rdquo; - 0xb3b6</li>
+					<li>&ldquo;reutar&rdquo; - 0xb3b6</li>
+					<li>...</li>
+				</ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50%;">
+				<script type="text/javascript" >
+					var exemploLanternaASCII = '';
+					var exemploLanternaTempo;
+
+					function exemploChecksum2(input) {
+
+						var saida = document.getElementById('exemploChecksumSaida2');
+						var entrada = document.getElementById('exemploChecksumEntrada2');
+						var s = entrada.value;
+						var i;
+						var sum = 0;
+						var par = 0;
+
+						for (i = 0; i < s.length; i += 2) {
+
+							if (i + 1 < s.length)
+								par = (s.charCodeAt(i + 1) << 8);
+							par += s.charCodeAt(i);
+							sum += par;
+							if (sum >= 65536)
+								sum -= 65535
+						}
+
+						sum = 65535 - sum;
+						saida.value = ('0000' + sum.toString(16)).slice(-4);
+					}
+				</script>
+			<br>
+			<br>
+			<br>
+			<br>
+			<center>
+			<div style="width: 60%; border: 2px solid #000; padding-bottom: 10px;">
+			<table class="align" style="width: 90%;">
+				<tr>
+					<td style="width: 90%;">Mensagem</td>
+					<td><input type="text" id="exemploChecksumEntrada2" name="exemploChecksumEntrada2" value="RedesII" size="10" maxlength="10" style="font-size: 80%; padding: 0.5%;"/></td>
+				</tr>
+				<tr>
+					<td>Checksum</td>
+					<td><input type="text" readonly="true" id="exemploChecksumSaida2" name="exemploChecksumSaida2" value="a219" size="10" maxlength="4" style="font-size: 80%; padding: 0.5%;" /></td>
+				</tr>
+			</table>
+			<br>
+			<input type="submit" name="exemploChecksumCalcular2" value="Calcular" style="padding: 0.5%; font-size: 90%; font-family: 'Lora', sans-serif;" onClick="exemploChecksum2();"/>
+			<br>
+			</div>
+			</center>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Internet Checksum: Falso Positivo</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Valor do checksum é transmitido junto do resto da mensagem.</li>
+			<li><b>Pergunta:</b> se a mensagem pode ser corrompida, por que o checksum não pode?</li>
+			<li><b>Resposta:</b> ele pode!</li>
+			<li>O que acontece quando o valor do checksum é corrompido?
+		</ul>
+		<div class="column" style="width: 45%;">
+			<ul>
+				<li>Primeira possibilidade: apenas o valor do checksum muda.
+				<ul>
+					<li>Exemplo: mensagem &ldquo;testar&rdquo; e checksum 0xb3b7.</li>
+					<li>Dados estão <b>corretos</b>, mas checksum não bate: mensagem correta é descartada!</li>
+				</ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 55%;">
+			<ul>
+				<li>Segunda possibilidade: tanto o valor do checksum, quanto mensagem são corrompidos.
+				<ul>
+					<li>Mais provável: checksum não irá bater, mensagem será (corretamente) descartada.</li>
+					<li>Menos provável: checksum irá bater, mensagem será (erroneamente) aceita!
+					<ul>
+						<li>Exemplo: mensagem &ldquo;tertar&rdquo;, checksum 0xb3b7.</li>
+					</ul></li>
+				</ul></li>
+			</ul>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Cyclic redundancy check (CRC)</h1>
+	<div class="slideContent">
+
+		<ul>
+			<li> Método mais poderoso de detecção de erro.
+			<ul>
+				<li> Resultado de uma &ldquo;conta&rdquo;, como o Checksum.</li>
+				<li> Mas posição dos bits tem maior influência no resultado final.
+				<ul>
+					<li> <b>Menos provável</b> que certos erros comuns não sejam detectados.</li>
+				</ul>
+				</li>
+			</ul>
+			</li>
+		</ul>
+
+
+		<div class="column" style="width: 45% ;">
+			<ul>
+				<li> <b>Ideia</b>
+				<ul>
+					<li> Trata msg <b>M</b> como um polinômio <b>D</b>.</li>
+					<li> Bits são coeficientes:</li>
+					<table class="align">
+						<tr align="center">
+							<td>                    M </td><td style="width: 20px;"> = </td><td style="width: 30px;"> 1 </td><td style="width: 30px;"> 1 </td><td style="width: 30px;"> 0 </td><td style="width: 30px;"> 1 </td><td style="width: 30px;"> 0</td>
+						</tr>
+
+						<tr align="center">
+							<td>                    D </td><td> = </td><td> <span class="math inline">\(x^4\)</span> </td><td> <span class="math inline">\(+x^3\)</span> </td><td> </td><td> <span class="math inline">\(+x^1\)</span> </td><td></td>
+						</tr>
+					</table>
+					<li> Escolhe um <i>polinômio gerador</i> <b>G</b> (grau <b>r</b>).</li>
+					<li> Encontra um polinômio <b>R</b> de grau menor que <span class="math inline">\(r\)</span>, tal que:</li>
+					<span class="math">\(G | (D\cdot x^r + R)\)</span>
+				</ul>
+				</li>
+			</ul>
+		</div>
+		<div class="column" style="width: 55% ;">
+			<ul>
+				<li> <b>Aspectos práticos</b>
+				<ul>
+					<li> Durante a divisão, operações sobre os coeficientes são feitas em módulo 2.
+					<ul>
+						<li> <span class="math inline">\(1 - 1 = 0\)</span></li>
+						<li> <span class="math inline">\(1 - 0 = 1\)</span></li>
+						<li> <span class="math inline">\(0 - 0 = 0\)</span></li>
+						<li> <span class="math inline">\(0 - 1 = 1\)</span></li>
+					</ul>
+					</li>
+					<li> Coeficientes de R são adicionados à mensagem como o CRC (<b>sempre r bits</b>).</li>
+					<li> Receptor trata msg recebida (incluindo CRC) como polinômio e testa divisibilidade.</li>
+				</ul>
+				</li>
+			</ul>
+		</div>
+
+	</div>
+	</section>
+
+	<section>
+	<h1>CRC: Exemplo</h1>
+	<div class="slideContent">
+
+		<ul>
+			<li> Considere:
+			<ul>
+				<li> <span class="math inline">\(M = 101110\)</span>.</li>
+				<li> <span class="math inline">\(G = x^3 + 1\)</span>.
+				<ul>
+					<li> <span class="math inline">\(D = x^5 + x^3 + x^2 + x\implies D\cdot x^3 = x^8 + x^6 + x^5 + x^4\)</span>.</li>
+				</ul>
+				</li>
+			</ul>
+			</li>
+		</ul>
+
+		<ul>
+			<li> <b>Pensando em polinômios:</b></li>
+		</ul>
+		<table class="align">
+			<tr>
+				<td style="width: 25px;">     </td><td style="width: 35px;"> <span class="math inline">\(x^8\)</span> </td><td style="width: 25px;"> + </td><td style="width: 35px;"> <span class="math inline">\(x^6\)</span> </td><td style="width: 25px;"> + </td><td style="width: 35px;"> <span class="math inline">\(x^5\)</span> </td><td style="width: 25px;"> + </td><td style="width: 35px;"> <span class="math inline">\(x^4\)</span> </td><td style="width: 25px;"> </td><td style="width: 35px;"> </td><td style="width: 25px;"> </td><td style="width: 35px;"> </td><td style="width: 25px;"> </td><td style="width: 35px;"> </td> <td style="border-left: 1px solid #000; border-bottom: 1px solid #000; padding-left: 5px; width: 35px;"><span class="math inline">\(x^3\)</span> </td><td style="border-bottom: 1px solid #000; width: 25px;"> + </td><td style="border-bottom: 1px solid #000; width: 35px;"> <span class="math inline">\(1\)</span> </td><td style="border-bottom: 1px solid #000; width: 25px;"> </td><td style="border-bottom: 1px solid #000; width: 25px;"> </td><td style="border-bottom: 1px solid #000; width: 35px;"> </td><td style="border-bottom: 1px solid #000; width: 35px;"></td>
+			</tr>
+			<tr>
+				<td style="border-bottom: 1px solid #000;">    <span class="math inline">\(-\)</span> </td><td style="border-bottom: 1px solid #000;"> <span class="math inline">\(x^8\)</span> </td><td style="border-bottom: 1px solid #000;"> </td><td style="border-bottom: 1px solid #000;"> </td><td style="border-bottom: 1px solid #000;"> <span class="math inline">\(-\)</span> </td><td style="border-bottom: 1px solid #000;"> <span class="math inline">\(x^5\)</span> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td> <td style="border-left: 1px solid #000; padding-left: 5px;"><span class="math inline">\(x^5\)</span> </td><td> + </td><td> <span class="math inline">\(x^3\)</span> </td><td> + </td><td> <span class="math inline">\(x\)</span> </td><td> + </td><td> <span class="math inline">\(1\)</span></td>
+			</tr>
+			<tr>
+				<td>     </td><td> </td><td> </td><td> <span class="math inline">\(x^6\)</span> </td><td> </td><td> </td><td> + </td><td> <span class="math inline">\(x^4\)</span> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td>
+			</tr>
+			<tr>
+				<td>     </td><td> </td><td style="border-bottom: 1px solid #000;"> <span class="math inline">\(-\)</span> </td><td style="border-bottom: 1px solid #000;"> <span class="math inline">\(x^6\)</span> </td><td style="border-bottom: 1px solid #000;"> </td><td style="border-bottom: 1px solid #000;"> </td><td style="border-bottom: 1px solid #000;"> </td><td style="border-bottom: 1px solid #000;"> </td><td style="border-bottom: 1px solid #000;"> <span class="math inline">\(-\)</span></td><td style="border-bottom: 1px solid #000;"> <span class="math inline">\(x^3\)</span> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td></td>
+			</tr>
+			<tr>
+				<td>     </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> + </td><td> <span class="math inline">\(x^4\)</span> </td><td> + </td><td> <span class="math inline">\(x^3\)</span> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td></td>
+			</tr>
+			<tr>
+				<td>     </td><td> </td><td> </td><td> </td><td> </td><td> </td><td style="border-bottom: 1px solid #000;"> <span class="math inline">\(-\)</span> </td><td style="border-bottom: 1px solid #000;"> <span class="math inline">\(x^4\)</span> </td><td style="border-bottom: 1px solid #000;"> </td><td style="border-bottom: 1px solid #000;"> </td><td style="border-bottom: 1px solid #000;"> <span class="math inline">\(-\)</span> </td><td style="border-bottom: 1px solid #000;"> <span class="math inline">\(x\)</span></td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td></td>
+			</tr>
+			<tr>
+				<td>     </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> <span class="math inline">\(x^3\)</span> </td><td> + </td><td> <span class="math inline">\(x\)</span> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td></td>
+			</tr>
+			<tr>
+				<td>     </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td style="border-bottom: 1px solid #000;"> <span class="math inline">\(-\)</span> </td><td style="border-bottom: 1px solid #000;"> <span class="math inline">\(x^3\)</span> </td><td style="border-bottom: 1px solid #000;"> </td><td style="border-bottom: 1px solid #000;"> </td><td style="border-bottom: 1px solid #000;"> <span class="math inline">\(-\)</span> </td><td style="border-bottom: 1px solid #000;"> <span class="math inline">\(1\)</span> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td></td>
+			</tr>
+			<tr>
+				<td>     </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> <span class="math inline">\(x\)</span> </td><td> + </td><td> <span class="math inline">\(1\)</span> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td></td>
+			</tr>
+		</table>
+		<ul>
+			<li> <span class="math inline">\(R = x+1\implies \mbox{CRC} = 011\)</span>.</li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>CRC: Exemplo (II)</h1>
+	<div class="slideContent">
+
+		<ul>
+			<li> Alternativa: <b>pensando diretamente nos bits</b></li>
+		</ul>
+
+		<style type = "text/css" scoped>
+			table.slide18 {
+				margin-left: 20px;
+			}
+			table.slide18, table.slide18 td, table.slide18 tr{
+				border: none;
+			}
+			table.slide18 td {
+				text-align: center;
+				width: 45px;
+			}
+			tr.slide18Upper td {
+				border-top: 1px solid #000;
+			}
+		</style>
+
+		<div class="column" style="width: 50% ;">
+			<ul>
+				<li> <b>Transmissor</b></li>
+			</ul>
+
+			<table class="slide18">
+
+				<tr class="slide18Upper">
+					<td>             </td> <td colspan="6" style="text-align: center;">Msg</td><td> </td><td colspan="3" style="text-align: center;">CRC</td>
+				</tr>
+
+				<tr class="slide18Upper">
+					<td>             </td><td> 1 </td><td> 0 </td><td> 1 </td><td> 1 </td><td> 1 </td><td> 0 </td><td> </td><td> 0 </td><td> 0 </td><td> 0</td>
+				</tr>
+				<tr>
+					<td><span class="math inline">\(\oplus\)</span> </td><td> 1 </td><td> 0 </td><td> 0 </td><td> 1 </td><td>   </td><td>   </td><td> </td><td>   </td><td>   </td><td>  </td>
+				</tr>
+
+				<tr class="slide18Upper">
+					<td>             </td><td> 0 </td><td> 0 </td><td> 1 </td><td> 0 </td><td> 1 </td><td> 0 </td><td> </td><td> 0 </td><td> 0 </td><td> 0</td>
+				</tr>
+				<tr>
+					<td><span class="math inline">\(\oplus\)</span> </td><td>   </td><td>   </td><td> 1 </td><td> 0 </td><td> 0 </td><td> 1 </td><td> </td><td>   </td><td>   </td><td>  </td>
+				</tr>
+
+				<tr class="slide18Upper">
+					<td>             </td><td> 0 </td><td> 0 </td><td> 0 </td><td> 0 </td><td> 1 </td><td> 1 </td><td> </td><td> 0 </td><td> 0 </td><td> 0</td>
+				</tr>
+				<tr>
+					<td><span class="math inline">\(\oplus\)</span> </td><td>   </td><td>   </td><td>   </td><td>   </td><td> 1 </td><td> 0 </td><td> </td><td> 0 </td><td> 1 </td><td>  </td>
+				</tr>
+
+				<tr class="slide18Upper">
+					<td>             </td><td> 0 </td><td> 0 </td><td> 0 </td><td> 0 </td><td> 0 </td><td> 1 </td><td> </td><td> 0 </td><td> 1 </td><td> 0</td>
+				</tr>
+				<tr>
+					<td><span class="math inline">\(\oplus\)</span> </td><td>   </td><td>   </td><td>   </td><td>   </td><td>   </td><td> 1 </td><td> </td><td> 0 </td><td> 0 </td><td> 1</td>
+				</tr>
+
+				<tr class="slide18Upper">
+					<td>             </td><td> 0 </td><td> 0 </td><td> 0 </td><td> 0 </td><td> 0 </td><td> 0 </td><td> </td><td> <b>0</b> </td><td> <b>1</b> </td><td> <b>1</b></td>
+				</tr>
+			</table>
+		</div>
+		<div class="column" style="width: 50% ;">
+			<ul>
+				<li> <b>Receptor</b></li>
+			</ul>
+			<table class="slide18">
+				<tr class="slide18Upper">
+					<td>             </td> <td colspan="6" style="text-align: center;">Msg</td><td> </td><td colspan="3" style="text-align: center;">CRC</td>
+				</tr>
+
+				<tr class="slide18Upper">
+					<td>             </td><td> 1 </td><td> 0 </td><td> 1 </td><td> 1 </td><td> 1 </td><td> 0 </td><td> </td><td> 0 </td><td> 1 </td><td> 1</td>
+				</tr>
+				<tr>
+					<td><span class="math inline">\(\oplus\)</span> </td><td> 1 </td><td> 0 </td><td> 0 </td><td> 1 </td><td>   </td><td>   </td><td> </td><td>   </td><td>   </td><td>  </td>
+				</tr>
+
+				<tr class="slide18Upper">
+					<td>             </td><td> 0 </td><td> 0 </td><td> 1 </td><td> 0 </td><td> 1 </td><td> 0 </td><td> </td><td> 0 </td><td> 1 </td><td> 1</td>
+				</tr>
+				<tr>
+					<td><span class="math inline">\(\oplus\)</span> </td><td>   </td><td>   </td><td> 1 </td><td> 0 </td><td> 0 </td><td> 1 </td><td> </td><td>   </td><td>   </td><td>  </td>
+				</tr>
+
+				<tr class="slide18Upper">
+					<td>             </td><td> 0 </td><td> 0 </td><td> 0 </td><td> 0 </td><td> 1 </td><td> 1 </td><td> </td><td> 0 </td><td> 1 </td><td> 1</td>
+				</tr>
+				<tr>
+					<td><span class="math inline">\(\oplus\)</span> </td><td>   </td><td>   </td><td>   </td><td>   </td><td> 1 </td><td> 0 </td><td> </td><td> 0 </td><td> 1 </td><td>  </td>
+				</tr>
+
+				<tr class="slide18Upper">
+					<td>             </td><td> 0 </td><td> 0 </td><td> 0 </td><td> 0 </td><td> 0 </td><td> 1 </td><td> </td><td> 0 </td><td> 0 </td><td> 1</td>
+				</tr>
+				<tr>
+					<td><span class="math inline">\(\oplus\)</span> </td><td>   </td><td>   </td><td>   </td><td>   </td><td>   </td><td> 1 </td><td> </td><td> 0 </td><td> 0 </td><td> 1</td>
+				</tr>
+
+				<tr class="slide18Upper">
+					<td>             </td><td> 0 </td><td> 0 </td><td> 0 </td><td> 0 </td><td> 0 </td><td> 0 </td><td> </td><td> <b>0</b> </td><td> <b>0</b> </td><td> <b>0</b></td>
+				</tr>
+			</table>
+		</div>
+
+	</div>
+	</section>
+
+	<section>
+	<h1>CRC: Uso</h1>
+	<div class="slideContent">
+
+		<div class="column" style="width: 50% ;">
+			<ul>
+				<li> Computacionalmente simples.</li>
+				<li> Efetivo em detectar erros comuns.</li>
+				<li> Parametrizável.
+				<ul>
+					<li> Número de bits (grau do polinômio gerador).</li>
+					<li> Polinômio gerador em si.</li>
+				</ul>
+				</li>
+				<li> <b>Ampla adotação</b> em protocolos da camada de enlace.
+				<ul>
+					<li> Ethernet, 802.11 (Wi-Fi), ...</li>
+				</ul>
+				</li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50% ;">
+			<ul>
+				<li> <b>Escolha do polinômio</b> gerador é importante.
+				<ul>
+					<li> Alguns são melhores que outros.</li>
+				</ul>
+				</li>
+				<li> Para evitar escolhas ruins, há <b>CRCs padronizados</b>.
+				<ul>
+					<li> CRC16&mdash;IBM, <b>CRC32</b>, CRC32&mdash;C, CRC40&mdash;GSM, ...</li>
+				</ul>
+				</li>
+			</ul>
+		</div>
+
+	</div>
+	</section>
+
+	<section>
+	<h1>CRC: Probabilidade de Falha</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50% ;">
+			<ul>
+				<li> CRC pode falhar?
+				<ul>
+					<li> Sim! Mesmos casos vistos para o Checksum, se aplicam.</li>
+					<li> <b>Em particular, duas mensagens diferentes podem ter o mesmo CRC.</b></li>
+					<li> Estamos &ldquo;resumindo&rdquo; mensagem em poucos (<i>e.g.</i> 32) bits.</li>
+					<li> Há mais combinações de mensagens que valores de CRC.</li>
+				</ul>
+				</li>
+				<li> O quão provável é isso?
+				<ul>
+					<li> Assumindo uma &ldquo;boa&rdquo; função de espalhamento, probabilidade de <b>colisão</b>:</li>
+					<center><span class="math">\(\approx 1 - e^{\scriptsize\frac{-2}{2N}}\)</span></center>
+					<li> <span class="math inline">\(N\)</span>: # de diferentes valores de CRC.</li>
+				</ul>
+				</li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50% ;">
+			<center>
+				<img src="imagens/ProbColisao2.png" style="width: 90% ;"/>
+			</center>
+		</div>
+
+	</div>
+	</section>
+
+	<section>
+	<h1>CRC: Exemplo de Colisão</h1>
+	<div class="slideContent">
+		<script>
+			 var makeCRCTable = function(){
+			    var c;
+			    var crcTable = [];
+			    for(var n =0; n < 256; n++){
+				  c = n;
+				  for(var k =0; k < 8; k++){
+					c = ((c&1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1));
+				  }
+				  crcTable[n] = c;
+			    }
+			    return crcTable;
+			 }
+
+			 var crc32 = function(str) {
+				    var crcTable = window.crcTable || (window.crcTable = makeCRCTable());
+				    var crc = 0 ^ (-1);
+
+				    for (var i = 0; i < str.length; i++ ) {
+						  crc = (crc >>> 8) ^ crcTable[(crc ^ str.charCodeAt(i)) & 0xFF];
+				    }
+
+				    return (crc ^ (-1)) >>> 0;
+			 };
+			 function exemploCRC() {
+
+				var entrada = document.getElementById('exemploCRCEntrada');
+				var saida =  document.getElementById('exemploCRCSaida');
+
+				saida.value = ('00000000' + crc32(entrada.value).toString(16)).slice(-8);
+			 }
+		</script>
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li>Alguns pequenos exemplos de colisão do CRC32:
+				<ul>
+					<li>&ldquo;plumless&rdquo; - 0x4ddb0c25.</li>
+					<li>&ldquo;buckeroo&rdquo; - 0x4ddb0c25.</li>
+				</ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50%;">
+			<center>
+			<div style="width: 60%; border: 2px solid #000; padding-bottom: 10px;">
+			<table class="align" style="width: 90%;">
+				<tr>
+					<td style="width: 90%;">Mensagem</td>
+					<td><input type="text" id="exemploCRCEntrada" name="exemploCRCEntrada" value="RedesII" size="10" maxlength="10" style="font-size: 80%; padding: 0.5%;"/></td>
+				</tr>
+				<tr>
+					<td>CRC32</td>
+					<td><input type="text" readonly="true" id="exemploCRCSaida" name="exemploCRCSaida" value="6959b4c4" size="10" maxlength="4" style="font-size: 80%; padding: 0.5%;" /></td>
+				</tr>
+			</table>
+			<br>
+			<input type="submit" name="exemploCRCCalcular" value="Calcular" style="padding: 0.5%; font-size: 90%; font-family: 'Lora', sans-serif;" onClick="exemploCRC();"/>
+			<br>
+			</div>
+			</center>
+
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>CRC <i>vs</i>. Checksum (I)</h1>
+		<br>
+		<br>
+		<br>
+		<br>
+		<ul>
+			<li>CRC é mais eficiente em detectar erros.
+			<ul>
+				<li>Justifica seu emprego comum em protocolos da camada de enlace.</li>
+			</ul></li>
+			<li>Mas por que, então, o checksum é usado nas camadas superiores?</li>
+		</ul>
+	</section>
+
+	<section>
+	<h1>CRC <i>vs</i>. Checksum (II)</h1>
+		<br>
+		<br>
+		<br>
+		<br>
+		<ul>
+			<li>CRC é mais eficiente em detectar erros.
+			<ul>
+				<li>Justifica seu emprego comum em protocolos da camada de enlace.</li>
+			</ul></li>
+			<li>Mas por que, então, o checksum é usado nas camadas superiores?
+			<ul>
+				<li>Cálculo do CRC é mais complexo computacionalmente.</li>
+				<li>Já o checksum é rápido.</li>
+				<li>Lembre-se:
+				<ul>
+					<li>Camada de enlace é normalmente implementada em <i>hardware</i> especializado.</li>
+					<li>Camadas de rede, transporte são geralmente implementadas em <i>software</i>.</li>
+				</ul></li>
+				<li>Conclusão: implementação do CRC é &ldquo;mais viável&rdquo; na camada de enlace.
+				<ul>
+					<li>Ainda relevante hoje?</li>
+				</ul></li>
+			</ul></li>
+		</ul>
+	</section>
+
+<!--
+
+	<section>
+	<h1>Resumindo...</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li>Camada de enlace:
+				<ul>
+					<li>Responsável por transferir datagramas entre nós <b>diretamente conectados</b>.</li>
+					<li>Encapsula datagramas em unidade chamada de <b>quadro</b>.</li>
+					<li>Também gerencia o <b>acesso ao meio de transmissão</b>.</li>
+					<li><b>Provê endereçamento diferente</b> do provido pela camada de rede.</li>
+					<li>Pode prover <b>entrega confiável de dados</b>.</li>
+					<li>Provê <b>Detecção de erros</b> (e possível correção).</li>
+					<li>Pode prover <b>controle de fluxo</b>.</li>
+					<li>Enlace pode ser <b>half-duplex</b>, <b>full-duplex</b>.</li>
+				</ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li>Detecção/correção de erros:
+				<ul>
+					<li>Importante, principalmente em <b>enlaces propensos a perdas</b>.</li>
+					<li>Detecção é probabilística, <i>i.e.</i>, <b>pode falhar</b>.</li>
+					<li>Utiliza bits <b>redundantes</b>: quanto mais bits, menor probabilidade de falha, maior o <i>overhead</i>.</li>
+					<li>Bit de paridade único: <b>detecta</b> um número ímpar de erros.</li>
+					<li>Paridade bi-dimensional: <b>corrige</b> único erro.
+					<ul>
+						<li>Método simples de <b>FEC</b>.</li>
+					</ul></li>
+					<li>Checksum: <b>detecta</b> erros.</li>
+					<li>CRC: <b>detecta</b> erros melhor que o checksum.</li>
+				</ul></li>
+			</ul>
+		</div>
+	</div>
+	</section>
+
+    <section>
+    <h1>Leitura e Exercícios Sugeridos</h1>
+    <div class="slideContent">
+        <ul>
+            <li>Serviços providos pela camada de enlace:
+            <ul>
+                <li>Páginas 318 a 323 do Kurose (Seção 5.1).</li>
+                <li>Exercícios de fixação 2 e 3 do capítulo 5 (Kurose).</li>
+            </ul></li>
+            <li>Detecção e correção de erros:
+            <ul>
+                <li>Páginas 323 a 328 do Kurose (Seção 5.2).</li>
+                <li>Problemas 1, 2 e 3 do capítulo 5 (Kurose).</li>
+            </ul></li>
+        </ul>
+    </div>
+    </section>
+
+	<section>
+	<h1>Próxima Aula...</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Continuação do estudo da camada de enlace.</li>
+			<li>Próximo tópico: protocolos de acesso múltiplo.
+			<ul>
+				<li>Quais problemas podem decorrer de múltiplas transmissões simultâneas?</li>
+				<li>Como coordenar o acesso de múltiplos nós a um enlace compartilhado?</li>
+				<li>O quão eficientes são estes protocolos?</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+-->
+	<!-- {{{{ dzslides core
+	#
+	#
+	#     __  __  __       .  __   ___  __
+	#    |  \  / /__` |    | |  \ |__  /__`
+	#    |__/ /_ .__/ |___ | |__/ |___ .__/ core :€
+	#
+	#
+	# The following block of code is not supposed to be edited.
+	# But if you want to change the behavior of these slides,
+	# feel free to hack it!
+	#
+	-->
+
+    <!-- More CSS -->
+	<link href='../template/css/slides.css' id="slides" rel='stylesheet' type='text/css'>
+	<link href='../template/css/presentationSpecific2.css' id="presentationSpecific2" rel='stylesheet' type='text/css'>
+
+    <!-- More Javascript -->
+	<script type="text/javascript" src="../template/js/dz.js"></script>
+
+	<!-- More CSS -->
+	<link href='../template/css/notesSpecific.css' id="notesSpecific" rel='stylesheet' type='text/css'>
+	<link href='../template/css/printSpecific.css' id="printSpecific" rel='stylesheet' type='text/css'>
+</body>
+</html>
