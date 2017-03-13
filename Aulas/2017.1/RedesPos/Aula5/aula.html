@@ -6,8 +6,8 @@
 	<meta charset="utf-8">
 	<meta name="shortauthor" content="Diego Passos"/>
 	<meta name="shorttitle" content="Camada de Aplicação, HTTP"/>
-	<meta name="shortevent" content="Redes de Computadores I"/>
-	<title>Redes de Computadores I: Aula 5</title>
+	<meta name="shortevent" content="Redes de Computadores"/>
+	<title>Redes de Computadores: Aula 5</title>
 
     <!-- Math support -->
 	<script type="text/x-mathjax-config">
@@ -17,19 +17,19 @@
 	</script>
 	<script src="js/plotly-latest.min.js"></script>
 	<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
-    <!--<script src="../../../../MathJax-2.6-latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>-->
+  <script src="../../../../../MathJax-2.6-latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
 	<script type="text/javascript" src="../template/js/dz_pre.js"></script>
 
-    <!-- Fonts -->
-    <link href='https://fonts.googleapis.com/css?family=Lora:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
-    <!--<link href='../../../../Fonts/Lora/lora.css' rel='stylesheet' type='text/css'>-->
+  <!-- Fonts -->
+  <link href='https://fonts.googleapis.com/css?family=Lora:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
+  <link href='../../../../../Fonts/Lora/lora.css' rel='stylesheet' type='text/css'>
 
-    <!-- CSS -->
+  <!-- CSS -->
 	<link href='../template/css/template.css' id="template" rel='stylesheet' type='text/css'>
 	<link href='../template/css/presentationSpecific.css' id="presentationSpecific" rel='stylesheet' type='text/css'>
 
 
-    <!-- Javascript -->
+  <!-- Javascript -->
 	<script type="text/javascript" src="../template/js/audio.js"></script>
 	<script src="js/snap.svg-min.js" charset="utf-8"></script>
 	<script src="js/term.js" charset="utf-8"></script>
@@ -47,92 +47,13 @@
             <h1 class="title">Aula 5 - Introdução à Camada de Aplicação, HTTP (I)</h1>
             <h2 class="author">Diego Passos</h2>
             <h4 class="institution">Universidade Federal Fluminense</h4>
-            <h3 class="date">Redes de Computadores I</h3>
+            <h3 class="date">Redes de Computadores</h3>
         </div>
 
 	<br>
 	<br>
 	<div style="width: 30%; float: right; padding-right: 2%;">
 	<p style="font-size: 18px; text-align: right;">Material adaptado a partir dos slides originais de J.F Kurose and K.W. Ross.</p>
-	</div>
-	</section>
-
-	<section>
-	<h1>Revisão da Última Aula...</h1>
-	<div class="slideContent">
-		<div class="column" style="width: 45%;">
-		<ul>
-			<li>Medidas de desempenho em redes:
-			<ul>
-				<li>Perda de pacotes.</li>
-				<li>Atraso.</li>
-				<li>Vazão.</li>
-			</ul></li>
-			<li>Perda de pacotes ocorre por:
-			<ul>
-				<li>Erros na transmissão por enlaces (menos comum na Internet).</li>
-				<li><span class="alert">Descartes por <i>buffers</i> cheios</span> (mais comum).</li>
-			</ul></li>
-			<li>Atraso é acumulado a cada salto:
-			<ul>
-				<li>Processamento.</li>
-				<li>Enfileiramento.</li>
-				<li>Transmissão.</li>
-				<li>Propagação.</li>
-			</ul></li>
-		</ul>
-		</div>
-		<div class="column" style="width: 55%;">
-			<ul>
-				<li>Vazão é diferente da taxa de transmissão do fluxo.
-				<ul>
-					<li>Depende da capacidade da rede.</li>
-					<li>Limitada pelo <span class="alert">enlace de gargalo</span>.</li>
-					<li>Também afetada por competição entre fluxos.</li>
-					item
-				</ul></li>
-				<li>Pilha de Protocolos TCP/IP.
-				<ul>
-					<li>Modelo em camadas.</li>
-					<li>Organiza protocolos na Internet.</li>
-					<li>Define <span class="alert">responsabilidades</span>.</li>
-					<li>Alternativa: modelo OSI.</li>
-					<li><span class="alert">Encapsulamento:</span> camadas/protocolos adicionam cabeçalhos.</li>
-				</ul></li>
-				<li>Segurança:
-				<ul>
-					<li>Ataque de negação de serviço.</li>
-				</ul></li>
-				<li>Modelo de serviço de <span class="alert">melhor esforço</span>.</li>
-			</ul>
-		</div>
-
-	</div>
-	</section>
-
-	<!-- Content slides -->
-
-	<section>
-	<h1>Agenda do Capítulo II</h1>
-	<div class="slideContent">
-		<div class="column" style="width: 50%;">
-			<ul>
-				<li>Princípios de Aplicações de Rede.</li>
-				<li>Web e HTTP.</li>
-				<li>FTP.</li>
-				<li>E-mail.
-				<ul>
-					<li>SMTP, POP3, IMAP.</li>
-				</ul></li>
-			</ul>
-		</div>
-		<div class="column" style="width: 50%;">
-			<ul>
-				<li>DNS.</li>
-				<li>Aplicações P2P.</li>
-				<li>Programação com Sockets.</li>
-			</ul>
-		</div>
 	</div>
 	</section>
 
@@ -1107,100 +1028,6 @@
 			TermCast3 = new TermCast(document.getElementById('termcastHTTT1_1NP'), 'terminalSessions/getBasicoHTTP1.1ConnectionClose.json');
 		});
 	</script>
-
-
-
-	<section>
-	<h1>Resumo da Aula (I)...</h1>
-	<div class="slideContent">
-        <div class="column" style="width: 55%;">
-            <ul>
-                <li>Aplicações de rede: programas <span class="alert">distribuídos</span>.
-                <ul>
-                    <li>&ldquo;Partes&rdquo; rodam em computadores diferentes.</li>
-                    <li>Processos se comunicam através de trocas de mensagens.</li>
-                    <li>Executadas apenas nos <i>hosts</i>.</li>
-                </ul></li>
-                <li>Arquitetura <span class="alert">Cliente-servidor</span>:
-                <ul>
-                    <li>Servidor dedicado, sempre ligado.</li>
-                    <li>Endereço permanente.</li>
-                    <li><span class="alert">Cliente se comunica apenas com servidor</span>.</li>
-                </ul></li>
-                <li>Arquitetura <span class="alert"><i>peer-to-peer</i></span>:
-                <ul>
-                    <li><span class="alert">Clientes podem se comunicar diretamente</span>.</li>
-                    <li>Conteúdos, serviços requisitados de outros pares.</li>
-                    <li>Mais complexo, mas com melhor <span class="alert">escalabilidade</span>.</li>
-                </ul></li>
-            </ul>
-        </div>
-        <div class="column" style="width: 45%;">
-            <ul>
-                <li>Sockets:
-                <ul>
-                    <li>&ldquo;Janela&rdquo; entre aplicação e transporte.</li>
-                    <li>Processos identificados por números de porta.</li>
-                </ul></li>
-
-                <li>Protocolos de aplicação:
-                <ul>
-                    <li>Tipos de mensagens.</li>
-                    <li>Sintaxe, semântica.</li>
-                    <li>Regras sobre como reagir a eventos.</li>
-                </ul></li>
-                <li>Aplicações diferentes têm necessidades diferentes.
-                <ul>
-                    <li>Dão origem a <span class="alert">modelos de serviço</span> diferentes.</li>
-                    <li>UDP e TCP.</li>
-                </ul></li>
-                <li>Web:
-                <ul>
-                    <li>Acesso a objetos hipermídia.</li>
-                    <li>Referenciam outros objetos.</li>
-                </ul></li>
-            </ul>
-        </div>
-	</div>
-	</section>
-
-    <section>
-    <h1>Resumo da Aula (II)...</h1>
-    <div class="slideContent">
-        <ul>
-                <li>HTTP:
-                <ul>
-                    <li>Cliente-servidor.</li>
-                    <li>Requisição e resposta.</li>
-                    <li>Roda sobre TCP.</li>
-                    <li><i>Stateless.</i></li>
-                    <li>Baseado em texto.</li>
-                </ul></li>
-                <li>HTTP: persistente <i>vs.</i> não-persistente.
-                <ul>
-                    <li>Um objeto por conexão <i>vs.</i> múltiplos objetos em uma única conexão.</li>
-                </ul></li>
-                <li>HTTP: tipos de requisição.
-                <ul>
-                    <li><tt>GET, HEAD, POST</tt>.</li>
-                </ul></li>
-        </ul>
-    </div>
-    </section>
-
-	<section>
-	<h1>Próxima Aula...</h1>
-	<div class="slideContent">
-        <ul>
-            <li>Continuamos discutindo o HTTP e a Web.
-            <ul>
-                <li>Cookies: como aplicações complexas salvam estado sobre o HTTP <i>stateless</i>.</li>
-                <li>Web Caches.</li>
-            </ul></li>
-            <li>Também discutiremos outro protocolo clássico: FTP.</li>
-        </ul>
-	</div>
-	</section>
 
 	<!-- {{{{ dzslides core
 	#
