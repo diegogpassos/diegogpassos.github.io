@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <!-- Meta info -->
+	<meta charset="utf-8">
+	<meta name="shortauthor" content="Diego Passos"/>
+	<meta name="shorttitle" content="Apresentação do Curso"/>
+	<meta name="shortevent" content="Redes de Computadores"/>
+	<title>Redes de Computadores: Aula 1</title>
+
+    <!-- Math support -->
+	<script type="text/x-mathjax-config">
+		MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+			MathJax.InputJax.TeX.Definitions.number = /^(?:[0-9]+(?:\.[0-9]{3})*(?:\{,\}[0-9]*)*|\{,\}[0-9]+)/
+		});
+	</script>
+	<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+	<script src="../../../../../MathJax-2.5-latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+
+    <!-- Fonts -->
+	<link href='https://fonts.googleapis.com/css?family=Lora:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
+	<link href='../../../../../Fonts/Lora/lora.css' rel='stylesheet' type='text/css'>
+
+    <!-- CSS -->
+	<link href='../template/css/template.css' id="template" rel='stylesheet' type='text/css'>
+	<link href='../template/css/presentationSpecific.css' id="presentationSpecific" rel='stylesheet' type='text/css'>
+
+    <!-- Javascript -->
+	<script type="text/javascript" src="../template/js/audio.js"></script>
+</head>
+
+<body>
+    <!-- Audio handlers -->
+	<!--<audio src="audio/La.wav" id="La.wav" preload="auto"></audio>-->
+
+    <!-- Title Slide -->
+	<section>
+
+        <div class="slideContent">
+            <h1 class="title">Aula 1 - Apresentação do Curso</h1>
+            <h2 class="author">Diego Passos</h2>
+            <h4 class="institution">Universidade Federal Fluminense</h4>
+            <h3 class="date">Redes de Computadores</h3>
+        </div>
+
+	</section>
+
+    <!-- Content slides -->
+
+     <section class="secao">
+     <div class="slideContent">
+     	Estrutura da Disciplina
+     </div>
+     </section>
+
+	<section>
+	<h1>Informações Gerais</h1>
+	<div class="slideContent">
+			<center>
+				<div class="block" style="width:1100px;">
+					<div class="blockTitle" style="width: 100%;">
+						<p>Salas e Horários</p>
+					</div>
+					<div class="blockBody">
+						<ul>
+							<li>Segundas, 18:00 às 20:00, sala 319.</li>
+							<li>Quartas, 18:00 às 20:00, sala 319.</li>
+						</ul>
+					</div>
+				</div>
+			</center>
+			<br>
+			<br>
+			<center>
+				<div class="block" style="width:1100px;">
+					<div class="blockTitle" style="width: 100%;">
+						<p>Contato</p>
+					</div>
+					<div class="blockBody">
+						<ul>
+							<li><tt>dpassos@ic.uff.br</tt></li>
+							<li><tt><a href="http://www.ic.uff.br/~dpassos/">http://www.ic.uff.br/~dpassos/</a></tt>
+							<li><tt><a href="http://www.midiacom.uff.br/~diego/">http://www.midiacom.uff.br/~diego/</a></tt>
+							<li><tt><a href="http://sites.google.com/site/diegogpassos/disciplinas/redespos_2017_1">http://sites.google.com/site/diegogpassos/disciplinas/ redespos_2017_1</a></tt>
+							<ul>
+								<li>Calendário.</li>
+								<li>Material didático.</li>
+								<li>Informações.</li>
+								<li>Avisos.</li>
+							</ul></li>
+						</ul>
+					</div>
+				</div>
+			</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Objetivos da Disciplina</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Revisar/estudar:
+			<ul>
+				<li>Conceitos básicos de redes de computadores.</li>
+				<li>Arquitetura básica da Internet.</li>
+				<li>Quatro camadas da pilha de protocolos TCP/IP:
+				<ul>
+					<li>Aplicação.</li>
+					<li>Transporte.</li>
+					<li>Rede.</li>
+					<li>Enlace.</li>
+				</ul></li>
+			</ul></li>
+			<li>Estudar alguns artigos clássicos da área.</li>
+			<li>E alguns tópicos de pesquisa recente (ementa variável).
+			<ul>
+				<li>Roteamento em redes sem fio.</li>
+				<li>Codificação de redes.</li>
+				<li>Eficiência energética.</li>
+				<li>Redes definidas por <i>software</i>.
+				<li>...</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Dinâmica da Disciplina</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Aulas expositivas, principalmente no início.
+			<ul>
+				<li>Conteúdo básico de redes.</li>
+				<li>Ritmo mais rápido.</li>
+				<li><i>Slides</i> do Kurose.</li>
+			</ul>
+			</li>
+			<li>Outra parte da disciplina fortemente baseada em leitura de artigos.
+			<ul>
+				<li>Objetivando conhecer o trabalho, mas também <b>discuti-lo</b>.</li>
+				<li>Participação é <b>fundamental</b>.</li>
+			</ul>
+			</li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Bibliografia e Material de Apoio</h1>
+	<div class="slideContent">
+		<center>
+			<div class="block" style="width:1100px;">
+				<div class="blockTitle" style="width: 100%;">
+					<p>Bibliografia Básica</p>
+				</div>
+				<div class="blockBody">
+					<ul>
+						<li>Kurose &amp; Ross, <i>Redes de Computadores e a Internet</i>, Editora Addison-Wesley, 5a. edição, 2005.</li>
+					</ul>
+				</div>
+			</div>
+			<br>
+			<center>
+				<div class="block" style="width:1100px;">
+					<div class="blockTitle" style="width: 100%;">
+						<p>Bibliografia Adicional</p>
+					</div>
+					<div class="blockBody">
+						<ul>
+							<li>Tanenbaum, <i>Computer Networks</i>, Editora Pearson, 5a. edição, 2010.</li>
+							<li>S. Keshav, <i>An Engineering Approach to Computer Networking</i>, Editora Addison-Wesley Professional, 1a. edição, 1997.</li>
+						</ul>
+					</div>
+				</div>
+			</center>
+		</center>
+		<br>
+		<center>
+			<div class="block" style="width:1100px;">
+				<div class="blockTitle" style="width: 100%;">
+					<p>Outras Referências</p>
+				</div>
+				<div class="blockBody">
+					<ul>
+						<li>Slides, videoaulas, referências para artigos na página da disciplina.</li>
+					</ul>
+				</div>
+			</div>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Critério de Avaliação: Alunos de Pós-Graduação</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Apresentação de 2 artigos: 40% da nota final.
+			<ul>
+				<li>Um artigo <b>obrigatório</b>: 20%.</li>
+				<li>Um artigo <b>de livre escolha</b>: 20%.</li>
+			</ul></li>
+			<li>Revisão de dois artigos: 20% da nota final.
+			<ul>
+				<li>Aluno deverá entregar <b>antes da apresentação</b> um formulário de revisão.</li>
+				<li>Cada revisão contará 10% da nota final.</li>
+			</ul></li>
+			<li>Projeto: 20% da nota final.
+			<ul>
+				<li>Pequeno projeto relacionado a algum <b>tema de pesquisa em redes</b>.</li>
+				<li>Relatório: 15%.</li>
+				<li>Apresentação: 5%.</li>
+			</ul></li>
+			<li>Prova: 20% da nota final.
+			<ul>
+				<li>Toda matéria da disciplina.</li>
+				<li><b>Potencialmente incluindo conteúdos dos artigos lidos.</b></li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Critério de Avaliação: Alunos de Graduação</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Apresentação de <b>1 artigo: 20% da nota final</b>.
+			<ul>
+				<li><b>De livre escolha</b>, mas com auxílio.</li>
+				<li><b>Em grupo</b>.</li>
+			</ul></li>
+			<li>Projeto: <b>50% da nota final</b>.
+			<ul>
+				<li>Relatório: <b>30%</b>.</li>
+				<li>Apresentação: <b>20%</b>.</li>
+				<li>Pode ser similar aos projetos dos pós-graduandos.</li>
+				<li>Mas uma <b>sugestão</b>: tentativa de reprodução de resultados do artigo apresentado.</li>
+				<li><b>Em grupo</b>.</li>
+			</ul></li>
+			<li>Prova: <b>30% da nota final</b>.
+			<ul>
+				<li>Toda matéria da disciplina.</li>
+				<li><b>Potencialmente incluindo conteúdos dos artigos lidos.</b></li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Calendário (Sujeito a Alterações)</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<center>
+				<!--
+			<style>
+				table#calendario td {
+
+					padding-left: 5px;
+					padding-right: 5px;
+				}
+			</style>
+
+			<table id="calendario" style="font-size: 80%;">
+				<tr><th colspan="2">Março</th></tr>
+				<tr>
+					<td>15</td>
+					<td style="color: black;">Apresentação da Disciplina</td>
+				</tr>
+				<tr>
+					<td>17</td>
+					<td style="color: black;">Introdução</td>
+				</tr>
+				<tr>
+					<td>22</td>
+					<td style="color: black;">Introdução</td>
+				</tr>
+				<tr>
+					<td>24</td>
+					<td style="color: black;">Introdução/<span class="alert">Definição de Artigos</span></td>
+				</tr>
+				<tr>
+					<td>29</td>
+					<td style="color: blue;">Não Haverá Aula (MINTER)</td>
+				</tr>
+				<tr>
+					<td>31</td>
+					<td style="color: blue;">Não Haverá Aula (MINTER)</td>
+				</tr>
+				<tr><th colspan="2">Abril</th></tr>
+				<tr>
+					<td>05</td>
+					<td style="color: black;">Introdução/Apresentação Artigos [1, 2]</td>
+				</tr>
+				<tr>
+					<td>07</td>
+					<td style="color: black;">Camada de Aplicação</td>
+				</tr>
+				<tr>
+					<td>12</td>
+					<td style="color: black;">Camada de Aplicação</td>
+				</tr>
+				<tr>
+					<td>14</td>
+					<td style="color: black;">Camada de Aplicação/Apresentação Artigo [3]</td>
+				</tr>
+				<tr>
+					<td>19</td>
+					<td style="color: blue;">Não Haverá Aula (MINTER)</td>
+				</tr>
+				<tr>
+					<td>21</td>
+					<td style="color: blue;">Feriado (Tiradentes)</td>
+				</tr>
+				<tr>
+					<td>26</td>
+					<td style="color: black;">Camada de Transporte/<span class="alert">Definição de Projetos</span></td>
+				</tr>
+				<tr>
+					<td>28</td>
+					<td style="color: black;">Camada de Transporte</td>
+				</tr>
+			</table>
+			</center>
+		</div>
+		<div class="column" style="width: 50%;">
+			<center>
+			<style>
+				table#calendario2 td {
+
+					padding-left: 5px;
+					padding-right: 5px;
+				}
+			</style>
+
+			<table id="calendario2" style="font-size: 80%;">
+				<tr><th colspan="2">Maio</th></tr>
+				<tr>
+					<td>03</td>
+					<td style="color: black;">Camada de Transporte</td>
+				</tr>
+				<tr>
+					<td>05</td>
+					<td style="color: black;">Apresentação Artigos [4, 5]/Camada de Rede.</td>
+				</tr>
+				<tr>
+					<td>10</td>
+					<td style="color: black;">Camada de Rede</td>
+				</tr>
+				<tr>
+					<td>12</td>
+					<td style="color: black;">Camada de Rede</td>
+				</tr>
+				<tr>
+					<td>17</td>
+					<td style="color: black;">Camada de Rede</td>
+				</tr>
+				<tr>
+					<td>19</td>
+					<td style="color: black;">Apresentação Artigos [6, 7]/Camada de Enlace.</td>
+				</tr>
+				<tr>
+					<td>24</td>
+					<td style="color: black;">Camada de Enlace/<span class="alert">Definição de Artigos</span></td>
+				</tr>
+				<tr>
+					<td>26</td>
+					<td style="color: blue;">Feriado (Corpus Christi)</td>
+				</tr>
+				<tr>
+					<td>31</td>
+					<td style="color: black;">Camada de Enlace/Apresentação Artigos [8].</td>
+				</tr>
+				<tr><th colspan="2">Junho</th></tr>
+				<tr>
+					<td>02</td>
+					<td style="color: black;">Apresentação Artigos [9, 10, 11]</td>
+				</tr>
+				<tr>
+					<td>07</td>
+					<td style="color: black;">Apresentação Artigos [12, 13, 14]</td>
+				</tr>
+				<tr>
+					<td>09</td>
+					<td style="color: black;">Apresentação Artigos [15, 16, 17]</td>
+				</tr>
+				<tr>
+					<td>14</td>
+					<td style="color: black;">Apresentação Artigos [18, 19, 20]</td>
+				</tr>
+				<tr>
+					<td>16</td>
+					<td style="color: black;">Apresentação Artigos [21, 22]/<span class="alert">Entrega do Relatório do Projeto<span></td>
+				</tr>
+				<tr>
+					<td>21</td>
+					<td style="color: black;">Apresentação dos Projetos</td>
+				</tr>
+				<tr>
+					<td>23</td>
+					<td style="color: black;">Apresentação dos Projetos</td>
+				</tr>
+				<tr>
+					<td>28</td>
+					<td style="color: black;">Apresentação dos Projetos</td>
+				</tr>
+				<tr>
+					<td>30</td>
+					<td style="color: red;">Prova</td>
+				</tr>
+			</table>
+		-->
+		<style type="text/css">
+		<style type="text/css">
+		.tg  {border-collapse:collapse;border-spacing:0;border-color:#bbb;}
+		.tg td{font-size:18px;padding:2px 1px;border-style:solid;border-width:0px;overflow:hidden;word-break:normal;border-color:#bbb;color:#594F4F;background-color:#E0FFEB;}
+		.tg th{font-size:18px;font-weight:normal;padding:2px 1px;border-style:solid;border-width:0px;overflow:hidden;word-break:normal;border-color:#bbb;color:#493F3F;background-color:#9DE0AD;}
+		.tg .tg-lktj{background-color:#C2FFD6;color:#00009b;vertical-align:top}
+		.tg .tg-g4jy{color:#00009b;vertical-align:top}
+		.tg .tg-rmb8{background-color:#C2FFD6;vertical-align:top}
+		.tg .tg-n3ox{background-color:#C2FFD6;color:#fe0000;vertical-align:top}
+		.tg .tg-9hbo{font-weight:bold;vertical-align:top}
+		.tg .tg-3mlp{background-color:#C2FFD6;font-weight:bold;vertical-align:top}
+		.tg .tg-yw4l{vertical-align:top}
+		.tg .tg-mejs{color:#fe0000;vertical-align:top}
+		</style>
+		<table class="tg">
+			<tr>
+		    <th class="tg-9hbo">Data</th>
+		    <th class="tg-9hbo">Assunto</th>
+		  </tr>
+		  <tr>
+		    <td class="tg-3mlp">13/03/2017</td>
+		    <td class="tg-rmb8">Introdução à disciplina.</td>
+		  </tr>
+		  <tr>
+		    <td class="tg-9hbo">15/03/2017</td>
+		    <td class="tg-yw4l">Internet e sua Arquitetura</td>
+		  </tr>
+		  <tr>
+		    <td class="tg-3mlp">20/03/2017</td>
+		    <td class="tg-rmb8">Filosofias da Internet; Comutação de Pacotes; Métricas de Desempenho</td>
+		  </tr>
+		  <tr>
+		    <td class="tg-9hbo">22/03/2017</td>
+		    <td class="tg-mejs">Modelo em Camadas; Segurança; Artigo [1]</td>
+		  </tr>
+		  <tr>
+		    <td class="tg-3mlp">27/03/2017</td>
+		    <td class="tg-n3ox">Artigo [2]; Camada de aplicação: princípios, arquiteturas, serviços; HTTP (I).</td>
+		  </tr>
+		  <tr>
+		    <td class="tg-9hbo">29/03/2017</td>
+		    <td class="tg-yw4l">HTTP (II): Cookies, Web Caches; FTP; E-mail; P2P</td>
+		  </tr>
+		  <tr>
+		    <td class="tg-3mlp">03/04/2017</td>
+		    <td class="tg-n3ox">Artigo [3]; DNS; Programação com Sockets</td>
+		  </tr>
+		  <tr>
+		    <td class="tg-9hbo">05/04/2017</td>
+		    <td class="tg-yw4l">Camada de transporte; modelos de serviço; UDP; Transferência Confiável (I)</td>
+		  </tr>
+		  <tr>
+		    <td class="tg-3mlp">10/04/2017</td>
+		    <td class="tg-rmb8">Transferência Confiável (II); Pipeline; Introdução ao TCP</td>
+		  </tr>
+		  <tr>
+		    <td class="tg-9hbo">12/04/2017</td>
+		    <td class="tg-yw4l">TCP: transferência confiável, controle de fluxo, gerenciamento.</td>
+		  </tr>
+		  <tr>
+		    <td class="tg-3mlp">17/04/2017</td>
+		    <td class="tg-n3ox">TCP: controle de congestionamento; Artigo [4]</td>
+		  </tr>
+		  <tr>
+		    <td class="tg-9hbo">19/04/2017</td>
+		    <td class="tg-mejs">Artigo [5]; Camada de rede; Circuitos vs. datagramas; Roteadores</td>
+		  </tr>
+		  <tr>
+		    <td class="tg-3mlp">24/04/2017</td>
+		    <td class="tg-rmb8">Políticas de Enfileiramento e Descarte; Protocolo IP</td>
+		  </tr>
+		  <tr>
+		    <td class="tg-9hbo">26/04/2017</td>
+		    <td class="tg-g4jy">Feriado (Dia do Trabalho)</td>
+		  </tr>
+		  <tr>
+		    <td class="tg-3mlp">01/05/2017</td>
+		    <td class="tg-n3ox">DHCP; Endereçamento Hierárquico; Artigos [6,7]</td>
+		  </tr>
+		  <tr>
+		    <td class="tg-9hbo">03/05/2017</td>
+		    <td class="tg-mejs">NAT; ICMP; IPv6; Roteamento; Estado de Enlace; Artigo [8]</td>
+		  </tr>
+		  <tr>
+		    <td class="tg-3mlp">08/05/2017</td>
+		    <td class="tg-rmb8">Vetor de distância; Roteamento hierárquico; Intra vs. inter-AS; RIP; OSPF</td>
+		  </tr>
+		</table>
+			</center>
+		</div>
+		<div class="column" style="width: 50%;">
+		  <center>
+				<table class="tg">
+					<tr>
+				    <th class="tg-9hbo">Data</th>
+				    <th class="tg-9hbo">Assunto</th>
+				  </tr>
+					<tr>
+				    <td class="tg-9hbo">10/05/2017</td>
+				    <td class="tg-yw4l">BGP; Roteamento Broadcast; Roteamento Multicast</td>
+				  </tr>
+				  <tr>
+				    <td class="tg-3mlp">15/05/2017</td>
+				    <td class="tg-rmb8">Camada de Enlace: Introdução; Detecção e Correção de Erros</td>
+				  </tr>
+				  <tr>
+				    <td class="tg-9hbo">17/05/2017</td>
+				    <td class="tg-yw4l">Protocolos de Acesso Múltiplo</td>
+				  </tr>
+				  <tr>
+				    <td class="tg-3mlp">22/05/2017</td>
+				    <td class="tg-rmb8">Endereçamento; ARP; Ethernet</td>
+				  </tr>
+				  <tr>
+				    <td class="tg-9hbo">24/05/2017</td>
+				    <td class="tg-yw4l">Switches</td>
+				  </tr>
+				  <tr>
+				    <td class="tg-3mlp">29/05/2017</td>
+				    <td class="tg-rmb8">VLANs</td>
+				  </tr>
+				  <tr>
+				    <td class="tg-9hbo">31/05/2017</td>
+				    <td class="tg-yw4l">MPLS</td>
+				  </tr>
+				  <tr>
+				    <td class="tg-3mlp">05/06/2017</td>
+				    <td class="tg-n3ox">Artigos [9,10,11]</td>
+				  </tr>
+				  <tr>
+				    <td class="tg-9hbo">07/06/2017</td>
+				    <td class="tg-mejs">Apresentações de artigos (4)</td>
+				  </tr>
+				  <tr>
+				    <td class="tg-3mlp">12/06/2017</td>
+				    <td class="tg-n3ox">Apresentações de artigos (4)</td>
+				  </tr>
+				  <tr>
+				    <td class="tg-9hbo">14/06/2017</td>
+				    <td class="tg-mejs">Apresentações de artigos (4)</td>
+				  </tr>
+				  <tr>
+				    <td class="tg-3mlp">19/06/2017</td>
+				    <td class="tg-n3ox">Apresentações de artigos (4)</td>
+				  </tr>
+				  <tr>
+				    <td class="tg-9hbo">21/06/2017</td>
+				    <td class="tg-mejs">Apresentações de projetos (7)</td>
+				  </tr>
+				  <tr>
+				    <td class="tg-3mlp">26/06/2017</td>
+				    <td class="tg-n3ox">Apresentações de projetos (7)</td>
+				  </tr>
+				  <tr>
+				    <td class="tg-9hbo">28/06/2017</td>
+				    <td class="tg-mejs">Prova (fim do período da pós)</td>
+				  </tr>
+				  <tr>
+				    <td class="tg-3mlp">03/07/2017</td>
+				    <td class="tg-n3ox">Graduação apenas: VR (Se Necessária)</td>
+				  </tr>
+				  <tr>
+				    <td class="tg-9hbo">05/07/2017</td>
+				    <td class="tg-yw4l">Divulgação das notas (Prova, VR, Projeto, ...)</td>
+				  </tr>
+				  <tr>
+				    <td class="tg-3mlp">10/07/2017</td>
+				    <td class="tg-lktj">Preparação para VS (Não Haverá Aula)</td>
+				  </tr>
+				  <tr>
+				    <td class="tg-9hbo">12/07/2017</td>
+				    <td class="tg-mejs">Graduação apenas: VS (Se Necessária)</td>
+				  </tr>
+				  <tr>
+				    <td class="tg-3mlp">17/07/2017</td>
+				    <td class="tg-rmb8">Graduação apenas: Divulgação das Notas Finais / Vista da VS</td>
+				  </tr>
+				  <tr>
+				    <td class="tg-9hbo">19/07/2017</td>
+				    <td class="tg-g4jy">Fim de Período (Não Haverá Aula)</td>
+				  </tr>
+				</table>
+		  </center>
+		</div>
+
+	</div>
+	</section>
+
+	<section>
+	<h1>Sobre os Artigos (I)</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Cada aluno de pós-graduação apresentará dois artigos:
+				<ul>
+					<li>Um da lista de <b>artigos obrigatórios</b> (já disponível na página da disciplina).</li>
+					<li>Um de <b>livre escolha</b> (sugere-se dentro do tema do projeto).</li>
+				</ul>
+			</li>
+			<li>O apresentador terá sempre, ao menos, uma semana para se preparar.
+				<ul>
+					<li>Ler o artigo e preparar a apresentação.</li>
+					<li>Também deverá entregar um formulário de revisão preenchido <b>antes da apresentação</b>.
+				</ul>
+			</li>
+			<li>Revisões não serão cobradas dos demais alunos, <b>mas espera-se que todos leiam os artigos</b>.
+				<ul>
+					<li>Artigos serão discutidos em sala de aula.</li>
+					<li>Participação é fundamental.</li>
+				</ul>
+			</li>
+
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Sobre os Artigos (II)</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>Artigos de livre escolha podem ser de qualquer tema <b>pertinente à disciplina</b>.</li>
+	    <li>Mas artigo tem que atender aos seguintes <b>requisitos</b>:
+	    <ul>
+	      <li>Ter sido publicado em um dos <b>seguintes veículos</b>:
+	      <ul>
+	        <li>Conferências: GLOBECOM, INFOCOM, SIGCOMM.</li>
+	        <li>Periódicos: Computer Networks, IEEE Transactions on Computer Communications, IEEE/ACM Transactions on Networking, IEEE Transactions on Wireless Communications.</li>
+	      </ul></li>
+	      <li>Ter sido publicado nos <b>últimos 4 anos</b> (<i>i.e.</i>, de 2014 para cá).</li>
+	    </ul></li>
+			<li>Tempo de apresentação:
+			<ul>
+			  <li>Até 25 minutos, mais arguição/perguntas.</li>
+			</ul></li>
+	  </ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Sobre os Artigos (III)</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>Para os alunos de <b>graduação</b>, não há restrição de escolha do artigo.</li>
+	    <li>Mas:
+	    <ul>
+	      <li>Escolha deve ser feita em acordo com o professor.</li>
+	      <li>Artigo deve &ldquo;ajudar&rdquo; no projeto da disciplina.</li>
+	    </ul></li>
+			<li>Apresentação feita em grupo.
+			<ul>
+			  <li><b>Notas individuais</b>.</li>
+			</ul></li>
+	    <li>Mesma duração das apresentações dos alunos de pós:
+	    <ul>
+	      <li>Até 25 minutos, mais arguição/discussão.</li>
+	    </ul></li>
+	  </ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Sobre as Revisões</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Devem ser entregues <b>obrigatoriamente antes do dia da apresentação</b>.</li>
+			<li>Entrega por e-mail.</li>
+			<li>Campos típicos de um formulário de revisão:
+			<ul>
+				<li>Pequeno resumo: algumas poucas frases.</li>
+				<li>Pontos positivos: idem.</li>
+				<li>Pontos negativos: idem.</li>
+				<li>E notas:
+				<ul>
+					<li>Apresentação.</li>
+					<li>Originalidade.</li>
+					<li>Rigor técnico.</li>
+					<li>Contribuição.</li>
+					<li>Avaliação geral.</li>
+				</ul></li>
+				<li>Comentários que justifiquem as notas.</li>
+				<li>Sugestões de melhorias no artigo.</li>
+			</ul></li>
+			<li>Descrição disponível na página da disciplina.</li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Sobre a Prova</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Conteúdo das aulas expositivas:
+			<ul>
+				<li>Arquiteturas.</li>
+				<li>Camada de Aplicação.</li>
+				<li>Camada de Transporte.</li>
+				<li>...</li>
+			</ul></li>
+			<li>Mas também sobre os artigos vistos ao longo da disciplina.
+			<ul>
+				<li>Foco na visão geral, vantagens, desvantagens.</li>
+				<li>Detalhes e especificidades são menos importantes.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Sobre o Projeto: Alunos de Pós-graduação (I)</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Individuais.</li>
+			<li>Alunos são livres para escolher os temas.</li>
+			<li>Mas todo projeto deve:
+			<ul>
+				<li>Ter relação com redes de computadores.</li>
+				<li>Ter relação a um tópico recente de pesquisa.</li>
+				<li>Discutam possíveis temas com o professor.</li>
+			</ul></li>
+			<li><b>Plágio não será tolerado!</b>
+			<ul>
+				<li>Trabalhos plagiados (de qualquer que seja a fonte) serão <b>desconsiderados</b>.</li>
+			</ul></li>
+			<li>Notem que o <b>tempo é curto</b>.
+			<ul>
+				<li>Cerca de três meses até o prazo de entrega.</li>
+				<li>Escolham projetos <b>viáveis, com escopo bem definido</b>.</li>
+				<li>Escolham o quanto antes.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Sobre o Projeto: Alunos de Pós-graduação (II)</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Relatório a ser entregue até o dia 20/06.<ul>
+				<li>Entrega por e-mail.</li>
+			</ul></li>
+			<li>Apresentações orais para toda a turma.
+			<ul>
+				<li>Duração: 15 minutos, mais arguição/discussão.</li>
+				<li>Deverá explicar o tema abordado, objetivos e resultados.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Exemplos de Projetos: Localização em Ambientes <i>Indoor</i></h1>
+	<div class="slideContent">
+		<ul>
+			<li>Problema: determinar localização de equipamento/pessoa em ambiente interno.
+				<ul>
+					<li>Similar a um GPS, mas indoor.</li>
+					<li>Utiliza sinais de interfaces de rede sem fio comuns, como WiFi, Bluetooth, etc.</li>
+				</ul></li>
+			<li>Abordagens comuns:
+				<ul>
+					<li>Inteligência artificial (mineração de dados, aprendizado de máquina).</li>
+					<li>Modelagem matemática.</li>
+				</ul></li>
+			<li>Projeto pode envolver:
+				<ul>
+					<li>Implementação de métodos da literatura.</li>
+					<li>Proposta de um novo método.</li>
+					<li>Coleta e análise de dados pertinentes ao problema.</li>
+				</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Exemplos de Projetos: Variantes do TCP</h1>
+	<div class="slideContent">
+		<ul>
+			<li>TCP já possui muitas variantes propostas.
+				<ul>
+					<li>Inclusive para tipos específicos de redes (como redes sem fio).</li>
+				</ul></li>
+			<li>Possibilidade de projetos:
+				<ul>
+					<li>Implementar/avaliar algumas variantes do TCP.</li>
+					<li>Verificar adequação à um determinado tipo de rede.</li>
+					<li>Eventualmente propor e avaliar alguma otimização.</li>
+				</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Exemplos de Projetos: <i>Survey</i> sobre Métodos de <i>Rendezvous</i> para Rádios Cognitivos</h1>
+	<div class="slideContent">
+	  <ul>
+			<li>Área relativamente <b>recente, de interesse acadêmico</b>.</li>
+	    <li>Rádios com capacidade de operar em diversas bandas.
+	    <li>Autonomicamente verificam disponibilidade e escolhem canal adequado para operação.</li>
+	    <li>Rádios precisam <b>se encontrar</b> em <b>canais de controle</b> para coordenação.</li>
+	    <li><b>Questão central</b>: como garantir ocorrência de encontros em um tempo máximo, minimizando o <i>overhead</i> de controle?</li>
+			<li>Possibilidade de projeto:
+			<ul>
+			  <li>Levantamento bibliográfico no tema.</li>
+			  <li>Classificação, descrição e análise crítica dos métodos encontrados.</li>
+			  <li>Identificação de problemas em aberto.</li>
+			</ul></li>
+	  </ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Exemplos de Projetos: Eficiência de Rede de Soluções para Versionamento de Código</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>Git, Subversion, Mercurial, ...</li>
+	    <li>Operações típicas muitas vezes requerem transmissão de dados/arquivos pela rede.</li>
+	    <li>Cada sistema tem suas particularidades:
+	    <ul>
+	      <li>Alguns comprimem dados antes do envio.</li>
+	      <li>Outros usam repositórios distribuídos.</li>
+	      <li>...</li>
+	    </ul></li>
+	    <li>Possibilidade de projeto:
+	    <ul>
+	      <li>Avaliação da eficiência do uso da rede em operações comuns.</li>
+	      <li>Pode incluir experimentos práticos.</li>
+	    </ul></li>
+	  </ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Sobre o Projeto: Alunos de Graduação (I)</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>Pode ser feito nos moldes do projeto para os alunos de Pós.</li>
+	    <li>Mas uma <b>sugestão</b>:
+	    <ul>
+	      <li>Tentar reproduzir experimentos realizados no artigo apresentado.</li>
+	      <li>Montar cenário descrito em um simulador de redes.
+	      <ul>
+	        <li><i>e.g.</i>, ns-2, ns-3, TOSSIM, OMNeT++, ...</li>
+	      </ul></li>
+	      <li>Executar simulações, extrair e analisar resultados.</li>
+	      <li>Reportar achados:
+	      <ul>
+	        <li>Foram encontrados resultados similares?</li>
+	        <li>Se não, por quê?</li>
+	      </ul></li>
+	    </ul></li>
+	  </ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Sobre o Projeto: Alunos de Graduação (II)</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>Assim como a apresentação do artigo, feito <b>em grupo</b>.</li>
+	    <li>Tempo de apresentação idêntico ao dos projetos dos alunos de pós:
+	    <ul>
+	      <li>15 minutos, mais arguição/discussão.</li>
+	    </ul></li>
+	  </ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Resumo das Datas Importantes</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li><b>15/03/2017</b>: Definição dos apresentadores de cada um dos artigos obrigatórios.</li>
+			<li><b>24/04/2017</b>: Definição dos temas dos projetos e dos artigos de livre escolha.</li>
+			<li><b>24/05/2017</b>: Definição da ordem das apresentações dos artigos de livre escolha e dos projetos.</li>
+			<li><b>28/06/2017</b>: Prova e último dia de aulas para os alunos de pós-graduação.</li>
+	  </ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Próxima Aula...</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Começaremos a disciplina &ldquo;de verdade&rdquo;.</li>
+			<li>Primeiro tópico: A Internet e sua Arquitetura.</li>
+		</ul>
+	</div>
+	</section>
+
+	<!-- {{{{ dzslides core
+	#
+	#
+	#     __  __  __       .  __   ___  __
+	#    |  \  / /__` |    | |  \ |__  /__`
+	#    |__/ /_ .__/ |___ | |__/ |___ .__/ core :€
+	#
+	#
+	# The following block of code is not supposed to be edited.
+	# But if you want to change the behavior of these slides,
+	# feel free to hack it!
+	#
+	-->
+
+    <!-- More CSS -->
+	<link href='../template/css/slides.css' id="slides" rel='stylesheet' type='text/css'>
+	<link href='../template/css/presentationSpecific2.css' id="presentationSpecific2" rel='stylesheet' type='text/css'>
+
+    <!-- More Javascript -->
+	<script type="text/javascript" src="../template/js/dz.js"></script>
+
+	<!-- More CSS -->
+	<link href='../template/css/notesSpecific.css' id="notesSpecific" rel='stylesheet' type='text/css'>
+	<link href='../template/css/printSpecific.css' id="printSpecific" rel='stylesheet' type='text/css'>
+</body>
+</html>
