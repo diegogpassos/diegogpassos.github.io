@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <!-- Meta info -->
+		<meta charset="utf-8">
+		<meta name="shortauthor" content="Diego Passos"/>
+		<meta name="shorttitle" content="DHCP, Endereçamento"/>
+		<meta name="shortevent" content="Redes de Computadores"/>
+		<title>Redes de Computadores: Aula 14</title>
+
+		<!-- Math support -->
+		<script type="text/x-mathjax-config">
+		MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+			MathJax.InputJax.TeX.Definitions.number = /^(?:[0-9]+(?:\.[0-9]{3})*(?:\{,\}[0-9]*)*|\{,\}[0-9]+)/
+		});
+		</script>
+		<!--<script src="js/plotly-latest.min.js"></script>-->
+		<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+		<script src="../../../../../MathJax-2.6-latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+		<script type="text/javascript" src="../template/js/dz_pre.js"></script>
+
+		<!-- Fonts -->
+		<link href='https://fonts.googleapis.com/css?family=Lora:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
+		<link href='../../../../../Fonts/Lora/lora.css' rel='stylesheet' type='text/css'>
+
+		<!-- CSS -->
+		<link href='../template/css/template.css' id="template" rel='stylesheet' type='text/css'>
+		<link href='../template/css/presentationSpecific.css' id="presentationSpecific" rel='stylesheet' type='text/css'>
+
+
+		<!-- Javascript -->
+		<!--
+		<script type="text/javascript" src="../template/js/audio.js"></script>
+		<script src="js/term.js" charset="utf-8"></script>
+    <script src="js/termcast.js" charset="utf-8"></script>
+		<link rel="stylesheet" href="css/googlecode.css">
+		<script src="js/highlight.pack.js"></script>
+		<script>
+			hljs.initHighlightingOnLoad();
+			hljs.configure({
+				tabReplace: '  '
+			});
+		</script>
+		-->
+</head>
+
+<body>
+    <!-- Audio handlers -->
+	<!--<audio src="audio/La.wav" id="La.wav" preload="auto"></audio>-->
+
+    <!-- Title Slide -->
+	<section>
+
+        <div class="slideContent">
+            <h1 class="title">Aula 14 - Protocolo DHCP, Endereçamento Hierárquico</h1>
+            <h2 class="author">Diego Passos</h2>
+            <h4 class="institution">Universidade Federal Fluminense</h4>
+            <h3 class="date">Redes de Computadores</h3>
+        </div>
+		<br>
+		<br>
+			<div style="width: 30%; float: right; padding-right: 2%;">
+			<p style="font-size: 18px; text-align: right;">Material adaptado a partir dos slides originais de J.F Kurose and K.W. Ross.</p>
+		</div>
+	</section>
+
+	<section class="secao">
+	<div class="slideContent">
+	  DHCP
+	</div>
+	</section>
+
+	<section>
+	<h1>Endereços IP: Como Conseguir Um?</h1>
+	<div class="slideContent">
+		<ul>
+		  <li><span class="alert">Pergunta:</span> como um <i>host</i> obtém seu endereço IP?</li>
+		  <li>Algumas possibilidades:
+		  <ul>
+		    <li>Configurado de maneira <b>estática</b> pelo administrador do sistema em um arquivo.
+		    <ul>
+		      <li>Windows: painel de controle &rarr; Redes &rarr; Configuração &rarr; TCP/IP &rarr; Propriedades.</li>
+		      <li>UNIX: <tt>/etc/rc.config</tt>.</li>
+		    </ul></li>
+		    <li><span class="alert">DHCP: D</span>ynamic <span class="alert">H</span>ost <span class="alert">C</span>onfiguration <span class="alert">P</span>rotocol.
+		    <ul>
+		      <li>Obtém configuração dinamicamente diretamente de um servidor.</li>
+		      <li>&ldquo;plug-and-play&rdquo;.</li>
+		    </ul></li>
+		  </ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>DHCP: <i>Dynamic Host Configuration Protocol</i></h1>
+	<div class="slideContent">
+	  <ul>
+	    <li><b>Objetivo:</b> permitir que <i>host</i> dinamicamente obtenha seu endereço IP de um servidor da rede quando se conecta a ela.
+	    <ul>
+	      <li>Endereços atribuídos pelo servidor em esquema de &ldquo;empréstimo&rdquo; (<i>lease</i>).</li>
+	      <li>Dispositivo pode renovar sua <i>lease</i> durante o uso.</li>
+	      <li>Permite reutilização de endereços (dispositivos só possuem endereço enquanto conectados à rede/ligados).</li>
+	      <li>Dá suporte a usuários móveis que querem se conectar a rede (mais detalhes em Redes II).</li>
+	    </ul></li>
+	    <li><b>Visão geral do DHCP:</b>
+	    <ul>
+	      <li><i>Host</i> envia mensagem do tipo <span class="alert">&ldquo;DHCP discover&rdquo;</span> em <b><i>broadcast</i></b> [opcional].</li>
+	      <li>Servidor DHCP responde com um <span class="alert">&ldquo;DHCP offer&rdquo;</span>[opcional].</li>
+	      <li><i>Host</i> requisita endereço IP com mensagem <span class="alert">&ldquo;DHCP request&rdquo;</span>.</li>
+	      <li>Servidor DHCP envia endereço com mensagem <span class="alert">&ldquo;DHCP ack&rdquo;</span>.</li>
+	    </ul></li>
+	  </ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Cenário de Cliente-Servidor DHCP</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/DHCP.svg" style="width: 70%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>DHCP: Interação Típica</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/DHCPInteracao.svg" style="width: 60%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>DHCP: Mais que Apenas Endereços IP</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>DHCP pode retornar mais que apenas um endereço IP adequado para aquela sub-rede.
+	    <ul>
+	      <li>Endereço IP do <span class="alert">roteador de primeiro salto</span>.
+	      <ul>
+	        <li>Também chamado de <span class="alert">gateway padrão</span>.</li>
+	      </ul></li>
+	      <li>Nome e endereço IP do servidor DNS local.</li>
+	      <li>Máscara de sub-rede.</li>
+	      <li>...</li>
+	    </ul></li>
+	  </ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>DHCP: Exemplo (I)</h1>
+	<div class="slideContent">
+	  <div class="column" style="width: 50%;">
+			<center>
+			  <img src="imagens/DHCPExemplo.svg" style="width: 70%;"/>
+			</center>
+	  </div>
+	  <div class="column" style="width: 50%;">
+			<ul>
+			  <li>Laptop se conecta à rede e precisa do seu endereço IP, endereço do roteador de primeiro salto, endereço do servidor DNS: utilizar DHCP.</li>
+			  <li>Requisição DHCP encapsulada em UDP, encapsulado em IP, encapsulado em 802.3 (Ethernet).</li>
+			  <li>Quadro Ethernet enviado em <i>broadcast</i> na rede local, recebido (em particular) no roteador rodando o servidor DHCP.</li>
+			  <li>Ethernet demultiplexado para IP, demultiplexado para UDP, demultiplexado para DHCP.</li>
+			</ul>
+	  </div>
+	</div>
+	</section>
+
+	<section>
+	<h1>DHCP: Exemplo (II)</h1>
+	<div class="slideContent">
+	  <div class="column" style="width: 50%;">
+			<center>
+			  <img src="imagens/DHCPExemplo2.svg" style="width: 70%;"/>
+			</center>
+
+	  </div>
+	  <div class="column" style="width: 50%;">
+			<ul>
+			  <li>Servidor DHCP formula um DHCP Ack contendo o endereço IP do cliente, endereço do roteador de primeiro salto, nome e endereço do servidor de DNS.</li>
+			  <li>Mensagem é encapsulada e enviada para o cliente.</li>
+			  <li>Cliente passa a saber seu endereço IP, endereço do servidor DNS, endereço IP do roteador de primeiro salto.</li>
+			</ul>
+	  </div>
+	</div>
+	</section>
+
+	<section>
+	<h1>DHCP: Saída de Captura do Wireshark</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/DHCPCaptura.svg" style="width: 90%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section class="secao">
+	<div class="slideContent">
+	  Endereçamento Hierárquico
+	</div>
+	</section>
+
+	<section>
+	<h1>Endereçamento IP: Como Obter Um?</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li><span class="alert">Pergunta:</span> como <b>a rede</b> obtém seus endereços?
+	    <ul>
+	      <li><i>i.e.</i>, seu prefixo.</li>
+	    </ul></li>
+	    <li><span class="alert">Resposta:</span> é alocada uma porção do espaço de endereços do seu ISP.
+	    <ul>
+	      <li>Uma <b>sub-rede menor</b>, contida na sub-rede do ISP, é alocada.</li>
+	    </ul></li>
+	    <li>Exemplo:</li>
+	  </ul>
+		<center>
+			<style media="screen">
+				td {
+					padding-top: 1px;
+				}
+			</style>
+			<table>
+				<tr style="border-bottom: 2px solid #000;">
+					<td>
+						Bloco do ISP
+					</td>
+					<td>
+						<tt><u>11001000 00010111 0001</u>0000 00000000</tt>
+					</td>
+					<td>
+						200.23.16.0/20
+					</td>
+				</tr>
+				<tr>
+					<td>
+						Organização 1
+					</td>
+					<td>
+						<tt><u>11001000 00010111 0001000</u>0 00000000</tt>
+					</td>
+					<td>
+						200.23.16.0/23
+					</td>
+				</tr>
+				<tr>
+					<td>
+						Organização 2
+					</td>
+					<td>
+						<tt><u>11001000 00010111 0001001</u>0 00000000</tt>
+					</td>
+					<td>
+						200.23.18.0/23
+					</td>
+				</tr>
+				<tr>
+					<td>
+						Organização 3
+					</td>
+					<td>
+						<tt><u>11001000 00010111 0001010</u>0 00000000</tt>
+					</td>
+					<td>
+						200.23.20.0/23
+					</td>
+				</tr>
+				<tr>
+					<td>
+						...
+					</td>
+					<td>
+						...
+					</td>
+					<td>
+						...
+					</td>
+				</tr>
+				<tr>
+					<td>
+						Organização 7
+					</td>
+					<td>
+						<tt><u>11001000 00010111 0001111</u>0 00000000</tt>
+					</td>
+					<td>
+						200.23.30.0/23
+					</td>
+				</tr>
+			</table>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Endereçamento Hierárquico: Agregação de Rotas (I)</h1>
+	<div class="slideContent">
+		<ul>
+		  <li>Endereçamento hierárquico permite o anúncio eficiente de informações de roteamento.</li>
+		</ul>
+		<br>
+	  <center>
+	    <img src="imagens/RoteamentoHierarquico1.svg" style="width: 70%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Endereçamento Hierárquico: Agregação de Rotas (II)</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Suponha que a organização 1 mude de ISP, mas queira manter seus endereços.</li>
+		  <li>Agora, o ISPs-R-Us tem rota <span class="alert">mais específica</span> para organização 1.</li>
+			<li>Endereçamento hierárquico + casamento por prefixo mais longo.</li>
+		</ul>
+		<br>
+	  <center>
+	    <img src="imagens/RoteamentoHierarquico2.svg" style="width: 70%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Endereçamento IP: Última Palavra...</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li><span class="alert">Pergunta:</span> como um ISP obtém um bloco de endereços?</li>
+	    <li><span class="alert">Resposta:</span> ICANN: Internet Corporation for Assigned Names and Numbers.
+	    <ul>
+	      <li><tt>http://www.icann.org/</tt></li>
+	      <li>Aloca endereços.</li>
+	      <li>Gerencia DNS.</li>
+	      <li>Atribui nomes de domínios, resolve disputas.</li>
+	    </ul></li>
+	  </ul>
+	</div>
+	</section>
+
+	<!-- {{{{ dzslides core
+	#
+	#
+	#     __  __  __       .  __   ___  __
+	#    |  \  / /__` |    | |  \ |__  /__`
+	#    |__/ /_ .__/ |___ | |__/ |___ .__/ core :€
+	#
+	#
+	# The following block of code is not supposed to be edited.
+	# But if you want to change the behavior of these slides,
+	# feel free to hack it!
+	#
+	-->
+
+    <!-- More CSS -->
+	<link href='../template/css/slides.css' id="slides" rel='stylesheet' type='text/css'>
+	<link href='../template/css/presentationSpecific2.css' id="presentationSpecific2" rel='stylesheet' type='text/css'>
+
+    <!-- More Javascript -->
+	<script type="text/javascript" src="../template/js/dz.js"></script>
+
+	<!-- More CSS -->
+	<link href='../template/css/notesSpecific.css' id="notesSpecific" rel='stylesheet' type='text/css'>
+	<link href='../template/css/printSpecific.css' id="printSpecific" rel='stylesheet' type='text/css'>
+</body>
+</html>
