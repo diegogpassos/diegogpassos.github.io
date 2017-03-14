@@ -1,0 +1,1247 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <!-- Meta info -->
+		<meta charset="utf-8">
+		<meta name="shortauthor" content="Diego Passos"/>
+		<meta name="shorttitle" content="Transporte, UDP, Confiabilidade"/>
+		<meta name="shortevent" content="Redes de Computadores"/>
+		<title>Redes de Computadores: Aula 8</title>
+
+		<!-- Math support -->
+		<script type="text/x-mathjax-config">
+		MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+			MathJax.InputJax.TeX.Definitions.number = /^(?:[0-9]+(?:\.[0-9]{3})*(?:\{,\}[0-9]*)*|\{,\}[0-9]+)/
+		});
+		</script>
+		<script src="js/plotly-latest.min.js"></script>
+		<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+		<script src="../../../../../MathJax-2.6-latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+		<script type="text/javascript" src="../template/js/dz_pre.js"></script>
+
+		<!-- Fonts -->
+		<link href='https://fonts.googleapis.com/css?family=Lora:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
+		<link href='../../../../../Fonts/Lora/lora.css' rel='stylesheet' type='text/css'>
+
+		<!-- CSS -->
+		<link href='../template/css/template.css' id="template" rel='stylesheet' type='text/css'>
+		<link href='../template/css/presentationSpecific.css' id="presentationSpecific" rel='stylesheet' type='text/css'>
+
+
+		<!-- Javascript -->
+		<script type="text/javascript" src="../template/js/audio.js"></script>
+		<script src="js/term.js" charset="utf-8"></script>
+    <script src="js/termcast.js" charset="utf-8"></script>
+		<!--
+		<link rel="stylesheet" href="css/googlecode.css">
+		<script src="js/highlight.pack.js"></script>
+		<script>
+			hljs.initHighlightingOnLoad();
+			hljs.configure({
+				tabReplace: '  '
+			});
+		</script>
+		-->
+</head>
+
+<body>
+    <!-- Audio handlers -->
+	<!--<audio src="audio/La.wav" id="La.wav" preload="auto"></audio>-->
+
+    <!-- Title Slide -->
+	<section>
+
+        <div class="slideContent">
+            <h1 class="title">Aula 8 - Conceitos de Camada de Transporte, UDP, Transferência Confiável (I)</h1>
+            <h2 class="author">Diego Passos</h2>
+            <h4 class="institution">Universidade Federal Fluminense</h4>
+            <h3 class="date">Redes de Computadores</h3>
+        </div>
+
+		<br>
+		<br>
+			<div style="width: 30%; float: right; padding-right: 2%;">
+			<p style="font-size: 18px; text-align: right;">Material adaptado a partir dos slides originais de J.F Kurose and K.W. Ross.</p>
+		</div>
+	</section>
+
+	<section class="secao">
+	<div class="slideContent">
+	  Serviços da Camada de Transporte
+	</div>
+	</section>
+
+	<section>
+	<h1>Serviços e Protocolos de Transporte</h1>
+	<div class="slideContent">
+	  <div class="column" style="width: 50%;">
+			<ul>
+			  <li>Provê <span class="alert">comunicação lógica</span> entre <span class="alert">processos</span> da aplicação rodando em <i>hosts</i> diferentes.</li>
+			  <li>Protocolos de transporte <span class="alert">são executados nos sistemas finais</span>.
+			  <ul>
+			    <li>Lado transmissor: quebra mensagens da aplicação em <span class="alert">segmentos</span>, passa segmentos para camada de rede.</li>
+			    <li>Lado receptor: remonta segmentos para formar mensagens originais, passa mensagens para a camada de aplicação.</li>
+			  </ul></li>
+			  <li>Mais de um protocolo disponível para as aplicações.
+			  <ul>
+			    <li>Na Internet: TCP e UDP.</li>
+			  </ul></li>
+			</ul>
+	  </div>
+	  <div class="column" style="width: 50%;">
+			<center>
+			  <img src="imagens/CamadaDeTransporte.svg" style="width: 70%;"/>
+			</center>
+	  </div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Camada de Transporte <i>vs.</i> Camada de Rede</h1>
+	<div class="slideContent">
+	  <div class="column" style="width: 40%;">
+			<ul>
+			  <li><b>Camada de Rede:</b> comunicação lógica entre <i>hosts</i>.</li>
+			  <li><b>Camada de Transporte:</b> comunicação lógica entre processos.
+			  <ul>
+			    <li>Depende de, e aperfeiçoa, serviços da camada de rede.</li>
+			  </ul></li>
+			</ul>
+	  </div>
+	  <div class="column" style="width: 60%;">
+			<center>
+			<div class="block" style="width:600px;">
+			    <div class="blockTitle" style="width: 100%;">
+			        <p>Analogia doméstica</p>
+			    </div>
+			    <div class="blockBody">
+			        <ul>
+			          <li>12 crianças na casa da Ann enviam cartas a 12 crianças na casa do Bill.
+			          <ul>
+			            <li><i>hosts</i> = casas.</li>
+			            <li>processos = crianças.</li>
+			            <li>mensagens da aplicação = cartas nos envelopes.</li>
+			            <li>protocolo de transporte = Ann e Bill que demultiplexam cartas para as crianças.</li>
+			            <li>protocolo de camada de rede = correios.</li>
+			          </ul></li>
+			        </ul>
+			    </div>
+			</div>
+			</center>
+	  </div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Protocolos de Camada de Transporte da Internet</h1>
+	<div class="slideContent">
+	  <div class="column" style="width: 50%;">
+			<ul>
+			  <li>Entrega confiável, em ordem (TCP).
+			  <ul>
+			    <li>Controle de congestionamento.</li>
+			    <li>Controle de fluxo.</li>
+			    <li><i>Setup</i> da conexão.</li>
+			  </ul></li>
+			  <li>Entrega não-confiável, não-ordenada (UDP).
+			  <ul>
+			    <li>Extensão básica do serviço de &ldquo;melhor esforço&rdquo; do IP.</li>
+			  </ul></li>
+			  <li>Serviços não disponíveis (nem TCP, nem UDP):
+			  <ul>
+			    <li>Garantias de atraso máximo.</li>
+			    <li>Garantias de vazão mínima.</li>
+			  </ul></li>
+			</ul>
+	  </div>
+	  <div class="column" style="width: 50%;">
+			<center>
+			  <img src="imagens/CamadaDeTransporte.svg" style="width: 70%;"/>
+			</center>
+	  </div>
+	</div>
+	</section>
+
+	<section class="secao">
+	<div class="slideContent">
+	  Multiplexação e Demultiplexação
+	</div>
+	</section>
+
+	<section>
+	<h1>Multiplexação/Demultiplexação</h1>
+	<div class="slideContent">
+		<div style="height: 200px;">
+			<div class="column" style="width: 50%;">
+				<center>
+					<div class="block" style="width:550px;">
+						<div class="blockTitle" style="width: 100%;">
+							<p>Multiplexação no Transmissor</p>
+						</div>
+						<div class="blockBody">
+							Lida com dados de múltiplos sockets, adiciona cabeçalho da camada de transporte (usado posteriormente para demultiplexação)
+						</div>
+					</div>
+				</center>
+			</div>
+			<div class="column" style="width: 50%;">
+				<center>
+					<div class="block" style="width:550px;">
+						<div class="blockTitle" style="width: 100%;">
+							<p>Demultiplexação no Receptor</p>
+						</div>
+						<div class="blockBody">
+							Usa informação do cabeçalho para entregar segmentos recebidos para o socket correto
+						</div>
+					</div>
+				</center>
+			</div>
+		</div>
+		<center>
+		  <img src="imagens/Multiplexacao.svg" style="width: 80%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Como a Demultiplexação Ocorre</h1>
+	<div class="slideContent">
+	  <div class="column" style="width: 50%;">
+			<ul>
+			  <li><i>Host</i> recebe datagrama IP.
+			  <ul>
+			    <li>Cada datagrama possui um endereço IP de origem, endereço IP de destino.</li>
+			    <li>Cada datagrama carrega um segmento de camada de transporte.</li>
+			    <li>Cada segmento possui <span class="alert">números de porta de origem e de destino</span>.</li>
+			  </ul></li>
+			  <li><i>Host</i> utiliza <span class="alert">tanto os endereços IP quanto os números de porta</span> para direcionar segmentos aos sockets apropriados.</li>
+			</ul>
+	  </div>
+	  <div class="column" style="width: 50%;">
+			<center>
+			  <img src="imagens/CabecalhoGenerico.svg" style="width: 70%;"/>
+			</center>
+	  </div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Demultiplexação Sem Conexão</h1>
+	<div class="slideContent">
+	  <div class="column" style="width: 50%;">
+	    <ul>
+	      <li><b>Lembre-se:</b> socket criado tem # de porta no <i>host</i>.</li>
+				<tt>DatagramSocket mySocket1 = new DatagramSocket(12534);</tt>
+	      <li><b>Lembre-se:</b> quando criamos datagrama para enviar pelo socket UDP, é preciso especificar:
+	      <ul>
+	        <li>Endereço IP de destino.</li>
+	        <li># de porta de destino.</li>
+	      </ul></li>
+	    </ul>
+	  </div>
+		<div class="column" style="width: 50%;">
+		  <ul>
+		    <li>Quando <i>host</i> recebe segmento UDP:
+		    <ul>
+		      <li>Verifica o # de porta de destino no segmento.</li>
+		      <li>Direciona o segmento UDP para o socket com aquele # de porta.</li>
+		    </ul></li>
+		    <li>Datagramas com <span class="alert">o mesmo # de porta de destino</span>, mas com IPs e/ou portas de origem diferentes serão direcionados <span class="alert">ao mesmo socket</span> no destinatário.</li>
+		  </ul>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Demultiplexação Sem Conexão: Exemplo</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/DemultiplexacaoSemConexao.svg" style="width: 80%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Demultiplexação Orientada a Conexão</h1>
+	<div class="slideContent">
+	  <div class="column" style="width: 50%;">
+			<ul>
+			  <li>Socket TCP é identificado por tupla de 4 componentes:
+			  <ul>
+			    <li><span class="alert">IP de origem</span>.</li>
+			    <li><span class="alert">IP de destino</span>.</li>
+			    <li><span class="alert">Porta de origem</span>.</li>
+			    <li><span class="alert">Porta de destino</span>.</li>
+			  </ul></li>
+			  <li>Demultiplexação: receptor usa todos os quatro valores para direcionar segmento a socket correto.</li>
+			</ul>
+	  </div>
+	  <div class="column" style="width: 50%;">
+			<ul>
+			  <li><i>Host</i> servidor pode suportar múltiplos sockets TCP simultâneos.
+			  <ul>
+			    <li>Cada socket identificado pela sua própria tupla de quatro valores.</li>
+			  </ul></li>
+			  <li>Servidores web têm sockets diferentes para cada cliente conectado.
+			  <ul>
+			    <li>No HTTP não-persistente, um socket para cada requisição.</li>
+			  </ul></li>
+			</ul>
+	  </div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Demultiplexação Orientada a Conexão: Exemplo</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/DemultiplexacaoConectada.svg" style="width: 80%;"/>
+	  </center>
+		<br>
+		<div style="padding: 10px; width: 60%;">
+			<span class="alert">Três segmentos, todos destinados ao IP de B na porta de destino 80 são demultiplexados para sockets diferentes.</span>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Demultiplexação Orientada a Conexão: Exemplo (Threads)</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/DemultiplexacaoConectadaThreads.svg" style="width: 80%;"/>
+	  </center>
+		<br>
+		<br>
+	</div>
+	</section>
+
+	<section class="secao">
+	<div class="slideContent">
+	  Transporte Sem Conexão: UDP
+	</div>
+	</section>
+
+	<section>
+	<h1>UDP: <i>User Datagram Protocol</i> [RFC 768]</h1>
+	<div class="slideContent">
+	  <div class="column" style="width: 50%;">
+	    <ul>
+	      <li>&ldquo;Serviço básico&rdquo;, &ldquo;mínimo&rdquo; da camada de transporte da Internet.</li>
+	      <li>Modelo de serviço de &ldquo;melhor esforço&rdquo;.</li>
+	      <li>Segmentos UDP podem ser:
+	      <ul>
+	        <li>Perdidos</li>
+	        <li>Entregues, porém fora de ordem para a aplicação.</li>
+	      </ul></li>
+	      <li><span class="alert">Sem conexão:</span>
+	      <ul>
+	        <li>Não há comunicação inicial entre UDP do transmissor e do receptor.</li>
+	        <li>Datagramas são simplesmente enviados.</li>
+	        <li>Cada segmento UDP é tratado de forma completamente independente dos demais.</li>
+	      </ul></li>
+	    </ul>
+	  </div>
+		<div class="column" style="width: 50%;">
+		  <ul>
+		    <li>Usos do UDP:
+		    <ul>
+		      <li>Aplicações de <i>Streaming</i> multimídia (tolerantes a perda, sensíveis a taxa).</li>
+		      <li>DNS.</li>
+		      <li>SNMP.</li>
+		    </ul></li>
+		    <li>Transferência confiável sobre UDP:
+		    <ul>
+		      <li>Possível, mas depende da aplicação.</li>
+		      <li>Adição de confiabilidade da própria aplicação.</li>
+		      <li>Métodos de recuperação de erros específicos de cada aplicação.</li>
+		    </ul></li>
+		  </ul>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>UDP: Cabeçalho de um Segmento</h1>
+	<div class="slideContent">
+	  <div class="column" style="width: 50%;">
+			<center>
+			  <img src="imagens/UDPFormato.svg" style="width: 70%;"/>
+			</center>
+			<ul>
+			  <li><span class="alert">Campo <i>length</i></span>: tamanho do segmento, incluindo cabeçalhos.</li>
+			</ul>
+	  </div>
+	  <div class="column" style="width: 50%;">
+			<center>
+			<br>
+			<br>
+			<div class="block" style="width:550px;">
+			    <div class="blockTitle" style="width: 100%;">
+			        <p>Por que existe um UDP?</p>
+			    </div>
+			    <div class="blockBody">
+			        <ul>
+			          <li>Sem estabelecimento de conexão (que adiciona atraso).</li>
+			          <li>Simples: não armazena estado da comunicação no transmissor ou no receptor.</li>
+			          <li>Cabeçalho pequeno.</li>
+			          <li>Sem controle de congestionamento: UDP transmite na mesma taxa que a aplicação gera.</li>
+			        </ul>
+			    </div>
+			</div>
+			</center>
+	  </div>
+	</div>
+	</section>
+
+	<section>
+	<h1>UDP: <i>Checksum</i></h1>
+	<div class="slideContent">
+	  <ul>
+	    <li><b>Objetivo:</b> detectar &ldquo;erros&rdquo; (<i>e.g.</i>, bits com valor trocado) no segmento transmitido.</li>
+	  </ul>
+		<br>
+		<div class="column" style="width: 50%;">
+		  <ul>
+		    <li><b>Transmissor:</b>
+		    <ul>
+		      <li>Trata conteúdo do segmento, incluindo campos de cabeçalho, como uma sequência de inteiros de 16 bits.</li>
+		      <li><i>Checksum</i>: soma, em complemento a 1, do conteúdo do segmento.</li>
+		      <li>Transmissor coloca valor do <i>checksum</i> no campo do cabeçalho UDP.</li>
+		    </ul></li>
+		  </ul>
+		</div>
+		<div class="column" style="width: 50%;">
+		  <ul>
+		    <li><b>Receptor:</b>
+		    <ul>
+		      <li>Computa o <i>checksum</i> do segmento recebido.</li>
+		      <li><i>Checksum</i> computado é igual ao indicado pelo cabeçalho?
+		      <ul>
+		        <li>Não: erro detectado.</li>
+		        <li>Sim: nenhum erro detectado.
+		        <ul>
+		          <li>Mas pode haver erros mesmo assim? Mais detalhes em Redes II.</li>
+		        </ul></li>
+		      </ul></li>
+		    </ul></li>
+		  </ul>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1><i>Checksum</i> da Internet: Soma em Complemento a 1</h1>
+	<div class="slideContent">
+	  	<ul>
+	  	  <li>Soma de dois valores de 16 bits em complemento a 1:</li>
+	  	</ul>
+			<br>
+			<center>
+			  <img src="imagens/SomaComplementoA1.svg" style="width: 70%;"/>
+			</center>
+			<br>
+			<ul>
+			  <li>Note: ao somar dois números, o <i>vai-um</i> do bit mais significativo deve ser somado ao resultado.</li>
+			</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Internet Checksum: Exemplos</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+				<script type="text/javascript" >
+					var exemploLanternaASCII = '';
+					var exemploLanternaTempo;
+
+					function exemploChecksumZeraTabelaEntrada(l) {
+
+						var tabela = document.getElementById('exemploChecksumInputBits');
+						var tr, td;
+						var i, j;
+
+						tabela.innerHTML = "";
+						for (var i = 0; i < l; i++) {
+
+							if (i % 2 == 0) {
+
+								tr = document.createElement('tr');
+								tabela.appendChild(tr);
+
+								if (i > 0) {
+
+									td = document.createElement('td');
+									tr.appendChild(td);
+									td.style.width = "15px";
+									td.innerHTML = "+";
+								}
+								else {
+
+									td = document.createElement('td');
+									tr.appendChild(td);
+									td.style.width = "15px";
+									td.innerHTML = "";
+								}
+							}
+							else {
+
+								td = document.createElement('td');
+								tr.appendChild(td);
+								td.style.width = "15px";
+							}
+
+							for (j = 0; j < 8; j++) {
+
+								td = document.createElement('td');
+								tr.appendChild(td);
+								td.id = 'checksumInputByte' + i + 'Bit' + j;
+								td.style.width = "15px";
+								td.style.height = "15px";
+								td.style.textAlign = "center";
+							}
+
+							if (i % 2 == 1) {
+
+								td = document.createElement('td');
+								tr.appendChild(td);
+								td.style.width = "190px";
+								td.innerHTML = "&nbsp;&nbsp;&nbsp;(bytes " + (i+1) + " e " + (i) + ")";
+
+								if (i == 3 || (i > 3)) {
+
+									tr.style.borderBottom = "2px solid #000";
+
+									tr = document.createElement('tr');
+									tabela.appendChild(tr);
+									tr.style.color = "#11c";
+
+									td = document.createElement('td');
+									tr.appendChild(td);
+									td.style.width = "15px";
+									td.id = 'checksumInputParcelaCarry' + ((i-3)/2) + 'Bit0';
+									td.innerHTML = "0";
+
+									for (j = 0; j < 16; j++) {
+
+										if (j == 8) {
+
+											td = document.createElement('td');
+											tr.appendChild(td);
+											td.style.width = "15px";
+										}
+
+										td = document.createElement('td');
+										tr.appendChild(td);
+										td.id = 'checksumInputParcelaCarry' + ((i-3)/2) + 'Bit' + (j+1);
+										td.style.width = "15px";
+										td.style.height = "15px";
+										td.style.textAlign = "center";
+										td.innerHTML = "1";
+									}
+
+									td = document.createElement('td');
+									tr.appendChild(td);
+									td.style.width = "210px";
+									td.innerHTML = "&nbsp;&nbsp;&nbsp;(com vai-1)";
+
+									tr = document.createElement('tr');
+									tabela.appendChild(tr);
+									tr.style.color = "#c11";
+
+									td = document.createElement('td');
+									tr.appendChild(td);
+									td.style.width = "15px";
+									td.innerHTML = "";
+
+									for (j = 0; j < 16; j++) {
+
+										if (j == 8) {
+
+											td = document.createElement('td');
+											tr.appendChild(td);
+											td.style.width = "15px";
+										}
+
+										td = document.createElement('td');
+										tr.appendChild(td);
+										td.id = 'checksumInputParcela' + ((i-3)/2) + 'Bit' + j;
+										td.style.width = "15px";
+										td.style.height = "15px";
+										td.style.textAlign = "center";
+										td.innerHTML = "1";
+									}
+
+									td = document.createElement('td');
+									tr.appendChild(td);
+									td.style.width = "190px";
+
+									if (i < l - 1)
+										td.innerHTML = "&nbsp;&nbsp;&nbsp;(parcela)";
+									else
+										td.innerHTML = "&nbsp;&nbsp;&nbsp;(total)";
+
+								}
+							}
+						}
+
+						tr.style.borderBottom = "2px solid #000";
+						tr.children[0].innerHTML = "~";
+
+						tr = document.createElement('tr');
+						tabela.appendChild(tr);
+						tr.style.color = "#1c1";
+
+						td = document.createElement('td');
+						tr.appendChild(td);
+						td.style.width = "15px";
+						td.innerHTML = "";
+
+						for (j = 0; j < 16; j++) {
+
+							if (j == 8) {
+
+								td = document.createElement('td');
+								tr.appendChild(td);
+								td.style.width = "15px";
+							}
+
+							td = document.createElement('td');
+							tr.appendChild(td);
+							td.id = 'checksumInputFinalBit' + j;
+							td.style.width = "15px";
+							td.style.height = "15px";
+							td.style.textAlign = "center";
+							td.innerHTML = "0";
+						}
+
+						td = document.createElement('td');
+						tr.appendChild(td);
+						td.style.width = "190px";
+						td.innerHTML = "&nbsp;&nbsp;&nbsp;(checksum)";
+					}
+
+					function exemploChecksumPreencheTabelaParcelaCarry(parcela, valor) {
+
+						var base2;
+						var bit;
+						var td;
+						var i;
+
+						base2 = valor.toString(2);
+						var padLen = 17 - base2.length;
+						for (i = 0; i < padLen; i++) base2 = "0" + base2;
+
+						for (bit = 0; bit < 17; bit++) {
+							td = document.getElementById('checksumInputParcelaCarry' + parcela + 'Bit' + bit);
+							td.innerHTML = base2.charAt(bit);
+						}
+					}
+
+					function exemploChecksumPreencheTabelaParcelaSemCarry(parcela, valor) {
+
+						var base2;
+						var bit;
+						var td;
+						var i;
+
+						base2 = valor.toString(2);
+						var padLen = 16 - base2.length;
+						for (i = 0; i < padLen; i++) base2 = "0" + base2;
+
+						for (bit = 0; bit < 16; bit++) {
+							td = document.getElementById('checksumInputParcela' + parcela + 'Bit' + bit);
+							td.innerHTML = base2.charAt(bit);
+						}
+					}
+
+					function exemploChecksumPreencheTabelaFinal(valor) {
+
+						var base2;
+						var bit;
+						var td;
+						var i;
+
+						base2 = valor.toString(2);
+						var padLen = 16 - base2.length;
+						for (i = 0; i < padLen; i++) base2 = "0" + base2;
+
+						for (bit = 0; bit < 16; bit++) {
+							td = document.getElementById('checksumInputFinalBit' + bit);
+							td.innerHTML = base2.charAt(bit);
+						}
+					}
+
+					function exemploChecksumPreencheTabelaEntrada(s) {
+
+						var byte, bit;
+						var ascii;
+						var entradaTabela;
+						var i;
+
+						if (s.length % 2 == 0)
+							exemploChecksumZeraTabelaEntrada(s.length);
+						else
+							exemploChecksumZeraTabelaEntrada(s.length + 1);
+
+						for (byte = 0; byte < s.length; byte += 2) {
+
+							if (byte + 1 < s.length) {
+
+								ascii = s.charCodeAt(byte + 1).toString(2);
+								var padLen = 8 - ascii.length;
+								for (i = 0; i < padLen; i++) ascii = "0" + ascii;
+							}
+							else {
+
+								ascii = "00000000";
+							}
+
+							for (bit = 0; bit < 8; bit++) {
+								entradaTabela = document.getElementById('checksumInputByte' + byte + 'Bit' + bit);
+								entradaTabela.innerHTML = ascii.charAt(bit);
+							}
+
+							ascii = s.charCodeAt(byte).toString(2);
+							var padLen = 8 - ascii.length;
+							for (i = 0; i < padLen; i++) ascii = "0" + ascii;
+
+							for (bit = 0; bit < 8; bit++) {
+								entradaTabela = document.getElementById('checksumInputByte' + (byte+1) + 'Bit' + bit);
+								entradaTabela.innerHTML = ascii.charAt(bit);
+							}
+
+						}
+					}
+
+					function exemploChecksum(input) {
+
+						var saida = document.getElementById('exemploChecksumSaida');
+						var entrada = document.getElementById('exemploChecksumEntrada');
+						var s = entrada.value;
+						var i;
+						var sum = 0;
+						var par = 0;
+
+						exemploChecksumPreencheTabelaEntrada(s);
+
+						for (i = 0; i < s.length; i += 2) {
+
+							if (i + 1 < s.length)
+								par = (s.charCodeAt(i + 1) << 8);
+							par += s.charCodeAt(i);
+							sum += par;
+
+							if (i > 0) {
+
+								exemploChecksumPreencheTabelaParcelaCarry(i / 2 - 1, sum);
+							}
+
+							if (sum >= 65536)
+								sum -= 65535
+
+							if (i > 0) {
+
+								exemploChecksumPreencheTabelaParcelaSemCarry(i / 2 - 1, sum);
+							}
+
+						}
+
+						sum = 65535 - sum;
+						exemploChecksumPreencheTabelaFinal(sum);
+						saida.value = ('0000' + sum.toString(16)).slice(-4);
+					}
+				</script>
+			<ul>
+			  <li>Experimente o cálculo do <i>checksum</i> de algumas mensagens (<i>strings</i>):</li>
+			</ul>
+			<center>
+			<div style="width: 60%; border: 2px solid #000; padding-bottom: 10px;">
+			<table class="align" style="width: 90%;">
+				<tr>
+					<td style="width: 90%;">Mensagem</td>
+					<td><input type="text" id="exemploChecksumEntrada" name="exemploChecksumEntrada" value="RedesI" size="10" maxlength="10" style="font-size: 80%; padding: 0.5%;"/></td>
+				</tr>
+				<tr>
+					<td>Checksum</td>
+					<td><input type="text" readonly="true" id="exemploChecksumSaida" name="exemploChecksumSaida" value="ebd5" size="10" maxlength="4" style="font-size: 80%; padding: 0.5%;" /></td>
+				</tr>
+			</table>
+			<br>
+			<input type="submit" name="exemploChecksumCalcular" value="Calcular" style="padding: 0.5%; font-size: 90%; font-family: 'Lora', sans-serif;" onClick="exemploChecksum();"/>
+			<br>
+			</div>
+			</center>
+			<ul>
+				<li>Sugestão: calcule o <i>checksum</i> de &ldquo;casa&rdquo;.
+				<ul>
+					<li>Resultado: 0x3d29.</li>
+					<li>Em ASCII: 0x3D &#8594; &ldquo;=&rdquo;.</li>
+					<li>Em ASCII: 0x29 &#8594; &ldquo;)&rdquo;.</li>
+				</ul></li>
+				<li><span class="alert">Pergunta:</span> qual é o <i>checksum</i> de &ldquo;casa)=&rdquo;?</li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50%;">
+			<div style="width: 100%; height: 450px;">
+			  <table class="align" id="exemploChecksumInputBits">
+			  </table>
+			</div>
+		</div>
+	</div>
+	</section>
+	<section class="secao">
+	<div class="slideContent">
+	  Princípios de Transferência Confiável de Dados
+	</div>
+	</section>
+
+	<section>
+	<h1>Princípios de Transferência Confiável de Dados</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>Importante nas camadas de aplicação, transporte e enlace.
+	    <ul>
+	      <li>Um dos 10 problemas mais importantes em redes de computadores!</li>
+	    </ul></li>
+	  </ul>
+		<center>
+		  <img src="imagens/TransmissaoConfiavel1.svg" style="width: 70%;"/>
+		</center>
+		<ul>
+		  <li>Características do canal não-confiável determinarão complexidade do protocolo de transmissão confiável de dados.
+		  <ul>
+		    <li>Ou rdt, do inglês <i>reliable data transfer</i>.</li>
+		  </ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Princípios de Transferência Confiável de Dados</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>Importante nas camadas de aplicação, transporte e enlace.
+	    <ul>
+	      <li>Um dos 10 problemas mais importantes em redes de computadores!</li>
+	    </ul></li>
+	  </ul>
+		<center>
+		  <img src="imagens/TransmissaoConfiavel2.svg" style="width: 70%;"/>
+		</center>
+		<ul>
+		  <li>Características do canal não-confiável determinarão complexidade do protocolo de transmissão confiável de dados.
+		  <ul>
+		    <li>Ou rdt, do inglês <i>reliable data transfer</i>.</li>
+		  </ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Princípios de Transferência Confiável de Dados</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>Importante nas camadas de aplicação, transporte e enlace.
+	    <ul>
+	      <li>Um dos 10 problemas mais importantes em redes de computadores!</li>
+	    </ul></li>
+	  </ul>
+		<center>
+		  <img src="imagens/TransmissaoConfiavel3.svg" style="width: 70%;"/>
+		</center>
+		<ul>
+		  <li>Características do canal não-confiável determinarão complexidade do protocolo de transmissão confiável de dados.
+		  <ul>
+		    <li>Ou rdt, do inglês <i>reliable data transfer</i>.</li>
+		  </ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Transmissão Confiável de Dados: Início (I)</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/TransmissaoConfiavelInicio.svg" style="width: 70%;"/>
+	  </center>
+		<ul>
+		  <li><b>rdt_send():</b> chamada pela aplicação para enviar dados para o transporte.</li>
+		  <li><b>udt_send():</b> chamado pelo transporte para passa pacote para a rede.</li>
+		  <li><b>rdt_rcv():</b> chamada quando pacote chega pela rede no lado receptor.</li>
+		  <li><b>deliver_data():</b> chamado pelo transporte para entregar dados para aplicação.</li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Transmissão Confiável de Dados: Início (II)</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>Nós iremos:
+	    <ul>
+	      <li>Incrementalmente desenvolver os lados transmissor e receptor de um protocolo rdt.</li>
+	      <li>Consideraremos apenas transmissão unidirecional de dados.
+	      <ul>
+	        <li>Mas informação de controle trafegará nos dois sentidos!</li>
+	      </ul></li>
+	      <li>Usar máquinas de estado para especificar transmissor, receptor.</li>
+	    </ul></li>
+	  </ul>
+		<br>
+		<center>
+		  <img src="imagens/MaquinaDeEstados.svg" style="width: 70%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>rdt1.0: Transmissão Confiável sobre Canal Confiável</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>Canal de comunicação (rede) perfeitamente confiável.
+	    <ul>
+	      <li>Pacotes nunca são perdidos.</li>
+	      <li>Sempre são entregues íntegros.</li>
+	    </ul></li>
+	    <li>Máquinas de estado separadas para transmissor, receptor:
+	    <ul>
+	      <li>Transmissor envia dados pelo canal.</li>
+	      <li>Receptor lê dados a partir do canal.</li>
+	    </ul></li>
+	  </ul>
+		<br>
+		<center>
+			<div class="column" style="width: 50%;">
+				<span class="alert">Transmissor</span><br>
+			  <img src="imagens/rdt1_0Transmissor.svg" style="width: 70%;"/>
+			</div>
+			<div class="column" style="width: 50%;">
+			  <span class="alert">Receptor</span><br>
+				<img src="imagens/rdt1_0Receptor.svg" style="width: 70%;"/>
+			</div>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>rdt2.0: Canal com Erros de Bit (I)</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>Canal (rede) pode alterar valor de determinados bits.
+	    <ul>
+	      <li>Mas pacotes <span class="alert">sempre</span> são entregues, ainda que <span class="alert">corrompidos</span>.</li>
+	    </ul></li>
+	    <li>Já vimos uma maneira de verificar erros: <i>checksum</i>.</li>
+	    <li>Mas a pergunta é: como o protocolo <span class="alert">se recupera dos erros</span>?</li>
+	  </ul>
+		<br>
+		<br>
+		<br>
+		<br>
+		<br>
+		<center>
+			<span class="alert" style="font-size: 36px;">Como humanos se recuperam de &ldquo;erros&rdquo; durante uma conversa?</span>
+		</center>
+		<br>
+		<br>
+		<br>
+		<br>
+	</div>
+	</section>
+
+	<section>
+	<h1>rdt2.0: Canal com Erros de Bit (II)</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>Canal (rede) pode alterar valor de determinados bits.
+	    <ul>
+	      <li>Mas pacotes <span class="alert">sempre</span> são entregues, ainda que <span class="alert">corrompidos</span>.</li>
+	    </ul></li>
+	    <li>Já vimos uma maneira de verificar erros: <i>checksum</i>.</li>
+	    <li>Mas a pergunta é: como o protocolo <span class="alert">se recupera dos erros</span>?
+	    <ul>
+	      <li><span class="alert">Pacotes de reconhecimento (ACKs):</span> receptor diz explicitamente ao transmissor que pacote foi recebido corretamente.</li>
+	      <li><span class="alert">Reconhecimento negativo (NAKs):</span> receptor diz explicitamente ao transmissor que pacote foi recebido com erros.</li>
+	      <li>Transmissor retransmite pacote sempre que receber um NAK.</li>
+	    </ul></li>
+			<li>Novo mecanismo no rdt2.0 (e versões posteriores):
+			<ul>
+			  <li>Detecção de erros (via <i>checksum</i>).</li>
+			  <li>Retro-alimentação: mensagens de controle (ACK, NAK) do receptor para o transmissor.</li>
+			</ul></li>
+	  </ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>rdt2.0: Especificação da Máquina de Estados</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<center>
+				<span class="alert">Transmissor</span><br><br>
+		    <img src="imagens/rdt2_0Transmissor.svg" style="width: 95%;"/>
+		</center>
+		</div>
+		<div class="column" style="width: 50%;">
+			<center>
+				<span class="alert">Receptor</span><br><br>
+		    <img src="imagens/rdt2_0Receptor.svg" style="width: 40%;"/>
+			</center>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>rdt2.0: Operação Sem Erros (I)</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/rdt2_0Exemplo1_1.svg" style="width: 90%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>rdt2.0: Operação Sem Erros (II)</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/rdt2_0Exemplo1_2.svg" style="width: 90%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>rdt2.0: Operação Sem Erros (III)</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/rdt2_0Exemplo1_3.svg" style="width: 90%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>rdt2.0: Operação Sem Erros (IV)</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/rdt2_0Exemplo1_4.svg" style="width: 90%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>rdt2.0: Operação Sem Erros (V)</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/rdt2_0Exemplo1_5.svg" style="width: 90%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>rdt2.0: Operação Com Erros (I)</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/rdt2_0Exemplo1_1.svg" style="width: 90%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>rdt2.0: Operação Com Erros (II)</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/rdt2_0Exemplo1_2.svg" style="width: 90%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>rdt2.0: Operação Com Erros (III)</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/rdt2_0Exemplo2_3.svg" style="width: 90%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>rdt2.0: Operação Com Erros (IV)</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/rdt2_0Exemplo2_4.svg" style="width: 90%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>rdt2.0: Operação Com Erros (V)</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/rdt2_0Exemplo2_5.svg" style="width: 90%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>rdt2.0: Operação Com Erros (VI)</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/rdt2_0Exemplo2_6.svg" style="width: 90%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>rdt2.0: Operação Com Erros (VII)</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/rdt2_0Exemplo2_7.svg" style="width: 90%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>rdt2.0: Uma Falha Fatal!</h1>
+	<div class="slideContent">
+		<div style="height: 300px;">
+	  <div class="column" style="width: 50%;">
+	    <ul>
+	      <li><b>O que acontece se ACK/NAK são corrompidos?</b>
+	      <ul>
+	        <li>Transmissor não sabe o que ocorreu no receptor!</li>
+	        <li>Não pode simplesmente retransmitir: pode gerar duplicatas.</li>
+	      </ul></li>
+	    </ul>
+	  </div>
+		<div class="column" style="width: 50%;">
+		  <ul>
+		    <li><b>Lidando com duplicatas:</b>
+		    <ul>
+		      <li>Transmissor retransmite pacote atual se ACK/NAK é corrompido.</li>
+		      <li>Transmissor adiciona um <span class="alert">número de sequência</span> a cada pacote.</li>
+		      <li>Receptor descarta (não entrega à aplicação) pacotes duplicados.</li>
+		    </ul></li>
+		  </ul>
+		</div>
+		</div>
+		<center>
+		<div class="block" style="width:700px;">
+		    <div class="blockTitle" style="width: 100%;">
+		        <p>Stop and wait</p>
+		    </div>
+		    <div class="blockBody">
+		        Transmissor envia um pacote, espera pela resposta antes da próxima transmissão
+		    </div>
+		</div>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>rdt2.1: Lida com ACK/NAK Corrompido (Transmissor)</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/rdt2_1Transmissor.svg" style="width: 50%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>rdt2.1: Lida com ACK/NAK Corrompido (Receptor)</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/rdt2_1Receptor.svg" style="width: 83%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>rdt2.1: Discussão</h1>
+	<div class="slideContent">
+	  <div class="column" style="width: 50%;">
+	    <ul>
+	      <li><b>Transmissor:</b>
+	      <ul>
+	        <li># de sequência adicionado a pacotes.</li>
+	        <li>Dois valores (0 e 1) bastam. Por quê?</li>
+	        <li>Precisa verificar se ACK/NAK recebidos estão corrompidos.</li>
+	        <li>Duas vezes mais estados.
+	        <ul>
+	          <li>Estado &ldquo;lembra&rdquo; se # de sequência esperado é 0 ou 1.</li>
+	        </ul></li>
+	      </ul></li>
+	    </ul>
+	  </div>
+		<div class="column" style="width: 50%;">
+		  <ul>
+		    <li><b>Receptor:</b>
+		    <ul>
+		      <li>Deve verificar se pacote recebido é duplicado.
+		      <ul>
+		        <li>Estados indicam se pacote esperado é o 0 ou o 1.</li>
+		      </ul></li>
+		      <li>Note: receptor não tem como saber se último ACK/NAK enviado chegou corretamente no transmissor.</li>
+		    </ul></li>
+		  </ul>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>rdt2.2: Um Protocolo Sem NAK</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>Mesma funcionalidade do rdt2.1 usando apenas ACKs.</li>
+	    <li>Ao invés de um NAK, receptor envia <span class="alert">ACK para o último pacote recebido corretamente</span>.
+	    <ul>
+	      <li>Receptor precisará incluir no ACK <b>explicitamente</b> o # de sequência do pacote reconhecido.</li>
+	    </ul></li>
+	    <li>ACK duplicado no receptor resulta nas mesmas ações que um NAK: retransmitir pacote corrente.</li>
+	  </ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>rdt2.2: Transmissor</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/rdt2_2Transmissor.svg" style="width: 50%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>rdt2.2: Receptor</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/rdt2_2Receptor.svg" style="width: 70%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<!-- {{{{ dzslides core
+	#
+	#
+	#     __  __  __       .  __   ___  __
+	#    |  \  / /__` |    | |  \ |__  /__`
+	#    |__/ /_ .__/ |___ | |__/ |___ .__/ core :€
+	#
+	#
+	# The following block of code is not supposed to be edited.
+	# But if you want to change the behavior of these slides,
+	# feel free to hack it!
+	#
+	-->
+
+    <!-- More CSS -->
+	<link href='../template/css/slides.css' id="slides" rel='stylesheet' type='text/css'>
+	<link href='../template/css/presentationSpecific2.css' id="presentationSpecific2" rel='stylesheet' type='text/css'>
+
+    <!-- More Javascript -->
+	<script type="text/javascript" src="../template/js/dz.js"></script>
+
+	<!-- More CSS -->
+	<link href='../template/css/notesSpecific.css' id="notesSpecific" rel='stylesheet' type='text/css'>
+	<link href='../template/css/printSpecific.css' id="printSpecific" rel='stylesheet' type='text/css'>
+</body>
+</html>
