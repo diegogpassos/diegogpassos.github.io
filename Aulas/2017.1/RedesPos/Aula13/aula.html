@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <!-- Meta info -->
+		<meta charset="utf-8">
+		<meta name="shortauthor" content="Diego Passos"/>
+		<meta name="shorttitle" content="Políticas de Enfileiramento, IP"/>
+		<meta name="shortevent" content="Redes de Computadores"/>
+		<title>Redes de Computadores: Aula 13</title>
+
+		<!-- Math support -->
+		<script type="text/x-mathjax-config">
+		MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+			MathJax.InputJax.TeX.Definitions.number = /^(?:[0-9]+(?:\.[0-9]{3})*(?:\{,\}[0-9]*)*|\{,\}[0-9]+)/
+		});
+		</script>
+		<!--<script src="js/plotly-latest.min.js"></script>-->
+		<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+		<script src="../../../../../MathJax-2.6-latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+		<script type="text/javascript" src="../template/js/dz_pre.js"></script>
+
+		<!-- Fonts -->
+		<link href='https://fonts.googleapis.com/css?family=Lora:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
+		<link href='../../../../../Fonts/Lora/lora.css' rel='stylesheet' type='text/css'>
+
+		<!-- CSS -->
+		<link href='../template/css/template.css' id="template" rel='stylesheet' type='text/css'>
+		<link href='../template/css/presentationSpecific.css' id="presentationSpecific" rel='stylesheet' type='text/css'>
+
+
+		<!-- Javascript -->
+		<!--
+		<script type="text/javascript" src="../template/js/audio.js"></script>
+		<script src="js/term.js" charset="utf-8"></script>
+    <script src="js/termcast.js" charset="utf-8"></script>
+		<link rel="stylesheet" href="css/googlecode.css">
+		<script src="js/highlight.pack.js"></script>
+		<script>
+			hljs.initHighlightingOnLoad();
+			hljs.configure({
+				tabReplace: '  '
+			});
+		</script>
+		-->
+</head>
+
+<body>
+    <!-- Audio handlers -->
+	<!--<audio src="audio/La.wav" id="La.wav" preload="auto"></audio>-->
+
+    <!-- Title Slide -->
+	<section>
+
+        <div class="slideContent">
+            <h1 class="title">Aula 13 - Políticas de Enfileiramento, Protocolo IP</h1>
+            <h2 class="author">Diego Passos</h2>
+            <h4 class="institution">Universidade Federal Fluminense</h4>
+            <h3 class="date">Redes de Computadores</h3>
+        </div>
+		<br>
+		<br>
+			<div style="width: 30%; float: right; padding-right: 2%;">
+			<p style="font-size: 18px; text-align: right;">Material adaptado a partir dos slides originais de J.F Kurose and K.W. Ross.</p>
+		</div>
+	</section>
+
+	<section class="secao">
+	<div class="slideContent">
+	  Roteadores: Políticas de Enfileiramento
+	</div>
+	</section>
+
+	<section>
+	<h1>Políticas de Enfileiramento: Escalonamento e Descarte</h1>
+	<div class="slideContent">
+	  <ul>
+			<li>Também chamadas de <span class="alert">disciplinas</span>.</li>
+	    <li>Duas decisões importantes:
+	    <ul>
+	      <li><b>Escalonamento:</b> em que ordem transmitir os pacotes.
+	      <ul>
+	        <li><i>e.g.</i>, há pacotes mais importantes que outros?</li>
+	        <li><i>e.g.</i>, um pacote deve pode &ldquo;passar a frente&rdquo; dos demais?</li>
+	        <li>Prioridades?</li>
+	      </ul></li>
+	      <li><b>Descarte:</b> quem (e quando) descartar.
+	      <ul>
+	        <li>Descartar o último pacote?</li>
+	        <li>Descartar o primeiro?</li>
+	        <li>Descartar aleatoriamente?</li>
+	        <li>Descartar apenas quando fila está <b>completamente cheia</b>?</li>
+	      </ul></li>
+	    </ul></li>
+	  </ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Políticas de Enfileiramento: Por Quê?</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li><b>Solução óbvia:</b> respeitar ordem de chegada.
+	    <ul>
+	      <li>Transmitir pacotes na ordem em que são recebidos.</li>
+	      <li>Descartar novos pacotes quando não há espaço em <i>buffer</i>.</li>
+	    </ul></li>
+	    <li><b>Nem sempre é o ideal:</b>
+	    <ul>
+	      <li>Podemos querer <span class="alert">dar importância maior</span> a certos pacotes/fluxos.
+	      <ul>
+	        <li><i>e.g.</i>, datagrama de um <i>download</i> pode esperar, de uma chamada VoIP não.</li>
+	      </ul></li>
+	      <li><span class="alert">Controle de congestionamento do TCP pode ser afetado.</span>
+	      <ul>
+	        <li>Infere congestionamento por perdas.</li>
+	        <li>É possível <span class="alert">avisar mais rápido e a todos os fluxos</span>.</li>
+	      </ul></li>
+	    </ul></li>
+	  </ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Políticas de Escalonamento: FIFO</h1>
+	<div class="slideContent">
+		<ul>
+		  <li><b><i>First-In, First-Out</i></b>.
+		  <ul>
+		    <li>Também chamada de FCFS (<i>First-Come, First-Served</i>).</li>
+		  </ul></li>
+		  <li>&ldquo;Solução óbvia&rdquo;: pacotes servidos na ordem em que chegam.</li>
+		  <li>Não há prioridades.
+		  <ul>
+		    <li>Nenhum pacote &ldquo;fura fila&rdquo;.</li>
+		  </ul></li>
+			<li>Simples, popular.</li>
+		</ul>
+		<br>
+		<div class="column" style="width: 50%;">
+			<center>
+				<br>
+				<br>
+			  <img src="imagens/Fifo.gif" style="width: 70%;"/>
+			</center>
+		</div>
+		<div class="column" style="width: 50%;">
+			<center>
+			  <img src="imagens/FifoTempo.gif" style="width: 70%;"/>
+			</center>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Políticas de Escalonamento: <i>Priority Queuing</i> (I)</h1>
+	<div class="slideContent">
+		<ul>
+		  <li>Divide pacotes em <b>classes</b>.
+		  <ul>
+		    <li>Uma fila separada para cada classe.</li>
+		  </ul></li>
+		  <li>Cada classe possui uma <b>prioridade diferente</b>.</li>
+		  <li>Pacotes de classes prioritárias <b>sempre</b> são transmitidos antes.
+		  <ul>
+		    <li><i>i.e.</i>, fila de uma classe só é atendida se filas de <b>todas as classes mais prioritárias estão vazias</b>.</li>
+		  </ul></li>
+		</ul>
+	  <div class="column" style="width: 50%;">
+			<center>
+			  <img src="imagens/Prio.gif" style="width: 70%;"/>
+			</center>
+	  </div>
+	  <div class="column" style="width: 50%;">
+			<center>
+			  <img src="imagens/Prio2.gif" style="width: 70%;"/>
+			</center>
+	  </div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Políticas de Escalonamento: <i>Priority Queuing</i> (II)</h1>
+		<br>
+		<br>
+		<br>
+		<br>
+	  <ul>
+	    <li>Classe do pacote é definida de acordo com sua importância.
+	    <ul>
+	      <li>Termo relativo, definido pelo administrador do roteador.</li>
+	    </ul></li>
+	    <li><b>Exemplo:</b>
+	    <ul>
+	      <li>Pacotes VoIP ficam na classe de mais alta prioridade.</li>
+	      <li>Demais pacotes ficam na classe de prioridade mais baixa.</li>
+	    </ul></li>
+	    <li><b>Problemas?</b></li>
+	  </ul>
+	</section>
+
+	<section>
+	<h1>Políticas de Escalonamento: <i>Priority Queuing</i> (III)</h1>
+		<br>
+		<br>
+		<br>
+		<br>
+	  <ul>
+	    <li>Classe do pacote é definida de acordo com sua importância.
+	    <ul>
+	      <li>Termo relativo, definido pelo administrador do roteador.</li>
+	    </ul></li>
+	    <li><b>Exemplo:</b>
+	    <ul>
+	      <li>Pacotes VoIP ficam na classe de mais alta prioridade.</li>
+	      <li>Demais pacotes ficam na classe de prioridade mais baixa.</li>
+	    </ul></li>
+	    <li><b>Problemas?</b>
+	    <ul>
+	      <li>Pode causar <span class="alert">esfomeação</span> (<i>starvation</i>).</li>
+	    </ul></li>
+	  </ul>
+	</section>
+
+	<section>
+	<h1>Políticas de Escalonamento: <i>Round-Robin</i></h1>
+	<div class="slideContent">
+		<ul>
+		  <li>Assim como a <i>Priority Queuing</i>, pacotes são divididos em classes.</li>
+		  <li><b>Mas objetivo é diferente:</b>
+		  <ul>
+		    <li>Garantir uma divisão <span class="alert">justa</span> do uso dos recursos.</li>
+		    <li>Todas as classes recebem <span class="alert">oportunidades iguais</span>.</li>
+		  </ul></li>
+		  <li>Filas das classes são servidas através de um <i>round-robim</i>, um pacote por vez.</li>
+		</ul>
+	  <div class="column" style="width: 50%;">
+			<center>
+			  <img src="imagens/Prio.gif" style="width: 70%;"/>
+			</center>
+	  </div>
+	  <div class="column" style="width: 50%;">
+			<center>
+			  <img src="imagens/round_robin.gif" style="width: 70%;"/>
+			</center>
+	  </div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Políticas de Escalonamento: <i>Round-Robin</i> e Prioridades?</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li><i>Round-Robin</i> não incorre em esfomeação.</li>
+			<li><b>Mas também não atribui prioridades diferentes!</b></li>
+			<li>É possível <span class="alert">combinar</span> as duas abordagens?
+			<ul>
+			  <li><i>i.e.</i>, atribuir prioridades maiores a certas classes, <span class="alert">mas garantindo que todas as classes receberão</span> um certo grau de oportunidade?</li>
+			</ul></li>
+	    <li><b>Sim!</b>
+	    <ul>
+	      <li>Alcançado pela política <i>Weighted Fair Queueing</i>.</li>
+	      <li>Mais detalhes em Redes II.</li>
+	    </ul></li>
+	  </ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Políticas de Descarte: <i>Drop-tail</i> (I)</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>Está para o descarte como a FIFO está para o escalonamento.
+	    <ul>
+	      <li>Ideia simples, imediata.</li>
+	    </ul></li>
+	    <li>Funcionamento:
+	    <ul>
+	      <li>Quando fila está cheia e novo pacote chega, <span class="alert">novo pacote sempre é descartado.</span></li>
+	    </ul></li>
+	  </ul>
+		<br>
+		<center>
+		  <img src="imagens/DropTail.svg" style="width: 55%;"/>
+		</center>
+		<ul>
+		  <li>Política amplamente implementada e adotada.
+		  <ul>
+		    <li>Mas não necessariamente a melhor em todos os casos.</li>
+		  </ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Políticas de Descarte: <i>Drop-tail</i> (II)</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>Potencial problema: sincronização de fluxos.
+	    <ul>
+	      <li>Suponha dois <i>hosts</i> compartilhando um único enlace de saída de um roteador.</li>
+	      <li>Assuma que ambos geram <span class="alert">tráfego em rajada</span>.
+	      <ul>
+	        <li><i>i.e.</i>, quando <i>host</i> transmite, envia <b>vários pacotes em sequência.</b></li>
+	        <li>Em seguida, passa algum sem geração de tráfego.</li>
+	      </ul></li>
+	      <li>Dependendo da ordem dos envios, um dos <i>hosts</i> pode ser prejudicado.
+	      <ul>
+	        <li><i>i.e.</i>, seus pacotes comumente encontram a fila cheia e são descartados.</li>
+	      </ul></li>
+	    </ul></li>
+	  </ul>
+		<br>
+		<center>
+		  <img src="imagens/DropTailSinc.svg" style="width: 70%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Políticas de Descarte: <i>Drop-head</i> (I)</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>&ldquo;Contrário&rdquo; da <i>drop-tail</i>.</li>
+	    <li>Se novo pacote chega e fila está cheia, <span class="alert">primeiro pacote da fila é sempre descartado</span>.
+	    <ul>
+	      <li><i>i.e.</i>, o pacote a mais tempo na fila.</li>
+	    </ul></li>
+	  </ul>
+		<center>
+		  <img src="imagens/DropHead.svg" style="width: 55%;"/>
+		</center>
+		<ul>
+		  <li><span class="alert">Pergunta:</span> resolve o problema da injustiça na <i>Drop-tail</i>?</li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Políticas de Descarte: <i>Drop-head</i> (II)</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>Qual é a vantagem de se descartar o primeiro pacote da fila?</li>
+	    <li>Não é injusto descartar o pacote que espera há mais tempo?</li>
+	    <li>Talvez, mas se este pacote for um segmento TCP, há uma grande vantagem:
+	    <ul>
+	      <li>TCP <b>precisa ser avisado do congestionamento o mais rápido possível</b>.</li>
+	      <li>Descartar primeiro pacote provavelmente gerará mais rapidamente:
+	      <ul>
+	        <li>Estouro do temporizador do TCP.</li>
+	        <li>Ou ACKs duplicados.</li>
+	      </ul></li>
+				<li><b>Resultado:</b> TCP reage mais rapidamente reduzindo janela.</li>
+	    </ul></li>
+	  </ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Políticas de Descarte: RED (I)</h1>
+	<div class="slideContent">
+		<ul>
+		  <li><b><i>Random Early Detection</i></b>.</li>
+		  <li>Começa (possivelmente) a descartar pacotes <span class="alert">antes que a fila esteja completamente cheia</span>.</li>
+		  <li>Funcionamento (Simplificado):
+		  <ul>
+		    <li><b><tt>Mínimo</tt></b>: menor ocupação da fila para a qual pacotes podem ser descartados.</li>
+		    <li><b><tt>Máximo</tt></b>: tamanho máximo da fila.</li>
+				<li>Quando novo pacote chega:
+				<ul>
+			    <li>Se fila está menor que <tt>Mínimo</tt>, nunca descarte.</li>
+			    <li>Se fila está igual a <tt>Máximo</tt>, sempre descarte.</li>
+					<li>Caso contrário, <span class="alert">descarte último pacote com probabilidade <span class="math inline">\(p\)</span> proporcional ao tamanho atual da fila.</span></li>
+				</ul></li>
+		  </ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Políticas de Descarte: RED (II)</h1>
+	<div class="slideContent">
+		<ul>
+		  <li>Esquema simplificado de funcionamento do RED:</li>
+		</ul>
+		<center>
+		  <img src="imagens/REDAlgoritmo2.svg" style="width: 85%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Políticas de Descarte: RED (III)</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>Mar <b>por que descartar</b> pacotes se o <i>buffer</i> ainda não está totalmente cheio?</li>
+	    <li>Lembre-se:
+	    <ul>
+	      <li>Congestionamento se manifesta como um <b>aumento no nível de enfileiramento</b>.</li>
+	      <li><i>Overflow</i> é apenas uma <b>consequência</b> após um <b>período estendido de congestionamento</b>.</li>
+				<li>TCP identifica congestionamento por perdas.</li>
+	    </ul></li>
+	    <li>Ao descartar pacotes quando <i>buffer</i> está parcialmente cheio, <span class="alert">sinalizamos congestionamento antecipadamente</span>.</li>
+	    <li><b>Efeito colateral:</b> evita problema da sincronização.
+	    <ul>
+	      <li>Descartes tendem a ser mais bem distribuídos entre fluxos.</li>
+	    </ul></li>
+	  </ul>
+	</div>
+	</section>
+
+	<section class="secao">
+	<div class="slideContent">
+	  Protocolo IP: Datagramas
+	</div>
+	</section>
+
+	<section>
+	<h1>A Camada de Rede na Internet</h1>
+	<div class="slideContent">
+		<ul>
+		  <li>Funções da camada de rede de <i>hosts</i> e roteadores.</li>
+		</ul>
+		<br>
+	  <center>
+	    <img src="imagens/InternetCamadaDeRede.svg" style="width: 70%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Formato do Datagrama (I)</h1>
+	<div class="slideContent">
+	  <div class="column" style="width: 50%;">
+			<ul>
+			  <li><b>version:</b> número de versão.
+			  <ul>
+			    <li><i>e.g.</i>, versão 4, versão 6.</li>
+			  </ul></li>
+			  <li><b>header length:</b> comprimento do cabeçalho, em bytes.
+			  <ul>
+			    <li>Cabeçalho tem tamanho variável.</li>
+			    <li>Vide campo <b>options</b>.</li>
+			  </ul></li>
+			  <li><b>type of service:</b> &ldquo;classe&rdquo; do dado encapsulado.
+			  <ul>
+			    <li><i>e.g.</i>, tráfego de tempo real, melhor esforço.</li>
+			  </ul></li>
+			  <li><b>length:</b> tamanho total do datagrama.
+			  <ul>
+			    <li>Cabeçalho + carga útil.</li>
+					<li>Tamanho máximo: 65535 bytes.</li>
+			  </ul></li>
+			  <li><b>identifier, flags, fragment offset:</b> usados para fragmentação.
+			  <ul>
+			    <li>Mais em breve.</li>
+			  </ul></li>
+			</ul>
+	  </div>
+	  <div class="column" style="width: 50%;">
+			<center>
+			  <img src="imagens/IPFormato.svg" style="width: 70%;"/>
+			</center>
+	  </div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Formato do Datagrama (II)</h1>
+	<div class="slideContent">
+	  <div class="column" style="width: 50%;">
+			<ul>
+				<li><b>time to live:</b> número máximo de saltos que datagrama pode percorrer.
+				<ul>
+				  <li>Decrementado a cada roteador.</li>
+				  <li>Usado, por exemplo, em caso de <i>loops</i> de roteamento.</li>
+				</ul></li>
+				<li><b>upper layer:</b> indica protocolo responsável pela carga útil.
+				<ul>
+				  <li><i>e.g.</i>, TCP, UDP, IP.</li>
+				</ul></li>
+				<li><b>header checksum:</b> verificação de integridade <span class="alert">apenas do cabeçalho</span>.</li>
+				<li><b>endereços de origem e destino:</b> 32 bits cada.</li>
+				<li><b>options:</b> opções de tratamento do datagrama.
+				<ul>
+				  <li><i>e.g.</i>, <i>timestamp</i>, gravar rota, especificação de caminho.</li>
+				</ul></li>
+			</ul>
+	  </div>
+	  <div class="column" style="width: 50%;">
+			<center>
+			  <img src="imagens/IPFormato.svg" style="width: 70%;"/>
+			</center>
+	  </div>
+	</div>
+	</section>
+
+	<section>
+	<h1>IP: Fragmentação, Remontagem de Datagramas (I)</h1>
+	<div class="slideContent">
+	  <div class="column" style="width: 50%;">
+			<ul>
+			  <li>Enlaces de rede têm um MTU (<i>Maximum Transmission Unit</i>).
+			  <ul>
+			    <li>Maior quadro que pode ser transmitido pelo enlace.</li>
+			    <li>Tecnologias diferentes têm MTUs diferentes.</li>
+			  </ul></li>
+			  <li>Datagramas IP grandes são divididos (&ldquo;fragmentados&rdquo;) na rede.
+			  <ul>
+			    <li>Um datagrama quebrado em vários datagramas.</li>
+			    <li>&ldquo;Remontados&rdquo; <span class="alert">apenas no destinatário final</span>.</li>
+			    <li>Bits do cabeçalho IP são usados para identificar e ordenar fragmentos de um mesmo datagrama original.</li>
+			  </ul></li>
+			</ul>
+	  </div>
+	  <div class="column" style="width: 50%;">
+			<br>
+			<br>
+			<br>
+			<center>
+			  <img src="imagens/IPFragmentacao1.svg" style="width: 90%;"/>
+			</center>
+
+	  </div>
+	</div>
+	</section>
+
+	<section>
+	<h1>IP: Fragmentação, Remontagem de Datagramas (II)</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 40%;">
+		<ul>
+		  <li>Exemplo:
+		  <ul>
+		    <li>Datagrama de 4000 bytes.</li>
+		    <li>MTU = 1500 bytes.</li>
+		  </ul></li>
+		  <li><b>Cuidado!</b> O campo <i>offset</i> da fragmentação <span class="alert">é contado em unidade de 8 bytes</span>.</li>
+			<li><b>Além disso:</b> MTU considera o tamanho do datagrama inteiro, <span class="alert">incluindo cabeçalho.</span></li>
+		</ul>
+		</div>
+		<div class="column" style="width: 60%;">
+			<center>
+			  <img src="imagens/IPFragmentacao2.svg" style="width: 80%;"/>
+			</center>
+		</div>
+	</div>
+	</section>
+
+	<section class="secao">
+	<div class="slideContent">
+	  IP: Endereçamento (IPv4)
+	</div>
+	</section>
+
+	<section>
+	<h1>Endereçamento IP: Introdução (I)</h1>
+	<div class="slideContent">
+	  <div class="column" style="width: 50%;">
+			<ul>
+			  <li><b>Endereço IP:</b> identificador de 32 bits para <span class="alert">interfaces</span> de <i>hosts</i>, roteadores.</li>
+			  <li><b>Interface:</b> conexão entre <i>host</i>/roteador e enlace físico.
+			  <ul>
+			    <li>Roteadores tipicamente possuem múltplas interfaces.</li>
+			    <li><i>Host</i> tipicamente possui uma ou duas interfaces (<i>e.g.</i>, Ethernet cabeada e IEEE 802.11 sem fio).</li>
+			  </ul></li>
+			  <li><span class="alert">Endereços IP associados a cada interface</span>.</li>
+			</ul>
+	  </div>
+	  <div class="column" style="width: 50%;">
+			<center>
+			  <img src="imagens/IPEnderecamento1.svg" style="width: 90%;"/>
+			</center>
+	  </div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Endereçamento IP: Introdução (II)</h1>
+	<div class="slideContent">
+	  <div class="column" style="width: 50%;">
+			<ul>
+			  <li><span class="alert">Pergunta:</span> como as interfaces se conectam?</li>
+			  <li><span class="alert">Resposta:</span> tópico dos capítulos 5 e 6.
+			  <ul>
+			    <li>Redes II.</li>
+			  </ul></li>
+			  <li>Interfaces cabeadas Ethernet se conectam através de <i>switches</i> Ethernet.</li>
+			  <li>Interfaces Wi-Fi se conectam através de estações base Wi-Fi.</li>
+			  <li><span class="alert">Por enquanto:</span> não é preciso se preocupar com a interconexão de interfaces.</li>
+			</ul>
+	  </div>
+	  <div class="column" style="width: 50%;">
+			<center>
+			  <img src="imagens/IPEnderecamento2.svg" style="width: 90%;"/>
+			</center>
+
+	  </div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Sub-redes (I)</h1>
+	<div class="slideContent">
+	  <div class="column" style="width: 50%;">
+			<ul>
+			  <li><b>Endereço IP: duas partes</b>.
+			  <ul>
+			    <li>Porção da <span class="alert">sub-rede</span>: bits mais significativos (<i>i.e.</i>, mais à esquerda).</li>
+			    <li>Porção do <i>host</i>: bits menos significativos (<i>i.e.</i>, mais à direita).</li>
+			  </ul></li>
+			  <li><b>O que é uma sub-rede?</b>
+			  <ul>
+			    <li>Interfaces de dispositivos com a mesma porção da sub-rede nos seus endereços IP.</li>
+			    <li>Podem se alcançar diretamente, <span class="alert">sem o intermédio de um roteador</span>.</li>
+			  </ul></li>
+			</ul>
+	  </div>
+	  <div class="column" style="width: 50%;">
+			<center>
+			  <img src="imagens/Subrede.svg" style="width: 70%;"/>
+			</center>
+	  </div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Sub-redes (II)</h1>
+	<div class="slideContent">
+	  <div class="column" style="width: 50%;">
+			<ul>
+			  <li><span class="alert">Receita:</span>
+			  <ul>
+			    <li>Para determinar as sub-redes, desconecte as interfaces de seu <i>host</i> ou roteador, criando ilhas de redes isoladas.</li>
+					<li>Cada rede isolada é uma <span class="alert">sub-rede</span>.</li>
+			  </ul></li>
+				<li><span class="alert">Corolário:</span> roteadores interconectam sub-redes.</li>
+			</ul>
+	  </div>
+	  <div class="column" style="width: 50%;">
+			<center>
+			  <img src="imagens/Subrede2.svg" style="width: 70%;"/>
+			</center>
+	  </div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Sub-redes (III)</h1>
+	<div class="slideContent">
+	  <div class="column" style="width: 45%;">
+			<ul>
+			  <li><b>Quantas sub-redes?</b></li>
+			</ul>
+	  </div>
+	  <div class="column" style="width: 55%;">
+			<center>
+			  <img src="imagens/Subrede3.svg" style="width: 90%;"/>
+			</center>
+
+	  </div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Quantos Bits Identificam a Sub-rede?</h1>
+	<div class="slideContent">
+		<ul>
+		  <li>Recapitulando: endereço IP é dividido em duas partes.
+		  <ul>
+		    <li>Porção da sub-rede (bits mais significativos).</li>
+		    <li>Porção do <i>host</i> (bits menos significativos).</li>
+		  </ul></li>
+		  <li><span class="alert">Pergunta:</span> quantos bits em cada porção?
+		  <ul>
+		    <li>Um endereço IP tem 32 bits <b>no total</b>.</li>
+		    <li>Mas como eles são divididos nas duas porções?</li>
+				<li>Note que <b>nem toda sub-rede precisa ser do mesmo tamanho</b>.</li>
+		  </ul></li>
+		  <li>Duas alternativas:
+		  <ul>
+		    <li>Endereçamento baseado em classes (usado originalmente).</li>
+		    <li>CIDR (usado atualmente).</li>
+		  </ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Endereçamento Baseado em Classes</h1>
+	<div class="slideContent">
+		<ul>
+		  <li>Ideia básica: definimos sub-redes com propósitos diferentes.
+		  <ul>
+		    <li><b>Classe A</b>: redes &ldquo;grandes&rdquo;.
+		    <ul>
+		      <li>Porção da sub-rede com 8 bits, sempre iniciados por 0.</li>
+		      <li><span class="math inline">\(2^{24} = 16777216\)</span> endereços.</li>
+		    </ul></li>
+		    <li><b>Classe B</b>: redes &ldquo;médias&rdquo;.
+		    <ul>
+		      <li>Porção da sub-rede com 16 bits, sempre iniciados por 10.</li>
+		      <li><span class="math inline">\(2^{16} = 65536\)</span> endereços.</li>
+		    </ul></li>
+		    <li><b>Classe C</b>: redes &ldquo;pequenas&rdquo;.
+		    <ul>
+		      <li>Porção da sub-rede com 24 bits, sempre iniciados por 110.</li>
+		      <li><span class="math inline">\(2^{8} = 256\)</span> endereços.</li>
+		    </ul></li>
+				<li><b>Classes D (Multicast) e E (Reservado)</b>: outros usos.
+				<ul>
+				  <li>Endereços iniciados por 1110 e 1111, respectivamente.</li>
+				</ul></li>
+		  </ul></li>
+			<li>Exemplos:
+			<ul>
+			  <li>10.151.0.1 é de classe A (começa por 0), porção da sub-rede é <tt>00001010</tt>.</li>
+			  <li>200.20.15.156 é de classe C (começa por 110), porção da sub-rede é <tt>11001000 00010100 00001111</tt>.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Endereçamento Baseado em Classes: Problemas</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>Três tamanhos não são suficientes.
+	    <ul>
+	      <li>Pouca granularidade.</li>
+	    </ul></li>
+	    <li>Grande sub-utilização do espaço de endereçamento.</li>
+	    <li>Por exemplo: suponha que a UFF precise conectar 1000 dispositivos em uma sub-rede.
+	    <ul>
+	      <li>Sub-rede de classe C é muito pequena: apenas 256 endereços.</li>
+	      <li>Solução: atribuir uma sub-rede de classe B.</li>
+	      <li>Resultado: 65536 - 1000 = 64536 endereços ociosos.
+	      <ul>
+	        <li>Mas <b>alocados</b>!</li>
+	      </ul></li>
+	    </ul></li>
+	  </ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>CIDR</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li><span class="alert">CIDR: C</span>lassless <span class="alert">I</span>nter<span class="alert">D</span>omain <span class="alert">R</span>outing.
+	    <ul>
+	      <li>Porção de sub-rede de tamanho arbitrário.</li>
+	      <li>Formato de endereço: <span class="alert">a.b.c.d/x</span>, onde x é o # de bits na porção da sub-rede.</li>
+	    </ul></li>
+	  </ul>
+		<br>
+		<center>
+		  <img src="imagens/CIDR.svg" style="width: 45%;"/>
+		</center>
+		<br>
+		<ul>
+			<li>Convenciona-se que o endereço IP com todos os bits da porção do <i>host</i> iguais a zero seja denominado o <span class="alert">&ldquo;endereço da rede&rdquo;</span>.</li>
+			<li>Se porção do <i>host</i> só contém 1's, trata-se do <span class="alert">endereço de broadcast</span>.</li>
+		  <li>Porção da sub-rede é comumente chamada de <span class="alert">prefixo</span>.</li>
+			<li>O x, portanto, é o <span class="alert">tamanho do prefixo</span>.</li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>CIDR: Máscara de Sub-rede</h1>
+	<div class="slideContent">
+		<ul>
+		  <li>Notação alternativa:
+		  <ul>
+		    <li>Número de 32 bits tal que um <i>and</i> bit-a-bit entre o endereço de um <i>host</i> e a máscará resulte no endereço da rede.</li>
+				<li>Exemplo:
+				<ul>
+				  <li><i>Host</i> tem endereço 200.20.10.89.</li>
+				  <li>Máscara de sub-rede é 255.255.255.224.</li>
+				  <li>Endereço da rede: 200.20.10.64.</li>
+				</ul></li>
+		  </ul></li>
+		</ul>
+		<center>
+			<style media="screen">
+				table, td, tr {
+					border: none;
+				}
+				td {
+					padding: 10px;
+				}
+			</style>
+		  <table>
+				<tr>
+			  	<td></td><td>200.20.10.89</td> <td>=</td><td><tt>11001000 00010100 00001010 01011001</tt></td>
+				</tr>
+				<tr>
+			  	<td>&and;</td><td>255.255.255.255.224</td> <td>=</td><td><tt>11111111 11111111 11111111 11100000</tt></td>
+				</tr>
+				<tr style="border-top: 2px solid #000;">
+			  	<td>=</td><td>200.20.10.64</td> <td>=</td><td><tt>11001000 00010100 00001010 01000000</tt></td>
+				</tr>
+		  </table>
+		</center>
+		<br>
+		<ul>
+		  <li>Na prática, máscaras são uma sequência de 1's seguida de uma sequência de 0's.
+		  <ul>
+		    <li>Tamanho da sequência de 1's é o tamanho do prefixo na notação CIDR.</li>
+		  </ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>CIRD e Tamanhos de Sub-Redes</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>O CIDR permite sub-redes de tamanhos arbitrários?
+	    <ul>
+	      <li><span class="alert">Não, ainda há restrições de granularidade</span>.</li>
+	    </ul></li>
+	    <li>Exemplos:
+	    <ul>
+	      <li>Prefixo de 27 bits &mdash; <span class="math inline">\(2^{5} = 32\)</span> endereços.</li>
+	      <li>Prefixo de 26 bits &mdash; <span class="math inline">\(2^{6} = 64\)</span> endereços.</li>
+	      <li>Prefixo de 25 bits &mdash; <span class="math inline">\(2^{7} = 128\)</span> endereços.</li>
+	      <li>Prefixo de 24 bits &mdash; <span class="math inline">\(2^{8} = 256\)</span> endereços.</li>
+				<li>...</li>
+	    </ul></li>
+			<li>Mas há bem mais <b>opções</b>.</li>
+	  </ul>
+	</div>
+	</section>
+
+	<!-- {{{{ dzslides core
+	#
+	#
+	#     __  __  __       .  __   ___  __
+	#    |  \  / /__` |    | |  \ |__  /__`
+	#    |__/ /_ .__/ |___ | |__/ |___ .__/ core :€
+	#
+	#
+	# The following block of code is not supposed to be edited.
+	# But if you want to change the behavior of these slides,
+	# feel free to hack it!
+	#
+	-->
+
+    <!-- More CSS -->
+	<link href='../template/css/slides.css' id="slides" rel='stylesheet' type='text/css'>
+	<link href='../template/css/presentationSpecific2.css' id="presentationSpecific2" rel='stylesheet' type='text/css'>
+
+    <!-- More Javascript -->
+	<script type="text/javascript" src="../template/js/dz.js"></script>
+
+	<!-- More CSS -->
+	<link href='../template/css/notesSpecific.css' id="notesSpecific" rel='stylesheet' type='text/css'>
+	<link href='../template/css/printSpecific.css' id="printSpecific" rel='stylesheet' type='text/css'>
+</body>
+</html>
