@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <!-- Meta info -->
+		<meta charset="utf-8">
+		<meta name="shortauthor" content="Diego Passos"/>
+		<meta name="shorttitle" content="BGP, Roteamento Multicast"/>
+		<meta name="shortevent" content="Redes de Computadores"/>
+		<title>Redes de Computadores: Aula 17</title>
+
+		<!-- Math support -->
+		<script type="text/x-mathjax-config">
+		MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+			MathJax.InputJax.TeX.Definitions.number = /^(?:[0-9]+(?:\.[0-9]{3})*(?:\{,\}[0-9]*)*|\{,\}[0-9]+)/
+		});
+		</script>
+		<!--<script src="js/plotly-latest.min.js"></script>-->
+		<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+		<script src="../../../../../MathJax-2.6-latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+		<script type="text/javascript" src="../template/js/dz_pre.js"></script>
+
+		<!-- Fonts -->
+		<link href='https://fonts.googleapis.com/css?family=Lora:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
+		<link href='../../../../../Fonts/Lora/lora.css' rel='stylesheet' type='text/css'>
+
+		<!-- CSS -->
+		<link href='../template/css/template.css' id="template" rel='stylesheet' type='text/css'>
+		<link href='../template/css/presentationSpecific.css' id="presentationSpecific" rel='stylesheet' type='text/css'>
+
+		<!-- Javascript -->
+		<!--
+		<script type="text/javascript" src="../template/js/audio.js"></script>
+		<script src="js/term.js" charset="utf-8"></script>
+    <script src="js/termcast.js" charset="utf-8"></script>
+		<link rel="stylesheet" href="css/googlecode.css">
+		<script src="js/highlight.pack.js"></script>
+		<script>
+			hljs.initHighlightingOnLoad();
+			hljs.configure({
+				tabReplace: '  '
+			});
+		</script>
+		-->
+</head>
+
+<body>
+    <!-- Audio handlers -->
+	<!--<audio src="audio/La.wav" id="La.wav" preload="auto"></audio>-->
+
+    <!-- Title Slide -->
+	<section>
+
+        <div class="slideContent">
+            <h1 class="title">Aula 17 - BGP, Roteamento Broadcast e Multicast</h1>
+            <h2 class="author">Diego Passos</h2>
+            <h4 class="institution">Universidade Federal Fluminense</h4>
+            <h3 class="date">Redes de Computadores</h3>
+        </div>
+		<br>
+		<br>
+			<div style="width: 30%; float: right; padding-right: 2%;">
+			<p style="font-size: 18px; text-align: right;">Material adaptado a partir dos slides originais de J.F Kurose and K.W. Ross.</p>
+		</div>
+	</section>
+
+	<section class="secao">
+	<div class="slideContent">
+	  Roteamento Inter-AS
+	</div>
+	</section>
+
+	<section>
+	<h1>Roteamento Inter-AS na Internet: BGP</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li><b>BGP (<i>Border Gateway Protocol</i>):</b> o padrão <i>de facto</i> para roteamento inter-domínios.
+	    <ul>
+	      <li>&ldquo;A cola que mantém a Internet junta&rdquo;.</li>
+	    </ul></li>
+	    <li>BGP provê a cada AS uma maneira de:
+	    <ul>
+	      <li><b>eBGP:</b> obter informações sobre sub-redes alcançáveis de ASs vizinhos.</li>
+	      <li><b>iBGP:</b> propagar informações de sub-redes externas alcançáveis para todos os roteadores do AS.</li>
+				<li>Determinar &ldquo;boas&rdquo; rotas para outras redes com base nas informações das sub-redes alcançáveis e políticas diversas.</li>
+	    </ul></li>
+	    <li>Permite a uma sub-rede anunciar sua existência para o resto da Internet: <span class="alert">&ldquo;estou aqui!&rdquo;</span></li>
+	  </ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>BGP: Conceitos Básicos</h1>
+	<div class="slideContent">
+		<ul>
+		  <li><span class="alert">Sessão BGP:</span> dois roteadores BGP (&ldquo;<i>peers</i>&rdquo;) trocam mensagens BGP.
+		  <ul>
+		    <li>Anunciam <span class="alert">caminhos</span> para vários prefixos de sub-redes diferentes (protocolo baseado em &ldquo;vetor de caminhos&rdquo;).</li>
+		    <li>Trocadas sobre conexões TCP semi-permanentes.</li>
+		  </ul></li>
+		  <li>Quando o AS3 anuncia um prefixo para o AS1:
+		  <ul>
+		    <li>AS3 <span class="alert">se compromete</span> a encaminhar datagramas em direção àquele prefixo.</li>
+		    <li>AS3 pode agregar prefixos nos seus anúnicios.</li>
+		  </ul></li>
+		</ul>
+		<br>
+	  <center>
+	    <img src="imagens/BGP1.svg" style="width: 70%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>BGP: Distribuindo Informação de Caminhos</h1>
+	<div class="slideContent">
+		<ul>
+		  <li>Usando a sessão eBGP entre 3a e 1c, AS3 envia prefixos alcançáveis para o AS1.
+		  <ul>
+		    <li>1c pode, então, usar o iBGP para distribuir novas informações de prefixos conhecidos para todos os roteadores no AS1.</li>
+		    <li>1b pode, então, re-anunciar a informação de prefixos alcançáveis para o AS2 através da sessão eBGP entre 1b e 2a.</li>
+		  </ul></li>
+		  <li>Quanto roteador aprende um novo prefixo, ele cria uma entrada para o prefixo na sua tabela de roteamento.</li>
+		</ul>
+		<br>
+	  <center>
+	    <img src="imagens/BGP2.svg" style="width: 70%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Atributos de Caminhos e Rotas BGP</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>Prefixos anunciados incluem atributos BGP.
+	    <ul>
+	      <li>prefixo + atributos = &ldquo;rota&rdquo;.</li>
+	    </ul></li>
+	    <li>Dois atributos importantes:
+	    <ul>
+	      <li><span class="alert">AS-PATH:</span> contém lista de ASs pelos quais o anúncio do prefixo passou: <i>e.g.</i>, AS 67, AS 17.</li>
+				<li><span class="alert">NEXT-HOP:</span> indica roteador do AS de próximo salto (que pode estar a vários saltos do AS atual).</li>
+	    </ul></li>
+	    <li>Roteador <i>gateway</i> que recebe anúncios utiliza <span class="alert">política de importação</span> para aceitá-los ou não.
+	    <ul>
+	      <li><i>e.g.</i>, nunca encaminhe para o AS x.</li>
+	      <li>Roteamento baseado em <span class="alert">políticas</span>.</li>
+	    </ul></li>
+	  </ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>BGP: Seleção de Rota</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>Roteador pode aprender múltiplas rotas para um AS de destino. Seleção é baseada em:
+	    <ol>
+	      <li>Valor do atributo <i>Local Preference</i>: decisão baseada em política.</li>
+	      <li>AS-PATH mais curto.</li>
+	      <li>Roteador NEXT-HOP mais próximo: roteamento batata-quente.</li>
+	      <li>Critérios adicionais.</li>
+	    </ol></li>
+	  </ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Mensagens BGP</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>Mensagens BGP trocadas entre <i>peers</i> sobre conexão TCP.</li>
+	    <li>Mensagens BGP:
+	    <ul>
+	      <li><b>OPEN:</b> abre conexão TCP para o <i>peer</i> e autentica transmissor.</li>
+	      <li><b>UPDATE:</b> anuncia novo caminho (ou anula anúnicio antigo).</li>
+	      <li><b>KEEPALIVE:</b> mantém a conexão aberta em caso de inatividade prolongada; também serve de ACK para mensagem OPEN.</li>
+	      <li><b>NOTIFICATION:</b> reporta erros na mensagem anterior; também usada para fechar conexão.</li>
+	    </ul></li>
+	  </ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Juntando Tudo</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li><span class="alert">Como uma entrada é colocada na tabela de roteamento de um roteador?</span>
+	    <ul>
+	      <li>Resposta é complicada!</li>
+	      <li>Junta Roteamento Hierárquico, BGP e OSPF.</li>
+	      <li>Provê boa visão geral do funcionamento do BGP!</li>
+	    </ul></li>
+	  </ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Como a Entrada é Inserida na Tabela de Roteamento? (I)</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/BGPExemplo1.svg" style="width: 70%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Como a Entrada é Inserida na Tabela de Roteamento? (II)</h1>
+	<div class="slideContent">
+		<ul>
+		  <li><b>Visão de alto nível:</b>
+		  <ol>
+		    <li>Roteador passa a conhecer o prefixo.</li>
+		    <li>Roteador determina a porta de saída para alcançar o prefixo.</li>
+		    <li>Roteador insere mapeamento <tt>porta-prefixo</tt> na tabela de roteamento.</li>
+		  </ol></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Roteador Passa a Conhecer o Prefixo</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/BGP1.svg" style="width: 70%;"/>
+	  </center>
+		<br>
+		<ul>
+		  <li>Mensagem BGP contém &ldquo;rotas&rdquo;.</li>
+		  <li>&ldquo;Rota&rdquo; é um prefixo, mais seus atributos: AS-PATH, NEXT-HOP, ...</li>
+		  <li>Exemplo de rota BGP:
+		  <ul>
+		    <li>Prefixo: 138.16.64/22.</li>
+		    <li>AS-PATH: AS3 AS131.</li>
+		    <li>NEXT-HOP: 201.44.13.125.</li>
+		  </ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Roteador Pode Receber Múltiplas Rotas</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/BGPMultiplasRotas.svg" style="width: 70%;"/>
+	  </center>
+		<br>
+		<ul>
+		  <li>Roteador pode receber múltiplos anúncios de rotas para <span class="alert">um mesmo prefixo</span>.</li>
+		  <li>Precisa selecionar um.</li>
+		</ul>
+		<br>
+		<br>
+		<br>
+		<br>
+	</div>
+	</section>
+
+	<section>
+	<h1>Seleção da Melhor Rota BGP para o Prefixo</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>Roteador seleciona rota com base no AS-PATH mais curto.</li>
+	    <li>Por exemplo:
+	    <ul>
+	      <li>AS2 AS17 para alcançar 138.16.64/22 (<span class="alert">selecionada</span>).</li>
+	      <li>AS3 AS131 AS201 para alcançar 138.16.64/22.</li>
+	    </ul></li>
+	    <li>E se ocorrer um empate? Voltaremos a este ponto em breve!</li>
+	  </ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Encontrar Melhor Rota Interna para a Rota BGP</h1>
+	<div class="slideContent">
+		<ul>
+		  <li>Use o atributo NEXT-HOP da rota selecionada.
+		  <ul>
+		    <li>É o endereço IP da interface do roteamento que inicia o AS PATH.</li>
+		  </ul></li>
+		  <li>Exemplo:
+		  <ul>
+		    <li>AS-PATH: AS2 AS17; NEXT-HOP: 111.99.86.55.</li>
+		  </ul></li>
+		  <li>Roteador usa OSPF para encontrar caminho mais curto de 1c para 111.99.86.55.</li>
+		</ul>
+		<br>
+	  <center>
+	    <img src="imagens/BGPRotaInterna.svg" style="width: 70%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Roteador Identifica Porta para Rota</h1>
+	<div class="slideContent">
+		<ul>
+		  <li>Identifica porta no caminho mais curto apontado pelo OSPF.</li>
+		  <li>Adiciona entrada mapeamento o prefixo à porta na sua tabela de roteamento.
+		  <ul>
+		    <li><span class="alert"><tt>(183.16.64/22, porta 4)</tt></span>.</li>
+		  </ul></li>
+		</ul>
+		<br>
+	  <center>
+	    <img src="imagens/BGPIdentificarPorta.svg" style="width: 70%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Roteamento Batata-Quente</h1>
+	<div class="slideContent">
+		<ul>
+		  <li>Suponha que haja duas ou mais melhores rotas BGP.</li>
+		  <li>Então escolha aquela com o NEXT-HOP mais próximo.
+		  <ul>
+		    <li><span class="alert">Use o OSPF para determinar qual <i>gateway</i> está mais próximo</span>.</li>
+		    <li><span class="alert">Pergunta:</span> de 1c, escolher AS3 AS131 ou AS2 AS17?</li>
+		    <li><span class="alert">Resposta:</span> rota AS3 AS 131, já que NEXT-HOP é mais próximo.</li>
+		  </ul></li>
+		</ul>
+		<br>
+	  <center>
+	    <img src="imagens/BGPBatataQuente.svg" style="width: 70%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Como uma Entrada é Inserida na Tabela de Roteamento?</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>Sumário:
+	    <ol>
+	      <li>Roteador passa a conhecer o prefixo.
+	      <ul>
+	        <li>Através de anúncios BGP de outros roteadores.</li>
+	      </ul></li>
+	      <li>Determina porta de saída para o prefixo.
+	      <ul>
+	        <li>Usa seleção de rotas BGP para encontrar a melhor rota BGP.</li>
+	        <li>Usa OSPF para encontrar melhor rota interna ao AS que leva o pacote até o início da melhor rota BGP.</li>
+	        <li>Roteador identifica porta de saída para esta rota.</li>
+	      </ul></li>
+	      <li>Insere o mapeamento <tt>(prefixo, porta)</tt> na tabela de roteamento.</li>
+	    </ol></li>
+	  </ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>BGP: Políticas de Roteamento (I)</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/BGPPoliticas.svg" style="width: 70%;"/>
+	  </center>
+		<br>
+		<ul>
+		  <li>A, B e C são redes de provedores.</li>
+		  <li>X, W, e Y são consumidores (clientes dos provedores).</li>
+		  <li>X é <span class="alert"><i>dual-homed</i></span>: se conecta à Internet por dois provedores diferentes.
+		  <ul>
+		    <li>X não quer rotear pacotes de B para C.</li>
+		    <li>...logo, X não irá anunciar para B uma rota para C.</li>
+		  </ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>BGP: Políticas de Roteamento (II)</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/BGPPoliticas.svg" style="width: 70%;"/>
+	  </center>
+		<br>
+		<ul>
+		  <li>A anuncia caminho AW para B.</li>
+		  <li>B anuncia caminho BAW para X.</li>
+		  <li>B deve anunciar caminho BAW para C?
+		  <ul>
+		    <li>Claro que não! B não lucra roteando CBAW, já que nem W nem C são clientes de B.</li>
+		    <li>B quer forçar C a rotear para W por A.</li>
+		    <li>B quer rotear <span class="alert">apenas</span> tráfego de e para seus clientes!</li>
+		  </ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Por que Roteamentos Diferentes Intra- e Inter-AS?</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li><b>Políticas:</b>
+	    <ul>
+	      <li>Inter-AS: administrador quer controle sobre como seu tráfego é roteado, quem roteia pela sua rede.</li>
+	      <li>Intra-AS: único administrador, não são necessárias decisões políticas.</li>
+	    </ul></li>
+	    <li><b>Escala:</b>
+	    <ul>
+	      <li>Roteamento hierárquico reduz tamanho das tabelas, reduz tráfego de atualização de rotas.</li>
+	    </ul></li>
+	    <li><b>Desempenho:</b>
+	    <ul>
+	      <li>Intra-AS: foco no desempenho.</li>
+	      <li>Inter-AS: políticas podem dominar decisões.</li>
+	    </ul></li>
+	  </ul>
+	</div>
+	</section>
+
+	<section class="secao">
+	<div class="slideContent">
+	  Roteamento <i>Broadcast</i>
+	</div>
+	</section>
+
+	<section>
+	<h1>Roteamento <i>Broadcast</i></h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>Entrega pacotes da origem a todos os outros nós.</li>
+	    <li>Replicação na origem é ineficiente:</li>
+	  </ul>
+		<br>
+		<center>
+		  <img src="imagens/ReplicacaoOrigem.svg" style="width: 70%;"/>
+		</center>
+		<br>
+		<ul>
+		  <li>Replicação na origem: como a origem determina o endereço dos destinatários?</li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Replicação na Rede</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li><b>Inundação:</b> quando nó recebe pacote em <i>broadcast</i>, envia cópias para todos os seus vizinhos.
+	    <ul>
+	      <li>Problemas: ciclos e <span class="alert">tempestade de <i>broadcast</i></span>.</li>
+	    </ul></li>
+	    <li><b>Inundação Controlada:</b> nó só envia cópias se está é a primeira recepção deste pacote.
+	    <ul>
+	      <li>Nós mantêm lista dos IDs dos pacotes já replicados.</li>
+	      <li>Outra alternativa é o <i>Reverse Path Forwarding</i> (RPF): apenas replicar pacotes que chegaram pelo enlace de próximo salto do caminho entre o nó corrente e <span class="alert">a origem</span>.</li>
+	    </ul></li>
+	    <li><b>Árvore Geradora (<i>Spanning Tree</i>):</b>
+	    <ul>
+	      <li>Nós nunca recebem pacotes redundantes.</li>
+	    </ul></li>
+	  </ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Árvores Geradoras</h1>
+	<div class="slideContent">
+		<ul>
+		  <li>Primeiramente, construa uma árvore geradora.
+		  <ul>
+		    <li>Grafo acíclico conectando todos os nós.</li>
+		  </ul></li>
+		  <li>Os nós, então, encaminham/criam cópias dos pacotes apenas nos enlaces da árvore geradora.</li>
+		</ul>
+	  <center>
+	    <img src="imagens/ArvoresGeradoras.svg" style="width: 70%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Árvores Geradoras: Criação Distribuída</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>Elege-se um nó central.
+	    <ul>
+	      <li><i>e.g.</i>, origem do tráfego <i>broadcast</i>.</li>
+	    </ul></li>
+	    <li>Cada nó envia uma mensagem <i>join</i> em <i>unicast</i> para o nó central.
+	    <ul>
+	      <li>Mensagem encaminhada normalmente até que chega a um nó que já pertence à árvore geradora.</li>
+	    </ul></li>
+	  </ul>
+		<br>
+		<center>
+		  <img src="imagens/ArvoresGeradorasConstrucao.svg" style="width: 70%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section class="secao">
+	<div class="slideContent">
+	  Roteamento <i>Multicast</i>
+	</div>
+	</section>
+
+	<section>
+	<h1>Roteamento <i>Multicast</i>: Definição do Problema</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li><b>Objetivo:</b> encontrar uma árvore (ou árvores) conectando roteadores <span class="alert">membros de um grupo multicast</span>.</li>
+	  </ul>
+		<div class="column" style="width: 70%;">
+		  <ul>
+		    <li>Mais definições:
+		    <ul>
+		      <li><b>Árvore</b>: nem todos os enlaces da rede são usados.</li>
+		      <li><b>Árvore Compartilhada:</b> uma mesma árvore é usada por todos os membros do grupo.</li>
+		      <li><b>Enraizada na Fonte:</b> árvores diferentes para cada transmissor do grupo.</li>
+		    </ul></li>
+		  </ul>
+			<br>
+			<center>
+			  <img src="imagens/TiposMulticast.svg" style="width: 70%;"/>
+			</center>
+		</div>
+		<div class="column" style="width: 30%;">
+		  <center>
+		    <img src="imagens/TiposMulticastLegenda.svg" style="width: 70%;"/>
+		  </center>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Abordagens para Construção de Árvores Multicast</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li><b>Árvores enraizadas na fonte:</b> uma árvore por fonte.
+	    <ul>
+	      <li>Árvore de caminhos mais curtos.</li>
+	      <li>Encaminhamento baseado no caminho reverso.</li>
+	    </ul></li>
+	    <li><b>Árvores compartilhadas:</b> grupo todo usa árvore única.
+	    <ul>
+	      <li>Árvore de custo mínimo (<span class="alert">Árvore de Steiner</span>).</li>
+	      <li>Árvore baseadas em nó central.</li>
+	    </ul></li>
+			<li>Veremos cada uma destas abordagens.</li>
+	  </ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Árvore de Caminhos mais Curtos</h1>
+	<div class="slideContent">
+		<ul>
+		  <li>Árvore de encaminhamento <i>multicast</i>: árvore composta pelos caminhos mais curtos da origem até cada destinatário.
+		  <ul>
+		    <li>Sub-produto do Algoritmo de Dijkstra.</li>
+		  </ul></li>
+		</ul>
+		<br>
+	  <center>
+	    <img src="imagens/ArvoreCaminhosMaisCurtos.svg" style="width: 70%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Encaminhamento baseado no Caminho Reverso</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>Se baseia no conhecimento dos roteadores sobre os caminhos <i>unicast</i> mais curtos para a origem.</li>
+	    <li>Cada roteador aplica o seguinte algoritmo para realizar o encaminhamento:</li>
+	  </ul>
+		<br>
+		<center>
+		  <div style="border: 2px solid #a33; text-align: left; width: 70%; padding: 10px;">
+		    <b>Se</b> (datagrama <i>multicast</i> foi recebido no enlace de próximo salto no caminho mais curto de volta à origem)<br>
+				&nbsp;&nbsp;&nbsp; <b>Então</b> inunde datagrama para todos os enlaces de saída.<br>
+				&nbsp;&nbsp;&nbsp; <b>Senão</b> ignore datagrama.
+		  </div>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Encaminhamento baseado no Caminho Reverso: Exemplo</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/CaminhoReversoExemplo.svg" style="width: 70%;"/>
+	  </center>
+		<br>
+		<ul>
+		  <li>Resultado é uma árvore específica para nó de origem.
+		  <ul>
+		    <li>Árvore de caminhos mais curtos reversa.</li>
+		    <li>Pode não ser uma boa escolha se enlaces forem muito assimétricos.</li>
+		  </ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Encaminhamento baseado no Caminho Reverso: Poda</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>Árvore de encaminhamento contém sub-árvores sem membros do grupo <i>multicast</i>.
+	    <ul>
+	      <li>Não é necessário encaminhar datagramas por estas sub-árvores.</li>
+	      <li>Mensagens de &ldquo;poda&rdquo; enviadas em direção à origem por roteadores sem membros conectados.</li>
+	    </ul></li>
+	  </ul>
+		<br>
+		<center>
+		  <img src="imagens/CaminhoReversoPoda.svg" style="width: 70%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Árvore Compartilhada: Árvore de Steiner</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li><b>Árvore de Steiner:</b> árvore de custo mínimo conectando todos os roteadores que possuem membros do grupo.</li>
+	    <li>Problema é NP-Difícil.
+	    <ul>
+	      <li><i>i.e.</i>, hoje não conhecemos algoritmos ótimos eficientes.</li>
+				<li>E é possível que não existam.</li>
+	    </ul></li>
+	    <li>Mas há excelentes heurísticas disponíveis.</li>
+	    <li>Mesmo assim, não é utilizado na prática:
+	    <ul>
+	      <li>Complexidade computacional.</li>
+	      <li>Necessidade de informação sobre toda a rede.</li>
+	      <li>Monolítico: re-execução é necessária sempre que um novo roteador entra/sai do grupo.</li>
+	    </ul></li>
+	  </ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Árvores Baseadas em Nó Central</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>Uma única árvore de encaminhamento compartilhada por todos os nós.</li>
+	    <li>Um roteador se define como o <span class="alert">&ldquo;centro&rdquo;</span> da árvore.</li>
+	    <li>Para se juntar ao grupo:
+	    <ul>
+	      <li>Roteador de borda envia mensagem <i>unicast</i> do tipo <i>join</i> endereçada ao centro da árvore.</li>
+	      <li>Mensagem é &ldquo;processada&rdquo; pelos roteadores intermediários e encaminhada em direção ao centro.</li>
+	      <li>A mensagem de <i>join</i> ou chega ao centro ou chega a algum ramo já existente da árvore.</li>
+	      <li>Caminho usado pela mensagem <i>join</i> se torna, então, um novo ramo da árvore conectando o novo roteador.</li>
+	    </ul></li>
+	  </ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Árvores Baseadas em Nó Central: Exemplo</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>Suponha que R6 seja escolhido como centro.</li>
+	  </ul>
+		<br>
+		<center>
+		  <img src="imagens/ArvoreNoCentral.svg" style="width: 70%;"/>
+		</center>
+	</div>
+	</section>
+
+	<!-- {{{{ dzslides core
+	#
+	#
+	#     __  __  __       .  __   ___  __
+	#    |  \  / /__` |    | |  \ |__  /__`
+	#    |__/ /_ .__/ |___ | |__/ |___ .__/ core :€
+	#
+	#
+	# The following block of code is not supposed to be edited.
+	# But if you want to change the behavior of these slides,
+	# feel free to hack it!
+	#
+	-->
+
+    <!-- More CSS -->
+	<link href='../template/css/slides.css' id="slides" rel='stylesheet' type='text/css'>
+	<link href='../template/css/presentationSpecific2.css' id="presentationSpecific2" rel='stylesheet' type='text/css'>
+
+    <!-- More Javascript -->
+	<script type="text/javascript" src="../template/js/dz.js"></script>
+
+	<!-- More CSS -->
+	<link href='../template/css/notesSpecific.css' id="notesSpecific" rel='stylesheet' type='text/css'>
+	<link href='../template/css/printSpecific.css' id="printSpecific" rel='stylesheet' type='text/css'>
+</body>
+</html>
