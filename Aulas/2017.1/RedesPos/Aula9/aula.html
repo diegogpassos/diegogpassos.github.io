@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <!-- Meta info -->
+		<meta charset="utf-8">
+		<meta name="shortauthor" content="Diego Passos"/>
+		<meta name="shorttitle" content="Confiabilidade (II), Pipeline, TCP (I)"/>
+		<meta name="shortevent" content="Redes de Computadores"/>
+		<title>Redes de Computadores: Aula 9</title>
+
+		<!-- Math support -->
+		<script type="text/x-mathjax-config">
+		MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+			MathJax.InputJax.TeX.Definitions.number = /^(?:[0-9]+(?:\.[0-9]{3})*(?:\{,\}[0-9]*)*|\{,\}[0-9]+)/
+		});
+		</script>
+		<!--<script src="js/plotly-latest.min.js"></script>-->
+		<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+		<script src="../../../../../MathJax-2.6-latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+		<script type="text/javascript" src="../template/js/dz_pre.js"></script>
+
+		<!-- Fonts -->
+		<link href='https://fonts.googleapis.com/css?family=Lora:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
+		<link href='../../../../../Fonts/Lora/lora.css' rel='stylesheet' type='text/css'>
+
+		<!-- CSS -->
+		<link href='../template/css/template.css' id="template" rel='stylesheet' type='text/css'>
+		<link href='../template/css/presentationSpecific.css' id="presentationSpecific" rel='stylesheet' type='text/css'>
+
+
+		<!-- Javascript -->
+		<!--
+		<script type="text/javascript" src="../template/js/audio.js"></script>
+		<script src="js/term.js" charset="utf-8"></script>
+    <script src="js/termcast.js" charset="utf-8"></script>
+		<link rel="stylesheet" href="css/googlecode.css">
+		<script src="js/highlight.pack.js"></script>
+		<script>
+			hljs.initHighlightingOnLoad();
+			hljs.configure({
+				tabReplace: '  '
+			});
+		</script>
+		-->
+</head>
+
+<body>
+    <!-- Audio handlers -->
+	<!--<audio src="audio/La.wav" id="La.wav" preload="auto"></audio>-->
+
+    <!-- Title Slide -->
+	<section>
+
+        <div class="slideContent">
+            <h1 class="title">Aula 9 - Transmissão Confiável (II), Pipeline, Introdução ao TCP</h1>
+            <h2 class="author">Diego Passos</h2>
+            <h4 class="institution">Universidade Federal Fluminense</h4>
+            <h3 class="date">Redes de Computadores</h3>
+        </div>
+		<br>
+		<br>
+			<div style="width: 30%; float: right; padding-right: 2%;">
+			<p style="font-size: 18px; text-align: right;">Material adaptado a partir dos slides originais de J.F Kurose and K.W. Ross.</p>
+		</div>
+	</section>
+
+	<section>
+	<h1>rdt3.0: Canal com Erros e Perdas</h1>
+	<div class="slideContent">
+	  <div class="column" style="width: 45%;">
+			<ul>
+			  <li><b>Nova hipótese:</b>
+			  <ul>
+			    <li>Canal (rede) pode também descartar pacotes (tanto dados, quanto ACKs).
+			    <ul>
+			      <li><i>Checksum</i>, # de sequência, ACKs, retransmissões ajudarão... mas não serão suficientes.</li>
+			    </ul></li>
+			  </ul></li>
+			</ul>
+	  </div>
+	  <div class="column" style="width: 55%;">
+			<ul>
+			  <li><b>Abordagem:</b> transmissor aguarda ACK por um tempo &ldquo;razoável&rdquo;.
+			  <ul>
+			    <li>Retransmite pacote se ACK não é recebido neste período.</li>
+			    <li>Se o pacote (ou seu ACK) estão simplesmente atrasados (e não perdidos):
+			    <ul>
+			      <li>Retransmissão será duplicada, mas # de sequência já lida com isso.</li>
+			      <li>Receptor deve especificar # de sequência do pacote sendo reconhecido pelo ACK.</li>
+			    </ul></li>
+			    <li>Requer um <span class="alert">temporizador</span> regressivo.</li>
+			  </ul></li>
+			</ul>
+	  </div>
+	</div>
+	</section>
+
+	<section>
+	<h1>rdt3.0: Transmissor</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/rdt3_0Transmissor.svg" style="width: 70%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>rdt3.0 em Ação (I)</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/rdt3_0a1.svg" style="width: 80%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>rdt3.0 em Ação (II)</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/rdt3_0a2.svg" style="width: 80%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Desempenho do rdt3.0</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>rdt3.0 funciona, mas desempenho é péssimo.</li>
+	    <li><i>e.g.</i>, enlace de 1 Gb/s, com 15 ms de atraso de propagação, pacote de 8000 bits:</li>
+	  </ul>
+		<center>
+			<span class="math inline">\(D_{trans} = \frac{L}{R} = \frac{8000}{10^9} = 8\;\mu s\)</span>
+		</center>
+		<ul>
+		  <li><span class="math inline">\(U_{sender}\)</span>: <span class="alert">utilização</span> &mdash; fração do tempo em que transmissor efetivamente usa o canal.</li>
+		</ul>
+		<center>
+			<span class="math inline">\(U_{sender} = \frac{L/R}{RTT + L/R} = \frac{0{,}008}{30{,}008} = 0{,}00027\)</span>
+		</center>
+		<ul>
+		  <li>Se RTT=30 ms, um pacote de 1 KB é enviado a cada 30 ms.
+		  <ul>
+		    <li>Vazão de 33 kB/s em enlace de 1 Gb/s</li>
+		  </ul></li>
+		  <li>Protocolo está limitando o uso dos recursos físicos!</li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>rdt3.0: Operação do Tipo <i>Stop-and-Wait</i></h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/StopAndWaitNovo.svg" style="width: 90%;"/>
+	  </center>
+		<br>
+	  <center>
+			<span class="math inline">\(U_{sender} = \frac{L/R}{RTT + L/R} = \frac{0{,}008}{30{,}008} = 0{,}00027\)</span>
+	  </center>
+	</div>
+	</section>
+
+	<section class="secao">
+	<div class="slideContent">
+	  Protocolos Baseados em Pipeline
+	</div>
+	</section>
+
+	<section>
+	<h1>Operação do Tipo <i>Stop-and-Wait</i></h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/StopAndWait.svg" style="width: 70%;"/>
+	  </center>
+		<br>
+	  <center>
+			<span class="math inline">\(U_{sender} = \frac{L/R}{RTT + L/R} = \frac{0{,}008}{30{,}008} = 0{,}00027\)</span>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Protocolos Baseados em Pipeline</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li><b>Pipeline:</b> permite que transmissor tenha múltiplos segmentos <span class="alert">em trânsito</span>.
+	    <ul>
+	      <li><i>i.e.</i>, segmentos enviados, mas com ACK ainda pendente.</li>
+	      <li>Faixa dos números de sequência precisa ser aumentada.</li>
+	      <li><i>Buffers</i> necessários no transmissor e/ou no receptor.</li>
+	    </ul></li>
+	  </ul>
+		<center>
+		  <img src="imagens/Pipeline.svg" style="width: 70%;"/>
+		</center>
+		<ul>
+		  <li>Duas formas genéricas de protocolos baseados em pipeline: <b>go-Back-N</b> e <b>repetição seletiva</b>.</li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Pipeline: Aumentando a Utilização</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/PipelineUtilizacao.svg" style="width: 85%;"/>
+			<br>
+		  <span class="math inline">\(U_{sender} = \frac{3L/R}{RTT + L/R} = \frac{0{,}0024}{30{,}008} = 0{,}00081\)</span>
+			<br>
+			<br>
+			<span class="alert">Três vezes mais que no <i>Stop-and-Wait</i>.</span>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Protocolos Baseados em Pipeline: Visão Geral</h1>
+	<div class="slideContent">
+	  <div class="column" style="width: 50%;">
+			<ul>
+			  <li><b>Go-back-N:</b>
+			  <ul>
+			    <li>Transmissor pode ter até N segmentos em trânsito no pipeline.</li>
+			    <li>Receptor envia apenas <span class="alert">ACKs cumulativos</span>.
+			    <ul>
+			      <li>Não reconhece pacote se há um &ldquo;buraco&rdquo;.</li>
+			    </ul></li>
+			    <li>Transmissor possui um temporizador para o pacote mais antigo em trânsito.
+			    <ul>
+			      <li>De menor número de sequência.</li>
+			      <li>Quando o temporizador expira, <b>todos</b> os pacotes em trânsito são retransmitidos.</li>
+			    </ul></li>
+			  </ul></li>
+			</ul>
+	  </div>
+	  <div class="column" style="width: 50%;">
+			<ul>
+			  <li><b>Repetição Seletiva:</b>
+			  <ul>
+			    <li>Transmissor pode ter até N segmentos em trânsito no pipeline.</li>
+			    <li>Receptor envia <span class="alert">ACKs seletivos</span>.
+			    <ul>
+			      <li><i>i.e.</i>, segmentos são reconhecidos individualmente.</li>
+			    </ul></li>
+			    <li>Transmissor mantém um timer para cada pacote em trânsito.
+			    <ul>
+			      <li>Quanto temporizador expira, <b>apenas</b> segmento correspondente é retransmitido.</li>
+			    </ul></li>
+			  </ul></li>
+			</ul>
+	  </div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Go-Back-N: Transmissor</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>Cabeçalho do segmento contém campo de k bits para o # de sequência.</li>
+	    <li>&ldquo;Janela de até N&rdquo; pacotes em trânsito consecutivos.</li>
+	  </ul>
+		<center>
+		  <img src="imagens/GoBackNJanelaTransmissor.svg" style="width: 80%;"/>
+		</center>
+		<ul>
+		  <li>ACK(n): reconhece todos os pacotes, incluindo o de # de sequência n.
+		  <ul>
+		    <li><span class="alert">ACK cumulativo</span>.</li>
+		    <li>ACKs repetidos podem ser recebidos (vide receptor).</li>
+		  </ul></li>
+		  <li>Temporizador para o segmento em trânsito mais antigo.
+		  <ul>
+		    <li>Quando expira, todos os pacotes em trânsito são retransmitidos.</li>
+		  </ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Go-Back-N: Máquina de Estados do Transmissor</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/GoBackNMaquinaDeEstadosTransmissor.svg" style="width: 65%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Go-Back-N: Máquina de Estados do Receptor</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/GoBackNMaquinaDeEstadosReceptor.svg" style="width: 70%;"/>
+	  </center>
+
+		<ul>
+		  <li>Apenas ACK: sempre envia ACK para segmentos corretos reconhecendo recebimento do <span class="alert">maior # de sequência em ordem</span>.
+		  <ul>
+		    <li>Pode gerar ACKs duplicados.</li>
+		    <li>Precisa se lembrar apenas do próximo número de sequência esperado.</li>
+		  </ul></li>
+		  <li>Pacote fora de ordem:
+		  <ul>
+		    <li>Descartado (não é armazenado em <i>buffer</i>): <span class="alert">sem <i>buffer</i> de recepção</span>.</li>
+				<li>Mesmo assim, receptor gera ACK para maior # de sequência já recebido em ordem.</li>
+		  </ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Go-Back-N em Ação</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/GBNAction.svg" style="width: 80%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Repetição Seletiva</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>Receptor reconhece segmentos recebidos corretamente de forma <b>individual</b>.
+	    <ul>
+	      <li>Segmentos recebidos fora de ordem são colocados em <i>buffer</i> para posterior entrega à aplicação.</li>
+	    </ul></li>
+	    <li>Transmissor reenvia apenas segmentos para os quais o ACK ainda não foi recebido.
+	    <ul>
+	      <li>Um temporizador para cada segmento em trânsito.</li>
+	    </ul></li>
+	    <li>Janela do transmissor:
+	    <ul>
+	      <li>N números de sequência consecutivos.</li>
+	      <li>Limita número de segmentos em trânsito.</li>
+	    </ul></li>
+	  </ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Repetição Seletiva: Janelas do Transmissor e do Receptor</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/SRJanela.svg" style="width: 80%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Repetição Seletiva: Eventos</h1>
+	<div class="slideContent">
+	  <div class="column" style="width: 50%;">
+			<center>
+			  <span class="alert">Transmissor</span>
+			</center>
+			<br>
+			<ul>
+			  <li><b>Dado da aplicação:</b>
+			  <ul>
+			    <li>Se há # de sequência disponível na janela, transmita segmento.</li>
+			  </ul></li>
+			  <li><b>timeout(n):</b>
+			  <ul>
+			    <li>Retransmita pacote n, reinicie temporizador.</li>
+			  </ul></li>
+			  <li><b>ACK(n):</b>
+			  <ul>
+			    <li>Marque pacote n como recebido.</li>
+			    <li>Se n é o menor # de sequência na janela, avance base da janela para o próximo # de sequência não reconhecido/disponível.</li>
+			  </ul></li>
+			</ul>
+	  </div>
+	  <div class="column" style="width: 50%;">
+			<center>
+			  <span class="alert">Receptor</span>
+			</center>
+			<br>
+			<ul>
+			  <li>Segmento n recebido (<span class="math inline">\(rcvbase \le n < rcvbase + N\)</span>).
+			  <ul>
+			    <li>Transmita ACK(n).</li>
+			    <li>Se fora de ordem: armazene em <i>buffer</i>.</li>
+			    <li>Se em ordem, entregue todos os dados contíguos, avance janela para próxima lacuna.</li>
+			  </ul></li>
+			  <li>Segmento n recebido (<span class="math inline">\(rcvbase - N \le n < rcvbase\)</span>).
+			  <ul>
+			    <li>ACK(n).</li>
+			  </ul></li>
+			  <li>Outros:
+			  <ul>
+			    <li>Ignore.</li>
+			  </ul></li>
+			</ul>
+	  </div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Repetição Seletiva em Ação</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/SRAction.svg" style="width: 80%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Repetição Seletiva: Dilema</h1>
+	<div class="slideContent">
+	  <div class="column" style="width: 50%;">
+			<br>
+			<br>
+			<br>
+			<ul>
+			  <li>Exemplo:
+			  <ul>
+			    <li># de sequência disponíveis: 0, 1, 2, 3.</li>
+			    <li>Tamanho da janela: 3.</li>
+			    <li>Receptor não vê diferença nos dois cenários!</li>
+			    <li>No segundo, dados entregues à aplicação duplicados.</li>
+			    <li><b>Pergunta:</b> qual a relação entre o # de sequência e o tamanho da janela para evitar o problema?</li>
+			  </ul></li>
+			</ul>
+	  </div>
+	  <div class="column" style="width: 50%;">
+			<center>
+			  <img src="imagens/SRDilema.svg" style="width: 70%;"/>
+			</center>
+
+	  </div>
+	</div>
+	</section>
+
+	<section class="secao">
+	<div class="slideContent">
+	  Introdução ao TCP
+	</div>
+	</section>
+
+	<section>
+	<h1>TCP: Visão Geral [RFCs: 793, 1122, 1323, 2018, 2581]</h1>
+	<div class="slideContent">
+	  <div class="column" style="width: 50%;">
+	    <ul>
+	      <li><b>Ponto-a-ponto:</b>
+	      <ul>
+	        <li>Um transmissor, um receptor.</li>
+	      </ul></li>
+	      <li><b>Fluxo de bytes confiável, ordenado:</b>
+	      <ul>
+	        <li>Sem &ldquo;fronteiras entre mensagens&rdquo;.</li>
+	      </ul></li>
+	      <li><b>Baseado em Pipeline:</b>
+	      <ul>
+	        <li>Controle de fluxo e controle de congestionamento configuram tamanho da janela.</li>
+	      </ul></li>
+	    </ul>
+	  </div>
+		<div class="column" style="width: 50%;">
+		  <ul>
+		    <li><b>Comunicação <i>full-duplex</i></b>:
+		    <ul>
+		      <li>Dados podem fluir nas duas direções em uma mesma conexão.</li>
+		      <li>MSS: <i>Maximum Segment Size</i>.</li>
+		    </ul></li>
+		    <li><b>Orientado a conexão</b>:
+		    <ul>
+		      <li>Um <i>handshake</i> (troca de mensagens de controle) inicia os estados no transmissor, receptor <span class="alert">antes da troca de dados</span>.</li>
+		    </ul></li>
+		    <li><b>Controle de fluxo:</b>
+		    <ul>
+		      <li>Transmissor não afogará o receptor.</li>
+		    </ul></li>
+		  </ul>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Estrutura de um Segmento TCP</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/TCPFormato.svg" style="width: 70%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>TCP: # de Sequência, ACKs (I)</h1>
+	<div class="slideContent">
+	  <div class="column" style="width: 50%;">
+			<ul>
+			  <li><b>Números de sequência:</b>
+			  <ul>
+			    <li>&ldquo;Índice&rdquo; do primeiro byte do segmento no fluxo de bytes.</li>
+			  </ul></li>
+			  <li><b>ACKs:</b>
+			  <ul>
+			    <li>Número de sequência do próximo byte esperado pelo receptor.</li>
+			    <li>ACKs cumulativos.</li>
+			  </ul></li>
+			  <li><span class="alert">Pergunta:</span> como o receptor lida com segmentos fora de ordem?
+			  <ul>
+			    <li>Resposta: especificação do TCO não diz &mdash; decisão do implementador.</li>
+			  </ul></li>
+			</ul>
+	  </div>
+	  <div class="column" style="width: 50%;">
+			<center>
+			  <img src="imagens/TCPSeqNum.svg" style="width: 70%;"/>
+			</center>
+
+	  </div>
+	</div>
+	</section>
+
+	<section>
+	<h1>TCP: # de Sequência, ACKs (II)</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/TCPAcks.svg" style="width: 50%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<!-- {{{{ dzslides core
+	#
+	#
+	#     __  __  __       .  __   ___  __
+	#    |  \  / /__` |    | |  \ |__  /__`
+	#    |__/ /_ .__/ |___ | |__/ |___ .__/ core :€
+	#
+	#
+	# The following block of code is not supposed to be edited.
+	# But if you want to change the behavior of these slides,
+	# feel free to hack it!
+	#
+	-->
+
+    <!-- More CSS -->
+	<link href='../template/css/slides.css' id="slides" rel='stylesheet' type='text/css'>
+	<link href='../template/css/presentationSpecific2.css' id="presentationSpecific2" rel='stylesheet' type='text/css'>
+
+    <!-- More Javascript -->
+	<script type="text/javascript" src="../template/js/dz.js"></script>
+
+	<!-- More CSS -->
+	<link href='../template/css/notesSpecific.css' id="notesSpecific" rel='stylesheet' type='text/css'>
+	<link href='../template/css/printSpecific.css' id="printSpecific" rel='stylesheet' type='text/css'>
+</body>
+</html>
