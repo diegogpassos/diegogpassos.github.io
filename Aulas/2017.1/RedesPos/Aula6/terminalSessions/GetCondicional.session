@@ -1,0 +1,63 @@
+Script started on Tue 10 May 2016 11:10:23 PM BRT
+ExperimentosRedesI:# telnet www.midiacom.uff.br 80
+Trying 200.20.10.93...
+Connected to mesbla.midiacom.uff.br.
+Escape character is '^]'.
+GET /~diego/ HTTP/1.1
+Host: www.midiacom.uff.br
+If-Modo ified-Since: Sat, 21 Nov 2015 01:23:56 GMT
+
+HTTP/1.1 304 Not Modified
+Date: Wed, 11 May 2016 02:10:59 GMT
+Server: Apache/2.2.3 (Red Hat)
+ETag: "34f8002-131-52502d8804300"
+X-Cache: MISS from localhost
+X-Cache-Lookup: MISS from localhost:3128
+Via: 1.1 localhost (squid)
+Connection: keep-alive
+
+GET /~diego/ HTTP/1.1
+Host: www.midiacom.uff.br
+If-Modified-Since: Sat, 20 Nov 2015 01:23:56 GMT
+
+HTTP/1.1 200 OK
+Date: Wed, 11 May 2016 02:11:29 GMT
+Server: Apache/2.2.3 (Red Hat)
+Last-Modified: Sat, 21 Nov 2015 01:23:56 GMT
+ETag: "34f8002-131-52502d8804300"
+Accept-Ranges: bytes
+Content-Length: 305
+Content-Type: text/html
+X-Cache: MISS from localhost
+X-Cache-Lookup: MISS from localhost:3128
+Via: 1.1 localhost (squid)
+Connection: keep-alive
+
+<html>
+	<head>
+		<title>Diego Passos</title> 
+		<style>
+			body {
+				margin: 0;
+			}
+
+			iframe {
+
+				border: 0; 
+				width: 100%; 
+				height: 100%
+			}
+		</style>
+	</head>
+
+	<body>
+		<iframe src="https://sites.google.com/site/diegogpassos/">Seu browser não suporta iFrames.</iframe>
+	</body>
+</html>
+^]q
+
+telnet> q
+Connection closed.
+ExperimentosRedesI:# exit
+
+Script done on Tue 10 May 2016 11:11:31 PM BRT
