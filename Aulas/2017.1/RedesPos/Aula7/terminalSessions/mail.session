@@ -1,0 +1,47 @@
+Script started on Mon 16 May 2016 04:01:42 PM BRT
+ExperimentosRedesI:# dig midiacom.uff.br mx
+
+; <<>> DiG 9.9.5-9+deb8u2-Debian <<>> midiacom.uff.br mx
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 51177
+;; flags: qr rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 1
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 512
+;; QUESTION SECTION:
+;midiacom.uff.br.		IN	MX
+
+;; ANSWER SECTION:
+midiacom.uff.br.	687	IN	MX	5 mail.midiacom.uff.br.
+
+;; Query time: 69 msec
+;; SERVER: 8.8.8.8#53(8.8.8.8)
+;; WHEN: Mon May 16 16:01:47 BRT 2016
+;; MSG SIZE  rcvd: 65
+
+ExperimentosRedesI:# dig mail.midiacom.uff.br a
+
+; <<>> DiG 9.9.5-9+deb8u2-Debian <<>> mail.midiacom.uff.br a
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 48201
+;; flags: qr rd ra; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 1
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 512
+;; QUESTION SECTION:
+;mail.midiacom.uff.br.		IN	A
+
+;; ANSWER SECTION:
+mail.midiacom.uff.br.	384	IN	CNAME	icarai.midiacom.uff.br.
+icarai.midiacom.uff.br.	384	IN	A	200.20.10.66
+
+;; Query time: 67 msec
+;; SERVER: 8.8.8.8#53(8.8.8.8)
+;; WHEN: Mon May 16 16:01:55 BRT 2016
+;; MSG SIZE  rcvd: 86
+
+ExperimentosRedesI:# exit
+
+Script done on Mon 16 May 2016 04:02:00 PM BRT

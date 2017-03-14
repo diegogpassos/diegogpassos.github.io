@@ -1,0 +1,527 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="230.03511mm"
+   height="129.85297mm"
+   viewBox="0 0 815.08503 460.10894"
+   id="svg3773"
+   version="1.1"
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="ClienteServidorUDP.svg">
+  <defs
+     id="defs3775">
+    <linearGradient
+       x1="531.17999"
+       y1="184.06"
+       x2="595.21997"
+       y2="106.28"
+       gradientUnits="userSpaceOnUse"
+       spreadMethod="pad"
+       id="linearGradient300">
+      <stop
+         style="stop-opacity:1;stop-color:#ffffff"
+         offset="0"
+         id="stop302" />
+      <stop
+         style="stop-opacity:1;stop-color:#ffffff"
+         offset="1"
+         id="stop304" />
+    </linearGradient>
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath286">
+      <path
+         d="M 2.628e-6,1.8311e-4 720,1.8311e-4 720,540.00018 l -719.999997372,0 0,-539.99999689 z"
+         id="path288"
+         inkscape:connector-curvature="0"
+         style="clip-rule:evenodd" />
+    </clipPath>
+    <mask
+       maskUnits="userSpaceOnUse"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       id="mask292">
+      <image
+         width="1"
+         height="1"
+         preserveAspectRatio="none"
+         xlink:href="data:image/png;base64,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"
+         id="image294" />
+    </mask>
+    <linearGradient
+       x1="125.95"
+       y1="206.31"
+       x2="61.905998"
+       y2="128.53"
+       gradientUnits="userSpaceOnUse"
+       spreadMethod="pad"
+       id="linearGradient274">
+      <stop
+         style="stop-opacity:1;stop-color:#ffffff"
+         offset="0"
+         id="stop276" />
+      <stop
+         style="stop-opacity:1;stop-color:#ffffff"
+         offset="1"
+         id="stop278" />
+    </linearGradient>
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath260">
+      <path
+         d="M 3.7e-7,1.2207e-4 720,1.2207e-4 720,540.00012 3.7e-7,540.00012 3.7e-7,1.2207e-4 Z"
+         id="path262"
+         inkscape:connector-curvature="0"
+         style="clip-rule:evenodd" />
+    </clipPath>
+    <mask
+       maskUnits="userSpaceOnUse"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       id="mask266">
+      <image
+         width="1"
+         height="1"
+         preserveAspectRatio="none"
+         xlink:href="data:image/png;base64,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"
+         id="image268" />
+    </mask>
+    <linearGradient
+       x1="7.375"
+       y1="193"
+       x2="126.88"
+       y2="193"
+       gradientUnits="userSpaceOnUse"
+       spreadMethod="pad"
+       id="linearGradient116">
+      <stop
+         style="stop-opacity:1;stop-color:#b2b2b2"
+         offset="0"
+         id="stop118" />
+      <stop
+         style="stop-opacity:1;stop-color:#b2b2b2"
+         offset="1"
+         id="stop120" />
+    </linearGradient>
+    <linearGradient
+       x1="461.12"
+       y1="197.94"
+       x2="577.12"
+       y2="197.94"
+       gradientUnits="userSpaceOnUse"
+       spreadMethod="pad"
+       id="linearGradient80">
+      <stop
+         style="stop-opacity:1;stop-color:#b2b2b2"
+         offset="0"
+         id="stop82" />
+      <stop
+         style="stop-opacity:1;stop-color:#b2b2b2"
+         offset="1"
+         id="stop84" />
+    </linearGradient>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1.1388607"
+     inkscape:cx="407.54252"
+     inkscape:cy="230.05447"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="1360"
+     inkscape:window-height="719"
+     inkscape:window-x="0"
+     inkscape:window-y="25"
+     inkscape:window-maximized="1"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0" />
+  <metadata
+     id="metadata3778">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-64.468018,-290.00549)">
+    <text
+       y="723.08978"
+       x="543.47565"
+       style="font-variant:normal;font-weight:normal;font-size:22.53125px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="text4058">
+      <tspan
+         x="543.47565 554.74121 559.74316 572.27057 583.53619"
+         y="723.08978"
+         sodipodi:role="line"
+         id="tspan4060">close</tspan>
+    </text>
+    <text
+       y="749.83978"
+       x="543.47565"
+       style="font-variant:normal;font-weight:normal;font-size:22.5px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#cc0000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="text4062">
+      <tspan
+         x="543.47565 554.72565 559.72064 564.71564 577.22559 589.7356 595.9906 610.99811 623.50812 634.75812 646.21063"
+         y="749.83978"
+         sodipodi:role="line"
+         id="tspan4064">clientSocke</tspan>
+    </text>
+    <text
+       y="749.83978"
+       x="658.75061"
+       style="font-variant:normal;font-weight:normal;font-size:22.5px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#ff0000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="text4066">
+      <tspan
+         x="658.75061"
+         y="749.83978"
+         id="tspan4068">t</tspan>
+    </text>
+    <path
+       d="m 602.4381,671.83354 0,24.85 -2.8125,0 0,-24.85 2.8125,0 z m 2.8125,23.4375 -4.2125,8.44375 -4.225,-8.44375 8.4375,0 z"
+       style="fill:#000099;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="path4070"
+       inkscape:connector-curvature="0" />
+    <text
+       y="643.53351"
+       x="539.72565"
+       style="font-variant:normal;font-weight:normal;font-size:22.53125px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="text4072">
+      <tspan
+         x="539.72565 547.22852 559.75592 572.28326 584.72052 590.71381 603.24121 615.76855 621.96466 634.49207 647.01941 654.52234 666.95959 685.93091 691.92419 698.39069 705.89355 718.42096"
+         y="643.53351"
+         sodipodi:role="line"
+         id="tspan4074">read datagram from</tspan>
+    </text>
+    <text
+       y="670.28351"
+       x="539.72565"
+       style="font-variant:normal;font-weight:normal;font-size:22.5px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#cc0000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="text4076">
+      <tspan
+         x="539.72565 550.97565 555.97064 560.96564 573.47565 585.9856 592.2406 607.24811 619.75812 631.00812 642.46063 654.97058"
+         y="670.28351"
+         sodipodi:role="line"
+         id="tspan4078">clientSocket</tspan>
+    </text>
+    <path
+       d="m 591.1881,551.83354 0,74.5375 -2.8125,0 0,-74.5375 2.8125,0 z m 2.8125,73.125 -4.2125,8.4375 -4.225,-8.4375 8.4375,0 z"
+       style="fill:#000099;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="path4080"
+       inkscape:connector-curvature="0" />
+    <text
+       y="370.77103"
+       x="528.16315"
+       style="font-variant:normal;font-weight:normal;font-size:22.5px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="text4082">
+      <tspan
+         x="528.16315 539.41315 546.90564 559.41559 571.9256 578.1806 590.69061 596.65308 607.90308 620.41309 631.66309 643.13812 655.64807 661.90308"
+         y="370.77103"
+         sodipodi:role="line"
+         id="tspan4084">create socket:</tspan>
+    </text>
+    <text
+       y="399.24603"
+       x="528.16315"
+       style="font-variant:normal;font-weight:normal;font-size:22.53125px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#cc0000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="text4086">
+      <tspan
+         x="528.16315 539.42871 544.43066 549.43262 561.96002 574.4198 580.68347 595.71179 608.17157 619.43719 630.90558 643.43298 649.69666 655.39709"
+         y="399.24603"
+         sodipodi:role="line"
+         id="tspan4088">clientSocket =</tspan>
+    </text>
+    <text
+       y="429.49603"
+       x="528.16315"
+       style="font-variant:normal;font-weight:normal;font-size:22.5px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#cc0000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="text4090">
+      <tspan
+         x="528.16315 539.41315 551.9231 563.1731 574.64813 587.15808 593.41309 600.90558 615.91309 629.66058 642.17059 648.4256 664.67059 679.6781 690.90558 697.16058 712.16809 729.6731 745.91809 760.9256 773.43561 789.6806 807.18561 823.4306 838.43811 857.1806"
+         y="429.49603"
+         sodipodi:role="line"
+         id="tspan4092">socket(AF_INET,SOCK_DGRAM)</tspan>
+    </text>
+    <text
+       y="482.37103"
+       x="526.91315"
+       style="font-variant:normal;font-weight:normal;font-size:22.5px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="text4094">
+      <tspan
+         x="526.91315 543.15814 550.65063 563.16064 575.67059 581.9256 594.43561 600.42059 612.9306 625.44061 631.69562 644.20563 656.71558 664.20813 676.71808 695.64062 701.64807 717.39813 722.39313 728.64813 741.15808 747.88562 759.13562 771.64557 779.13812 790.38812 802.89807 810.39062 816.64557 822.90057 837.39062 843.64563 856.15564 868.66559"
+         y="482.37103"
+         sodipodi:role="line"
+         id="tspan4096">Create datagram with server IP and</tspan>
+    </text>
+    <text
+       y="509.37103"
+       x="526.91315"
+       style="font-variant:normal;font-weight:normal;font-size:22.5px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="text4098">
+      <tspan
+         x="526.91315 539.4231 551.93311 559.4256 565.6806 578.88812 590.13812 596.39313 602.37811 613.62811 626.13812 638.64813 651.15808 657.41309 669.9231 682.43311 688.68811 701.13062 713.64062 721.13312 733.64313 752.6106 758.6181 769.8681 774.8631"
+         y="509.37103"
+         sodipodi:role="line"
+         id="tspan4100">port=x; send datagram via</tspan>
+    </text>
+    <text
+       y="536.15851"
+       x="526.91315"
+       style="font-variant:normal;font-weight:normal;font-size:22.53125px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#cc0000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="text4102">
+      <tspan
+         x="526.91315 538.17871 543.18066 548.18262 560.71002 573.1698 579.43347 594.46179 606.92157 618.18719 629.65558 642.18298"
+         y="536.15851"
+         sodipodi:role="line"
+         id="tspan4104">clientSocket</tspan>
+    </text>
+    <path
+       d="m 587.7506,436.05854 0,24.8375 -2.8125,0 0,-24.8375 2.8125,0 z m 2.8125,23.4375 -4.2125,8.4375 -4.225,-8.4375 8.4375,0 z"
+       style="fill:#000099;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="path4106"
+       inkscape:connector-curvature="0" />
+    <path
+       d="m 520.9506,496.50854 -230.25,38.225 -0.4625,-2.775 230.2625,-38.225 0.45,2.775 z m -228.4,40.7625 -9.0125,-2.775 7.6375,-5.55 1.375,8.325 z"
+       style="fill:#cc0000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="path4108"
+       inkscape:connector-curvature="0" />
+    <text
+       y="391.97101"
+       x="78.038101"
+       style="font-variant:normal;font-weight:normal;font-size:22.5px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="text4110">
+      <tspan
+         x="78.038101 89.288101 96.780602 109.2906 121.8006 128.0556 140.5656 146.52811 157.77811 170.28812 181.53812 193.01311 205.5231 211.77809 218.03311 224.0181 236.52811 249.0381 256.53061 262.78561 275.9931 282.24811 293.49811"
+         y="391.97101"
+         sodipodi:role="line"
+         id="tspan4112">create socket, port= x:</tspan>
+    </text>
+    <text
+       y="419.55853"
+       x="79.288101"
+       style="font-variant:normal;font-weight:normal;font-size:22.5px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#cc0000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="text4114">
+      <tspan
+         x="79.288101 90.538101 103.0481 110.5406 121.7906 134.3006 141.79311 156.8006 169.31061 180.56061 192.01311 204.5231 210.77811 216.51559"
+         y="419.55853"
+         sodipodi:role="line"
+         id="tspan4116">serverSocket =</tspan>
+    </text>
+    <text
+       y="449.80853"
+       x="79.288101"
+       style="font-variant:normal;font-weight:normal;font-size:22.5px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#cc0000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="text4118">
+      <tspan
+         x="79.288101 90.538101 103.0481 114.2981 125.7731 138.28311 144.5381 152.03061 167.0381 180.7856 193.29561 199.5506 215.79561 230.8031 242.03061 248.2856 263.29309 280.7981 297.04309 312.05063 324.56061 340.8056 358.31061 374.5556 389.56311 408.3056"
+         y="449.80853"
+         sodipodi:role="line"
+         id="tspan4120">socket(AF_INET,SOCK_DGRAM)</tspan>
+    </text>
+    <path
+       d="m 180.2506,459.80854 0,50.15 -2.8125,0 0,-50.15 2.8125,0 z m 2.8125,48.75 -4.2125,8.4375 -4.225,-8.4375 8.4375,0 z"
+       style="fill:#000099;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="path4122"
+       inkscape:connector-curvature="0" />
+    <text
+       y="533.62103"
+       x="126.7881"
+       style="font-variant:normal;font-weight:normal;font-size:22.5px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="text4124">
+      <tspan
+         x="126.7881 134.28061 146.7906 159.3006 171.81061 177.79561 190.30562 202.8156 209.0706 221.5806 234.09061 241.5831 254.09311 273.01562 279.0231 285.50311 292.99561 305.50562"
+         y="533.62103"
+         sodipodi:role="line"
+         id="tspan4126">read datagram from</tspan>
+    </text>
+    <text
+       y="560.40851"
+       x="126.7881"
+       style="font-variant:normal;font-weight:normal;font-size:22.53125px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#cc0000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="text4128">
+      <tspan
+         x="126.7881 138.05373 150.5811 158.08401 169.34962 181.78688 189.28979 204.31813 216.8455 228.04353 239.51195"
+         y="560.40851"
+         sodipodi:role="line"
+         id="tspan4130">serverSocke</tspan>
+    </text>
+    <text
+       y="560.40851"
+       x="252.07561"
+       style="font-variant:normal;font-weight:normal;font-size:22.53125px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#ff0000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="text4132">
+      <tspan
+         x="252.07561"
+         y="560.40851"
+         id="tspan4134">t</tspan>
+    </text>
+    <text
+       y="618.30853"
+       x="128.9756"
+       style="font-variant:normal;font-weight:normal;font-size:22.5px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="text4136">
+      <tspan
+         x="128.9756 144.7256 152.21811 157.2131 163.46811 175.97812 182.4581 189.95061 202.4606 214.9706 219.96561 230.6981 237.4256 243.6806"
+         y="618.30853"
+         sodipodi:role="line"
+         id="tspan4138">write reply to</tspan>
+    </text>
+    <text
+       y="645.3335"
+       x="128.9756"
+       style="font-variant:normal;font-weight:normal;font-size:22.53125px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#cc0000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="text4140">
+      <tspan
+         x="128.9756 140.24123 152.7686 160.27151 171.53712 183.97438 191.47729 206.50563 219.033 230.23103 241.69945 254.22682"
+         y="645.3335"
+         sodipodi:role="line"
+         id="tspan4142">serverSocket</tspan>
+    </text>
+    <text
+       y="672.3335"
+       x="128.9756"
+       style="font-variant:normal;font-weight:normal;font-size:22.5px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="text4144">
+      <tspan
+         x="128.9756 140.2256 152.73561 165.24561 176.49561 181.4906 187.9481 198.70311 203.6981 216.2081 228.71809"
+         y="672.3335"
+         sodipodi:role="line"
+         id="tspan4146">specifying</tspan>
+    </text>
+    <text
+       y="699.34601"
+       x="128.9756"
+       style="font-variant:normal;font-weight:normal;font-size:22.5px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="text4148">
+      <tspan
+         x="128.9756 140.2256 145.22061 150.21561 162.7256 175.23561 181.4906 187.4756 199.9856 212.49561 225.0056 232.49811 245.0081 256.25809 267.50812"
+         y="699.34601"
+         sodipodi:role="line"
+         id="tspan4150">client address,</tspan>
+    </text>
+    <text
+       y="726.12103"
+       x="128.9756"
+       style="font-variant:normal;font-weight:normal;font-size:22.53125px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="text4152">
+      <tspan
+         x="128.9756 141.50298 154.03035 161.53326 167.72935 173.72267 186.25005 198.77742 217.70367 230.23103 242.75842"
+         y="726.12103"
+         sodipodi:role="line"
+         id="tspan4154">port number</tspan>
+    </text>
+    <path
+       d="m 184.3131,572.93354 0,23.9 -2.8125,0 0,-23.9 2.8125,0 z m 2.8125,22.5 -4.2125,8.4375 -4.225,-8.4375 8.4375,0 z"
+       style="fill:#000099;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="path4156"
+       inkscape:connector-curvature="0" />
+    <path
+       d="m 271.2006,610.59604 233.0125,27.3125 -0.325,2.7875 -233.0125,-27.3 0.325,-2.8 z m 231.95,24.35 7.8875,5.175 -8.875,3.2125 0.9875,-8.3875 z"
+       style="fill:#cc0000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="path4158"
+       inkscape:connector-curvature="0" />
+    <text
+       y="317.09604"
+       x="62.569351"
+       style="font-variant:normal;font-weight:normal;font-size:35.03125px;font-family:'Gill Sans MT';-inkscape-font-specification:'Gill Sans MT';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="text4188">
+      <tspan
+         x="62.569351 76.056381 92.836349 107.54948 122.05241 138.83238"
+         y="317.09604"
+         sodipodi:role="line"
+         id="tspan4190">server</tspan>
+    </text>
+    <text
+       y="317.09604"
+       x="161.1006"
+       style="font-variant:normal;font-weight:normal;font-size:30px;font-family:'Gill Sans MT';-inkscape-font-specification:'Gill Sans MT';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="text4192">
+      <tspan
+         x="161.1006 170.79062 182.8206 197.8206 212.8206 227.8206 234.39059 249.39061"
+         y="317.09604"
+         sodipodi:role="line"
+         id="tspan4194">(running</tspan>
+    </text>
+    <text
+       y="317.09604"
+       x="268.87561"
+       style="font-variant:normal;font-weight:normal;font-size:25px;font-family:'Gill Sans MT';-inkscape-font-specification:'Gill Sans MT';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="text4196">
+      <tspan
+         x="268.87561 282.62561"
+         y="317.09604"
+         sodipodi:role="line"
+         id="tspan4198">on</tspan>
+    </text>
+    <text
+       y="317.09604"
+       x="301.88812"
+       style="font-variant:normal;font-weight:normal;font-size:22.5px;font-family:'Comic Sans MS';-inkscape-font-specification:'Comic Sans MS';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="text4200">
+      <tspan
+         x="301.88812 312.84561 325.1756 336.1106 347.04559 359.37561 370.3331 382.6181"
+         y="317.09604"
+         sodipodi:role="line"
+         id="tspan4202">serverIP</tspan>
+    </text>
+    <text
+       y="317.09604"
+       x="394.41312"
+       style="font-variant:normal;font-weight:normal;font-size:30px;font-family:'Gill Sans MT';-inkscape-font-specification:'Gill Sans MT';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="text4204">
+      <tspan
+         x="394.41312"
+         y="317.09604"
+         id="tspan4206">)</tspan>
+    </text>
+    <text
+       y="316.62103"
+       x="530.10065"
+       style="font-variant:normal;font-weight:normal;font-size:35.03125px;font-family:'Gill Sans MT';-inkscape-font-specification:'Gill Sans MT';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="text4208">
+      <tspan
+         x="530.10065 545.44427 553.11615 560.78796 577.56793 595.08356"
+         y="316.62103"
+         sodipodi:role="line"
+         id="tspan4210">client</tspan>
+    </text>
+    <path
+       d="m 67.444354,322.93354 328.906246,0"
+       style="fill:none;stroke:#cc0000;stroke-width:1.875;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+       id="path4212"
+       inkscape:connector-curvature="0" />
+    <path
+       d="m 534.0131,324.03354 66.5625,0"
+       style="fill:none;stroke:#cc0000;stroke-width:1.875;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+       id="path4214"
+       inkscape:connector-curvature="0" />
+  </g>
+</svg>

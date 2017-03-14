@@ -1,0 +1,1400 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <!-- Meta info -->
+		<meta charset="utf-8">
+		<meta name="shortauthor" content="Diego Passos"/>
+		<meta name="shorttitle" content="DNS, Sockets"/>
+		<meta name="shortevent" content="Redes de Computadores"/>
+		<title>Redes de Computadores: Aula 7</title>
+
+		<!-- Math support -->
+		<script type="text/x-mathjax-config">
+		MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+			MathJax.InputJax.TeX.Definitions.number = /^(?:[0-9]+(?:\.[0-9]{3})*(?:\{,\}[0-9]*)*|\{,\}[0-9]+)/
+		});
+		</script>
+		<script src="js/plotly-latest.min.js"></script>
+		<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+		<script src="../../../../../MathJax-2.6-latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+		<script type="text/javascript" src="../template/js/dz_pre.js"></script>
+
+		<!-- Fonts -->
+		<link href='https://fonts.googleapis.com/css?family=Lora:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
+		<link href='../../../../../Fonts/Lora/lora.css' rel='stylesheet' type='text/css'>
+
+		<!-- CSS -->
+		<link href='../template/css/template.css' id="template" rel='stylesheet' type='text/css'>
+		<link href='../template/css/presentationSpecific.css' id="presentationSpecific" rel='stylesheet' type='text/css'>
+
+
+		<!-- Javascript -->
+		<script type="text/javascript" src="../template/js/audio.js"></script>
+		<script src="js/term.js" charset="utf-8"></script>
+    <script src="js/termcast.js" charset="utf-8"></script>
+		<link rel="stylesheet" href="css/googlecode.css">
+		<script src="js/highlight.pack.js"></script>
+		<script>
+			hljs.initHighlightingOnLoad();
+			hljs.configure({
+				tabReplace: '  '
+			});
+		</script>
+
+</head>
+
+<body>
+    <!-- Audio handlers -->
+	<!--<audio src="audio/La.wav" id="La.wav" preload="auto"></audio>-->
+
+    <!-- Title Slide -->
+	<section>
+
+        <div class="slideContent">
+            <h1 class="title">Aula 7 - DNS, Programação com Sockets</h1>
+            <h2 class="author">Diego Passos</h2>
+            <h4 class="institution">Universidade Federal Fluminense</h4>
+            <h3 class="date">Redes de Computadores I</h3>
+        </div>
+
+	<br>
+	<br>
+	<div style="width: 30%; float: right; padding-right: 2%;">
+	<p style="font-size: 18px; text-align: right;">Material adaptado a partir dos slides originais de J.F Kurose and K.W. Ross.</p>
+	</div>
+	</section>
+
+	<section class="secao">
+	<div class="slideContent">
+		DNS
+	</div>
+	</section>
+
+	<section>
+	<h1>DNS: <i>Domain Name System</i></h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li><b>Pessoas:</b> muitos identificadores.
+				<ul>
+					<li>CPF, RG, # de passaporte, ...</li>
+				</ul></li>
+				<li><b>Hosts e roteadores na Internet:</b>
+				<ul>
+					<li>Endereço IP (# de 32 bits) usado para endereçar datagramas.</li>
+					<li>&ldquo;Nome&rdquo;, <i>e.g.</i>, <tt>www.yahoo.com</tt>, usado por humanos.</li>
+				</ul></li>
+				<li><span class="alert">Pergunta:</span> como mapear nomes para seus respectivos IPs e vice-versa?</li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li><b>Domain Name System (DNS):</b>
+				<ul>
+					<li><span class="alert">Base de dados distribuída:</span> implementada em uma hierarquia de múltiplos <span class="alert">servidores de nomes</span>.</li>
+					<li><span class="alert">Protocolo da camada de aplicação:</span> <i>hosts</i> e servidores de nome se comunicam para <span class="alert">resolver</span> nomes (tradução entre nome e endereço IP).
+					<ul>
+						<li>Note: função fundamental da Internet implementada como protocolo de aplicação.</li>
+						<li>Complexidade nas bordas.</li>
+					</ul></li>
+				</ul></li>
+			</ul>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>DNS: Serviços, Estrutura</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li><b>Serviços do DNS</b>:
+				<ul>
+					<li>Tradução de nomes de <i>hosts</i> para endereços IP.</li>
+					<li><i>Host aliasing</i>.
+					<ul>
+						<li>Atribuição de &ldquo;apelidos&rdquo;.</li>
+						<li><i>Host</i> possui <span class="alert">nome canônico</span> e, possivelmente, vários apelidos.</li>
+					</ul></li>
+					<li><i>Aliasing</i> de servidores de e-mail.</li>
+					<li>Balanceamento de carga.
+					<ul>
+						<li>Servidores web replicados.</li>
+						<li>Cada servidor com seu IP.</li>
+						<li>Mas o mesmo nome associado a vários IPs.</li>
+					</ul></li>
+				</ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li><b>Por que não um DNS centralizado?</b>
+				<ul>
+					<li>Ponto único de falha.</li>
+					<li>Concentração de grande volume de tráfego.</li>
+					<li>Base de dados centralizada distante.</li>
+					<li>Manutenção.</li>
+				</ul></li>
+			</ul>
+			<br>
+			<center>
+				Em suma: <span class="alert">não escala!</span>
+			</center>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>DNS: Balanceamento de Carga</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<div id="termcastDNSBalanceamento" style="margin-left: 3px;"></div>
+		</div>
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li>Aplicação (ping) requisita resolução de nome <tt>www.google.com</tt>:
+				<ul>
+					<li>Primeiras execuções associam nome a <tt>216.58.222.100</tt>.</li>
+					<li>Eventualmente, respostas diferentes: <tt>216.58.222.68</tt>.</li>
+				</ul></li>
+			</ul>
+		</div>
+	</div>
+	</section>
+
+	<script type="text/javascript">
+			var TermCast1;
+			DzAddPostInitFunction(function() {
+
+					TermCast1 = new TermCast(document.getElementById('termcastDNSBalanceamento'), 'terminalSessions/BalanceamentoDeCarga.json');
+			});
+ 	</script>
+
+	<section>
+	<h1>Alias (Apelidos)</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<div id="termcastAlias" style="margin-left: 3px;"></div>
+		</div>
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li>Primeira resolução para o nome <tt>www.midiacom.uff.br</tt>:
+				<ul>
+					<li>Nome associado ao IP <tt>200.20.10.93</tt>.</li>
+				</ul></li>
+				<li>Segunda resolução para <tt>mesbla.midiacom.uff.br</tt>:
+				<ul>
+				  <li>Associado ao mesmo IP!.</li>
+				</ul></li>
+			</ul>
+		</div>
+	</div>
+	</section>
+
+	<script type="text/javascript">
+			var TermCast2;
+			DzAddPostInitFunction(function() {
+
+					TermCast2 = new TermCast(document.getElementById('termcastAlias'), 'terminalSessions/alias.json');
+			});
+ 	</script>
+
+	<section>
+	<h1>DNS: Uma Base de Dados Hierárquica e Distribuída</h1>
+	<div class="slideContent">
+		<center>
+			<img src="imagens/DNSHierarquico.svg" style="width: 70%;"/>
+		</center>
+		<br>
+		<ul>
+			<li><b>Cliente quer IP de <tt>www.amazon.com</tt>. Primeira abordagem:</b>
+			<ul>
+				<li>Cliente pergunta ao servidor raiz a localização do DNS do <span class="alert">domínio</span> <tt>.com</tt>.</li>
+				<li>Cliete pergunta ao servidor DNS do domínio <tt>.com</tt> a localização do servidor DNS do domínio <tt>amazon.com</tt>.</li>
+				<li>Cliete pergunta ao servidor DNS do domínio <tt>amazon.com</tt> pelo endereço IP do <i>host</i> <tt>www.amazon.com</tt>.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>DNS: Servidores Raiz</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Conhecem os servidores TLD.</li>
+			<li>Contactados (principalmente) quando se deseja saber o DNS de um TLD.</li>
+			<li>Poucos &ldquo;servidores&rdquo; no mundo.
+			<ul>
+				<li>Embora cada um seja composto por vários computadores espalhados pelo mundo.</li>
+			</ul></li>
+		</ul>
+		<br>
+		<center>
+			<img src="imagens/DNSRaiz.svg" style="width: 70%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>TLD, Servidores Autoritativos</h1>
+	<div class="slideContent">
+		<ul>
+			<li><b>Servidores <i>Top-Level Domain</i> (TLD):</b>
+			<ul>
+				<li>TLD: <tt>.org, .net, .com, .edu</tt>, ..., <tt>.br, .uk, .jp</tt>, ...</li>
+				<li>Cada TLD tem seu servidor DNS específico.</li>
+				<li>A Network Solutions mantém servidores DNS para o TLD <tt>.com</tt>.</li>
+				<li>A Registro.br mantém o DNS para o TLD <tt>.br</tt>.</li>
+			</ul></li>
+			<li><b>Servidores autoritativos:</b>
+			<ul>
+				<li>Servidor de DNS de uma organização específica.</li>
+				<li>Provê mapeamentos para os endereços IP da organização e seus nomes de <i>host</i>.</li>
+				<li>Pode ser gerenciado pela própria organização ou por um provedor de serviço.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>TLDs</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<div id="termcastTLD" style="margin-left: 3px;"></div>
+		</div>
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li>Primeira resolução para o nome <tt>www.google.com</tt>:
+				<ul>
+					<li>Como esperado, bem sucedido.</li>
+					<li>TLD <tt>.com</tt></li>
+				</ul></li>
+				<li>Segunda resolução para <tt>com.google</tt>:
+				<ul>
+				  <li>Nome parece invertido: primeiro TLD, depois nome da organização.</li>
+				  <li>Mas resolução é bem sucedida de qualquer forma!</li>
+				  <li>Por que?
+				  <ul>
+				    <li>Atualmente, <tt>.google</tt> é um TLD.</li>
+				    <li>Dentro deste TLD, há um <i>hostname</i> chamado <tt>com</tt>.</li>
+				  </ul></li>
+				</ul></li>
+			</ul>
+		</div>
+	</div>
+	</section>
+
+	<script type="text/javascript">
+			var TermCast3;
+			DzAddPostInitFunction(function() {
+
+					TermCast3 = new TermCast(document.getElementById('termcastTLD'), 'terminalSessions/tld.json');
+			});
+ 	</script>
+
+	<section>
+	<h1>Servidores DNS Locais</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Estritamente falando, não fazem parte da hierarquia.</li>
+			<li>Cada ISP (residencial, empresas, universidades) normalmente tem um.
+			<ul>
+				<li>Também chamado de &ldquo;DNS padrão&rdquo;.</li>
+			</ul></li>
+			<li>Quando o <i>host</i> faz uma requisição DNS, esta é enviada para o seu servidor DNS local.
+			<ul>
+				<li>Geralmente, possui um cache para mapeamentos realizados recentemente (mas o mapeamento pode não ser mais válido!).</li>
+				<li>Atua como um <i>proxy</i>, encaminhando requisições para a hierarquia.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Exemplo de Resolução de Nome Usando DNS (I)</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<br>
+			<br>
+			<br>
+			<br>
+			<ul>
+				<li><i>Host</i> em <tt>cis.poly.edu</tt> quer o IP de <tt>gaia.cs.umass.edu</tt>.</li>
+				<li><b>Método iterativo:</b>
+				<ul>
+					<li>Servidor contactado retorna nome de outro servidor a ser contactado.</li>
+					<li>&ldquo;Eu não conheço este nome, mas pergunte para este outro servidor&rdquo;.</li>
+				</ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50%;">
+			<center>
+				<img src="imagens/DNSIterativo.svg" style="width: 80%;"/>
+			</center>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Exemplo de Resolução de Nome Usando DNS (II)</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<br>
+			<br>
+			<br>
+			<ul>
+				<li><b>Modo recursivo:</b>
+				<ul>
+					<li>Coloca o fardo da resolução do nome no servidor contactado.</li>
+					<li>Alta carga nos níveis mais altos da hierarquia?</li>
+				</ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50%;">
+			<center>
+				<img src="imagens/DNSRecursivo.svg" style="width: 80%;"/>
+			</center>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>DNS: Cache, Atualização de Registros</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Uma vez aprendido um mapeamento, um servidor de nomes (qualquer) <span class="alert">o armazena em cache.</span>
+			<ul>
+				<li>Entradas na cache tem uma data de expiração (TTL).
+				<ul>
+					<li><i>i.e.</i>, são jogadas fora depois de algum tempo.</li>
+				</ul></li>
+				<li>Servidores TLD tipicamente presentes na cache.
+				<ul>
+					<li>Logo, servidores raiz raramente visitados.</li>
+				</ul></li>
+			</ul></li>
+			<li>Entradas na cache podem ficar <span class="alert">desatualizadas</span>.
+			<ul>
+				<li>Serviço de tradução de melhor esforço!</li>
+				<li>Se <i>host</i> tem IP alterado, restante da Internet pode não ficar sabendo até que TTLs expirem.</li>
+			</ul></li>
+			<li>Há propostas para mecanismos de atualização/notificação.
+			<ul>
+				<li><i>e.g.</i>, RFC 2136.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Registros de DNS</h1>
+	<div class="slideContent">
+		<ul>
+			<li><b>DNS:</b> base de dados distribuída que armazena <i>Resource Records</i> <span class="alert">(RR)</span>.</li>
+		</ul>
+		<br>
+		<center>
+			<div style="width: 50%; border: 2px solid #3a3; padding: 5px;">
+				Formato de um RR: (nome, valor, tipo, TTL)
+			</div>
+		</center>
+		<br>
+		<div>
+			<div class="column" style="width: 50%;">
+				<ul>
+					<li><b>Tipo=A</b>
+					<ul>
+						<li><b>nome</b> é um nome de um <i>host</i>.</li>
+						<li><b>valor</b> é o endereço IP.</li>
+					</ul></li>
+					<li><b>Tipo=NS</b>
+					<ul>
+						<li><b>nome</b> é um domínio (<i>e.g.</i>, <tt>foo.com</tt>).</li>
+						<li><b>valor</b> é o <span class="alert">nome do host</span> do servidor DNS autoritativo para este domínio.</li>
+					</ul></li>
+				</ul>
+			</div>
+			<div class="column" style="width: 50%;">
+				<ul>
+					<li><b>Tipo=CNAME</b>
+					<ul>
+						<li><b>nome</b> é um apelido para um <i>host</i>.</li>
+						<li><b>value</b> é o <span class="alert">nome canônico</span>.</li>
+						<li><i>e.g.</i>, <tt>www.midiacom.uff.br</tt> é um apelido para <tt>mesbla.midiacom.uff.br</tt>.</li>
+					</ul></li>
+					<li><b>Tipo=MX</b>
+					<ul>
+						<li><b>valor</b> é o <span class="alert">nome do host</span> que funciona como servidor de e-mail do domínio associado ao <b>nome</b>.</li>
+					</ul></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>DNS: Protocolo e Mensagens (I)</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Mensagens de <span class="alert">requisição</span> e <span class="alert">resposta</span> têm o mesmo <span class="alert">formato</span>.</li>
+		</ul>
+		<div>
+			<div class="column" style="width: 50%;">
+				<ul>
+					<li>Cabeçalho das mensagens:
+					<ul>
+						<li><b>Identificação</b>: # de 16 bits para requisição; resposta utiliza mesmo # da requisição a que responde.</li>
+						<li><b>Flags</b>:
+						<ul>
+							<li>Requisição ou resposta.</li>
+							<li>Modo recursivo é desejado.</li>
+							<li>Modo recursivo está disponível.</li>
+							<li>Resposta é autoritativa.</li>
+						</ul></li>
+					</ul></li>
+				</ul>
+			</div>
+			<div class="column" style="width: 50%;">
+				<center>
+					<img src="imagens/DNSMensagem.svg" style="width: 70%;"/>
+				</center>
+			</div>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>DNS: Protocolo e Mensagens (II)</h1>
+	<div class="slideContent">
+		</div>
+		<br>
+		<br>
+		<br>
+		<div class="column" style="width: 50%;">
+			<br>
+			<br>
+			<ul>
+				<li>Campo das consultas:
+				<ul>
+					<li>Múltiplas consultas possíveis em uma mesma requisição.</li>
+					<li>Informa nomes, tipos dos campos nas requisições.</li>
+				</ul></li>
+				<li>Campo das respostas:
+				<ul>
+					<li>Múltiplas respostas possíveis em uma mesma mensagem.</li>
+				</ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50%;">
+			<center>
+				<img src="imagens/DNSMensagem.svg" style="width: 70%;"/>
+			</center>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Inserindo Registros no DNS</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Exemplo: nova empresa chamada &ldquo;Network Utopia&rdquo;.</li>
+			<li>Registro do domínio networkutopia.com com a entidade de registro de nomes.
+			<ul>
+				<li><i>e.g.</i>, Network Solutions.</li>
+				<li>Necessário prover nomes e IPs dos servidores de nome autoritativos do novo domínio (primário e secundário).</li>
+				<li>Entidade de registro insere dois RRs na base do servidor de DNS TLD <tt>.com</tt>:
+				<ul>
+					<li><tt>(networkutopia.com, dns1.networkutopia.com, NS).</tt></li>
+					<li><tt>(dns1.networkutopia.com, 212.212.212.1, A)</tt>.</li>
+				</ul></li>
+			</ul></li>
+			<li>No DNS autoritativo, são criadas RRs do tipo A para <tt>www.networkutopia.com</tt> e do tipo MX para o domínio.</li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Registro de um Domínio</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<div id="termcastDominio" style="margin-left: 3px;"></div>
+		</div>
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li>Usamos a ferramenta <tt>dig</tt> para fazer consultas ao DNS.</li>
+				<li>Consulta inicial do tipo NS ao domínio <tt>uff.br</tt>.
+				<ul>
+				  <li>Resultado: três entradas listando servidores de DNS autoritativos.</li>
+				</ul></li>
+				<li>Segunda consulta: entrada do tipo A para <tt>server.uff.br</tt>.
+				<ul>
+				  <li>Resultado: endereço IP do servidor.</li>
+				</ul></li>
+				<li>Note que respostas <span class="alert">não são autoritativas</span>.
+				<ul>
+				  <li>Possivelmente um cache do servidor DNS local utilizado.</li>
+				</ul></li>
+			</ul>
+		</div>
+	</div>
+	</section>
+
+	<script type="text/javascript">
+			var TermCast4;
+			DzAddPostInitFunction(function() {
+
+					TermCast4 = new TermCast(document.getElementById('termcastDominio'), 'terminalSessions/dominio.json');
+			});
+ 	</script>
+
+	<section>
+	<h1>Respostas Autoritativas <i>vs.</i> Não-autoritativas</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<div id="termcastAutoritativo" style="margin-left: 3px;"></div>
+		</div>
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li>Mesma consulta repetida duas vezes:
+				<ul>
+				  <li>Do tipo A para nome <tt>www.midiacom.uff.br</tt>.</li>
+				</ul></li>
+				<li>Inicialmente, usamos um servidor local qualquer.
+				<ul>
+				  <li>Resultado: resposta <span class="alert">não-autoritativa</span>.</li>
+				  <li>Possivelmente cache (pode estar desatualizada!).</li>
+				</ul></li>
+				<li>Segunda tentativa: usamos um dos servidores de DNS de <tt>uff.br</tt> como &ldquo;servidor local&rdquo;
+				<ul>
+				  <li>Resultado: <span class="alert">resposta autoritativa</span>.</li>
+				</ul></li>
+			</ul>
+		</div>
+	</div>
+	</section>
+
+	<script type="text/javascript">
+			var TermCast5;
+			DzAddPostInitFunction(function() {
+
+					TermCast5 = new TermCast(document.getElementById('termcastAutoritativo'), 'terminalSessions/autoritativo.json');
+			});
+ 	</script>
+
+	<section>
+	<h1>DNS e E-mail</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<div id="termcastEmail" style="margin-left: 3px;"></div>
+		</div>
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li>Como servidor de e-mail do remetente sabe qual o servidor de e-mail do destinatário?
+				<ul>
+				  <li>Endereço de e-mail associado a um domínio.</li>
+					<li><i>e.g.</i> <tt>user@exemplo.com</tt>.</li>
+					<li>Servidor do remetente faz consulta do tipo MX a domínio do destinatário.</li>
+				</ul></li>
+				<li>Consulta do tipo MX retorna um <span class="alert">nome</span>
+				<ul>
+				  <li>Ainda precisa de uma nova resolução.</li>
+				  <li>Consulta do tipo A.</li>
+				</ul></li>
+			</ul>
+		</div>
+	</div>
+	</section>
+
+	<script type="text/javascript">
+			var TermCast6;
+			DzAddPostInitFunction(function() {
+
+					TermCast6 = new TermCast(document.getElementById('termcastEmail'), 'terminalSessions/mail.json');
+			});
+ 	</script>
+
+	<section>
+	<h1>Atacando o DNS</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li><b>Ataques de DDoS:</b>
+				<ul>
+					<li>Bombardear servidores raiz com tráfego.
+					<ul>
+						<li>Até hoje, não foi bem sucedido.</li>
+						<li>Técnicas de filtro de tráfego.</li>
+						<li>Servidores de DNS locais fazem cache dos IPs dos servidores TLD, evitam acessos ao servidores raiz.</li>
+					</ul></li>
+					<li>Bombardear servidores TLD.
+					<ul>
+						<li>Potencialmente mais perigoso.</li>
+					</ul></li>
+				</ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li><b>Ataques de redirecionamento:</b>
+				<ul>
+					<li>Homem-no-meio.
+					<ul>
+						<li>Intercepta requisições.</li>
+					</ul></li>
+					<li>Envenenamento do DNS.
+					<ul>
+						<li>Envia respostas adulteradas para servidor de DNS, que faz cache das informações.</li>
+					</ul></li>
+				</ul></li>
+				<li><b>Exploração do DNS para DDoS:</b>
+				<ul>
+					<li>Envia requisições com IP de origem forjado (IP da vítima).</li>
+					<li>Requer amplificação.</li>
+				</ul></li>
+			</ul>
+		</div>
+	</div>
+	</section>
+
+
+		<section class="secao">
+		<div class="slideContent">
+		  Conceitos Básicos
+		</div>
+		</section>
+
+		<section>
+		<h1>Programação com Sockets (I)</h1>
+		<div class="slideContent">
+			<ul>
+			  <li><b>Objetivo:</b> aprender a construir aplicações Cliente&mdash;Servidor que se comuniquem utilizando sockets.</li>
+			  <li><b>Socket:</b> janela entre processo da aplicação e protocolo de transporte.</li>
+			</ul>
+			<br>
+			<br>
+			<center>
+			  <img src="imagens/Sockets.svg" style="width: 70%;"/>
+			</center>
+
+		</div>
+		</section>
+
+		<section>
+		<h1>Programação com Sockets (II)</h1>
+		<div class="slideContent">
+			<ul>
+			  <li><b>Dois tipos de socket para dois modelos de serviço de transporte:</b>
+			  <ul>
+			    <li><span class="alert">UDP:</span> serviço de datagramas não-confiável.</li>
+			    <li><span class="alert">TCP:</span> serviço de entrega confiável, orientado a fluxo de bytes.</li>
+			  </ul></li>
+			  <li><b>Aplicação de exemplo</b>:
+			  <ol>
+			    <li>Cliente lê <i>string</i> do teclado e envia o dado para o servidor.</li>
+			    <li>O servidor recebe o dado e converte a <i>string</i> para caixa alta.</li>
+			    <li>Servidor envia dados modificados para o cliente.</li>
+			    <li>Cliente recebe dado modificado e imprime na tela.</li>
+			  </ol></li>
+			</ul>
+		</div>
+		</section>
+
+		<section>
+		<h1>Programação com Sockets UDP</h1>
+		<div class="slideContent">
+		  <ul>
+		    <li><b>UDP: não há &ldquo;conexão&rdquo; entre cliente e servidor.</b>
+		    <ul>
+		      <li>Não existe handshaking antes do envio de dados.</li>
+		      <li>Transmissor explicitamente informa o endereço IP e o número de porta de destino a cada pacote.</li>
+		      <li>Receptor extrai endereço IP do transmissor e número de porta do pacote recebido.</li>
+		    </ul></li>
+		    <li><span class="alert">UDP: dados transmitidos podem ser perdidos ou recebidos fora de ordem!</span></li>
+		    <li><b>Ponto de vista da aplicação:</b>
+		    <ul>
+		      <li>UDP provê serviço <b>não-confiável</b> de transmissão de grupos de bytes (&ldquo;datagramas&rdquo;) entre cliente e servidor.</li>
+		    </ul></li>
+		  </ul>
+		</div>
+		</section>
+
+		<section>
+		<h1>Interação entre Cliente/Servidor e o Socket: UDP</h1>
+		<div class="slideContent">
+		  <center>
+		    <img src="imagens/ClienteServidorUDP.svg" style="width: 70%;"/>
+		  </center>
+		</div>
+		</section>
+
+		<section>
+		<h1>Aplicação de Exemplo: Cliente UDP (I)</h1>
+		<div class="slideContent">
+			<pre>
+				<code class="java" style="font-size: 20px;">
+	import java.io.*;
+	import java.net.*;	// API de sockets.
+
+	class UDPClient {
+
+		public static void main(String args[]) throws Exception {
+
+			BufferedReader inFromUser =	new BufferedReader(new InputStreamReader(System.in));
+			// Criação de Socket UDP (datagramas)
+			DatagramSocket clientSocket = new DatagramSocket();
+			// Resolução de nome de host.
+			InetAddress IPAddress = InetAddress.getByName("hostname");
+
+			// Alocação de buffers para mensagens transmitida e recebida
+			byte[] sendData = new byte[1024];
+			byte[] receiveData = new byte[1024];
+
+			// Leitura de dados do usuário
+			String sentence = inFromUser.readLine();
+			// Formatação da mensagem da aplicação
+			sendData = sentence.getBytes();
+				</code>
+			</pre>
+		</div>
+		</section>
+
+		<section>
+		<h1>Aplicação de Exemplo: Cliente UDP (II)</h1>
+		<div class="slideContent">
+			<pre>
+				<code class="java" style="font-size: 20px;">
+			// Criação do datagrama e envio. Note a especificação do endereço
+			// de destino (IP e porta).
+			DatagramPacket sendPacket =	new DatagramPacket(sendData, sendData.length, IPAddress, 9876);
+			clientSocket.send(sendPacket);
+
+			// Espera pela resposta. Funções/métodos de recepção são (normalmente) bloqueantes.
+			DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
+			clientSocket.receive(receivePacket);
+
+			// Apresentação do resultado.
+			String modifiedSentence = new String(receivePacket.getData());
+			System.out.println("FROM SERVER:" + modifiedSentence);
+
+			// Fechamento do socket.
+			clientSocket.close();
+		}
+	}
+				</code>
+			</pre>
+		</div>
+		</section>
+
+		<section>
+		<h1>Aplicação de Exemplo: Servidor UDP (I)</h1>
+		<div class="slideContent">
+				<pre>
+					<code class="java" style="font-size: 20px;">
+	import java.io.*;
+	import java.net.*;
+
+	class UDPServer {
+
+		public static void main(String args[]) throws Exception {
+
+			// Criação do socket. Note que especificamos o # de porta na qual esperamos por datagramas.
+			DatagramSocket serverSocket = new DatagramSocket(9876);
+			byte[] receiveData = new byte[1024]; // Buffer de recepção de dados.
+			byte[] sendData = new byte[1024]; // Buffer para envio de dados.
+
+			// Servidores normalmente executam um loop infinito. Cada iteração representa o atendimento
+			// a um cliente diferente.
+			while(true) {
+
+				// Criação de um datagrama para recepção de mensagem.
+				DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
+
+				// Aguardar recepção de um novo datagrama. Novamente, métodos/funções de recepção são,
+				// em geral, bloqueantes.
+				serverSocket.receive(receivePacket);
+					</code>
+				</pre>
+		</div>
+		</section>
+
+		<section>
+		<h1>Aplicação de Exemplo: Servidor UDP (II)</h1>
+		<div class="slideContent">
+				<pre>
+					<code class="java" style="font-size: 20px;">
+				// Tratamento da mensagem. Aqui, é aplicada a lógica específica da aplicação.
+				// No caso, apenas interpretamos os bytes da mensagem como uma string e calculamos
+				// uma versão alternativa em caixa alta.
+				String sentence = new String(receivePacket.getData());
+				String capitalizedSentence = sentence.toUpperCase();
+
+				// Preparação da resposta: é preciso descobrir o endereço do cliente (IP e porta).
+				// Ambas as informações constam no datagrama recebido.
+				InetAddress IPAddress = receivePacket.getAddress();
+				int port = receivePacket.getPort();
+
+				// Criação do datagrama de resposta. Transferimos a string para o buffer de envio e
+				// construímos um datagrama a partir dele. Note, novamente, a especificação do
+				// endereço de destino.
+				sendData = capitalizedSentence.getBytes();
+				DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length,
+																												IPAddress, port);
+
+				// Envio em si do datagrama.
+				serverSocket.send(sendPacket);
+			}
+		}
+	}
+					</code>
+				</pre>
+		</div>
+		</section>
+
+		<section>
+		<h1>Programação com Sockets TCP</h1>
+		<div class="slideContent">
+			<div class="column" style="width: 50%;">
+			  <ul>
+			    <li><span class="alert">Cliente deve contactar servidor</span>.
+			    <ul>
+			      <li>Processo do servidor precisa estar previamente em execução.</li>
+			      <li>Servidor precisa ter criado socket que aceitará contato do cliente.</li>
+			    </ul></li>
+			    <li><span class="alert">Cliente contacta servidor:</span>
+			    <ul>
+			      <li>Criando socket TCP, especificando IP e número de porta do processo servidor.</li>
+			      <li><span class="alert">Quando cliente cria o socket</span>: TCP do cliente estabelece conexão para o TCP do servidor.</li>
+			    </ul></li>
+			  </ul>
+			</div>
+			<div class="column" style="width: 50%;">
+			  <ul>
+			    <li>Quando contactado pelo cliente, <span class="alert">TCP do servidor cria um novo socket</span>.
+			    <ul>
+			      <li>Novo socket utilizado para a comunicação do processo servidor com o processo cliente.</li>
+			      <li>Este esquema de dois sockets permite ao servidor falar com múltiplos clientes.</li>
+			      <li>Número de porta <span class="alert">de origem</span> são usados para distinguir clientes.
+			      <ul>
+			        <li>Mais detalhes no próximo capítulo</li>
+			      </ul></li>
+			    </ul></li>
+			    <li><b>Ponto de vista da aplicação:</b>
+			    <ul>
+			      <li>TCP provê transferência confiável e ordenada de fluxo de bytes entre cliente e servidor.</li>
+			    </ul></li>
+			  </ul>
+			</div>
+		</div>
+		</section>
+
+		<section>
+		<h1>Interação entre Cliente/Servidor e Socket TCP</h1>
+		<div class="slideContent">
+		  <center>
+		    <img src="imagens/ClienteServidorTCP.svg" style="width: 70%;"/>
+		  </center>
+		</div>
+		</section>
+
+		<section>
+		<h1>Aplicação de Exemplo: Cliente TCP (I)</h1>
+		<div class="slideContent">
+			<pre>
+				<code class="java" style="font-size: 20px;">
+	import java.io.*;
+	import java.net.*;
+
+	class TCPClient {
+
+		public static void main(String argv[]) throws Exception {
+
+	  	String sentence;
+	    String modifiedSentence;
+
+	    BufferedReader inFromUser = new BufferedReader(new InputStreamReader(System.in));
+
+			// Criação do socket TCP. Note que aqui, diferentemente da versão UDP, já especificamos
+			// o endereço do servidor (nome do host/ip e porta).
+	    Socket clientSocket = new Socket("hostname", 6789);
+
+			// Do ponto de vista do programador, um socket TCP pode ser manipulado de forma similar
+			// a um arquivo, com escrita e leitura de um fluxo de bytes.
+	    DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
+			BufferedReader inFromServer =  new BufferedReader(new InputStreamReader(
+																												clientSocket.getInputStream()));
+			// Leitura da entrada do usuário.
+	    sentence = inFromUser.readLine();
+				</code>
+			</pre>
+		</div>
+		</section>
+
+		<section>
+		<h1>Aplicação de Exemplo: Cliente TCP (II)</h1>
+		<div class="slideContent">
+			<pre>
+				<code class="java" style="font-size: 20px;">
+			// String é simplesmente "escrita" no socket. Notem que adicionamos uma quebra de linha
+			// ao final da string (caractere '\n'). Isso demarcará ao servidor onde termina a mensagem
+			// a ser processada.
+	    outToServer.writeBytes(sentence + '\n');
+
+			// Aguardamos uma resposta do servidor. Note mais uma vez a manipulação do socket como
+			// se fosse um arquivo. Aqui também uma quebra de linha denota fim da mensagem. Por fim,
+			// assim como no cliente UDP, leituras são (geralmente) bloqueantes.
+	    modifiedSentence = inFromServer.readLine();
+
+			// Impressão do resultado da tela.
+	    System.out.println("FROM SERVER: " + modifiedSentence);
+
+			// Fechamento do socket.
+	    clientSocket.close();
+	  }
+	}
+				</code>
+			</pre>
+		</div>
+		</section>
+
+		<section>
+		<h1>Aplicação de Exemplo: Servidor TCP (I)</h1>
+		<div class="slideContent">
+			<pre>
+				<code class="java" style="font-size: 20px;">
+	import java.io.*;
+	import java.net.*;
+
+	class TCPServer {
+
+	  public static void main(String argv[]) throws Exception {
+			String clientSentence;
+			String capitalizedSentence;
+
+			// Criação do socket do servidor. Este socket será usado para esperar por novas conexões.
+			// Repare que especificamos um # de porta na qual desejamos esperar pelas conexões.
+			ServerSocket welcomeSocket = new ServerSocket(6789);
+
+			// Assim como o servidor UDP, servidor TCP também executa um loop infinito permitindo
+			// o atendimento de múltiplos clientes.
+			while(true) {
+
+				// Função/método accept(): executada sobre socket, diz ao SO para aguardar (e aceitar)
+				// novas conexões. Só faz sentindo para sockets orientados a conexão (TCP). Note que
+				// o resultado da função/método é um novo socket.
+			  Socket connectionSocket = welcomeSocket.accept();
+				</code>
+			</pre>
+		</div>
+		</section>
+
+		<section>
+		<h1>Aplicação de Exemplo: Servidor TCP (II)</h1>
+		<div class="slideContent">
+			<pre>
+				<code class="java" style="font-size: 20px;">
+				// O socket original é serve apenas para aguardar por novas conexões. Já o socket
+				// retornado pela função/método accept representa uma conexão, realmente. É dele que
+				// "leremos" os dados enviados pelo cliente e escreveremos os dados de resposta. Mais
+				//  uma vez, note a abstração de arquivo.
+				BufferedReader inFromClient = new BufferedReader(new
+																					InputStreamReader(connectionSocket.getInputStream()));
+				DataOutputStream  outToClient = new DataOutputStream(connectionSocket.getOutputStream());
+
+				// Aguardamos dados do cliente. Por convenção, dados terminam em uma quebra de linha.
+				clientSentence = inFromClient.readLine();
+
+				// Implementação da lógica da aplicação.
+				capitalizedSentence = clientSentence.toUpperCase() + '\n';
+
+				// Escrita do resultado no socket.
+				outToClient.writeBytes(capitalizedSentence);
+			}
+		}
+	}
+				</code>
+			</pre>
+		</div>
+		</section>
+
+		<section class="secao">
+		<div class="slideContent">
+		  Exemplos Mais Complexos
+		</div>
+		</section>
+
+		<section>
+			<h1>Um (Protótipo de) Servidor Web (I)</h1>
+			<div class="slideContent">
+				<pre>
+					<code class="java" style="font-size: 20px;">
+		import java.io.*;
+		import java.net.*;
+		import java.util.*;
+
+		class WebServer {
+
+			public static void main(String argv[]) throws Exception  {
+
+				// Servidor web ouve na porta 8001, ao invés da tradicional 80.
+				ServerSocket listenSocket = new ServerSocket(8001);
+
+				while(true) {
+					Socket connectionSocket = listenSocket.accept(); // Aguarda conexão.
+
+					// Tratamento da requisição está encapsulado em outro método.
+					trataRequisicao(connectionSocket);
+				}
+		  }
+
+			private static void trataRequisicao(Socket connectionSocket) throws Exception {
+
+				String requestMessageLine;
+				String fileName;
+					</code>
+				</pre>
+			</div>
+		</section>
+
+		<section>
+		<h1>Um (Protótipo de) Servidor Web (II)</h1>
+		<div class="slideContent">
+			<pre>
+				<code class="java" style="font-size: 20px;">
+			// Criamos streams a partir do socket de conexão.
+			BufferedReader inFromClient =
+		            new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
+			DataOutputStream outToClient = new DataOutputStream(connectionSocket.getOutputStream());
+
+			// Primeira linha deve informar a requisição. Ignoraremos as demais (e.g., cabeçalhos).
+			requestMessageLine = inFromClient.readLine();
+
+			// Campos são divididos por espaços em branco. Primeiro campo deve ser tipo
+			// do método. Neste protótipo, tratamos apenas requisições do tipo GET.
+			StringTokenizer tokenizedLine = new StringTokenizer(requestMessageLine);
+			if (tokenizedLine.nextToken().equals("GET")){
+
+					// Próximo campo é o caminho do objeto requisitado.
+			    fileName = tokenizedLine.nextToken();
+
+					// Arquivos servidos pelo servidor web são confinados ao diretório do qual ele é
+					// executado (e subdiretórios). Logo, se a requisição referencia um caminho
+					// absoluto (i.e., iniciado por '/'), precisamos transformar isso em um caminho
+					// relativo ao diretório corrente.
+			    if (fileName.startsWith("/") == true)
+						fileName  = fileName.substring(1);
+				</code>
+			</pre>
+		</div>
+		</section>
+
+		<section>
+		<h1>Um (Protótipo de) Servidor Web (III)</h1>
+		<div class="slideContent">
+			<pre>
+				<code class="java" style="font-size: 20px;">
+	File file = new File(fileName);
+	if (file.exists()) {
+	  int numOfBytes = (int) file.length();
+	  FileInputStream inFile  = new FileInputStream (fileName);
+	  byte[] fileInBytes = new byte[numOfBytes];
+	  inFile.read(fileInBytes);
+
+		// Composição da mensagem de resposta: começamos com a linha de status.
+	  outToClient.writeBytes("HTTP/1.0 200 OK\r\n");
+		// Precisamos de algumas linhas de cabeçalho na resposta. A primeira para
+		// informar o tipo do arquivo.
+	  if (fileName.endsWith(".jpg")) outToClient.writeBytes("Content-Type: image/jpeg\r\n");
+		else if (fileName.endsWith(".gif"))	outToClient.writeBytes("Content-Type: image/gif\r\n");
+		else if (fileName.endsWith(".html")) outToClient.writeBytes("Content-Type: text/html\r\n");
+		// ...
+		// Outra linha de cabeçalho: tamanho do conteúdo anexado ao corpo da resposta.
+		outToClient.writeBytes("Content-Length: " + numOfBytes + "\r\n");
+		// Cabeçalhos são separados do corpo por uma linha em branco no HTTP.
+		outToClient.writeBytes("\r\n");
+		// Colocamos os bytes do objeto no corpo da mensagem.
+		outToClient.write(fileInBytes, 0, numOfBytes);
+	}
+				</code>
+			</pre>
+		</div>
+		</section>
+
+		<section>
+		<h1>Um (Protótipo de) Servidor Web (IV)</h1>
+		<div class="slideContent">
+			<pre>
+				<code class="java" style="font-size: 20px;">
+					else {
+						// Objeto não encontrado.
+						outToClient.writeBytes("HTTP/1.0 404 Not Found\r\n");
+					}
+				}
+				// Tratamento (muito básico) de erros.
+				else System.out.println("Bad Request Message");
+
+				// Fechamos o socket da conexão.
+		    connectionSocket.close();
+		}
+	}
+				</code>
+			</pre>
+		</div>
+		</section>
+
+		<section>
+		<h1>Ferramenta de Medição de Vazão TCP: Cliente (I)</h1>
+		<div class="slideContent">
+			<pre>
+				<code class="java" style="font-size: 20px;">
+	import java.io.*;
+	import java.net.*;
+
+	class BWTestClient {
+
+	  public static void main(String argv[]) throws Exception {
+
+	    byte buffer[] = new byte[8192];
+	    int i = 0;
+	    long endTime, now;
+
+	    // Criação do socket TCP. Note que aqui, diferentemente da versão UDP, já especificamos
+	    // o endereço do servidor (nome do host/ip e porta).
+	    Socket clientSocket = new Socket("localhost", 6789);
+
+	    // Do ponto de vista do programador, um socket TCP pode ser manipulado de forma similar
+	    // a um arquivo, com escrita e leitura de um fluxo de bytes.
+	    DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
+	    BufferedReader inFromServer =  new BufferedReader(new InputStreamReader(
+	                                                      clientSocket.getInputStream()));
+				</code>
+			</pre>
+		</div>
+		</section>
+
+		<section>
+		<h1>Ferramenta de Medição de Vazão TCP: Cliente (II)</h1>
+		<div class="slideContent">
+			<pre>
+				<code class="java" style="font-size: 20px;">
+	    // Armazenar hora do final do teste (testes sempre têm 10 segundos).
+	    endTime = System.currentTimeMillis() + 10000;
+
+	    // Simplesmente escrevemos continuamente no socket. Escritas *normalmente* não são
+	    // bloqueantes, mas o TCP limitará a taxa de envio de acordo com a capacidade da
+	    // rede. Quando excedermos esta capacidade, a chamada bloqueará.
+	    while(true) {
+	      outToServer.write(buffer);
+	      i = i + 1;
+	      now = System.currentTimeMillis();
+	      if (now >= endTime) break ;
+	    }
+
+	    // Impressão do resultado da tela. A cada iteração do loop anterior, transmitimos
+	    // 64 kb. Para calcular vazão, basta multiplicar i por 64 e dividir por 10.
+	    System.out.println("Vazão (kb/s): " + (i * 64 / 10.0));
+
+	    // Fechamento do socket.
+	    clientSocket.close();
+	  }
+	}
+				</code>
+			</pre>
+		</div>
+		</section>
+
+		<section>
+		<h1>Ferramenta de Medição de Vazão TCP: Servidor (I)</h1>
+		<div class="slideContent">
+			<pre>
+				<code class="java" style="font-size: 20px;">
+	import java.io.*;
+	import java.net.*;
+
+	class BWTestServer {
+
+	  public static void main(String argv[]) throws Exception {
+
+	    char buffer[] = new char[8192];
+
+	    // Criação do socket do servidor. Este socket será usado para esperar por novas conexões.
+	    // Repare que especificamos um # de porta na qual desejamos esperar pelas conexões.
+	    ServerSocket welcomeSocket = new ServerSocket(6789);
+
+	    // Assim como o servidor UDP, servidor TCP também executa um loop infinito permitindo
+	    // o atendimento de múltiplos clientes.
+	    while(true) {
+
+	      // Função/método accept(): executada sobre socket, diz ao SO para aguardar (e aceitar)
+	      // novas conexões. Só faz sentindo para sockets orientados a conexão (TCP). Note que
+	      // o resultado da função/método é um novo socket.
+	      Socket connectionSocket = welcomeSocket.accept();
+				</code>
+			</pre>
+		</div>
+		</section>
+
+		<section>
+		<h1>Ferramenta de Medição de Vazão TCP: Servidor (II)</h1>
+		<div class="slideContent">
+			<pre>
+				<code class="java" style="font-size: 20px;">
+	      // O socket original é serve apenas para aguardar por novas conexões. Já o socket
+	      // retornado pela função/método accept representa uma conexão, realmente. É dele que
+	      // "leremos" os dados enviados pelo cliente e escreveremos os dados de resposta. Mais
+	      //  uma vez, note a abstração de arquivo.
+	      BufferedReader inFromClient = new BufferedReader(new
+	      InputStreamReader(connectionSocket.getInputStream()));
+
+	      // Simplesmente, aguardamos dados do cliente, indefinidamente.
+	      while(true) {
+
+	        try {
+
+	          if (inFromClient.read(buffer) < 0) break ;
+	        }
+	        catch(IOException e) {
+
+	          // Cliente fechou a conexão.
+	          break ;
+	        }
+	      }
+	    }
+	  }
+	}
+				</code>
+			</pre>
+		</div>
+		</section>
+
+		<section class="secao">
+		<div class="slideContent">
+		  Outras Linguagens: Funções/Métodos Típicos
+		</div>
+		</section>
+
+		<section>
+		<h1>Funções/Métodos Tipicamente Utilizados</h1>
+		<div class="slideContent">
+		  <div class="column" style="width: 50%;">
+		    <center>
+		      <span class="alert">Cliente</span>
+		    </center>
+		    <ul>
+		      <li><b>socket():</b> criar novo socket de um determinado tipo.</li>
+		      <li><b>write():</b> &ldquo;passa&rdquo; dados/mensagens pelo socket p/ transporte.</li>
+		      <li><b>sendto():</b> envia mensagem por socket sem conexão (UDP).</li>
+		      <li><b>read():</b> &ldquo;recebe&rdquo; dados/mensagens pelo socket do transporte.</li>
+		      <li><b>recvfrom():</b> recebe mensagem por socket sem conexão (UDP).</li>
+		      <li><b>connect():</b> abre uma conexão (TCP) para servidor/porta especificados.</li>
+		      <li><b>getByName() ou getHostByName():</b> resolve nome para endereço IP.</li>
+		      <li><b>close():</b> fecha o socket (e conexão, se aplicável).</li>
+		    </ul>
+		  </div>
+			<div class="column" style="width: 50%;">
+			  <center>
+			    <span class="alert">Servidor</span>
+			  </center>
+			  <ul>
+					<li><b>socket():</b> criar novo socket de um determinado tipo.</li>
+		      <li><b>write():</b> &ldquo;passa&rdquo; dados/mensagens pelo socket p/ transporte.</li>
+		      <li><b>sendto():</b> envia mensagem por socket sem conexão (UDP).</li>
+		      <li><b>read():</b> &ldquo;recebe&rdquo; dados/mensagens pelo socket do transporte.</li>
+		      <li><b>recvfrom():</b> recebe mensagem por socket sem conexão (UDP).</li>
+		      <li><b>bind():</b> associa socket à porta especificada.</li>
+					<li><b>listen():</b> habilita socket (TCP) a receber conexões.</li>
+		      <li><b>close():</b> fecha o socket (e conexão, se aplicável).</li>
+			  </ul>
+			</div>
+		</div>
+		</section>
+
+		<section>
+		<h1>Sockets em Outras Linguagens: Python (Cliente TCP)</h1>
+		<div class="slideContent">
+			<pre>
+				<code class="python" style="font-size: 20px;">
+	from socket import *
+
+	serverName = ’servername’
+	serverPort = 12000
+
+	# Criação do socket
+	clientSocket = socket(AF_INET, SOCK_STREAM)
+	# Conexão com o servidor
+	clientSocket.connect((serverName,serverPort))
+
+	sentence = raw_input(‘Input lowercase sentence:’)
+	# Envio de bytes
+	clientSocket.send(sentence)
+
+	# Recepção
+	modifiedSentence = clientSocket.recv(1024)
+	print ‘From Server:’, modifiedSentence
+
+	# Fechamento
+	clientSocket.close()
+				</code>
+			</pre>
+		</div>
+		</section>
+
+	<section>
+		<h1>Sockets em Outras Linguagens: Python (Servidor TCP)</h1>
+		<div class="slideContent">
+			<pre>
+				<code class="python" style="font-size: 20px;">
+	from socket import *
+
+	serverPort = 12000
+
+	# Criação do socket, associação à porta 12000 e habilitar escuta por conexões
+	serverSocket = socket(AF_INET,SOCK_STREAM)
+	serverSocket.bind((‘’,serverPort))
+	serverSocket.listen(1)
+
+	print ‘The server is ready to receive’
+
+	while 1:
+
+		# Aguardar nova conexão
+		connectionSocket, addr = serverSocket.accept()
+		# Recepção de dados
+		sentence = connectionSocket.recv(1024)
+		capitalizedSentence = sentence.upper()
+		# Envio
+		connectionSocket.send(capitalizedSentence)
+		# Fechamento
+		connectionSocket.close()
+				</code>
+			</pre>
+		</div>
+	</section>
+
+
+	<!-- {{{{ dzslides core
+	#
+	#
+	#     __  __  __       .  __   ___  __
+	#    |  \  / /__` |    | |  \ |__  /__`
+	#    |__/ /_ .__/ |___ | |__/ |___ .__/ core :€
+	#
+	#
+	# The following block of code is not supposed to be edited.
+	# But if you want to change the behavior of these slides,
+	# feel free to hack it!
+	#
+	-->
+
+    <!-- More CSS -->
+	<link href='../template/css/slides.css' id="slides" rel='stylesheet' type='text/css'>
+	<link href='../template/css/presentationSpecific2.css' id="presentationSpecific2" rel='stylesheet' type='text/css'>
+
+    <!-- More Javascript -->
+	<script type="text/javascript" src="../template/js/dz.js"></script>
+
+	<!-- More CSS -->
+	<link href='../template/css/notesSpecific.css' id="notesSpecific" rel='stylesheet' type='text/css'>
+	<link href='../template/css/printSpecific.css' id="printSpecific" rel='stylesheet' type='text/css'>
+</body>
+</html>

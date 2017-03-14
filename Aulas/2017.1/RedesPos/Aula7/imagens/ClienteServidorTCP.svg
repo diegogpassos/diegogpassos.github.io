@@ -1,0 +1,565 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="643.73169"
+   height="478.91895"
+   id="svg3312"
+   version="1.1"
+   inkscape:version="0.48.5 r10040"
+   sodipodi:docname="New document 4">
+  <defs
+     id="defs3314" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.35"
+     inkscape:cx="224.96875"
+     inkscape:cy="219.45947"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     inkscape:window-width="496"
+     inkscape:window-height="451"
+     inkscape:window-x="711"
+     inkscape:window-y="317"
+     inkscape:window-maximized="0" />
+  <metadata
+     id="metadata3317">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-150.03125,-272.90271)">
+    <text
+       style="font-size:15px"
+       y="467.8945"
+       x="213.43793"
+       id="text3025">
+      <tspan
+         style="font-size:17.5px;font-variant:normal;font-weight:normal;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
+         x="213.43793 225.68793 235.41792 239.42543 244.16792 249.15543 254.14293 263.87292 269.64792 274.14542 278.13544 287.86545 296.61545 306.34543 321.11542 325.10544 334.83542"
+         y="467.8945"
+         sodipodi:role="line"
+         id="tspan3027">wait for incoming</tspan>
+    </text>
+    <text
+       style="font-size:15px"
+       y="488.90701"
+       x="213.43793"
+       id="text3029">
+      <tspan
+         style="font-size:17.5px;font-variant:normal;font-weight:normal;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
+         x="213.43793 222.18793 231.91794 241.64793 251.41293 261.14294 269.89294 274.67044 278.66043 288.39044 298.12042 302.40793 308.16544 317.89545 327.62543 337.39044 347.12042 355.87042"
+         y="488.90701"
+         sodipodi:role="line"
+         id="tspan3031">connection request</tspan>
+    </text>
+    <text
+       style="font-size:15px"
+       y="508.207"
+       x="213.58794"
+       id="text3033">
+      <tspan
+         style="font-size:17.5px;font-variant:normal;font-weight:normal;writing-mode:lr-tb;fill:#cc0000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
+         x="213.58794 222.33794 232.06793 241.79793 251.56293 261.29294 270.04294 274.82043 278.81042 288.54044 298.27045 310.04794 319.77795 328.52795 337.27795 347.00793 351.80295 356.05542"
+         y="508.207"
+         sodipodi:role="line"
+         id="tspan3035">connectionSocket =</tspan>
+    </text>
+    <text
+       style="font-size:15px"
+       y="529.24451"
+       x="213.58794"
+       id="text3037">
+      <tspan
+         style="font-size:17.53125px;font-variant:normal;font-weight:normal;writing-mode:lr-tb;fill:#cc0000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
+         x="213.58794 222.35356 232.10094 237.83365 246.59927 256.34665 262.07938 273.80777 283.55515 292.32077 301.0864 310.83377 315.54968 320.30066 330.04803 338.81366 347.57928 357.32663 367.07404 371.80746 377.55771"
+         y="529.24451"
+         sodipodi:role="line"
+         id="tspan3039">serverSocket.accept()</tspan>
+    </text>
+    <text
+       style="font-size:15px"
+       y="346.18201"
+       x="211.56293"
+       id="text3041">
+      <tspan
+         style="font-size:17.5px;font-variant:normal;font-weight:normal;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
+         x="211.56293 220.31293 226.07043 235.80043 245.53043 250.32542 260.05542 264.57043 273.32043 283.05045 291.80045 300.55045 310.28043 315.07544"
+         y="346.18201"
+         sodipodi:role="line"
+         id="tspan3043">create socket,</tspan>
+    </text>
+    <text
+       style="font-size:15px"
+       y="365.93201"
+       x="211.56293"
+       id="text3045">
+      <tspan
+         style="font-size:17.5px;font-variant:normal;font-weight:normal;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
+         x="211.56293 221.29294 231.02293 236.85043 241.55794"
+         y="365.93201"
+         sodipodi:role="line"
+         id="tspan3047">port=</tspan>
+    </text>
+    <text
+       style="font-size:15px"
+       y="365.93201"
+       x="251.85043"
+       id="text3049">
+      <tspan
+         style="font-size:17.5px;font-variant:normal;font-weight:bold;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Courier;-inkscape-font-specification:Courier New Bold"
+         x="251.85043"
+         y="365.93201"
+         id="tspan3051">x</tspan>
+    </text>
+    <text
+       style="font-size:15px"
+       y="365.93201"
+       x="262.35043"
+       id="text3053">
+      <tspan
+         style="font-size:17.5px;font-variant:normal;font-weight:normal;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
+         x="262.35043 267.09293 271.59042 276.57794 286.30792 292.08295 296.82544 300.81543 310.54544 319.29544 329.02542 343.79544 347.78543 357.51544 367.24542"
+         y="365.93201"
+         sodipodi:role="line"
+         id="tspan3055">, for incoming</tspan>
+    </text>
+    <text
+       style="font-size:15px"
+       y="388.18201"
+       x="211.56293"
+       id="text3057">
+      <tspan
+         style="font-size:17.5px;font-variant:normal;font-weight:normal;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
+         x="211.56293 217.32043 227.05043 236.78043 246.54543 256.27542 265.02542 269.80292"
+         y="388.18201"
+         sodipodi:role="line"
+         id="tspan3059">request:</tspan>
+    </text>
+    <text
+       style="font-size:15px"
+       y="407.2695"
+       x="212.18793"
+       id="text3061">
+      <tspan
+         style="font-size:17.5px;font-variant:normal;font-weight:normal;writing-mode:lr-tb;fill:#cc0000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
+         x="212.18793 220.93793 230.66794 236.44293 245.19293 254.92293 260.69791 272.42294 282.15292 290.90292 299.65292 309.38293 314.17795 318.67545 328.89542 333.67294 342.42294 352.15292 360.90292 369.65292 379.38293 384.17792 389.93542"
+         y="407.2695"
+         sodipodi:role="line"
+         id="tspan3063">serverSocket = socket()</tspan>
+    </text>
+    <path
+       inkscape:connector-curvature="0"
+       d="m 276.27543,422.08201 0,24.85 -2.8125,0 0,-24.85 2.8125,0 z m 2.8125,23.4375 -4.2125,8.4375 -4.225,-8.4375 8.4375,0 z"
+       style="fill:#000099;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="path3065" />
+    <text
+       style="font-size:15px"
+       y="468.68201"
+       x="585.75043"
+       id="text3067">
+      <tspan
+         style="font-size:17.5px;font-variant:normal;font-weight:normal;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
+         x="585.75043 594.50043 600.25793 609.98792 619.71796 624.51294 634.24292 638.75793 647.50793 657.23792 665.98792 674.73792 684.46796 689.26294"
+         y="468.68201"
+         sodipodi:role="line"
+         id="tspan3069">create socket,</tspan>
+    </text>
+    <text
+       style="font-size:15px"
+       y="488.43201"
+       x="585.75043"
+       id="text3071">
+      <tspan
+         style="font-size:17.5px;font-variant:normal;font-weight:normal;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
+         x="585.75043 594.50043 604.23047 613.96045 623.72546 633.45544 642.20544 646.98297 651.48047 656.22296 665.95294"
+         y="488.43201"
+         sodipodi:role="line"
+         id="tspan3073">connect to</tspan>
+    </text>
+    <text
+       style="font-size:15px"
+       y="488.43201"
+       x="670.75043"
+       id="text3075">
+      <tspan
+         style="font-size:17.5px;font-variant:normal;font-weight:bold;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Courier;-inkscape-font-specification:Courier New Bold"
+         x="670.75043 681.25043 691.75043 702.25043 712.75043 723.25043"
+         y="488.43201"
+         sodipodi:role="line"
+         id="tspan3077">hostid</tspan>
+    </text>
+    <text
+       style="font-size:15px"
+       y="488.43201"
+       x="733.7879"
+       id="text3079">
+      <tspan
+         style="font-size:17.5px;font-variant:normal;font-weight:normal;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
+         x="733.7879 738.53046 743.27295 753.00293 762.73291 768.56042 773.26794"
+         y="488.43201"
+         sodipodi:role="line"
+         id="tspan3081">, port=</tspan>
+    </text>
+    <text
+       style="font-size:15px"
+       y="488.43201"
+       x="783.52545"
+       id="text3083">
+      <tspan
+         style="font-size:17.5px;font-variant:normal;font-weight:bold;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Courier;-inkscape-font-specification:Courier New Bold"
+         x="783.52545"
+         y="488.43201"
+         id="tspan3085">x</tspan>
+    </text>
+    <text
+       style="font-size:15px"
+       y="510.2695"
+       x="585.43793"
+       id="text3087">
+      <tspan
+         style="font-size:17.5px;font-variant:normal;font-weight:normal;writing-mode:lr-tb;fill:#cc0000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
+         x="585.43793 594.18793 598.17792 602.16797 611.89795 621.62793 626.42291 638.14795 647.87793 656.62793 665.37793 675.10791 679.90295 684.15546 694.37543 699.15295 707.90295 717.63293 726.38293 735.13293 744.86292 749.65796 755.41541"
+         y="510.2695"
+         sodipodi:role="line"
+         id="tspan3089">clientSocket = socket()</tspan>
+    </text>
+    <text
+       style="font-size:15px"
+       y="299.957"
+       x="151.06293"
+       id="text3091">
+      <tspan
+         style="font-size:35px;font-variant:normal;font-weight:normal;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Gill Sans MT;-inkscape-font-specification:Gill Sans MT"
+         x="151.06293 164.53793 181.30293 196.03793 210.52792 227.29294"
+         y="299.957"
+         sodipodi:role="line"
+         id="tspan3093">server</tspan>
+    </text>
+    <text
+       style="font-size:15px"
+       y="299.957"
+       x="249.58794"
+       id="text3095">
+      <tspan
+         style="font-size:30px;font-variant:normal;font-weight:normal;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Gill Sans MT;-inkscape-font-specification:Gill Sans MT"
+         x="249.58794 259.27792 271.30792 286.30792 301.30792 316.30792 322.87793 337.87793"
+         y="299.957"
+         sodipodi:role="line"
+         id="tspan3097">(running</tspan>
+    </text>
+    <text
+       style="font-size:15px"
+       y="299.957"
+       x="357.35043"
+       id="text3099">
+      <tspan
+         style="font-size:25px;font-variant:normal;font-weight:normal;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Gill Sans MT;-inkscape-font-specification:Gill Sans MT"
+         x="357.35043 371.10043"
+         y="299.957"
+         sodipodi:role="line"
+         id="tspan3101">on</tspan>
+    </text>
+    <text
+       style="font-size:15px"
+       y="299.957"
+       x="390.37543"
+       id="text3103">
+      <tspan
+         style="font-size:22.5px;font-variant:normal;font-weight:bold;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Courier;-inkscape-font-specification:Courier New Bold"
+         x="390.37543 403.87543 417.37543 430.87543 444.37543 457.87543"
+         y="299.957"
+         sodipodi:role="line"
+         id="tspan3105">hostid</tspan>
+    </text>
+    <text
+       style="font-size:15px"
+       y="299.957"
+       x="471.41293"
+       id="text3107">
+      <tspan
+         style="font-size:30px;font-variant:normal;font-weight:normal;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Gill Sans MT;-inkscape-font-specification:Gill Sans MT"
+         x="471.41293"
+         y="299.957"
+         id="tspan3109">)</tspan>
+    </text>
+    <text
+       style="font-size:15px"
+       y="299.49451"
+       x="612.68793"
+       id="text3111">
+      <tspan
+         style="font-size:35px;font-variant:normal;font-weight:normal;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Gill Sans MT;-inkscape-font-specification:Gill Sans MT"
+         x="612.68793 628.01794 635.68292 643.34796 660.11292 677.61292"
+         y="299.49451"
+         sodipodi:role="line"
+         id="tspan3113">client</tspan>
+    </text>
+    <path
+       inkscape:connector-curvature="0"
+       d="m 670.02543,592.73201 -0.8375,59.5375 -2.8125,-0.05 0.8375,-59.525 2.8125,0.0375 z m 2,58.1625 -4.3375,8.375 -4.1,-8.4875 8.4375,0.1125 z"
+       style="fill:#000099;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="path3115" />
+    <text
+       style="font-size:15px"
+       y="569.18201"
+       x="605.43793"
+       id="text3117">
+      <tspan
+         style="font-size:17.5px;font-variant:normal;font-weight:normal;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
+         x="605.43793 614.18793 623.91797 633.64795 643.41296 647.91046 653.66797 663.39795 673.12793 682.89294 692.62292 701.37292 706.15045 710.89294 720.62292 729.37292 733.38043 743.11041"
+         y="569.18201"
+         sodipodi:role="line"
+         id="tspan3119">send request using</tspan>
+    </text>
+    <text
+       style="font-size:15px"
+       y="590.18201"
+       x="605.43793"
+       id="text3121">
+      <tspan
+         style="font-size:17.5px;font-variant:normal;font-weight:normal;writing-mode:lr-tb;fill:#cc0000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
+         x="605.43793 614.18793 618.17792 622.16797 631.89795 641.62793 646.42291 658.14795 667.87793 676.62793 685.37793 695.10791"
+         y="590.18201"
+         sodipodi:role="line"
+         id="tspan3123">clientSocket</tspan>
+    </text>
+    <path
+       inkscape:connector-curvature="0"
+       d="m 669.08793,524.26951 0,24.85 -2.8125,0 0,-24.85 2.8125,0 z m 2.8125,23.4375 -4.2125,8.4375 -4.225,-8.4375 8.4375,0 z"
+       style="fill:#000099;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="path3125" />
+    <path
+       inkscape:connector-curvature="0"
+       d="m 601.35043,566.90701 -230.25,38.225 -0.4625,-2.775 230.2625,-38.2125 0.45,2.7625 z m -228.4,40.775 -9.0125,-2.7875 7.6375,-5.5375 1.375,8.325 z"
+       style="fill:#cc0000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="path3127" />
+    <text
+       style="font-size:15px"
+       y="586.99451"
+       x="212.50043"
+       id="text3129">
+      <tspan
+         style="font-size:17.5px;font-variant:normal;font-weight:normal;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
+         x="212.50043 218.25793 227.98793 237.71793 247.48293 251.98044 257.73795 267.46793 277.19794 286.96292 296.69293 305.44293 310.22043 314.96292 319.95044 325.70795 335.43793"
+         y="586.99451"
+         sodipodi:role="line"
+         id="tspan3131">read request from</tspan>
+    </text>
+    <text
+       style="font-size:15px"
+       y="608.01947"
+       x="212.50043"
+       id="text3133">
+      <tspan
+         style="font-size:17.53125px;font-variant:normal;font-weight:normal;writing-mode:lr-tb;fill:#cc0000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
+         x="212.50043 221.26605 231.01343 240.7608 250.50818 260.25555 269.02118 273.75461 277.73422 287.4816 297.22897 308.97491 318.72229 327.48792 336.25351"
+         y="608.01947"
+         sodipodi:role="line"
+         id="tspan3135">connectionSocke</tspan>
+    </text>
+    <text
+       style="font-size:15px"
+       y="608.01947"
+       x="346.06293"
+       id="text3137">
+      <tspan
+         style="font-size:17.53125px;font-variant:normal;font-weight:normal;writing-mode:lr-tb;fill:#ff0000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
+         x="346.06293"
+         y="608.01947"
+         id="tspan3139">t</tspan>
+    </text>
+    <text
+       style="font-size:15px"
+       y="650.78198"
+       x="217.18793"
+       id="text3141">
+      <tspan
+         style="font-size:17.5px;font-variant:normal;font-weight:normal;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
+         x="217.18793 229.43793 235.19543 239.18542 243.92793 253.65793 258.66293 264.42044 274.15042 283.88043 287.90543 296.14792 301.38043 306.12292"
+         y="650.78198"
+         sodipodi:role="line"
+         id="tspan3143">write reply to</tspan>
+    </text>
+    <text
+       style="font-size:15px"
+       y="671.78198"
+       x="217.18793"
+       id="text3145">
+      <tspan
+         style="font-size:17.5px;font-variant:normal;font-weight:normal;writing-mode:lr-tb;fill:#cc0000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
+         x="217.18793 225.93793 235.66794 245.39793 255.16293 264.89294 273.64294 278.42044 282.41043 292.14044 301.87042 313.64792 323.37793 332.12793 340.87793 350.60794"
+         y="671.78198"
+         sodipodi:role="line"
+         id="tspan3147">connectionSocket</tspan>
+    </text>
+    <path
+       inkscape:connector-curvature="0"
+       d="m 276.27543,533.64451 0,30.475 -2.8125,0 0,-30.475 2.8125,0 z m 2.8125,29.0625 -4.2125,8.4375 -4.225,-8.4375 8.4375,0 z"
+       style="fill:#000099;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="path3149" />
+    <path
+       inkscape:connector-curvature="0"
+       d="m 278.15043,612.45701 -0.6625,17.35 -2.8125,-0.1125 0.675,-17.35 2.8,0.1125 z m 2.2,16.05 -4.5375,8.2625 -3.8875,-8.5875 8.425,0.325 z"
+       style="fill:#000099;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="path3151" />
+    <path
+       inkscape:connector-curvature="0"
+       d="m 366.91293,644.75701 233.0125,27.3 -0.325,2.8 -233.0125,-27.3125 0.325,-2.7875 z m 231.95,24.35 7.8875,5.1625 -8.875,3.2125 0.9875,-8.375 z"
+       style="fill:#cc0000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="path3153" />
+    <path
+       inkscape:connector-curvature="0"
+       d="m 150.03168,305.84451 328.90625,0"
+       style="fill:none;stroke:#cc0000;stroke-width:1.875;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:10;stroke-opacity:1;stroke-dasharray:none"
+       id="path3171" />
+    <path
+       inkscape:connector-curvature="0"
+       d="m 372.21293,481.61951 15,0 0,3.75 -15,0 0,-3.75 z m 26.25,0 15,0 0,3.75 -15,0 0,-3.75 z m 26.25,0 15,0 0,3.75 -15,0 0,-3.75 z m 26.25,0 15,0 0,3.75 -15,0 0,-3.75 z m 26.25,0 15,0 0,3.75 -15,0 0,-3.75 z m 26.25,0 15,0 0,3.75 -15,0 0,-3.75 z m 26.25,0 15,0 0,3.75 -15,0 0,-3.75 z m 26.25,0 14.0625,0 0,3.75 -14.0625,0 0,-3.75 z m -181.875,7.5 -11.25,-5.625 11.25,-5.625 0,11.25 z m 194.0625,-11.25 11.25,5.625 -11.25,5.625 0,-11.25 z"
+       style="fill:#cc0000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="path3173" />
+    <text
+       style="font-size:15px"
+       y="478.86951"
+       x="441.60043"
+       id="text3175">
+      <tspan
+         style="font-size:22.5px;font-variant:normal;font-weight:normal;writing-mode:lr-tb;fill:#cc0000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
+         x="441.60043 455.34793 471.59293 486.10544"
+         y="478.86951"
+         sodipodi:role="line"
+         id="tspan3177">TCP</tspan>
+    </text>
+    <text
+       style="font-size:15px"
+       y="503.15701"
+       x="381.85043"
+       id="text3179">
+      <tspan
+         style="font-size:22.5px;font-variant:normal;font-weight:normal;writing-mode:lr-tb;fill:#cc0000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
+         x="381.85043 393.10043 405.61041 418.12042 430.63043 443.14044 454.39044 460.64542 465.64041 478.15042 490.66043 496.60043 507.85043 520.36041 526.61542 539.12543"
+         y="503.15701"
+         sodipodi:role="line"
+         id="tspan3181">connection setup</tspan>
+    </text>
+    <path
+       inkscape:connector-curvature="0"
+       d="m 616.60043,306.93201 66.5625,0"
+       style="fill:none;stroke:#cc0000;stroke-width:1.875;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:10;stroke-opacity:1;stroke-dasharray:none"
+       id="path3183" />
+    <text
+       style="font-size:15px"
+       y="714.71326"
+       x="213.12543"
+       id="text3185">
+      <tspan
+         style="font-size:17.5px;font-variant:normal;font-weight:normal;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
+         x="213.12543 221.87543 225.86543 235.59543 244.34543"
+         y="714.71326"
+         sodipodi:role="line"
+         id="tspan3187">close</tspan>
+    </text>
+    <text
+       style="font-size:15px"
+       y="735.71326"
+       x="213.12543"
+       id="text3189">
+      <tspan
+         style="font-size:17.5px;font-variant:normal;font-weight:normal;writing-mode:lr-tb;fill:#cc0000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
+         x="213.12543 221.87543 231.60544 241.33543 251.10043 260.83044 269.58044 274.35794 278.34793 288.07794 297.80792 309.58542 319.31543 328.06543 336.81543 346.54544"
+         y="735.71326"
+         sodipodi:role="line"
+         id="tspan3191">connectionSocket</tspan>
+    </text>
+    <path
+       inkscape:connector-curvature="0"
+       d="m 275.96293,680.99451 0,24.84375 -2.8125,0 0,-24.84375 2.8125,0 z m 2.8125,23.4375 -4.2125,8.4375 -4.225,-8.4375 8.4375,0 z"
+       style="fill:#000099;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="path3193" />
+    <path
+       inkscape:connector-curvature="0"
+       d="m 276.90043,612.41951 0,3.2625 c 0,0.775 -0.625,1.4 -1.4,1.4 l -76.875,0 c -0.775,0 -1.4125,-0.625 -1.4125,-1.4 l 0,-47.8125 c 0,-0.775 0.6375,-1.4125 1.4125,-1.4125 l 55.775,0 0,2.8125 -55.775,0 1.4,-1.4 0,47.8125 -1.4,-1.4125 76.875,0 -1.4125,1.4125 0,-3.2625 2.8125,0 z m -23.9,-48.775 8.4375,4.225 -8.4375,4.2125 0,-8.4375 z"
+       style="fill:#000099;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="path3195" />
+    <text
+       style="font-size:15px"
+       y="673.43201"
+       x="607.93793"
+       id="text3197">
+      <tspan
+         style="font-size:17.5px;font-variant:normal;font-weight:normal;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
+         x="607.93793 613.69543 623.42542 633.15546 642.92047 647.41797 653.17542 662.90546 672.63544 676.6604 684.90295 689.89044 694.87793 700.63544 710.36542"
+         y="673.43201"
+         sodipodi:role="line"
+         id="tspan3199">read reply from</tspan>
+    </text>
+    <text
+       style="font-size:15px"
+       y="694.45697"
+       x="607.93793"
+       id="text3201">
+      <tspan
+         style="font-size:17.53125px;font-variant:normal;font-weight:normal;writing-mode:lr-tb;fill:#cc0000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
+         x="607.93793 616.70355 620.66565 624.6452 634.39258 644.13995 648.89093 660.61932 670.3667 679.13232 687.89795 697.64532"
+         y="694.45697"
+         sodipodi:role="line"
+         id="tspan3203">clientSocket</tspan>
+    </text>
+    <text
+       style="font-size:15px"
+       y="730.65076"
+       x="611.68793"
+       id="text3205">
+      <tspan
+         style="font-size:17.5px;font-variant:normal;font-weight:normal;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
+         x="611.68793 620.43793 624.42792 634.15796 642.90796"
+         y="730.65076"
+         sodipodi:role="line"
+         id="tspan3207">close</tspan>
+    </text>
+    <text
+       style="font-size:15px"
+       y="751.65076"
+       x="611.68793"
+       id="text3209">
+      <tspan
+         style="font-size:17.5px;font-variant:normal;font-weight:normal;writing-mode:lr-tb;fill:#cc0000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
+         x="611.68793 620.43793 624.42792 628.41797 638.14795 647.87793 652.67291 664.39795 674.12793 682.87793 691.62793 701.35791"
+         y="751.65076"
+         sodipodi:role="line"
+         id="tspan3211">clientSocket</tspan>
+    </text>
+    <path
+       inkscape:connector-curvature="0"
+       d="m 670.65043,700.68201 0,24.84375 -2.8125,0 0,-24.84375 2.8125,0 z m 2.8125,23.4375 -4.2125,8.4375 -4.225,-8.4375 8.4375,0 z"
+       style="fill:#000099;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="path3213" />
+  </g>
+</svg>
