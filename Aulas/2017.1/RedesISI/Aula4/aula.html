@@ -17,13 +17,13 @@
 	</script>
 	<script src="js/plotly-latest.min.js"></script>
 	<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
-    <!--<script src="../../../../MathJax-2.6-latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>-->
+  <script src="../../../../../MathJax-2.6-latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
 
-    <!-- Fonts -->
-    <link href='https://fonts.googleapis.com/css?family=Lora:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
-    <!--<link href='../../../../Fonts/Lora/lora.css' rel='stylesheet' type='text/css'>-->
+  <!-- Fonts -->
+  <link href='https://fonts.googleapis.com/css?family=Lora:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
+  <link href='../../../../../Fonts/Lora/lora.css' rel='stylesheet' type='text/css'>
 
-    <!-- CSS -->
+  <!-- CSS -->
 	<link href='../template/css/template.css' id="template" rel='stylesheet' type='text/css'>
 	<link href='../template/css/presentationSpecific.css' id="presentationSpecific" rel='stylesheet' type='text/css'>
 
@@ -99,7 +99,7 @@
 				</ul></li>
 			</ul>
 		</div>
-	</div>	
+	</div>
 	</section>
 
 	<!-- Content slides -->
@@ -109,7 +109,7 @@
 		Métricas de Desempenho
 	</div>
 	</section>
-	     
+
     <!--
 	<section>
 	<h1>Como Perdas de Pacotes e Atraso Ocorrem?</h1>
@@ -124,7 +124,7 @@
 		<center>
 			<img src="imagens/DescartesAtrasos.svg" style="width: 70%;"/>
 		</center>
-	</div>	
+	</div>
 	</section>
     -->
 
@@ -148,9 +148,9 @@
 				</ul></li>
 			</ul></li>
 		</ul>
-	</div>	
+	</div>
 	</section>
-	
+
 	<section>
 	<h1>Quatro Fontes de Atraso (I)</h1>
 	<div class="slideContent">
@@ -182,9 +182,9 @@
 				</ul></li>
 			</ul>
 		</div>
-	</div>	
+	</div>
 	</section>
-	
+
 	<section>
 	<h1>Quatro Fontes de Atraso (II)</h1>
 	<div class="slideContent">
@@ -220,9 +220,9 @@
 		<center>
 			<span class="math inline">\(d_{trans}\)</span> e <span class="math inline">\(d_{prop}\)</span> são <span class="alert">muito diferentes!</span></li>
 		</center>
-	</div>	
+	</div>
 	</section>
-	
+
 	<section>
 	<h1>Atraso de Transmissão <i>vs.</i> Atraso de Propagação (I)</h1>
 	<div class="slideContent">
@@ -251,9 +251,9 @@
 				<li><span class="alert">Ou 62 minutos.</span></li>
 			</ul>
 		</div>
-	</div>	
+	</div>
 	</section>
-	
+
 	<section>
 	<h1>Atraso de Transmissão <i>vs.</i> Atraso de Propagação (II)</h1>
 	<div class="slideContent">
@@ -274,13 +274,13 @@
 				</ul></li>
 			</ul></li>
 		</ul>
-	</div>	
+	</div>
 	</section>
-	
+
 	<section>
 	<h1>Atraso de Transmissão <i>vs.</i> Atraso de Propagação (III)</h1>
 	<div class="slideContent">
-		
+
         <div class="column" style="width: 40%;">
 
             <div style="border: 2px solid #4A4; width: 95%; margin-left: 10px; padding-bottom: 10px;">
@@ -302,7 +302,7 @@
                     <input type="button" onclick="PropagacaoVsTransmissaoStart();" value="Transmitir" style="font-size: 28px; font-family: 'Lora', sans-serif;"></input>
                 </center>
             </div>
-        
+
         </div>
 
         <div class="column" style="width: 60%;">
@@ -330,7 +330,7 @@
 
                 var time = document.getElementById('AnimacaoPropagacaoVsTransmissaoTempo');
                 var t = parseInt(time.innerHTML.split(' ')[2]);
-                
+
                 t = t + 100;
                 time.innerHTML = "t = " + t + " ms";
             }
@@ -350,7 +350,7 @@
 
 			function PropagacaoVsTransmissaoStart() {
 
-                // Conversão de unidades: 
+                // Conversão de unidades:
                 // * Cada s de tempo real corresponde a 100ms de tempo simulado.
                 // * Cada 4 kb/s de capacidade do enlace equivalem a 1px de largura.
 				var s = Snap("#AnimacaoPropagacaoVsTransmissao");
@@ -380,7 +380,7 @@
 
                     packet.animate({width: packetSize}, packetSize/propSpeed, null,
                             function() {
-                                packet.animate({x: linkEnd - packetSize}, (linkEnd - packetSize - linkBegin) / propSpeed, null, 
+                                packet.animate({x: linkEnd - packetSize}, (linkEnd - packetSize - linkBegin) / propSpeed, null,
                                         function() {
                                             packet.animate({width: 0}, packetSize/propSpeed);
                                             packet.animate({x: linkEnd}, packetSize/propSpeed);
@@ -404,11 +404,11 @@
 
                 }
 			}
-			
+
 		</script>
-	</div>	
+	</div>
 	</section>
-	
+
 	<section>
 	<h1>Perdas de Pacotes</h1>
 	<div class="slideContent">
@@ -428,9 +428,9 @@
 		<center>
 			<img src="imagens/Perdas.svg" style="width: 70%;"/>
 		</center>
-	</div>	
+	</div>
 	</section>
-	
+
 	<section>
 	<h1>Vazão (I)</h1>
 	<div class="slideContent">
@@ -449,9 +449,9 @@
 		<center>
 			<img src="imagens/Vazao1.svg" style="width: 70%;"/>
 		</center>
-	</div>	
+	</div>
 	</section>
-	
+
 	<section>
 	<h1>Vazão (II)</h1>
 	<div class="slideContent">
@@ -469,9 +469,9 @@
 				</div>
 			</center>
 		</center>
-	</div>	
+	</div>
 	</section>
-	
+
 	<section>
 	<h1>Cenário de Vazão na Internet</h1>
 	<div class="slideContent">
@@ -490,15 +490,15 @@
 				<img src="imagens/VazaoInternet.svg" style="width: 90%;"/>
 			</center>
 		</div>
-	</div>	
+	</div>
 	</section>
-	
+
     <section class="secao">
     <div class="slideContent">
         Modelos em Camadas
     </div>
     </section>
-    
+
     <section>
     <h1>&ldquo;Camadas&rdquo; de Protocolos</h1>
     <div class="slideContent">
@@ -523,9 +523,9 @@
 				<tr><td>... ou ao menos nossa discussão sobre redes?</td></tr>
 			</table>
 		</div>
-    </div>	
+    </div>
     </section>
-    
+
     <section>
     <h1>Analogia: Organização de uma Viagem Aérea (I)</h1>
     <div class="slideContent">
@@ -536,9 +536,9 @@
 	<ul>
 		<li>Uma série de passos envolvidos.</li>
 	</ul>
-    </div>	
+    </div>
     </section>
-    
+
     <section>
     <h1>Organizando Funcionalidades da Cia. Aérea em Camadas </h1>
     <div class="slideContent">
@@ -553,9 +553,9 @@
 			<li>Dependendo de serviços providos pela camada abaixo.</li>
 		</ul></li>
 	</ul>
-    </div>	
+    </div>
     </section>
-    
+
     <section>
     <h1>Por Que uma Organização em Camadas?</h1>
     <div class="slideContent">
@@ -574,9 +574,9 @@
     			<li>&ldquo;Layering considered harmful&rdquo;?</li>
     		</ul></li>
     	</ul>
-    </div>	
+    </div>
     </section>
-    
+
     <section>
     <h1>Pilha de Protocolos da Internet (I)</h1>
     <div class="slideContent">
@@ -592,9 +592,9 @@
 			<li>Nesta disciplina, <span class="alert">seguiremos o modelo do livro-texto</span>.</li>
 		</ul></li>
     	</ul>
-    </div>	
+    </div>
     </section>
-    
+
     <section>
     <h1>Pilha de Protocolos da Internet (II)</h1>
     <div class="slideContent">
@@ -621,9 +621,9 @@
 			<img src="imagens/PilhaTCPIP.svg" style="width: 50%;"/>
 		</center>
 	</div>
-    </div>	
+    </div>
     </section>
-    
+
     <section>
     <h1>Pilha de Protocolos da Internet (III)</h1>
     <div class="slideContent">
@@ -652,9 +652,9 @@
 			<img src="imagens/PilhaTCPIP.svg" style="width: 50%;"/>
 		</center>
 	</div>
-    </div>	
+    </div>
     </section>
- 
+
     <section>
     <h1>Pilha de Protocolos da Internet (IV)</h1>
     <div class="slideContent">
@@ -682,9 +682,9 @@
 			<img src="imagens/PilhaTCPIP.svg" style="width: 50%;"/>
 		</center>
 	</div>
-    </div>	
+    </div>
     </section>
- 
+
 
     <section>
     <h1>Pilha de Protocolos da Internet (V)</h1>
@@ -712,7 +712,7 @@
 			<img src="imagens/PilhaTCPIP.svg" style="width: 50%;"/>
 		</center>
 	</div>
-    </div>	
+    </div>
     </section>
 
     <section>
@@ -739,7 +739,7 @@
 			<img src="imagens/PilhaTCPIP.svg" style="width: 50%;"/>
 		</center>
 	</div>
-    </div>	
+    </div>
     </section>
 
     <section>
@@ -770,9 +770,9 @@
 			</ul></li>
 	    	</ul></li>
 	    </ul>
-    </div>	
+    </div>
     </section>
-    
+
     <section>
     <h1>Pilha de Protocolos: Uma Visão <i>Top-Down</i> (I)</h1>
     <!--    <div class="slideContent">-->
@@ -792,7 +792,7 @@
     	</ul>
 	<!--    </div>	-->
     </section>
-    
+
     <section>
     <h1>Pilha de Protocolos: Uma Visão <i>Top-Down</i> (II)</h1>
     <!--    <div class="slideContent">-->
@@ -816,7 +816,7 @@
     	</ul>
 	<!--    </div>	-->
     </section>
- 
+
     <section>
     <h1>O Modelo de Referência ISO/OSI</h1>
     <div class="slideContent">
@@ -837,16 +837,16 @@
 				<li>Funcionalidades implementadas na aplicação, <span class="alert">se necessárias</span>.</li>
 				<li>São necessárias?</li>
 			</ul></li>
-    		</ul>	
+    		</ul>
     	</div>
 	<div class="column" style="width: 40%;">
 		<center>
 			<img src="imagens/ModeloOSI.svg" style="width: 50%;"/>
 		</center>
 	</div>
-    </div>	
+    </div>
     </section>
-    
+
     <section>
     <h1>Inteligência nas Bordas e Camadas</h1>
     <div class="slideContent">
@@ -873,9 +873,9 @@
 	    		<img src="imagens/InteligenciaNasBordas.svg" style="width: 95%;"/>
 	    	</center>
 	    </div>
-    </div>	
+    </div>
     </section>
-    
+
     <section>
     <h1>Encapsulamento e Cabeçalhos (I)</h1>
     <div class="slideContent">
@@ -894,25 +894,25 @@
     			<li>Com suas informações relevantes.</li>
     		</ul></li>
     	</ul>
-    </div>	
+    </div>
     </section>
-    
+
     <section>
     <h1>Encapsulamento e Cabeçalhos (II)</h1>
     <div class="slideContent">
     	<center>
     		<img src="imagens/Encapsulamento.svg" style="width: 75%;"/>
     	</center>
-    </div>	
+    </div>
     </section>
-    
-	
+
+
     <section class="secao">
     <div class="slideContent">
         Segurança
     </div>
     </section>
-    
+
     <section>
     <h1>Segurança em Redes</h1>
     <div class="slideContent">
@@ -930,7 +930,7 @@
     			<li>Considerações de segurança aparecem em todas as camadas!</li>
     		</ul></li>
     	</ul>
-    </div>	
+    </div>
     </section>
 
     <section>
@@ -946,9 +946,9 @@
     		<li><i>Host infectado pode ser controlado como parte de uma <span class="alert"><i>botnet</i></span>.</i></li>
     		item
     	</ul>
-    </div>	
+    </div>
     </section>
-    
+
     <section>
     <h1>Ataques a Servidores, Infraestrutura de Rede</h1>
     <div class="slideContent">
@@ -975,9 +975,9 @@
 			<img src="imagens/DDoS.svg" style="width: 70%;"/>
 		</center>
 	</div>
-    </div>	
+    </div>
     </section>
-    
+
     <section>
     <h1><i>Sniffing</i> de Pacotes</h1>
     <div class="slideContent">
@@ -998,16 +998,16 @@
 	<ul>
 		<li>Também utilizados para fins legítimos!</li>
 	</ul>
-    </div>	
+    </div>
     </section>
-    
+
 
     <section class="secao">
     <div class="slideContent">
         Histórico
     </div>
     </section>
-    
+
     <section>
     <h1>História da Internet (I)</h1>
     <div class="slideContent">
@@ -1017,7 +1017,7 @@
     				<p>1961 a 1972</p>
     			</div>
     			<div class="blockBody">
-    				Estabelecimento dos princípios da comutação de pacotes	
+    				Estabelecimento dos princípios da comutação de pacotes
     			</div>
     		</div>
     	</center>
@@ -1047,9 +1047,9 @@
 	</div>
 
 
-    </div>	
+    </div>
     </section>
-    
+
     <section>
     <h1>História da Internet (II)</h1>
     <div class="slideContent">
@@ -1091,9 +1091,9 @@
 		</div>
 	</div>
 
-    </div>	
+    </div>
     </section>
-    
+
     <section>
     <h1>História da Internet (III)</h1>
     <div class="slideContent">
@@ -1123,9 +1123,9 @@
 			<li>100000 <i>hosts</i> conectados a confederação de redes.</li>
 		</ul>
 	</div>
-    </div>	
+    </div>
     </section>
-    
+
     <section>
     <h1>História da Internet (IV)</h1>
     <div class="slideContent">
@@ -1165,10 +1165,10 @@
 			</ul></li>
 		</ul>
 	</div>
-   	
-    </div>	
+
+    </div>
     </section>
-    
+
     <section>
     <h1>História da Internet (V)</h1>
     <div class="slideContent">
@@ -1200,9 +1200,9 @@
 			<li>Empresas, universidades, comércio eletrônico rodando seus serviços na &ldquo;nuvem&rdquo; (<i>e.g.</i>, EC2 da Amazon).</li>
 		</ul></li>
 	</ul>
-    </div>	
+    </div>
     </section>
-    
+
 	<section>
 	<h1>Resumo da Aula...</h1>
 	<div class="slideContent">
@@ -1250,9 +1250,9 @@
 					<li>Ataque de negação de serviço.</li>
 				</ul></li>
 				<li>Modelo de serviço de <span class="alert">melhor esforço</span>.</li>
-			</ul>	
+			</ul>
 		</div>
-	</div>	
+	</div>
 	</section>
 
 	<section>
@@ -1282,9 +1282,9 @@
 				<li>Cabeçalhos.</li>
 			</ul>
 		</div>
-	</div>	
+	</div>
 	</section>
-	
+
 	<section>
 	<h1>Próxima Aula...</h1>
 	<div class="slideContent">
@@ -1297,9 +1297,9 @@
 				<li>Início da discussão sobre o protocolo HTTP.</li>
 			</ul></li>
 		</ul>
-	</div>	
+	</div>
 	</section>
-	
+
 	<!-- {{{{ dzslides core
 	#
 	#
