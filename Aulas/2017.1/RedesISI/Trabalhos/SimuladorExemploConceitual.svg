@@ -1,0 +1,717 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="358.19815mm"
+   height="151.85767mm"
+   viewBox="0 0 1269.206 538.07834"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="SimuladorExemploConceitual.svg"
+   inkscape:export-filename="/home/diego/MaterialDidatico/GithubRepo/Aulas/2017.1/RedesISI/Trabalhos/SimuladorExemploConceitual.png"
+   inkscape:export-xdpi="56.701778"
+   inkscape:export-ydpi="56.701778">
+  <defs
+     id="defs4">
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker21244"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         id="path21246"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 Z"
+         style="fill:#00add8;fill-opacity:1;fill-rule:evenodd;stroke:#00add8;stroke-width:1pt;stroke-opacity:1"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       inkscape:isstock="true"
+       style="overflow:visible"
+       id="marker18346"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow1Lend">
+      <path
+         inkscape:connector-curvature="0"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)"
+         style="fill:#00add8;fill-opacity:1;fill-rule:evenodd;stroke:#00add8;stroke-width:1pt;stroke-opacity:1"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 Z"
+         id="path18348" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker17548"
+       style="overflow:visible"
+       inkscape:isstock="true"
+       inkscape:collect="always">
+      <path
+         id="path17550"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 Z"
+         style="fill:#00add8;fill-opacity:1;fill-rule:evenodd;stroke:#00add8;stroke-width:1pt;stroke-opacity:1"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       inkscape:isstock="true"
+       style="overflow:visible"
+       id="marker15910"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow1Lend"
+       inkscape:collect="always">
+      <path
+         inkscape:connector-curvature="0"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)"
+         style="fill:#00add8;fill-opacity:1;fill-rule:evenodd;stroke:#00add8;stroke-width:1pt;stroke-opacity:1"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 Z"
+         id="path15912" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker13572"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         id="path13574"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 Z"
+         style="fill:#00add8;fill-opacity:1;fill-rule:evenodd;stroke:#00add8;stroke-width:1pt;stroke-opacity:1"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       inkscape:isstock="true"
+       style="overflow:visible"
+       id="marker11460"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow1Lend"
+       inkscape:collect="always">
+      <path
+         inkscape:connector-curvature="0"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)"
+         style="fill:#00add8;fill-opacity:1;fill-rule:evenodd;stroke:#00add8;stroke-width:1pt;stroke-opacity:1"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 Z"
+         id="path11462" />
+    </marker>
+    <marker
+       inkscape:isstock="true"
+       style="overflow:visible"
+       id="marker5426"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow1Lend">
+      <path
+         transform="matrix(-0.8,0,0,-0.8,-10,0)"
+         style="fill:#00add8;fill-opacity:1;fill-rule:evenodd;stroke:#00add8;stroke-width:1pt;stroke-opacity:1"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 Z"
+         id="path5428"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Lend"
+       style="overflow:visible"
+       inkscape:isstock="true"
+       inkscape:collect="always">
+      <path
+         id="path4329"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 Z"
+         style="fill:#00add8;fill-opacity:1;fill-rule:evenodd;stroke:#00add8;stroke-width:1pt;stroke-opacity:1"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)"
+         inkscape:connector-curvature="0" />
+    </marker>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.70987524"
+     inkscape:cx="595.14384"
+     inkscape:cy="296.69118"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     showguides="false"
+     inkscape:guide-bbox="true"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     inkscape:window-width="1366"
+     inkscape:window-height="719"
+     inkscape:window-x="0"
+     inkscape:window-y="25"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-64.714348,-52.790775)">
+    <rect
+       ry="25.356567"
+       y="316.17297"
+       x="978.92828"
+       height="93.678421"
+       width="320.47882"
+       id="rect15864"
+       style="opacity:1;fill:#b3b3b3;fill-opacity:1;stroke:#000000;stroke-width:2;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       inkscape:export-xdpi="56.701778"
+       inkscape:export-ydpi="56.701778" />
+    <path
+       sodipodi:nodetypes="csc"
+       inkscape:connector-curvature="0"
+       id="path18344"
+       d="m 1132.0271,393.35959 c 0,0 -178.71663,17.28749 -196.02,-63.2727 -18.60052,-86.5994 -40.52179,-98.78453 -81.7839,-106.84363"
+       style="fill:none;fill-rule:evenodd;stroke:#00add8;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker18346)" />
+    <rect
+       ry="25.356567"
+       y="459.8602"
+       x="104.1267"
+       height="93.678421"
+       width="320.47882"
+       id="rect15890"
+       style="opacity:1;fill:#b3b3b3;fill-opacity:1;stroke:#000000;stroke-width:2;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#00add8;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker17548)"
+       d="m 255.81679,534.22941 c 0,0 868.81081,147.46281 596.99771,-295.49047"
+       id="path17546"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc" />
+    <rect
+       style="opacity:1;fill:#b3b3b3;fill-opacity:1;stroke:#000000;stroke-width:2;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect15846"
+       width="320.47882"
+       height="93.678421"
+       x="104.1267"
+       y="218.97279"
+       ry="25.356567" />
+    <path
+       sodipodi:nodetypes="cc"
+       inkscape:connector-curvature="0"
+       id="path15908"
+       d="m 258.63419,293.34201 c 0,0 336.32286,-162.4508 558.96285,-78.55094"
+       style="fill:none;fill-rule:evenodd;stroke:#00add8;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker15910)" />
+    <rect
+       ry="25.356567"
+       y="317.58167"
+       x="543.64056"
+       height="93.678406"
+       width="324.70493"
+       id="rect15852"
+       style="opacity:1;fill:#b3b3b3;fill-opacity:1;stroke:#000000;stroke-width:2;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+    <text
+       sodipodi:linespacing="125%"
+       id="text15854"
+       y="340.6102"
+       x="634.12701"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22.5px;line-height:125%;font-family:'Latin Modern Roman';-inkscape-font-specification:'Latin Modern Roman, Normal';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       xml:space="preserve"><tspan
+         style="font-size:17.5px;text-align:center;text-anchor:middle;fill:#000000"
+         id="tspan15856"
+         y="340.6102"
+         x="634.12701"
+         sodipodi:role="line">Interfaces Simuladas</tspan></text>
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#00add8;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker13572)"
+       d="m 819.29608,393.35959 c 0,0 72.90453,1.48693 112.30622,-62.68145 45.7967,-74.58311 205.049,-186.85675 318.4651,-113.06966"
+       id="path13570"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="csc" />
+    <path
+       sodipodi:nodetypes="cc"
+       inkscape:connector-curvature="0"
+       id="path11458"
+       d="m 709.41762,391.95089 c 0,0 -206.02595,140.41932 -305.97786,-10.93342"
+       style="fill:none;fill-rule:evenodd;stroke:#00add8;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker11460)" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#00add8;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow1Lend)"
+       d="m 586.86088,391.95089 c 0,0 -134.18235,-35.66796 -183.42112,-246.18603"
+       id="path4314"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc" />
+    <rect
+       style="opacity:0.97000002;fill:none;fill-opacity:1;stroke:#000000;stroke-width:2;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect4136"
+       width="397.82892"
+       height="536.07837"
+       x="65.714287"
+       y="53.790775" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22.5px;line-height:125%;font-family:'Latin Modern Roman';-inkscape-font-specification:'Latin Modern Roman, Normal';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="259.30536"
+       y="80.270111"
+       id="text4138"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         x="259.30536"
+         y="80.270111"
+         id="tspan4142"
+         style="font-weight:bold;text-align:center;text-anchor:middle">Host Físico A (192.168.0.10)</tspan></text>
+    <rect
+       style="opacity:0.97000002;fill:none;fill-opacity:1;stroke:#000000;stroke-width:2.7226572;stroke-miterlimit:4;stroke-dasharray:21.78126012, 21.78126012;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect4144"
+       width="340.70889"
+       height="221.51093"
+       x="94.305511"
+       y="100.51518" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22.5px;line-height:125%;font-family:'Latin Modern Roman';-inkscape-font-specification:'Latin Modern Roman, Normal';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="264.81461"
+       y="178.01683"
+       id="text4146"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         x="264.81461"
+         y="178.01683"
+         id="tspan4150"
+         style="font-weight:bold;text-align:center;text-anchor:middle">Instância do Simulador</tspan><tspan
+         sodipodi:role="line"
+         x="264.81461"
+         y="206.14183"
+         style="font-weight:bold;text-align:center;text-anchor:middle"
+         id="tspan4162">(porta TCP 5000)</tspan></text>
+    <ellipse
+       style="opacity:0.97000002;fill:#008000;fill-opacity:1;stroke:#000000;stroke-width:1.03256559;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="path4164"
+       cx="397.87827"
+       cy="126.53964"
+       rx="11.983718"
+       ry="11.983717" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22.5px;line-height:125%;font-family:'Latin Modern Roman';-inkscape-font-specification:'Latin Modern Roman, Normal';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="309.92297"
+       y="118.48448"
+       id="text4166"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan4168"
+         x="312.84534"
+         y="118.48448"
+         style="font-size:17.5px;text-align:center;text-anchor:middle">Socket de Recepção </tspan><tspan
+         sodipodi:role="line"
+         x="309.92297"
+         y="140.35948"
+         style="font-size:17.5px;text-align:center;text-anchor:middle"
+         id="tspan26336">(porta TCP 5000)</tspan></text>
+    <ellipse
+       ry="11.983717"
+       rx="11.983718"
+       cy="291.58002"
+       cx="256.16357"
+       id="ellipse4170"
+       style="opacity:0.97000002;fill:#000080;fill-opacity:1;stroke:#000000;stroke-width:1.03256559;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22.5px;line-height:125%;font-family:'Latin Modern Roman';-inkscape-font-specification:'Latin Modern Roman, Normal';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="194.61317"
+       y="242.00131"
+       id="text4172"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         x="194.61317"
+         y="242.00131"
+         id="tspan4176"
+         style="font-size:17.5px;text-align:center;text-anchor:middle;fill:#000000">Interfaces Simuladas</tspan></text>
+    <rect
+       y="339.92133"
+       x="94.305511"
+       height="221.51093"
+       width="340.70889"
+       id="rect4194"
+       style="opacity:0.97000002;fill:none;fill-opacity:1;stroke:#000000;stroke-width:2.7226572;stroke-miterlimit:4;stroke-dasharray:21.78126012, 21.78126012;stroke-dashoffset:0;stroke-opacity:1" />
+    <text
+       sodipodi:linespacing="125%"
+       id="text4196"
+       y="417.42297"
+       x="264.81461"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22.5px;line-height:125%;font-family:'Latin Modern Roman';-inkscape-font-specification:'Latin Modern Roman, Normal';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       xml:space="preserve"><tspan
+         style="font-weight:bold;text-align:center;text-anchor:middle"
+         id="tspan4198"
+         y="417.42297"
+         x="264.81461"
+         sodipodi:role="line">Instância do Simulador</tspan><tspan
+         id="tspan4200"
+         style="font-weight:bold;text-align:center;text-anchor:middle"
+         y="445.54797"
+         x="264.81461"
+         sodipodi:role="line">(porta TCP 5001)</tspan></text>
+    <ellipse
+       ry="11.983717"
+       rx="11.983718"
+       cy="365.9458"
+       cx="397.87827"
+       id="ellipse4202"
+       style="opacity:0.97000002;fill:#008000;fill-opacity:1;stroke:#000000;stroke-width:1.03256559;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+    <rect
+       y="150.51509"
+       x="938.96039"
+       height="291.04343"
+       width="393.95993"
+       id="rect4232"
+       style="opacity:0.97000002;fill:none;fill-opacity:1;stroke:#000000;stroke-width:2;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+    <text
+       sodipodi:linespacing="125%"
+       id="text4234"
+       y="176.99443"
+       x="1132.5515"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22.5px;line-height:125%;font-family:'Latin Modern Roman';-inkscape-font-specification:'Latin Modern Roman, Normal';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       xml:space="preserve"><tspan
+         style="font-weight:bold;text-align:center;text-anchor:middle"
+         id="tspan4236"
+         y="176.99443"
+         x="1132.5515"
+         sodipodi:role="line">Host Físico B (192.168.0.5)</tspan></text>
+    <rect
+       y="197.2395"
+       x="967.55157"
+       height="221.51093"
+       width="340.70889"
+       id="rect4238"
+       style="opacity:0.97000002;fill:none;fill-opacity:1;stroke:#000000;stroke-width:2.7226572;stroke-miterlimit:4;stroke-dasharray:21.78126012, 21.78126012;stroke-dashoffset:0;stroke-opacity:1" />
+    <text
+       sodipodi:linespacing="125%"
+       id="text4240"
+       y="274.74115"
+       x="1138.0607"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22.5px;line-height:125%;font-family:'Latin Modern Roman';-inkscape-font-specification:'Latin Modern Roman, Normal';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       xml:space="preserve"><tspan
+         style="font-weight:bold;text-align:center;text-anchor:middle"
+         id="tspan4242"
+         y="274.74115"
+         x="1138.0607"
+         sodipodi:role="line">Instância do Simulador</tspan><tspan
+         id="tspan4244"
+         style="font-weight:bold;text-align:center;text-anchor:middle"
+         y="302.86615"
+         x="1138.0607"
+         sodipodi:role="line">(porta TCP 5000)</tspan></text>
+    <ellipse
+       ry="11.983717"
+       rx="11.983718"
+       cy="223.26396"
+       cx="1271.1244"
+       id="ellipse4246"
+       style="opacity:0.97000002;fill:#008000;fill-opacity:1;stroke:#000000;stroke-width:1.03256559;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+    <rect
+       style="opacity:0.97000002;fill:none;fill-opacity:1;stroke:#000000;stroke-width:2;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect8796"
+       width="393.95993"
+       height="291.04343"
+       x="505.63544"
+       y="150.51511" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22.5px;line-height:125%;font-family:'Latin Modern Roman';-inkscape-font-specification:'Latin Modern Roman, Normal';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="699.2265"
+       y="176.99445"
+       id="text8798"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         x="699.2265"
+         y="176.99445"
+         id="tspan8800"
+         style="font-weight:bold;text-align:center;text-anchor:middle">Host Físico C (192.168.0.50)</tspan></text>
+    <rect
+       style="opacity:0.97000002;fill:none;fill-opacity:1;stroke:#000000;stroke-width:2.7226572;stroke-miterlimit:4;stroke-dasharray:21.78126012, 21.78126012;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect8802"
+       width="340.70889"
+       height="221.51093"
+       x="534.22662"
+       y="197.2395" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22.5px;line-height:125%;font-family:'Latin Modern Roman';-inkscape-font-specification:'Latin Modern Roman, Normal';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="704.73572"
+       y="274.74115"
+       id="text8804"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         x="704.73572"
+         y="274.74115"
+         id="tspan8806"
+         style="font-weight:bold;text-align:center;text-anchor:middle">Instância do Simulador</tspan><tspan
+         sodipodi:role="line"
+         x="704.73572"
+         y="302.86615"
+         style="font-weight:bold;text-align:center;text-anchor:middle"
+         id="tspan8808">(porta TCP 5000)</tspan></text>
+    <ellipse
+       style="opacity:0.97000002;fill:#008000;fill-opacity:1;stroke:#000000;stroke-width:1.03256559;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="ellipse8810"
+       cx="837.79938"
+       cy="223.26396"
+       rx="11.983718"
+       ry="11.983717" />
+    <ellipse
+       ry="11.983717"
+       rx="11.983718"
+       cy="389.93915"
+       cx="595.36279"
+       id="ellipse8816"
+       style="opacity:0.97000002;fill:#000080;fill-opacity:1;stroke:#000000;stroke-width:1.03256559;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22.5px;line-height:125%;font-family:'Latin Modern Roman';-inkscape-font-specification:'Latin Modern Roman, Normal';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="594.86469"
+       y="372.36041"
+       id="text8818"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         x="594.86469"
+         y="372.36041"
+         id="tspan8822"
+         style="font-size:17.5px;text-align:center;text-anchor:middle">0 (10.0.0.1)</tspan></text>
+    <ellipse
+       style="opacity:0.97000002;fill:#000080;fill-opacity:1;stroke:#000000;stroke-width:1.03256559;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="ellipse8824"
+       cx="711.53033"
+       cy="389.93915"
+       rx="11.983718"
+       ry="11.983717" />
+    <text
+       sodipodi:linespacing="125%"
+       id="text8826"
+       y="372.36041"
+       x="711.03217"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22.5px;line-height:125%;font-family:'Latin Modern Roman';-inkscape-font-specification:'Latin Modern Roman, Normal';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       xml:space="preserve"><tspan
+         style="font-size:17.5px;text-align:center;text-anchor:middle"
+         id="tspan8830"
+         y="372.36041"
+         x="711.03217"
+         sodipodi:role="line">1 (10.0.1.1)</tspan></text>
+    <ellipse
+       ry="11.983717"
+       rx="11.983718"
+       cy="389.93915"
+       cx="819.61664"
+       id="ellipse8832"
+       style="opacity:0.97000002;fill:#000080;fill-opacity:1;stroke:#000000;stroke-width:1.03256559;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22.5px;line-height:125%;font-family:'Latin Modern Roman';-inkscape-font-specification:'Latin Modern Roman, Normal';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="817.11853"
+       y="372.36041"
+       id="text8834"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         x="817.11853"
+         y="372.36041"
+         id="tspan8838"
+         style="font-size:17.5px;text-align:center;text-anchor:middle">2 (10.0.1.33)</tspan></text>
+    <text
+       sodipodi:linespacing="125%"
+       id="text15848"
+       y="275.47095"
+       x="255.18719"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22.5px;line-height:125%;font-family:'Latin Modern Roman';-inkscape-font-specification:'Latin Modern Roman, Normal';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       xml:space="preserve"><tspan
+         style="font-size:17.5px;text-align:center;text-anchor:middle;fill:#000000"
+         id="tspan15850"
+         y="275.47095"
+         x="255.18719"
+         sodipodi:role="line">0 (10.0.0.2)</tspan></text>
+    <ellipse
+       style="opacity:0.97000002;fill:#000080;fill-opacity:1;stroke:#000000;stroke-width:1.03256559;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="ellipse15866"
+       cx="1130.9652"
+       cy="388.78018"
+       rx="11.983718"
+       ry="11.983717" />
+    <text
+       sodipodi:linespacing="125%"
+       id="text15868"
+       y="339.20148"
+       x="1069.4148"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22.5px;line-height:125%;font-family:'Latin Modern Roman';-inkscape-font-specification:'Latin Modern Roman, Normal';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       xml:space="preserve"><tspan
+         style="font-size:17.5px;text-align:center;text-anchor:middle;fill:#000000"
+         id="tspan15870"
+         y="339.20148"
+         x="1069.4148"
+         sodipodi:role="line">Interfaces Simuladas</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22.5px;line-height:125%;font-family:'Latin Modern Roman';-inkscape-font-specification:'Latin Modern Roman, Normal';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="1129.9888"
+       y="372.67111"
+       id="text15872"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         x="1129.9888"
+         y="372.67111"
+         id="tspan15874"
+         style="font-size:17.5px;text-align:center;text-anchor:middle;fill:#000000">0 (10.0.1.34)</tspan></text>
+    <ellipse
+       style="opacity:0.97000002;fill:#000080;fill-opacity:1;stroke:#000000;stroke-width:1.03256559;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="ellipse15892"
+       cx="256.16357"
+       cy="532.46741"
+       rx="11.983718"
+       ry="11.983717" />
+    <text
+       sodipodi:linespacing="125%"
+       id="text15894"
+       y="482.8887"
+       x="194.61317"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22.5px;line-height:125%;font-family:'Latin Modern Roman';-inkscape-font-specification:'Latin Modern Roman, Normal';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       xml:space="preserve"><tspan
+         style="font-size:17.5px;text-align:center;text-anchor:middle;fill:#000000"
+         id="tspan15896"
+         y="482.8887"
+         x="194.61317"
+         sodipodi:role="line">Interfaces Simuladas</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22.5px;line-height:125%;font-family:'Latin Modern Roman';-inkscape-font-specification:'Latin Modern Roman, Normal';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="255.18719"
+       y="516.35834"
+       id="text15898"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         x="255.18719"
+         y="516.35834"
+         id="tspan15900"
+         style="font-size:17.5px;text-align:center;text-anchor:middle;fill:#000000">0 (10.0.1.2)</tspan></text>
+    <g
+       id="g26330"
+       transform="translate(0,39.844003)">
+      <path
+         sodipodi:nodetypes="cc"
+         inkscape:connector-curvature="0"
+         id="path21242"
+         d="m 1204.2816,53.915917 96.0847,0"
+         style="fill:none;fill-rule:evenodd;stroke:#00add8;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker21244)" />
+      <text
+         sodipodi:linespacing="125%"
+         id="text26108"
+         y="60.823032"
+         x="1051.2849"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22.5px;line-height:125%;font-family:'Latin Modern Roman';-inkscape-font-specification:'Latin Modern Roman, Normal';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         xml:space="preserve"><tspan
+           y="60.823032"
+           x="1051.2849"
+           id="tspan26110"
+           sodipodi:role="line">Conexão TCP</tspan></text>
+      <rect
+         style="opacity:0.97000002;fill:none;fill-opacity:1;stroke:#000000;stroke-width:2;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+         id="rect26328"
+         width="274.92499"
+         height="63.538708"
+         x="1046.5756"
+         y="22.323574" />
+    </g>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22.5px;line-height:125%;font-family:'Latin Modern Roman';-inkscape-font-specification:'Latin Modern Roman, Normal';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="307.19357"
+       y="359.92987"
+       id="text4166-3"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan4168-6"
+         x="310.11594"
+         y="359.92987"
+         style="font-size:17.5px;text-align:center;text-anchor:middle">Socket de Recepção </tspan><tspan
+         sodipodi:role="line"
+         x="307.19357"
+         y="381.80487"
+         style="font-size:17.5px;text-align:center;text-anchor:middle"
+         id="tspan26336-7">(porta TCP 5001)</tspan></text>
+    <text
+       sodipodi:linespacing="125%"
+       id="text26359"
+       y="359.92987"
+       x="307.19357"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22.5px;line-height:125%;font-family:'Latin Modern Roman';-inkscape-font-specification:'Latin Modern Roman, Normal';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       xml:space="preserve"><tspan
+         style="font-size:17.5px;text-align:center;text-anchor:middle"
+         y="359.92987"
+         x="310.11594"
+         id="tspan26361"
+         sodipodi:role="line">Socket de Recepção </tspan><tspan
+         id="tspan26363"
+         style="font-size:17.5px;text-align:center;text-anchor:middle"
+         y="381.80487"
+         x="307.19357"
+         sodipodi:role="line">(porta TCP 5001)</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22.5px;line-height:125%;font-family:'Latin Modern Roman';-inkscape-font-specification:'Latin Modern Roman, Normal';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="748.8205"
+       y="227.51224"
+       id="text4166-5"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan4168-3"
+         x="751.74286"
+         y="227.51224"
+         style="font-size:17.5px;text-align:center;text-anchor:middle">Socket de Recepção </tspan><tspan
+         sodipodi:role="line"
+         x="748.8205"
+         y="249.38724"
+         style="font-size:17.5px;text-align:center;text-anchor:middle"
+         id="tspan26336-5">(porta TCP 5000)</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22.5px;line-height:125%;font-family:'Latin Modern Roman';-inkscape-font-specification:'Latin Modern Roman, Normal';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="1177.769"
+       y="229.62527"
+       id="text4166-6"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan4168-2"
+         x="1180.6914"
+         y="229.62527"
+         style="font-size:17.5px;text-align:center;text-anchor:middle">Socket de Recepção </tspan><tspan
+         sodipodi:role="line"
+         x="1177.769"
+         y="251.50027"
+         style="font-size:17.5px;text-align:center;text-anchor:middle"
+         id="tspan26336-9">(porta TCP 5000)</tspan></text>
+  </g>
+</svg>

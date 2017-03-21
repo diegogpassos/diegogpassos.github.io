@@ -451,7 +451,7 @@
 					<ul>
 						<li>No exemplo, cada &ldquo;enlace&rdquo; contém 4 circuitos independentes.
 						<ul>
-							<li>Chamada segundo circuito do enlace de cima, primeiro circuito do enlace da direita.</li>
+							<li>Chamada usa segundo circuito do enlace de cima, primeiro circuito do enlace da direita.</li>
 						</ul></li>
 						<li>Recursos são dedicados: uma vez alocados, ninguém mais os utiliza.
 						<ul>
@@ -557,7 +557,7 @@
 			<div class="column" style="width: 33%;">
 				<center>
 					<b>1 dado usuário ativo</b><br>
-					<b>(demais desativos)</b>
+					<b>(demais inativos)</b>
 					<br>
 					<br>
 					<br>
@@ -567,7 +567,7 @@
 			<div class="column" style="width: 33%;">
 				<center>
 					<b>2 dados usuários ativos</b><br>
-					<b>(demais desativos)</b>
+					<b>(demais inativos)</b>
 					<br>
 					<br>
 					<br>
@@ -577,7 +577,7 @@
 			<div class="column" style="width: 33%;">
 				<center>
 					<b>k dados usuários ativos</b><br>
-					<b>(demais desativos)</b>
+					<b>(demais inativos)</b>
 					<br>
 					<br>
 					<br>
@@ -604,7 +604,7 @@
 			<div class="column" style="width: 33%;">
 				<center>
 					<b>1 usuário ativo</b><br>
-					<b>(demais desativos)</b>
+					<b>(demais inativos)</b>
 					<br>
 					<br>
 					<br>
@@ -614,7 +614,7 @@
 			<div class="column" style="width: 33%;">
 				<center>
 					<b>2 usuários ativos</b><br>
-					<b>(demais desativos)</b>
+					<b>(demais inativos)</b>
 					<br>
 					<br>
 					<br>
@@ -624,7 +624,7 @@
 			<div class="column" style="width: 33%;">
 				<center>
 					<b>k usuários ativos</b><br>
-					<b>(demais desativos)</b>
+					<b>(demais inativos)</b>
 					<br>
 					<br>
 					<br>
@@ -774,12 +774,13 @@
                     range: [0, 1]
                 },
                 xaxis: {
-                    title: "p",
+                    title: "p (%)",
                     showgrid: false,
                     showline: true,
                     showzeroline: false,
                     nticks: 4,
                     ticks: "outside",
+										range: [0, 100]
                 },
                 margin: {                           // update the left, bottom, right, top margin
                     l: 50, b: 65, r: 2, t: 5
@@ -1022,7 +1023,7 @@
 	</section>
 
 	<section>
-	<h1>Comutação de Circuitos: Quem Lida com os Problemas?</h1>
+	<h1>Comutação de Pacotes: Quem Lida com os Problemas?</h1>
 	<div class="slideContent">
 		<ul>
 			<li>Usamos a Internet todos os dias para transmitir arquivos.</li>
@@ -1030,7 +1031,7 @@
 			<li>Como isso é possível, se a rede pode descartar, reordenar pacotes?</li>
 			<li><span class="alert">Resposta:</span> os terminais precisam lidar com isso.
 			<ul>
-				<li><i>i.e., implantar mecanismos de recuperação.</i></li>
+				<li><i>i.e.</i>, implantar mecanismos de recuperação.</li>
 				<li><span class="alert">Assumindo que isto seja desejável</span>.</li>
 				<li>Argumento fim-a-fim, inteligência nas bordas.</li>
 			</ul></li>

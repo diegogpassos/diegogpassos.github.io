@@ -342,7 +342,7 @@
 		<div class="column" style="width: 33%;">
 			<center>
 				<b>1 dado usuário ativo</b><br>
-				<b>(demais desativos)</b>
+				<b>(demais inativos)</b>
 				<br>
 				<br>
 				<br>
@@ -352,7 +352,7 @@
 		<div class="column" style="width: 33%;">
 			<center>
 				<b>2 dados usuários ativos</b><br>
-				<b>(demais desativos)</b>
+				<b>(demais inativos)</b>
 				<br>
 				<br>
 				<br>
@@ -362,7 +362,7 @@
 		<div class="column" style="width: 33%;">
 			<center>
 				<b>k dados usuários ativos</b><br>
-				<b>(demais desativos)</b>
+				<b>(demais inativos)</b>
 				<br>
 				<br>
 				<br>
@@ -389,7 +389,7 @@
 		<div class="column" style="width: 33%;">
 			<center>
 				<b>1 usuário ativo</b><br>
-				<b>(demais desativos)</b>
+				<b>(demais inativos)</b>
 				<br>
 				<br>
 				<br>
@@ -399,7 +399,7 @@
 		<div class="column" style="width: 33%;">
 			<center>
 				<b>2 usuários ativos</b><br>
-				<b>(demais desativos)</b>
+				<b>(demais inativos)</b>
 				<br>
 				<br>
 				<br>
@@ -409,7 +409,7 @@
 		<div class="column" style="width: 33%;">
 			<center>
 				<b>k usuários ativos</b><br>
-				<b>(demais desativos)</b>
+				<b>(demais inativos)</b>
 				<br>
 				<br>
 				<br>
@@ -682,7 +682,7 @@
 		y = [];
                 for (i = 0; i <= 100; i++) {
 
-                    x[i] = i;
+                    x[i] = i / 100;
                     y[i] = 1 - MultiplexacaoEstatisticaCDF(N, k, i / 100);
                 }
 
