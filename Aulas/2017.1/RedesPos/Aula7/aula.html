@@ -211,8 +211,8 @@
 			<li><b>Cliente quer IP de <tt>www.amazon.com</tt>. Primeira abordagem:</b>
 			<ul>
 				<li>Cliente pergunta ao servidor raiz a localização do DNS do <span class="alert">domínio</span> <tt>.com</tt>.</li>
-				<li>Cliete pergunta ao servidor DNS do domínio <tt>.com</tt> a localização do servidor DNS do domínio <tt>amazon.com</tt>.</li>
-				<li>Cliete pergunta ao servidor DNS do domínio <tt>amazon.com</tt> pelo endereço IP do <i>host</i> <tt>www.amazon.com</tt>.</li>
+				<li>Cliente pergunta ao servidor DNS do domínio <tt>.com</tt> a localização do servidor DNS do domínio <tt>amazon.com</tt>.</li>
+				<li>Cliente pergunta ao servidor DNS do domínio <tt>amazon.com</tt> pelo endereço IP do <i>host</i> <tt>www.amazon.com</tt>.</li>
 			</ul></li>
 		</ul>
 	</div>
@@ -365,7 +365,7 @@
 		<ul>
 			<li>Uma vez aprendido um mapeamento, um servidor de nomes (qualquer) <span class="alert">o armazena em cache.</span>
 			<ul>
-				<li>Entradas na cache tem uma data de expiração (TTL).
+				<li>Entradas na cache têm uma data de expiração (TTL).
 				<ul>
 					<li><i>i.e.</i>, são jogadas fora depois de algum tempo.</li>
 				</ul></li>
@@ -706,7 +706,7 @@
 		  <ul>
 		    <li><b>UDP: não há &ldquo;conexão&rdquo; entre cliente e servidor.</b>
 		    <ul>
-		      <li>Não existe handshaking antes do envio de dados.</li>
+		      <li>Não existe <i>handshaking</i> antes do envio de dados.</li>
 		      <li>Transmissor explicitamente informa o endereço IP e o número de porta de destino a cada pacote.</li>
 		      <li>Receptor extrai endereço IP do transmissor e número de porta do pacote recebido.</li>
 		    </ul></li>
