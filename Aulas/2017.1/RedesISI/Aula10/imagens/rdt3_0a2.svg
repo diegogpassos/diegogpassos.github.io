@@ -14,8 +14,8 @@
    height="515.52924"
    id="svg6424"
    version="1.1"
-   inkscape:version="0.48.5 r10040"
-   sodipodi:docname="rdt3_0a1.svg">
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="rdt3_0a2.svg">
   <sodipodi:namedview
      id="base"
      pagecolor="#ffffff"
@@ -23,9 +23,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.6002389"
-     inkscape:cx="548.12592"
-     inkscape:cy="54.958881"
+     inkscape:zoom="1.2004778"
+     inkscape:cx="478.81843"
+     inkscape:cy="230.80294"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -33,10 +33,10 @@
      fit-margin-left="0"
      fit-margin-right="0"
      fit-margin-bottom="0"
-     inkscape:window-width="1600"
-     inkscape:window-height="1030"
-     inkscape:window-x="318"
-     inkscape:window-y="31"
+     inkscape:window-width="1366"
+     inkscape:window-height="768"
+     inkscape:window-x="0"
+     inkscape:window-y="25"
      inkscape:window-maximized="0" />
   <defs
      id="defs6426">
@@ -4140,7 +4140,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -4912,13 +4912,13 @@
     </text>
     <text
        style="font-size:15px"
-       y="269.83463"
+       y="301.83463"
        x="-212.70485"
        id="text24805">
       <tspan
-         style="font-size:22.5px;font-variant:normal;font-weight:normal;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Tahoma;-inkscape-font-specification:Tahoma"
+         style="font-variant:normal;font-weight:normal;font-size:22.5px;font-family:Tahoma;-inkscape-font-specification:Tahoma;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
          x="-212.70485 -202.66985 -190.83485 -178.36983 -165.85982 -158.81734 -146.32985 -135.07985 -127.56484"
-         y="269.83463"
+         y="301.83463"
          sodipodi:role="line"
          id="tspan24807">send pkt0</tspan>
     </text>
@@ -4936,20 +4936,20 @@
     </text>
     <path
        inkscape:connector-curvature="0"
-       d="m -102.65485,252.99713 138.012497,33.5 -0.6625,2.7375 -138.012497,-33.5 0.6625,-2.7375 z m 137.312497,30.4375 7.2,6.0875 -9.2,2.1125 2,-8.2 z"
+       d="m -102.65485,280.99713 138.012497,33.5 -0.6625,2.7375 -138.012497,-33.5 0.6625,-2.7375 z m 137.312497,30.4375 7.2,6.0875 -9.2,2.1125 2,-8.2 z"
        style="fill:#000099;fill-opacity:1;fill-rule:nonzero;stroke:none"
        id="path24813" />
     <text
        style="font-size:15px"
-       y="275.12213"
-       x="-17.954857"
+       y="295.12213"
+       x="-33.954857"
        id="text24815">
       <tspan
-         style="font-size:20px;font-variant:normal;font-weight:normal;writing-mode:lr-tb;fill:#000099;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
-         x="-17.954857 -6.9548531 3.0451469 8.5451469"
-         y="275.12213"
+         style="font-variant:normal;font-weight:normal;font-size:20px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000099;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         x="-33.954857 -22.954853 -12.954853"
+         y="295.12213"
          sodipodi:role="line"
-         id="tspan24817">pkt0</tspan>
+         id="tspan24817">pkt1</tspan>
     </text>
     <path
        inkscape:connector-curvature="0"
@@ -4970,20 +4970,20 @@
     </text>
     <path
        inkscape:connector-curvature="0"
-       d="m 41.720147,296.19713 -138.0125,33.5 -0.6625,-2.7375 138.0125,-33.4875 0.6625,2.725 z m -135.975,35.9 -9.199997,-2.1125 7.199997,-6.0875 2,8.2 z"
+       d="m 41.720147,324.19713 -138.0125,33.5 -0.6625,-2.7375 138.0125,-33.4875 0.6625,2.725 z m -135.975,35.9 -9.199997,-2.1125 7.199997,-6.0875 2,8.2 z"
        style="fill:#008000;fill-opacity:1;fill-rule:nonzero;stroke:none"
        id="path24825" />
     <text
        style="font-size:15px"
-       y="308.70963"
+       y="336.70963"
        x="-55.292381"
        id="text24827">
       <tspan
-         style="font-size:20px;font-variant:normal;font-weight:normal;writing-mode:lr-tb;fill:#008000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
-         x="-55.292381 -44.292381 -34.292381 -24.292381"
-         y="308.70963"
+         style="font-variant:normal;font-weight:normal;font-size:20px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#008000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         x="-55.292381 -44.292381 -34.292381"
+         y="336.70963"
          sodipodi:role="line"
-         id="tspan24829">ack0</tspan>
+         id="tspan24829">ack1</tspan>
     </text>
     <text
        style="font-size:15px"
@@ -5069,39 +5069,39 @@
     </text>
     <text
        style="font-size:15px"
-       y="289.35962"
+       y="313.35962"
        x="52.957623"
        id="text24859">
       <tspan
-         style="font-size:22.5px;font-variant:normal;font-weight:normal;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Tahoma;-inkscape-font-specification:Tahoma"
-         x="52.957623 60.967632 71.452621 82.657639 89.205124 101.64763 112.94267 120.45762"
-         y="289.35962"
+         style="font-variant:normal;font-weight:normal;font-size:22.5px;font-family:Tahoma;-inkscape-font-specification:Tahoma;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         x="52.957623 60.967632 71.452621 82.657639 89.205124 101.64763 112.94267"
+         y="313.35962"
          sodipodi:role="line"
-         id="tspan24861">rcv pkt0</tspan>
+         id="tspan24861">rcv pkt1</tspan>
     </text>
     <text
        style="font-size:15px"
-       y="330.17212"
+       y="334.17212"
        x="53.007671"
        id="text24863">
       <tspan
-         style="font-size:22.53125px;font-variant:normal;font-weight:normal;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Tahoma;-inkscape-font-specification:Tahoma"
-         x="53.007671 63.056561 74.75029 87.255173 99.714951 106.7672 118.50597 128.98302 140.2036"
-         y="330.17212"
+         style="font-variant:normal;font-weight:normal;font-size:22.53125px;font-family:Tahoma;-inkscape-font-specification:Tahoma;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         x="53.007671 63.056561 74.75029 87.255173 99.714951 106.7672 118.50597 128.98302"
+         y="334.17212"
          sodipodi:role="line"
-         id="tspan24865">send ack0</tspan>
+         id="tspan24865">send ack1</tspan>
     </text>
     <text
-       style="font-size:15px"
-       y="309.52213"
-       x="49.107647"
-       id="text24867">
+       id="text5054"
+       x="-201.01735"
+       y="279.76367"
+       style="font-size:15px">
       <tspan
-         style="font-size:17.5px;font-variant:normal;font-weight:normal;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Tahoma;-inkscape-font-specification:Tahoma"
-         x="49.107647 55.810162 65.592636 74.797653 80.642624 89.847641 97.845139 103.60265 108.85265 118.58263 128.34764 138.06017 142.06767 146.07512 154.05516 163.29515 169.05266 178.25768"
-         y="309.52213"
+         id="tspan5056"
          sodipodi:role="line"
-         id="tspan24869">(detect duplicate)</tspan>
+         y="279.76367"
+         x="-201.01735 -193.01875 -182.5417 -171.32118 -164.78712 -153.04829 -142.5713"
+         style="font-variant:normal;font-weight:normal;font-size:22.53125px;font-family:Tahoma;-inkscape-font-specification:Tahoma;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none">rcv ack0</tspan>
     </text>
   </g>
 </svg>
