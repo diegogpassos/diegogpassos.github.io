@@ -258,7 +258,7 @@
 			    <li>Topologia da rede, custos dos enlaces conhecidos por todos os nós.
 			    <ul>
 			      <li>Conseguido através da difusão do &ldquo;estado dos enlaces&rdquo;.</li>
-			      <li>Todos os nós tem a mesma informação.
+			      <li>Todos os nós têm a mesma informação.
 			      <ul>
 			        <li>Ou deveriam ter.</li>
 			      </ul></li>
@@ -307,37 +307,40 @@
 		  		<td>1</td><td><span class="math inline">\(N^\prime \leftarrow \{u\}\)</span></td><td style="color: #666;">// Caminho para origem é trivial</td>
 		  	</tr>
 		  	<tr>
-		  		<td>2</td><td><span class="math inline">\(\forall v \in N\)</span></td><td style="color: #666;">// Para os demais nós</td>
+		  		<td>2</td><td><span class="math inline">\(D(u) \leftarrow 0)</span></td><td style="color: #666;">// Custo 0.</td>
 		  	</tr>
 		  	<tr>
-		  		<td>3</td><td>&nbsp;&nbsp;&nbsp;&nbsp;<b>se</b> <span class="math inline">\((u, v) \in E\)</span></td><td style="color: #666;">// É vizinho da origem?</td>
+		  		<td>3</td><td><span class="math inline">\(\forall v \in N\)</span></td><td style="color: #666;">// Para os demais nós</td>
 		  	</tr>
 		  	<tr>
-		  		<td>4</td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>então</b> <span class="math inline">\(D(v) \leftarrow c(u,v)\)</span></td><td style="color: #666;">// Conhecemos um caminho</td>
+		  		<td>4</td><td>&nbsp;&nbsp;&nbsp;&nbsp;<b>se</b> <span class="math inline">\((u, v) \in E\)</span></td><td style="color: #666;">// É vizinho da origem?</td>
 		  	</tr>
 		  	<tr>
-		  		<td>5</td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>senão</b> <span class="math inline">\(D(v) = \infty\)</span></td><td style="color: #666;">// Ainda sem caminho</td>
+		  		<td>5</td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>então</b> <span class="math inline">\(D(v) \leftarrow c(u,v)\)</span></td><td style="color: #666;">// Conhecemos um caminho</td>
 		  	</tr>
 		  	<tr>
-		  		<td>6</td><td></td>
+		  		<td>6</td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>senão</b> <span class="math inline">\(D(v) = \infty\)</span></td><td style="color: #666;">// Ainda sem caminho</td>
 		  	</tr>
 		  	<tr>
-		  		<td>7</td><td><b>Repita</b></td><td style="color: #666;">// Loop principal</td>
+		  		<td>7</td><td></td>
 		  	</tr>
 		  	<tr>
-		  		<td>8</td><td>&nbsp;&nbsp;&nbsp;&nbsp;Encontre <span class="math inline">\(w \not\in N^\prime\)</span> tal que D(w) seja mínimo</td><td style="color: #666;">// Melhor caminho provisório</td>
+		  		<td>8</td><td><b>Repita</b></td><td style="color: #666;">// Loop principal</td>
 		  	</tr>
 		  	<tr>
-		  		<td>9</td><td>&nbsp;&nbsp;&nbsp;&nbsp;<span class="math inline">\(N^\prime\leftarrow N^\prime\cup\{w\}\)</span></td><td style="color: #666;">// Se torna definitivo</td>
+		  		<td>9</td><td>&nbsp;&nbsp;&nbsp;&nbsp;Encontre <span class="math inline">\(w \not\in N^\prime\)</span> tal que D(w) seja mínimo</td><td style="color: #666;">// Melhor caminho provisório</td>
 		  	</tr>
 		  	<tr>
-		  		<td>10</td><td>&nbsp;&nbsp;&nbsp;&nbsp;<span class="math inline">\(\forall v\)</span> tal que <span class="math inline">\(v \not\in N^\prime \land (w, v) \in E\)</span></td><td style="color: #666;">// Vizinhos de w ainda provisórios</td>
+		  		<td>10</td><td>&nbsp;&nbsp;&nbsp;&nbsp;<span class="math inline">\(N^\prime\leftarrow N^\prime\cup\{w\}\)</span></td><td style="color: #666;">// Se torna definitivo</td>
 		  	</tr>
 		  	<tr>
-		  		<td>11</td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="math inline">\(D(v) \leftarrow min(D(v), D(w) + c(w, v))\)</span></td><td style="color: #666;">// Anterior ou passando por w?</td>
+		  		<td>11</td><td>&nbsp;&nbsp;&nbsp;&nbsp;<span class="math inline">\(\forall v\)</span> tal que <span class="math inline">\(v \not\in N^\prime \land (w, v) \in E\)</span></td><td style="color: #666;">// Vizinhos de w ainda provisórios</td>
 		  	</tr>
 		  	<tr>
-		  		<td>12</td><td><b>Até que </b> <span class="math inline">\(N^\prime = N\)</span></td><td style="color: #666;">// Até adição de todos os nós</td>
+		  		<td>12</td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="math inline">\(D(v) \leftarrow min(D(v), D(w) + c(w, v))\)</span></td><td style="color: #666;">// Anterior ou passando por w?</td>
+		  	</tr>
+		  	<tr>
+		  		<td>13</td><td><b>Até que </b> <span class="math inline">\(N^\prime = N\)</span></td><td style="color: #666;">// Até adição de todos os nós</td>
 		  	</tr>
 		  </table>
 		<!--</center>-->
