@@ -158,18 +158,6 @@ Grafo.prototype.SelectNode = function (e, elem, grafo) {
 
   var node = elem[0];
 
-  if (e.button == 1) {
-
-    var newLabel = window.prompt("Insira o novo label", elem[1].node.innerHTML);
-    if (newLabel != null) {
-      elem[1].node.innerHTML = newLabel;
-    }
-
-    if (grafo.onChangeCB != null) grafo.onChangeCB();
-
-    return ;
-  }
-
   if (grafo.pendingLink != null) {
 
     grafo.s.unmousemove();
@@ -182,7 +170,7 @@ Grafo.prototype.SelectNode = function (e, elem, grafo) {
   }
   else {
 
-    if (e.shiftKey) {
+    if (e.shiftKey && !e.ctrlKey) {
 
       var x = Number(node.attr('cx'));
       var y = Number(node.attr('cy'));
@@ -191,7 +179,7 @@ Grafo.prototype.SelectNode = function (e, elem, grafo) {
       grafo.pendingLinkSrc = elem;
       grafo.s.mousemove(function(e) {Grafo.prototype.NewLinkMove(e, grafo);});
     }
-    else if (e.ctrlKey) {
+    else if (e.ctrlKey && !e.shiftKey) {
 
       while(elem.edges.length > 0) {
 
@@ -209,6 +197,17 @@ Grafo.prototype.SelectNode = function (e, elem, grafo) {
 
       if (grafo.onChangeCB != null) grafo.onChangeCB();
 
+    }
+    else if (e.shiftKey && e.ctrlKey) {
+
+          var newLabel = window.prompt("Insira o novo label", elem[1].node.innerHTML);
+          if (newLabel != null) {
+            elem[1].node.innerHTML = newLabel;
+          }
+
+          if (grafo.onChangeCB != null) grafo.onChangeCB();
+
+          return ;
     }
     else {
 
