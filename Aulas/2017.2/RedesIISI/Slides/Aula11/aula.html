@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <!-- Meta info -->
+	<meta charset="utf-8">
+	<meta name="shortauthor" content="Diego Passos"/>
+	<meta name="shorttitle" content="IEEE 802.11"/>
+	<meta name="shortevent" content="Redes de Computadores II"/>
+	<title>Redes de Computadores II: Aula 11</title>
+
+    <!-- Math support -->
+	<script type="text/x-mathjax-config">
+		MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+			MathJax.InputJax.TeX.Definitions.number = /^(?:[0-9]+(?:\.[0-9]{3})*(?:\{,\}[0-9]*)*|\{,\}[0-9]+)/
+		});
+	</script>
+	<!--<script src="../../../../MathJax-2.6-latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>-->
+	<script>window.MathJax || document.write('<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">\x3C/script>')</script>
+
+	<!-- Fonts -->
+	<link href='https://fonts.googleapis.com/css?family=Lora:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
+	<!--<link href='../../../../Fonts/Lora/lora.css' rel='stylesheet' type='text/css'>-->
+
+    <!-- CSS -->
+	<link href='../template/css/template.css' id="template" rel='stylesheet' type='text/css'>
+	<link href='../template/css/presentationSpecific.css' id="presentationSpecific" rel='stylesheet' type='text/css'>
+
+    <!-- Javascript -->
+	<script type="text/javascript" src="../template/js/audio.js"></script>
+</head>
+
+<body>
+
+    <!-- Title Slide -->
+	<section>
+
+        <div class="slideContent">
+            <h1 class="title">Aula 11 - IEEE 802.11</h1>
+            <h2 class="author">Diego Passos</h2>
+            <h4 class="institution">Universidade Federal Fluminense</h4>
+            <h3 class="date">Redes de Computadores II</h3>
+        </div>
+
+	</section>
+
+    <!-- Content slides -->
+
+	<section>
+	<h1>Na Última Aula (I)...</h1>
+	<div class="slideContent">
+			<ul>
+				<li>Enlaces sem fio: <b>mais propensos a erros</b>.
+				<ul>
+					<li>Sinais recebidos com <b>baixa potência</b>.</li>
+					<li>Altos níveis de <b>ruído, interferência</b>.</li>
+					<li><b>Múltiplos percursos</b> de propagação.</li>
+					<li>Tudo isso colabora para queda no <b>SNR</b>.
+					<ul>
+						<li>Resulta em queda da <b>BER</b>.</li>
+						<li>Solução: adaptação automática entre <b>múltiplas taxas.</b></li>
+					</ul></li>
+					<li>Outros problemas: <b>terminais escondidos</b>.</li>
+				</ul></li>
+				<li>CDMA: outra técnica comum para <b>acesso múltiplo</b>.
+				<ul>
+					<li>Usuários <b>podem</b> transmitir ao mesmo tempo, na mesma frequência.</li>
+					<li><b>Códigos ortogonais</b> garantem que não haverá colisão.</li>
+				</ul></li>
+			</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Na Última Aula (II)...</h1>
+	<div class="slideContent">
+		<ul>
+			<li>IEEE 802.11: padrão para <b>redes locais sem fio</b> (WLANs).
+			<ul>
+				<li>Evolução através de <b>emendas</b>, taxas de transmissão mais altas.</li>
+				<li><b>CSMA/CA</b> para acesso múltiplo.
+				<ul>
+					<li>Detecção de colisões é impossível.</li>
+					<li>Solução: <b>tentar ao máximo</b> evitá-las.</li>
+					<li>Utilizar <i>acks</i> para verificar se transmissão foi bem sucedida.</li>
+					<!--<li>Pode usar <b>CTS/RTS</b>: reserva do meio.</li>-->
+				</ul></li>
+				<li><b>Modos</b> infraestruturado e <i>ad hoc</i>.</li>
+				<li>Componentes da arquitetura:
+				<ul>
+					<li><b>AP</b> = estação base.</li>
+					<li><b>BSS</b> = área de cobertura do AP, célula.</li>
+				</ul></li>
+				<li>Nem todos os canais são <b>ortogonais</b>.</li>
+				<li><b>Associação</b>: entrada do host na rede.</li>
+				<!--<li><b>Adaptação automática de taxa</b>.</li>
+				<li><b>Gerenciamento de energia</b>.</li>-->
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+    <section>
+    <h1>Evitando Colisões (Mais): RTS/CTS</h1>
+    <div class="slideContent">
+    		<ul>
+    			<li>Ideia: permitir que transmissor &ldquo;reserve&rdquo; o canal para transmitir <b>dados</b>.
+    			<ul>
+    				<li>Ao invés de acessar aleatoriamente.</li>
+				<li>Evita colisões de <b>quadros longos</b>.</li>
+    			</ul></li>
+			<li>Transmissor começa enviando um quadro <b>pequeno</b> de <i>request-to-send</i> (RTS).
+			<ul>
+				<li>RTSs ainda podem colidir, mas são pequenos (&ldquo;baratos&rdquo; para retransmitir).</li>
+			</ul></li>
+			<li>AP envia (<i>broadcast</i>) um CTS como resposta.
+			<ul>
+				<li><i>Clear-to-send</i>.</li>
+				<li>(Idealmente) ouvido por todos os nós.
+				<ul>
+					<li>Que passam a saber que o meio está reservado por determinado período.
+					<ul>
+					  <li>Informado nos quadros RTS/CTS.</li>
+					</ul></li>
+				</ul></li>
+			</ul></li>
+			<li>Transmissor envia dados, enquanto outras estações aguardam.</li>
+			<li><span class="alert">Sempre funciona?</span></li>
+    		</ul>
+	</div>
+  </section>
+
+  <section>
+  <h1>Evitando Colisões: Troca de RTS/CTS</h1>
+  <div class="slideContent">
+    		<center>
+    			<img src="imagens/RTSCTS.svg" style="width: 80%;"/>
+    		</center>
+	</div>
+  </section>
+
+	<section>
+	<h1>RTS/CTS: Falhas</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>Várias possibilidades.</li>
+	    <li>Um exemplo:
+	    <ul>
+	      <li><b>Terminal oculto não ouve/compreende CTS:</b>
+	      <ul>
+	        <li>Por exemplo, por interferência passsageira.</li>
+	      </ul></li>
+	      <li>Enquanto estação transmite quadro de dados, terminal oculto começa sua transmissão.
+	      <ul>
+	        <li>Dados, RTS, ...</li>
+	      </ul></li>
+	      <li><b>Colisão ocorre, mesmo com a &ldquo;reserva&rdquo; prévia do meio.</b></li>
+	    </ul></li>
+	  </ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>RTS/CTS: <i>Overhead</i></h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>RTS/CTS pode reduzir colisões e seus impactos.
+	    <ul>
+	      <li>Principalmente <b>em presença de terminais escondidos</b>.</li>
+	    </ul></li>
+	    <li>Mas há um custo:
+	    <ul>
+	      <li>Gasta-se tempo transmitindo quadros RTS/CTS.</li>
+	      <li>Aumenta latência total para transmissão de um quadro.</li>
+	      <li><b>Reduz vazão</b> efetiva.</li>
+	    </ul></li>
+	    <li>Geralmente, RTS/CTS não vale a pena para quadros &ldquo;pequenos&rdquo;.
+	    <ul>
+	      <li>Mais barato transmiti-los e ver o que acontece.</li>
+	      <li>Retransmitir, se necessário.</li>
+				<li><span class="alert">Limiar de RTS/CTS</span>.</li>
+	    </ul></li>
+	  </ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>RTS/CTS: Vale a Pena?</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>Mecanismo nem sempre efetivo.</li>
+	    <li>Mesmo quando efetivo, adiciona <i>overhead</i>.</li>
+	    <li>Vale a pena?
+	    <ul>
+	      <li>Depende!</li>
+				<li>Pode valer se:
+				<ul>
+		      <li>Se rede sofre muito por colisões.</li>
+				  <li>Se pacotes que colidem são tipicamente &ldquo;grandes&rdquo;.</li>
+				  <li>Se terminais ocultos são tipicamente causa das colisões.</li>
+				</ul></li>
+	      <li>No entanto:
+	      <ul>
+	        <li>Equipamentos geralmente vêm, por padrão, com RTS/CTS &ldquo;desabilitado&rdquo;.</li>
+	        <li><i>i.e.</i>, limiar do RTS/CTS &gt; MTU do IP.</li>
+	      </ul></li>
+	    </ul></li>
+	  </ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>O Problema do Terminal Exposto (I)</h1>
+	<div class="slideContent">
+		  <center>
+		    <img src="imagens/TerminalExposto.svg" style="width: 50%;"/>
+		  </center>
+		  <ul>
+		    <li>Cenário:
+		    <ul>
+		      <li>Dois APs, no raio de alcance um do outro.</li>
+		      <li><b>Mas</b>: cada AP está fora do raio de alcance do cliente do outro BSS.</li>
+		    </ul></li>
+				<li>Suponha que ambos os APs tenham quadros para transmitir a seus clientes.</li>
+			  <li>Transmissões podem ocorrer simutaneamente?</li>
+		  </ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>O Problema do Terminal Exposto (II)</h1>
+	<div class="slideContent">
+		  <center>
+		    <img src="imagens/TerminalExposto.svg" style="width: 50%;"/>
+		  </center>
+		  <ul>
+		    <li><b>Não: CSMA/CA (geralmente) não permite.</b>
+		    <ul>
+		      <li>Suponha que o AP da esquerda comece sua transmissão primeiro.</li>
+		      <li>Detecção de portadora fará AP da direita entrar em <i>backoff</i>.</li>
+		    </ul></li>
+				<li>RTS/CTS também não resolve:
+				<ul>
+				  <li>Ao receber o RTS do AP da esquerda, AP da direita também entra em <i>backoff</i>.</li>
+				</ul></li>
+		  </ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Quadros do IEEE 802.11: Endereçamento (I)</h1>
+	<div class="slideContent">
+		<center>
+			<img src="imagens/80211enderecamento.svg" style="width: 80%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Quadros do IEEE 802.11: Endereçamento (II)</h1>
+	<div class="slideContent">
+			<center>
+				<img src="imagens/80211enderecamento2.svg" style="width: 80%;"/>
+			</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Quadros do IEEE 802.11 (Mais)</h1>
+	<div class="slideContent">
+		<center>
+			<img src="imagens/80211quadro.svg" style="width: 80%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>IEEE 802.11: Mobilidade Dentro da Mesma Sub-rede</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li>Padrão prevê <i>handoff</i> do cliente entre APs de uma mesma rede.
+				<ul>
+				  <li>Mesmo ESSID.</li>
+					<li>Através de um <b>quadro de reassociação</b>.</li>
+					<li>&ldquo;Estado do cliente&rdquo; é transferido entre APs.</li>
+				</ul></li>
+				<li>H1 permanece na mesma sub-rede.
+				<ul>
+					<li>Endereço IP pode continuar o mesmo.</li>
+				</ul></li>
+				<li>Ponto de vista do <i>switch</i>: a qual AP H1 está associado?
+				<ul>
+					<li>Auto-aprendizado (Capítulo 5).</li>
+					<li><i>Switch</i> recebe quadro originado em H1.</li>
+					<li>Armazena a informação da porta.</li>
+				</ul></li>
+				<li><b>Importante: decisão de mobilidade é do cliente!</b></li>
+			</ul>
+		</div>
+
+		<div class="column" style="width: 50%;">
+			<center>
+				<br>
+				<br>
+				<br>
+				<img src="imagens/80211mobilidade.svg" style="width: 80%;"/>
+			</center>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Adaptação Automática de Taxa (I)</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 55%;">
+			<br>
+			<br>
+			<ul>
+				<li><span class="alert">Adaptação automática de taxa:</span>
+				<ul>
+					<li>Estação base e hosts dinamicamente alteram taxa de transmissão.
+					<li>Forma de compensar variações no SNR (<i>e.g.</i>, devido a mobilidade).</li>
+				</ul></li>
+			</ul>
+			<ol>
+				<li>SNR diminui e BER aumenta a medida que host se distancia do AP.</li>
+				<li>Quando o BER se torna muito alto, escolhe-se taxa mais baixa (mas com BER menor).</li>
+			</ol>
+		</div>
+		<div class="column" style="width: 45%;">
+			<center>
+				<img src="imagens/BERXSNR.svg" style="width: 70%;"/>
+			</center>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Adaptação Automática de Taxa (II)</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 55%;">
+			<ul>
+				<li>Na prática, mecanismos de adaptação de taxa não medem diretamente SNR.</li>
+				<li>SNR é inferido indiretamente através de parâmetros como a <b>perda de quadros</b>.
+				<ul>
+				  <li>Aumento na perda pode indicar redução no SNR.</li>
+				  <li>(Mas nem sempre!)</li>
+				</ul></li>
+				<li>Exemplo de mecanismo comum: ARF.
+				<ul>
+				  <li><i>Auto-Rate Fallback</i>.</li>
+				  <li>Dez quadros transmitidos com sucesso em sequência: aumente a taxa.</li>
+				  <li>Dois quadros perdidos consecutivamente: reduza a taxa.</li>
+				</ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 45%;">
+			<center>
+				<img src="imagens/BERXSNR.svg" style="width: 70%;"/>
+			</center>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Economia de Energia no IEEE 802.11 (I)</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>Por quê?
+	    <ul>
+	      <li>Dispositivos sem fio são (muitas vezes) alimentados por bateria.
+	      <ul>
+	        <li>Celulares, tables, laptops, ...</li>
+	      </ul></li>
+	      <li>Baterias têm capacidade limitada.</li>
+	      <li>Em certos dispositivos, interface sem fio é um dos componentes que mais consomem energia.
+	      <ul>
+					<li>Mesmo quando apenas ouvindo o meio.</li>
+	      </ul></li>
+        <li>Logo, grande potencial de economia.</li>
+	    </ul></li>
+			<li>IEEE 802.11 se preocupa com consumo energético em vários contextos.</li>
+	  </ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Economia de Energia no IEEE 802.11 (II)</h1>
+	<div class="slideContent">
+		<ul>
+			<li><span class="alert">Gerenciamento de Energia:</span>
+			<ul>
+				<li>Host informa ao AP: &ldquo;vou dormir até o próximo <i>beacon</i>&rdquo;.
+				<ul>
+					<li>AP sabe que não deve transmitir quadros para o host.</li>
+					<li>Host acorda antes do próximo <i>beacon</i>.</li>
+				</ul></li>
+				<li>Quadro de <i>beacon</i>:
+				<ul>
+					<li>Contém lista de hosts para os quais AP possui dados a transmitir.</li>
+					<li>Nó permanece acordado se está lista.</li>
+					<li>Caso contrário, pode voltar a dormir até próximo <i>beacon</i>.</li>
+				</ul></li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Economia de Energia no IEEE 802.11 (III)</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>Detecção Virtual de Portadora:
+	    <ul>
+				<li>Objetivo: economizar energia durante a detecção de portadora.</li>
+	      <li>NAV: <i>Network Allocation Vector</i>.</li>
+	    </ul></li>
+	    <li>Funcionamento:
+	    <ul>
+	      <li>Quadros contém campo de duração: tempo necessário para aquela transmissão (incluindo <i>ack</i>).</li>
+	      <li>Sempre que estação recebe quadro, lê campo de duração.</li>
+	      <li>Configura temporizador (NAV) para o valor adequado.
+	      <ul>
+	        <li>Durante aquele período, não há necessidade de realizar a <b>detecção física da portadora</b>.</li>
+	      </ul></li>
+	    </ul></li>
+			<li>Também utilizado com RTS/CTS.</li>
+	  </ul>
+		<center>
+		  <img src="imagens/CampoDuracao.svg" style="width: 70%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>IEEE 802.11: Eficiência (I)</h1>
+	<div class="slideContent">
+	  <div class="column" style="width: 50%;">
+			<br>
+			<br>
+			<ul>
+			  <li>O IEEE 802.11 prevê várias taxas.
+			  <ul>
+			    <li>Possivelmente, escolha de um algoritmo de adaptação de taxa.</li>
+			  </ul></li>
+			  <li>Suponha que uma taxa <b>nominal</b> de 11 Mb/s tenha sido escolhida.
+			  <ul>
+			    <li>Qual é a <b>vazão efetiva</b> do enlace?</li>
+			  </ul></li>
+			  <li>Protocolo adiciona uma série de <i>overheads</i>:
+			  <ul>
+			    <li>Cabeçalhos, preâmbulos.</li>
+			    <li>IFS, <i>Acks</i>, RTS/CTS.</li>
+			  </ul></li>
+			  <li>Taxa de transmissão líquida pode ser bem mais baixa.</li>
+			</ul>
+	  </div>
+		<div class="column" style="width: 50%;">
+		  <center>
+		    <img src="imagens/Eficiencia.png" style="width: 90%;"/>
+		  </center>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>IEEE 802.11: Eficiência (II)</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>Outros fatores:
+	    <ul>
+	      <li>Perdas de quadros:
+	      <ul>
+	        <li>Uma parcela <b>representativa</b> das transmissões pode falhar.</li>
+	        <li>Tempo de transmissão desperdiçado.
+	        <ul>
+	          <li>E completamente, já que não há detecção simultânea de colisões, por exemplo.</li>
+	        </ul></li>
+					<li>Pior: quanto maior o número de retransmissões de um quadro, <b>maiores</b> os tempos esperados de <i>backoff</i>.
+					<ul>
+					  <li>Exponencialmente!</li>
+					</ul></li>
+	      </ul></li>
+				<li><b>Taxas de transmissão básicas:</b>
+				<ul>
+				  <li>Geralmente baixas.</li>
+				  <li>Usadas para transmissão de quadros de controle, gerência.
+				  <ul>
+				    <li>Associação, <i>beacons</i>, <i>probes</i>, ..., RTS, CTS, muitas vezes <i>Acks</i>.</li>
+				  </ul></li>
+				  <li>Estes quadros são pequenos, <b>mas transmitidos a taxas baixas</b>.
+				  <ul>
+				    <li>Ou seja, consomem muito tempo!</li>
+				  </ul></li>
+					<li>Corolário: <b>quanto mais alta a taxa de transmissão selecionada, menos eficiente é o padrão!</b></li>
+				</ul></li>
+	    </ul></li>
+	  </ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Redes Wi-Fi Densas (I)</h1>
+	<div class="slideContent">
+			<ul>
+					<li>Múltiplos APs espalhados por um ambiente.
+					<ul>
+							<li>Conectados por um <b>sistema de distribuição</b>.</li>
+							<li>Aumentam <b>capacidade</b> da rede.</li>
+							<li>Planejamento com <b>canais ortogonais</b>.</li>
+					</ul></li>
+			</ul>
+			<center>
+					<img src="imagens/CenarioDenso1.svg" style="width: 60%;"/>
+			</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Redes Wi-Fi Densas (II)</h1>
+	<div class="slideContent">
+			<ul>
+					<li><b>Idealmente</b>, clientes se espalhariam de maneira <b>uniforme</b>.
+					<ul>
+							<li>Número de clientes <b>associados</b> a cada AP seria relativamente equilibrado.</li>
+							<li><b>Balanceamento de carga</b>.</li>
+					</ul></li>
+			</ul>
+			<center>
+					<img src="imagens/CenarioDenso2.svg" style="width: 60%;"/>
+			</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Redes Wi-Fi Densas (III)</h1>
+	<div class="slideContent">
+			<ul>
+					<li><b>Mas na prática...</b>
+					<ul>
+							<li>Decisão de associação é <b>prerrogativa do cliente</b>.</li>
+							<li>Associações ocorrem de forma <b>descoordenada</b>, desbalanceada.</li>
+							<li>Alguns APs quase sem carga, outros <b>sobrecarregados</b>.</li>
+					</ul></li>
+			</ul>
+			<center>
+					<img src="imagens/CenarioDenso3.svg" style="width: 60%;"/>
+			</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Redes Wi-Fi Densas: Outras Questões</h1>
+	<div class="slideContent">
+			<ul>
+					<li>Além do balanceamento de carga:
+					<ul>
+							<li>Seleção (possivelmente dinâmica) de canais.
+							<ul>
+									<li>Como atribuir canais ortogonais aos APs vizinhos?</li>
+									<li>Considerando ainda que:
+									<ul>
+											<li>Há geralmente outras redes próximas não controladas.</li>
+											<li>Redes diferentes ocupam canais de formas diferentes.</li>
+											<li>Possível uso de um <b>controlador</b>.</li>
+									</ul></li>
+							</ul></li>
+							<li>Uso de <b>micro-células</b>.
+							<ul>
+									<li>Propositalmente <b>reduzir alcance</b> do AP.
+									<ul>
+											<li>Diminuindo potência de transmissão.</li>
+									</ul></li>
+									<li>Aumenta o <b>reuso espacial</b>.
+									<ul>
+											<li>Mais APs <b>não interferentes</b> em uma mesma região.</li>
+											<li>Maior capacidade.</li>
+									</ul></li>
+							</ul></li>
+					</ul></li>
+					<li>Instabilidade na associação dos clientes.
+					<ul>
+							<li>Problema do &ldquo;ping-pong&rdquo; [Balbi <i>et al.</i> 2016].</li>
+					</ul></li>
+			</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Redes Wi-Fi Densas: Ping-Pong (I)</h1>
+	<div class="slideContent">
+			<ul>
+					<li>Cliente pode estar na região de alcance de <b>múltiplos</b> APs.</li>
+					<li>Critério de seleção do &ldquo;melhor&rdquo; AP <b>não é padronizado</b>.
+					<ul>
+							<li>Deixado a cargo da implementação.</li>
+					</ul></li>
+			</ul>
+			<center>
+					<img src="imagens/PingPong1.svg" style="width: 60%;"/>
+			</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Redes Wi-Fi Densas: Ping-Pong (II)</h1>
+	<div class="slideContent">
+			<ul>
+					<li>Mesmo associado, cliente continua avaliando alternativas.
+					<ul>
+							<li>Através de <i>beacons</i>, anúncios dos APs.</li>
+					</ul></li>
+					<li>Meio sem fio sofre de <b>alta variabilidade</b>.
+					<ul>
+							<li>&ldquo;Melhor AP&rdquo; pode variar com o tempo &rArr; <i>handoff</i>.</li>
+					</ul></li>
+			</ul>
+			<center>
+					<img src="imagens/PingPong2.svg" style="width: 60%;"/>
+			</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Redes Wi-Fi Densas: Ping-Pong (III)</h1>
+	<div class="slideContent">
+			<ul>
+					<li>Processo continua, novas trocas podem ocorrer.</li>
+					<li>Devido à variabilidade, pode haver <b>alternância frequente</b> de associações.
+					<ul>
+							<li><i>e.g.</i>, <i>handoffs</i> a cada 30 segundos.</li>
+					</ul></li>
+			</ul>
+			<center>
+					<img src="imagens/PingPong3.svg" style="width: 60%;"/>
+			</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Redes Wi-Fi Densas: Ping-Pong (IV)</h1>
+	<div class="slideContent">
+			<ul>
+					<li>Dependendo do cenário, pode envolver mais que dois APs.</li>
+			</ul>
+			<center>
+					<img src="imagens/PingPong4.svg" style="width: 60%;"/>
+			</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Resumo da Aula (I)...</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+		  <ul>
+		    <li>RTS/CTS: mecanismo de <b>reserva virtual.</b>
+		    <ul>
+		      <li>RTS: <i>Request-To-Send</i>.</li>
+		      <li>CTS: <i>Clear-To-Send</i>.
+		      <ul>
+		        <li>Enviado pelo receptor, autorizando.</li>
+		      </ul></li>
+		      <li>Pode <b>reduzir quantidade e efeito</b> de colisões.
+		      <ul>
+		        <li>Principalmente em casos de terminais escondidos.</li>
+		        <li></li>
+		      </ul></li>
+		      <li>Nem sempre efetivo.</li>
+		      <li>Introduz <i>overheads</i>.</li>
+					<li><b>Limiar de RTS/CTS.</b></li>
+		    </ul></li>
+				<li><b>Problema do terminal exposto:</b>
+				<ul>
+				  <li>Transmissões simultâneas que não causariam colisão são suprimidas pelo CSMA/CA.</li>
+				  <li>Não resolvido pelo RTS/CTS.</li>
+				</ul></li>
+		  </ul>
+		</div>
+		<div class="column" style="width: 50%;">
+		  <ul>
+				<li>IEEE 802.11: endereços.
+				<ul>
+				  <li>Quatro campos previstos no cabeçalho.</li>
+				  <li>Origem e destino <b>daquela transmissão sem fio</b>.</li>
+				  <li>Mas também BSSID, destinatário final, ...</li>
+				</ul></li>
+				<li>IEEE 802.11: mobilidade.
+				<ul>
+				  <li>Suportada pelo padrão entre APs de um mesmo ESSID.</li>
+				  <li><b>Decisão do cliente</b>.</li>
+				</ul></li>
+				<li>Adaptação automática de taxa.
+				<ul>
+				  <li>Geralmente baseada em quadros perdidos.</li>
+				  <li>Reduz taxas para enlaces &ldquo;piores&rdquo;.</li>
+				</ul></li>
+				<li>IEEE 802.11: economia de energia.
+				<ul>
+				  <li>Detecção virtual de portadora.</li>
+				  <li><i>Duty cycle</i> entre <i>beacons</i>.</li>
+				</ul></li>
+		  </ul>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Resumo da Aula (II)...</h1>
+	<div class="slideContent">
+	  <ul>
+			<li>IEEE 802.11: eficiência.
+			<ul>
+				<li>Várias fontes de <i>overhead</i>.</li>
+				<li><b>Eficiência mais baixa para taxas mais altas</b>.</li>
+				<li>Perdas de quadros também contribuem.</li>
+			</ul></li>
+			<li>Redes densas:
+			<ul>
+				<li>Muitos clientes, muitos APs.</li>
+				<li>Balanceamento de carga.</li>
+				<li>Escolha dinâmica de canais.</li>
+				<li>Planejamento.</li>
+				<li>Micro-células.</li>
+				<li>Instabilidade de associação.</li>
+			</ul></li>
+	  </ul>
+	</div>
+	</section>
+	<section>
+	<h1>Leitura e Exercícios Sugeridos</h1>
+	<div class="slideContent">
+		<ul>
+			<li>IEEE 802.11:
+			<ul>
+				<li>Páginas 385 a 399 do Kurose (Seção 6.3).</li>
+				<li>Exercícios de fixação 5 a 10 do capítulo 6 do Kurose.</li>
+				<li>Problemas 6 e 7 do Kurose.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Próxima Aula...</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Mudaremos o foco da nossa discussão para as redes sem fio de múltiplos saltos.</li>
+			<li>Veremos alguns tipos e aplicações destas redes:
+			<ul>
+				<li>Redes <i>ad hoc</i> móveis</li>
+				<li>Redes em malha sem fio.</li>
+				<li>Redes de sensores.</li>
+				<li>Redes Veiculares.</li>
+			</ul></li>
+			<li>Também falaremos brevemente sobre alguns desafios nestas redes:
+			<ul>
+			  <li>Roteamento.</li>
+			  <li>Economia de energia.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<!-- {{{{ dzslides core
+	#
+	#
+	#     __  __  __       .  __   ___  __
+	#    |  \  / /__` |    | |  \ |__  /__`
+	#    |__/ /_ .__/ |___ | |__/ |___ .__/ core :€
+	#
+	#
+	# The following block of code is not supposed to be edited.
+	# But if you want to change the behavior of these slides,
+	# feel free to hack it!
+	#
+	-->
+
+    <!-- More CSS -->
+	<link href='../template/css/slides.css' id="slides" rel='stylesheet' type='text/css'>
+	<link href='../template/css/presentationSpecific2.css' id="presentationSpecific2" rel='stylesheet' type='text/css'>
+
+    <!-- More Javascript -->
+	<script type="text/javascript" src="../template/js/dz.js"></script>
+
+	<!-- More CSS -->
+	<link href='../template/css/notesSpecific.css' id="notesSpecific" rel='stylesheet' type='text/css'>
+	<link href='../template/css/printSpecific.css' id="printSpecific" rel='stylesheet' type='text/css'>
+</body>
+</html>

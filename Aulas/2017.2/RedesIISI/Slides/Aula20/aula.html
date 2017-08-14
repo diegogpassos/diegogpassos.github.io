@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <!-- Meta info -->
+	<meta charset="utf-8">
+	<meta name="shortauthor" content="Diego Passos"/>
+	<meta name="shorttitle" content="Gerência: ASN.1, Exemplos Práticos"/>
+	<meta name="shortevent" content="Redes de Computadores II"/>
+	<title>Redes de Computadores II: Aula 20</title>
+
+    <!-- Math support -->
+	<script type="text/x-mathjax-config">
+		MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+			MathJax.InputJax.TeX.Definitions.number = /^(?:[0-9]+(?:\.[0-9]{3})*(?:\{,\}[0-9]*)*|\{,\}[0-9]+)/
+		});
+	</script>
+	<!--<script src="../MathJax/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>-->
+	<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+	<!--<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>-->
+
+    <!-- Fonts -->
+	<link href='https://fonts.googleapis.com/css?family=Lora:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
+	<!--<link href='../../../../Fonts/Lora/lora.css' rel='stylesheet' type='text/css'>-->
+
+    <!-- CSS -->
+	<link href='../template/css/template.css' id="template" rel='stylesheet' type='text/css'>
+	<link href='../template/css/presentationSpecific.css' id="presentationSpecific" rel='stylesheet' type='text/css'>
+
+    <!-- Javascript -->
+	<script type="text/javascript" src="../template/js/audio.js"></script>
+</head>
+
+<body>
+    <!-- Audio handlers -->
+
+    <!-- Title Slide -->
+	<section>
+
+        <div class="slideContent">
+            <h1 class="title">Aula 20 - ASN.1, Exemplos Práticos</h1>
+            <h2 class="author">Diego Passos</h2>
+            <h4 class="institution">Universidade Federal Fluminense</h4>
+            <h3 class="date">Redes de Computadores II</h3>
+        </div>
+
+	</section>
+
+    <!-- Content slides -->
+
+	<section>
+	<h1>Na Última Aula (I)...</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li>Gerência de redes:
+				<ul>
+					<li><b>Monitoramento</b>, análise, resposta do/ao <b>comportamento da rede</b>.</li>
+					<li>Redes são <b>sistemas complexos</b>, apresentam <b>problemas</b>.</li>
+					<li>Inicialmente, gerência era uma prática quase inexistente.</li>
+				</ul></li>
+				<li>Casos de uso:
+				<ul>
+					<li>Detecção de falha.</li>
+					<li>Monitoramento de serviços.</li>
+					<li>Monitoramento de tráfego.</li>
+					<li>Detecção de intrusão.</li>
+					<li>...</li>
+				</ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li>Áreas de gerenciamento:
+				<ul>
+					<li>Desempenho.</li>
+					<li>Falhas.</li>
+					<li>Configuração.</li>
+					<li>Contabilização.</li>
+					<li>Segurança.</li>
+				</ul></li>
+				<li>Infraestrutura formada por:
+				<ul>
+					<li>Dispositivos gerenciados.</li>
+					<li>Agente de gerenciamento.</li>
+					<li>Objetos gerenciados.</li>
+					<li>Entidade gerenciadora.</li>
+					<li>Protocolo de gerenciamento.</li>
+				</ul></li>
+			</ul>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Na Última Aula (II)...</h1>
+	<div class="slideContent">
+		<ul>
+			<li>SNMP: padrão de fato.
+			<ul>
+				<li>Transporta informações de gerência.</li>
+				<li>Requisição/resposta ou <i>traps</i>.</li>
+				<li>Evoluiu através de 3 versões.</li>
+				<li>Recentemente, preocupação maior com segurança.</li>
+			</ul></li>
+			<li>MIBs: bases de dados de gerência.
+			<ul>
+				<li>Conjunto de informações de gerência.</li>
+				<li>Semântica, sintaxe definida através de SMI.</li>
+				<li>Organizadas hierarquicamente.
+				<ul>
+					<li><i>ISO Object Identifier</i>.</li>
+				</ul></li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+    <section class="secao">
+    <div class="slideContent">
+    		ASN.1
+    </div>
+    </section>
+
+    <section>
+    <h1>O Problema da Apresentação</h1>
+    <div class="slideContent">
+    		<ul>
+    			<li><span class="alert">Pergunta:</span> a capacidade de copiar perfeitamente dados da memória de um dispositivo para a memória de outro resolve por completo o &ldquo;problema da comunicação&rdquo;?</li>
+			<li><span class="alert">Resposta:</span> nem sempre!</li>
+    		</ul>
+
+		<center>
+			<img src="imagens/ProblemaApresentacao.svg" style="width: 60%;"/>
+		</center>
+
+		<ul>
+			<li><span class="alert">Problema:</span> convenções e formatos de armazenamento de dados diferentes.</li>
+		</ul>
+    </div>
+    </section>
+
+    <section>
+    <h1>Um Exemplo de Vida Real do Problema de Apresentação</h1>
+    <div class="slideContent">
+    		<center>
+    			<img src="imagens/ProblemaApresentacaoReal.svg" style="width: 70%;"/>
+    		</center>
+    </div>
+    </section>
+
+    <section>
+    <h1>Problema da Apresentação: Potenciais Soluções</h1>
+    <div class="slideContent">
+    		<ol>
+    			<li>Origem descobre o formato do destinatário. Origem traduz dados para o formato do destinatário. Origem envia.
+    			<ul>
+    				<li>Analogia com o mundo real?</li>
+				<li>Prós e contras?</li>
+    			</ul></li>
+			<li>Origem envia. Destinatário descobre o formato da origem. Destinatário traduz dados para o formato local.
+			<ul>
+				<li>Analogia com o mundo real?</li>
+				<li>Prós e contras?</li>
+			</ul></li>
+			<li>Origem traduz dados para formato independente de plataforma. Origem envia. Receptor traduz dados para o formato local.
+			<ul>
+				<li>Analogia com o mundo real?</li>
+				<li>Prós e contras?</li>
+			</ul></li>
+    		</ol>
+    </div>
+    </section>
+
+    <section>
+    <h1>Resolvendo o Problema da Apresentação</h1>
+    <div class="slideContent">
+    		<ol>
+    			<li>Traduzir dados do formato local para formato independente de plataforma.</li>
+			<li>Enviar dados no formato independente de plataforma.</li>
+			<li>Traduzir dados do formato independente de plataforma. para o formato remoto.</li>
+    		</ol>
+
+		<center>
+			<img src="imagens/ProblemaApresentacaoSolucao.svg" style="width: 80%;"/>
+		</center>
+    </div>
+    </section>
+
+    <section>
+    <h1>ASN.1: Abstract Syntax Notation 1</h1>
+    <div class="slideContent">
+    		<ul>
+    			<li><span class="alert">Padrão ISO X.680:</span>
+    			<ul>
+    				<li>Usado extensivamente na Internet.</li>
+				<li>Como comer vegetais, sabendo que &ldquo;é bom para você&rdquo;!</li>
+    			</ul></li>
+			<li><span class="alert">Tipos de dados definidos</span>, construtores de objetos.
+			<ul>
+				<li>Como o SMI.</li>
+			</ul></li>
+			<li><span class="alert">BER: Basic Encoding Rules:</span>
+			<ul>
+				<li>Especifica como objetos de dados definidos no ASN.1 devem ser transmitidos.</li>
+				<li>Cada objeto transmitido possui um tipo, um tamanho, um valor: codificação TLV.</li>
+			</ul></li>
+    		</ul>
+    </div>
+    </section>
+
+    <section>
+    <h1>Codificação TLV</h1>
+    <div class="slideContent">
+    		<ul>
+    			<li><span class="alert">Ideia:</span> dados transmitidos são auto-identificáveis.
+    			<ul>
+    				<li><span class="alert">T:</span> tipo do dado, um dos tipos definidos no ASN.1.</li>
+				<li><span class="alert">L:</span> comprimento do dado em bytes.</li>
+				<li><span class="alert">V:</span> valor do dado, codificado de acordo com o padrão ASN.1.</li>
+    			</ul></li>
+    		</ul>
+
+		<center>
+    		<style>
+			table#TLV {
+				   width: 50%;
+			}
+			table#TLV td {
+				padding: 10px;
+			}
+			table#TLV th {
+
+				padding: 10px;
+				color: blue;
+				background: none;
+				font-weight: normal;
+				text-decoration: underline;
+			}
+		</style>
+    		<table class="align" id="TLV">
+    			<tr>
+				<th style="width: 30%; text-align: right;">Valor da Tag</th>
+				<th style="text-align: left;">Tipo</th>
+			</tr>
+			<tr>
+				<td style="text-align: right; border-right: 2px solid blue;">
+					1
+				</td>
+				<td>Booleano</td>
+			</tr>
+			<tr>
+				<td style="text-align: right; border-right: 2px solid blue;">
+					2
+				</td>
+				<td>Inteiro</td>
+			</tr>
+			<tr>
+				<td style="text-align: right; border-right: 2px solid blue;">
+					3
+				</td>
+				<td>Cadeia de Bits</td>
+			</tr>
+			<tr>
+				<td style="text-align: right; border-right: 2px solid blue;">
+					4
+				</td>
+				<td>Cadeia de Octetos</td>
+			</tr>
+			<tr>
+				<td style="text-align: right; border-right: 2px solid blue;">
+					5
+				</td>
+				<td>Null</td>
+			</tr>
+			<tr>
+				<td style="text-align: right; border-right: 2px solid blue;">
+					6
+				</td>
+				<td>Object Identifier</td>
+			</tr>
+			<tr>
+				<td style="text-align: right; border-right: 2px solid blue;">
+					9
+				</td>
+				<td>Real</td>
+			</tr>
+    		</table>
+
+		</center>
+    </div>
+    </section>
+
+    <section>
+    <h1>Codificação TLV: Exemplo</h1>
+    <div class="slideContent">
+    		<center>
+    			<img src="imagens/TLV.svg" style="width: 50%;"/>
+    		</center>
+    </div>
+    </section>
+
+    <!-- Possível demonstração: captura de tráfego SNMP, mostrando dados codificados via TLV. -->
+
+	<!-- Possível demonstração: mostrar exemplos de plataformas/ferramentas de gerência de redes reais. -->
+
+    <section>
+    <h1>Resumo da Aula...</h1>
+    <div class="slideContent">
+    		<ul>
+    			<li>Interoperabilidade de dados: arquiteturas diferentes, representações diferentes.
+    			<ul>
+    				<li><i>e.g.</i>, <i>big-endian, little-endian</i>.</li>
+				<li>Redes de computadores: <b>interconexões</b> entre máquinas de <b>arquiteturas possivelmente diferentes</b>.</li>
+    			</ul></li>
+			<li>Possíveis soluções:
+			<ul>
+				<li>Origem traduz para formato do destino.</li>
+				<li>Destino traduz para seu formato.</li>
+				<li>Origem traduz para formato intermediário, padronizado, traduzido pelo destino para seu formato.</li>
+			</ul></li>
+			<li>ASN.1: <b>formato intermediário</b>, padronizado, <b>independente de plataforma</b>.
+			<ul>
+				<li>Define <b>tipos básicos</b> de dados.</li>
+				<li>Permite construção de tipos complexos.</li>
+				<li>Define também <b>regras de codificação</b>.
+				<ul>
+					<li>TLV: <b>tipo, comprimento, valor</b>.</li>
+				</ul></li>
+			</ul></li>
+    		</ul>
+    </div>
+    </section>
+
+	<section>
+	<h1>Leitura e Exercícios Sugeridos</h1>
+	<div class="slideContent">
+		<ul>
+			<li>ASN.1:
+			<ul>
+				<li>Páginas 570 a 574 do Kurose (Seções 9.4 e 9.5).</li>
+				<li>Exercícios de fixação 9 a 12 do capítulo 9 do Kurose.</li>
+				<li>Problemas 6 a 8 do capítulo 9 do Kurose.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+    <section>
+    <h1>Gerência de Redes: Sumário</h1>
+    <div class="slideContent">
+    		<ul>
+    			<li>Gerência de Redes.
+    			<ul>
+    				<li>Extremamente importante: 80% do &ldquo;custo&rdquo; da rede.</li>
+				<li>ASN.1 para descrição dos dados.</li>
+				<li>Protocolo SNMP usado como ferramenta para transporte das informações.</li>
+    			</ul></li>
+			<li>Gerenciamento de redes: mais arte que ciência.
+			<ul>
+				<li>O que medir/monitorar?</li>
+				<li>Como responder a falhas?</li>
+				<li>Alarmes baseados em correlação/filtros?</li>
+			</ul></li>
+    		</ul>
+    </div>
+    </section>
+
+	<section>
+	<h1>Próximas Aulas...</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Encerramos hoje as aulas de conteúdo da disciplina.</li>
+			<li>As próximas semanas serão dedicadas às últimas avaliações.
+		</ul>
+	</div>
+	</section>
+
+	<!-- {{{{ dzslides core
+	#
+	#
+	#     __  __  __       .  __   ___  __
+	#    |  \  / /__` |    | |  \ |__  /__`
+	#    |__/ /_ .__/ |___ | |__/ |___ .__/ core :€
+	#
+	#
+	# The following block of code is not supposed to be edited.
+	# But if you want to change the behavior of these slides,
+	# feel free to hack it!
+	#
+	-->
+
+    <!-- More CSS -->
+	<link href='../template/css/slides.css' id="slides" rel='stylesheet' type='text/css'>
+	<link href='../template/css/presentationSpecific2.css' id="presentationSpecific2" rel='stylesheet' type='text/css'>
+
+    <!-- More Javascript -->
+	<script type="text/javascript" src="../template/js/dz.js"></script>
+
+	<!-- More CSS -->
+	<link href='../template/css/notesSpecific.css' id="notesSpecific" rel='stylesheet' type='text/css'>
+	<link href='../template/css/printSpecific.css' id="printSpecific" rel='stylesheet' type='text/css'>
+</body>
+</html>

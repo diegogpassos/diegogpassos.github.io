@@ -1,0 +1,61 @@
+Script started on Mon 16 May 2016 03:24:36 PM BRT
+ExperimentosRedesI:# dig www.midiacom.uff.br a
+
+; <<>> DiG 9.9.5-9+deb8u2-Debian <<>> www.midiacom.uff.br a
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 31356
+;; flags: qr rd ra; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 1
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 512
+;; QUESTION SECTION:
+;www.midiacom.uff.br.		IN	A
+
+;; ANSWER SECTION:
+www.midiacom.uff.br.	2464	IN	CNAME	mesbla.midiacom.uff.br.
+mesbla.midiacom.uff.br.	2464	IN	A	200.20.10.93
+
+;; Query time: 68 msec
+;; SERVER: 8.8.8.8#53(8.8.8.8)
+;; WHEN: Mon May 16 15:24:45 BRT 2016
+;; MSG SIZE  rcvd: 85
+
+ExperimentosRedesI:# sudo vim /etc/resolv.conf 
+[sudo] password for diego: 
+[?1049h[?1h=[2;1H▽[6n[2;1H  [1;1H[1;24r[?12;25h[?12l[?25h[27m[23m[m[H[2J[?25l[24;1H"/etc/resolv.conf" 4L, 64C[>c[1;1H[36mdomain[m [1m[37m[41mlan[m
+[36msearch[m [31mlan[m
+[36mnameserver[m [31m8.8.8.8[m
+[36mnameserver[m [31m192.168.0.1[m
+[1m[34m~                                                                               [6;1H~                                                                               [7;1H~                                                                               [8;1H~                                                                               [9;1H~                                                                               [10;1H~                                                                               [11;1H~                                                                               [12;1H~                                                                               [13;1H~                                                                               [14;1H~                                                                               [15;1H~                                                                               [16;1H~                                                                               [17;1H~                                                                               [18;1H~                                                                               [19;1H~                                                                               [20;1H~                                                                               [21;1H~                                                                               [22;1H~                                                                               [23;1H~                                                                               [m[24;63H1,1[11CAll[1;1H[?12l[?25hP+q436f\P+q6b75\P+q6b64\P+q6b72\P+q6b6c\P+q2332\P+q2334\P+q2569\P+q2a37\P+q6b31\[?25l[24;63H2[2;1H[?12l[?25h[?25l[24;1H[1m-- INSERT --[m[24;13H[K[24;63H3,1[11CTop[3;23r[3;1H[L[1;24r[24;63H[K[24;63H3,1[11CAll[3;1H[?12l[?25h[?25l[1m[37m[41mn[m[24;65H2[3;2H[?12l[?25h[?25l[1m[37m[41ma[m[24;65H3[3;3H[?12l[?25h[?25l[1m[37m[41mm[m[24;65H4[3;4H[?12l[?25h[?25l[1m[37m[41me[m[24;65H5[3;5H[?12l[?25h[?25l[1m[37m[41ms[m[24;65H6[3;6H[?12l[?25h[?25l[1m[37m[41me[m[24;65H7[3;7H[?12l[?25h[?25l[1m[37m[41mr[m[24;65H8[3;8H[?12l[?25h[?25l[1m[37m[41mv[m[24;65H9[3;9H[?12l[?25h[?25l[1m[37m[41me[m[24;65H10[3;10H[?12l[?25h[?25l[36mnameserver[m[24;66H1[3;11H[?12l[?25h[?25l[24;66H2[3;12H[?12l[?25h[?25l[1m[37m[41m2[m[24;66H3[3;13H[?12l[?25h[?25l[1m[37m[41m0[m[24;66H4[3;14H[?12l[?25h[?25l[1m[37m[41m0[m[24;66H5[3;15H[?12l[?25h[?25l[1m[37m[41m.[m[24;66H6[3;16H[?12l[?25h[?25l[1m[37m[41m2[m[24;66H7[3;17H[?12l[?25h[?25l[1m[37m[41m0[m[24;66H8[3;18H[?12l[?25h[?25l[1m[37m[41m.[m[24;66H9[3;19H[?12l[?25h[?25l[1m[37m[41m1[m[24;65H20[3;20H[?12l[?25h[?25l[1m[37m[41m0[m[24;66H1[3;21H[?12l[?25h[?25l[1m[37m[41m.[m[24;66H2[3;22H[?12l[?25h[?25l[3;21H[K[24;66H1[3;21H[?12l[?25h[?25l[3;20H[K[24;66H0[3;20H[?12l[?25h[?25l[3;19H[K[24;65H19[3;19H[?12l[?25h[?25l[1m[37m[41m0[m[24;65H20[3;20H[?12l[?25h[?25l[1m[37m[41m.[m[24;66H1[3;21H[?12l[?25h[?25l[3;12H[31m200.20.0.1[m[24;66H2[3;22H[?12l[?25h[?25l[31m8[m[24;66H3[3;23H[?12l[?25h[24;1H[K[3;22H[?25l[24;63H3,22[10CAll[3;22H[?12l[?25h[?25l[24;63H[K[24;1H:[?12l[?25hw[?25l[?12l[?25hq[?25l[?12l[?25h[?25l"/etc/resolv.conf" 5L, 87C written
+[?1l>[?12l[?25h[?1049lExperimentosRedesI:# sudo vim /etc/resolv.conf [C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[1Pdig www.midiacom.uff.br a
+
+; <<>> DiG 9.9.5-9+deb8u2-Debian <<>> www.midiacom.uff.br a
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 11145
+;; flags: qr aa rd; QUERY: 1, ANSWER: 2, AUTHORITY: 3, ADDITIONAL: 1
+;; WARNING: recursion requested but not available
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 4096
+;; QUESTION SECTION:
+;www.midiacom.uff.br.		IN	A
+
+;; ANSWER SECTION:
+www.midiacom.uff.br.	3600	IN	CNAME	mesbla.midiacom.uff.br.
+mesbla.midiacom.uff.br.	3600	IN	A	200.20.10.93
+
+;; AUTHORITY SECTION:
+midiacom.uff.br.	3600	IN	NS	server.uff.br.
+midiacom.uff.br.	3600	IN	NS	guanabara.rederio.br.
+midiacom.uff.br.	3600	IN	NS	marlin.telecom.uff.br.
+
+;; Query time: 13 msec
+;; SERVER: 200.20.0.18#53(200.20.0.18)
+;; WHEN: Mon May 16 15:25:06 BRT 2016
+;; MSG SIZE  rcvd: 167
+
+ExperimentosRedesI:# exit
+
+Script done on Mon 16 May 2016 03:25:10 PM BRT

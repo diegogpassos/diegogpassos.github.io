@@ -1,0 +1,21 @@
+Script started on Mon 16 May 2016 02:52:52 PM BRT
+ExperimentosRedesI:# ping www.midiacom.uff.br
+PING mesbla.midiacom.uff.br (200.20.10.93) 56(84) bytes of data.
+64 bytes from mesbla.midiacom.uff.br (200.20.10.93): icmp_seq=1 ttl=53 time=8.71 ms
+64 bytes from mesbla.midiacom.uff.br (200.20.10.93): icmp_seq=2 ttl=53 time=9.22 ms
+^C
+--- mesbla.midiacom.uff.br ping statistics ---
+3 packets transmitted, 2 received, 33% packet loss, time 2002ms
+rtt min/avg/max/mdev = 8.710/8.966/9.223/0.273 ms
+ExperimentosRedesI:# ping mesbla.midiacom.uff.br
+PING mesbla.midiacom.uff.br (200.20.10.93) 56(84) bytes of data.
+64 bytes from mesbla.midiacom.uff.br (200.20.10.93): icmp_seq=1 ttl=53 time=8.77 ms
+64 bytes from mesbla.midiacom.uff.br (200.20.10.93): icmp_seq=2 ttl=53 time=8.98 ms
+64 bytes from mesbla.midiacom.uff.br (200.20.10.93): icmp_seq=3 ttl=53 time=8.18 ms
+^C
+--- mesbla.midiacom.uff.br ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2002ms
+rtt min/avg/max/mdev = 8.186/8.651/8.988/0.339 ms
+ExperimentosRedesI:# exit
+
+Script done on Mon 16 May 2016 02:53:12 PM BRT

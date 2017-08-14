@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <!-- Meta info -->
+	<meta charset="utf-8">
+	<meta name="shortauthor" content="Diego Passos"/>
+	<meta name="shorttitle" content="Arquitetura e Filosofias"/>
+	<meta name="shortevent" content="Redes de Computadores I"/>
+	<title>Redes de Computadores I: Aula 2</title>
+
+    <!-- Math support -->
+	<script type="text/x-mathjax-config">
+		MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+			MathJax.InputJax.TeX.Definitions.number = /^(?:[0-9]+(?:\.[0-9]{3})*(?:\{,\}[0-9]*)*|\{,\}[0-9]+)/
+		});
+	</script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+	<script src="../../../../../MathJax-2.6-latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+
+    <!-- Fonts -->
+	<link href='https://fonts.googleapis.com/css?family=Lora:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
+	<link href='../../../../../Fonts/Lora/lora.css' rel='stylesheet' type='text/css'>
+
+    <!-- CSS -->
+	<link href='../template/css/template.css' id="template" rel='stylesheet' type='text/css'>
+	<link href='../template/css/presentationSpecific.css' id="presentationSpecific" rel='stylesheet' type='text/css'>
+
+    <!-- Javascript -->
+	<script type="text/javascript" src="../template/js/audio.js"></script>
+</head>
+
+<body>
+    <!-- Audio handlers -->
+	<!--<audio src="audio/La.wav" id="La.wav" preload="auto"></audio>-->
+
+    <!-- Title Slide -->
+	<section>
+
+        <div class="slideContent">
+            <h1 class="title">Aula 2 - Internet: Arquitetura e Filosofias de Projeto</h1>
+            <h2 class="author">Diego Passos</h2>
+            <h4 class="institution">Universidade Federal Fluminense</h4>
+            <h3 class="date">Redes de Computadores I</h3>
+        </div>
+
+	<br>
+	<br>
+	<div style="width: 30%; float: right; padding-right: 2%;">
+	<p style="font-size: 18px; text-align: right;">Material adaptado a partir dos slides originais de J.F Kurose and K.W. Ross.</p>
+	</div>
+	</section>
+
+	<section>
+	<h1>Revisão da Última Aula...</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li>Componentes da Internet:
+				<ul>
+					<li><i>Hosts</i>, comutadores, (roteadores), enlaces.</li>
+				</ul></li>
+				<li>Várias visões da Internet:
+				<ul>
+					<li>Rede de redes, <span class="alert">ISPs</span> interconectados.</li>
+					<li>Serviço para aplicações.</li>
+				</ul></li>
+				<li>Estrutura da Internet:
+				<ul>
+					<li>ISPs de acesso, regionais, <i>tier-1</i>.</li>
+					<li>Redes de provedores de conteúdo.</li>
+					<li>PoP: <i>Point-of-Presence</i>.
+					<ul>
+						<li>Interconexão entre ISP e outras redes.</li>
+					</ul></li>
+				</ul></li>
+			</ul>
+		</div>
+
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li>Protocolos:
+				<ul>
+					<li>Convenções de comunicação.</li>
+					<li>Definem formatos de mensagens, ações.</li>
+					<li>Necessários para possibilitar comunicação entre elementos heterogêneos.</li>
+				</ul></li>
+				<li>Enlaces:
+				<ul>
+					<li>Interligam dois ou mais dispositivos computacionais.</li>
+					<li>Variam em: meio físico, taxa de transmissão, comprimento/propagação, confiabilidade, ...</li>
+				</ul></li>
+			</ul>
+		</div>
+	</div>
+	</section>
+
+	<!-- Content slides -->
+
+	<section class="secao">
+	<div class="slideContent">
+		Arquitetura da Internet
+	</div>
+	</section>
+
+	<section>
+	<h1>Olhando Mais de Perto para a Estrutura da Rede</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 60%;">
+			<br>
+			<ul>
+				<li>Internet pode ser dividida em duas &ldquo;zonas&rdquo;:
+				<ul>
+					<li>Borda da rede.</li>
+					<li>Núcleo da rede.</li>
+				</ul></li>
+				<li><span class="alert">Borda da rede:</span>
+				<ul>
+					<li><i>Hosts</i>: clientes e servidores.</li>
+					<li>Redes de acesso: interconectam <i>hosts</i> ao resto da Internet.</li>
+				</ul></li>
+				<li><span class="alert">Núcleo da rede:</span>
+				<ul>
+					<li>Roteadores interconectados.</li>
+					<li>Rede de redes.</li>
+				</ul></li>
+				<li><span class="alert">Roteadores de borda:</span> conectam elementos da borda ao núcleo da Internet.</li>
+			</ul>
+		</div>
+
+		<div class="column" style="width: 40%;">
+			<center>
+				<img src="imagens/InternetNutsAndBolts.svg" style="width: 90%;"/>
+			</center>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Borda da Rede: <i>Hosts</i></h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li>Executam as aplicações.</li>
+				<li>Aplicações geram mensagens.</li>
+				<li><i>Host</i> quebra mensagem em unidades menores, chamadas <span class="alert">pacotes</span>.</li>
+				<li>Pacotes são transmitidos através do enlace <span class="alert">na sua taxa de transmissão.</span></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50%;">
+			<center>
+				<img src="imagens/Host.svg" style="width: 90%;"/>
+			</center>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Borda da Rede: Redes de Acesso</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 60%;">
+			<br>
+			<br>
+			<br>
+			<ul>
+				<li>Interconectam <i>hosts</i> ao roteador de borda.
+				<ul>
+					<li>Redes de acesso residenciais.</li>
+					<li>Redes de acesso institucionais (Universidades, empresas).</li>
+					<li>Redes de acesso móveis.</li>
+				</ul></li>
+				<li>Aspectos importantes:
+				<ul>
+					<li>Capacidade da rede de acesso.</li>
+					<li>Dedicada ou compartilhada?</li>
+				</ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 40%;">
+			<center>
+				<img src="imagens/Borda.svg" style="width: 90%;"/>
+			</center>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Redes de Acesso: DSL</h1>
+	<div class="slideContent">
+		<center>
+			<img src="imagens/DSL.svg" style="width: 75%;"/>
+		</center>
+		<ul>
+			<li>Utiliza infraestrutura de telefonia <span class="alert">existente</span> até o DSLAM.
+			<ul>
+				<li>Dados vão para a Internet.</li>
+				<li>Voz vai para a rede telefônica.</li>
+			</ul></li>
+			<li>&le; 3.3 Mb/s de taxa <i>upstream</i>.</li>
+			<li>&le; 24 Mb/s de taxa <i>downstream</i>.</li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Redes de Acesso: HFC (I)</h1>
+	<div class="slideContent">
+		<center>
+			<img src="imagens/HFC1.svg" style="width: 65%;"/>
+		</center>
+		<br>
+		<ul>
+			<li><span class="alert">Multiplexação por divisão na frequência:</span> diferentes canais transmitidos em diferentes bandas de frequência.</li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Redes de Acesso: HFC (II)</h1>
+	<div class="slideContent">
+		<center>
+			<img src="imagens/HFC2.svg" style="width: 65%;"/>
+		</center>
+		<br>
+		<ul>
+			<li><span class="alert">HFC:</span> <i>Hybrid Fiber Coax</i>.
+			<ul>
+				<li>Assimetria: até 30 Mb/s de <i>download</i>, 2 Mb/s de <i>upload</i>.</li>
+			</ul></li>
+			<li>Rede híbrida de cabos coaxiais, fibra óptica, conecta casas a roteador do ISP.
+			<ul>
+				<li>Casas <span class="alert">compartilham rede de acesso</span> até a central.</li>
+				<li>Diferente do DSL, que possui acesso dedicado.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Redes de Acesso: Redes Sem Fio</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Rede de acesso sem fio compartilhada conecta <i>hosts</i> a roteador.
+			<ul>
+				<li>Através de <span class="alert">estação base</span>, também denominada &ldquo;ponto de acesso&rdquo;.</li>
+			</ul></li>
+		</ul>
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li><span class="alert">LANs sem fio</span>:
+				<ul>
+					<li>Normalmente usadas dentro de edifícios (dezenas de metros).</li>
+					<li>IEEE 802.11b/g/n/ac: 11 Mb/s, 54 Mb/s, 300 Mb/s, 1,69 Gb/s.</li>
+				</ul></li>
+			</ul>
+			<br>
+			<center>
+				<img src="imagens/80211.svg" style="width: 60%;"/>
+			</center>
+		</div>
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li><span class="alert">WAN sem fio</span>:
+				<ul>
+					<li>Providas por operadoras de celular (dezenas de quilômetros).</li>
+					<li>Entre 1 e 10 Mb/s.</li>
+					<li>3G, 4G: LTE.</li>
+				</ul></li>
+			</ul>
+			<br>
+			<center>
+				<img src="imagens/3G.svg" style="width: 60%;"/>
+			</center>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Redes de Acesso Institucionais</h1>
+	<div class="slideContent">
+		<center>
+			<img src="imagens/RedeInstitucional.svg" style="width: 70%;"/>
+		</center>
+		<ul>
+			<li>Tipicamente usadas em empresas, universidades.</li>
+			<li>Taxas de transmissão de 10 Mb/s, 100 Mb/s, 1 Gb/s, 10 Gb/s.</li>
+			<li>Hoje, <i>hosts</i> comumente se conectam a <i>switches</i> Ethernet.
+			<ul>
+				<li>Outro tipo de comutador, tópico de Redes II.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Redes de Acesso Domésticas</h1>
+	<div class="slideContent">
+		<center>
+			<img src="imagens/HomeNetwork.svg" style="width: 70%;"/>
+		</center>
+	</div>
+	</section>
+
+    <section>
+    <h1>Núcleo da Rede</h1>
+    <div class="slideContent">
+        <div class="column" style="width: 60%;">
+            <br>
+            <br>
+            <ul>
+                <li>Malha de <span class="alert">roteadores</span> interconectados.
+                <ul>
+                    <li>Malha = múltiplos caminhos possíveis.</li>
+                </ul></li>
+                <li><span class="alert">Comutação de pacotes:</span> <i>hosts</i> quebram mensagens das aplicações em <span class="alert">pacotes</span>.
+                <ul>
+                    <li>Pacotes <span class="alert">encaminhados</span> de um roteador para o próximo, passando pelos enlaces entre origem e destino.</li>
+                    <li>Cada pacote transmitido na capacidade máxima do enlace.</li>
+                </ul></li>
+            </ul>
+        </div>
+        <div class="column" style="width: 40%;">
+            <center>
+                <img src="imagens/Nucleo.svg" style="width: 90%;"/>
+            </center>
+        </div>
+    </div>
+    </section>
+
+    <section>
+    <h1>Núcleo da Rede: Encaminhamento <i>vs.</i> Roteamento</h1>
+    <div class="slideContent">
+        <div class="column" style="width: 50%;">
+            <ul>
+                <li><span class="alert">Roteamento:</span> determina rota entre origem e destino usada pelos pacotes.
+                <ul>
+                    <li>Algoritmos de roteamento.</li>
+                </ul></li>
+            </ul>
+            <center>
+                <img src="imagens/Roteamento.svg" style="width: 60%;"/>
+            </center>
+        </div>
+
+        <div class="column" style="width: 50%;">
+            <ul>
+                <li><span class="alert">Encaminhamento:</span> mover pacotes de um <span class="alert">enlace de entrada</span> para um <span class="alert">enlace de saída</span> do roteador.</li>
+            </ul>
+            <center>
+                <img src="imagens/Encaminhamento.svg" style="width: 90%;"/>
+            </center>
+        </div>
+    </div>
+    </section>
+
+    <section>
+    <h1>Rotas na Internet (I)</h1>
+    <div class="slideContent">
+        <ul>
+            <li>Com o que rotas &ldquo;reais&rdquo; da Internet se parecem?</li>
+            <li><span class="alert">traceroute:</span> programa capaz de &ldquo;descobrir&rdquo; rotas usadas por pacotes entre uma origem e um destino.</li>
+            <li>Para cada <span class="alert">salto</span> i:
+            <ul>
+                <li>Envia pacote até o i-<i>ésimo</i> roteador no caminho.</li>
+                <li>Roteador intermediário retorna resposta.</li>
+                <li>Transmissor cronometra intervalo entre transmissão e resposta.</li>
+                <li>Processo é repetido três vezes.</li>
+            </ul></li>
+        </ul>
+        <br>
+        <center>
+            <img src="imagens/Caminho.svg" style="width: 70%;"/>
+        </center>
+    </div>
+    </section>
+
+    <section>
+    <h1>Rotas na Internet (II)</h1>
+    <div class="slideContent">
+        <ul>
+            <li>Exemplo: de <tt>gaia.cs.umass.edu</tt> para <tt>www.eurecom.fr</tt>.</li>
+        </ul>
+        <br>
+        <p style="font-size: 14pt; line-height: 0.9; margin-left: 10%; margin-right: 10%; border: 2px solid #555;">
+        <tt>
+        1 cs-gw (128.119.240.254) 1 ms 1 ms 2 ms<br>
+        2 border1-rt-fa5-1-0.gw.umass.edu (128.119.3.145) 1 ms 1 ms 2 ms<br>
+        3 cht-vbns.gw.umass.edu (128.119.3.130) 6 ms 5 ms 5 ms<br>
+        4 jn1-at1-0-0-19.wor.vbns.net (204.147.132.129) 16 ms 11 ms 13 ms<br>
+        5 jn1-so7-0-0-0.wae.vbns.net (204.147.136.136) 21 ms 18 ms 18 ms<br>
+        6 abilene-vbns.abilene.ucaid.edu (198.32.11.9) 22 ms 18 ms 22 ms<br>
+        7 nycm-wash.abilene.ucaid.edu (198.32.8.46) 22 ms 22 ms 22 ms <br>
+        8 62.40.103.253 (62.40.103.253) 104 ms 109 ms 106 ms<br>
+        9 de2-1.de1.de.geant.net (62.40.96.129) 109 ms 102 ms 104 ms<br>
+        10 de.fr1.fr.geant.net (62.40.96.50) 113 ms 121 ms 114 ms<br>
+        11 renater-gw.fr1.fr.geant.net (62.40.103.54) 112 ms 114 ms 112 ms<br>
+        12 nio-n2.cssi.renater.fr (193.51.206.13) 111 ms 114 ms 116 ms<br>
+        13 nice.cssi.renater.fr (195.220.98.102) 123 ms 125 ms 124 ms<br>
+        14 r3t2-nice.cssi.renater.fr (195.220.98.110) 126 ms 126 ms 124 ms<br>
+        15 eurecom-valbonne.r3t2.ft.net (193.48.50.54) 135 ms 128 ms 133 ms<br>
+        16 194.214.211.25 (194.214.211.25) 126 ms 128 ms 126 ms<br>
+        17 * * *<br>
+        18 * * *<br>
+        19 fantasia.eurecom.fr (193.55.113.142) 132 ms 128 ms 136 ms
+        </tt>
+        </p>
+    </div>
+    </section>
+
+    <section>
+    <h1>Uma &ldquo;Foto&rdquo; da Internet</h1>
+    <div class="slideContent">
+        <center>
+            <img src="imagens/InternetTopology.jpg" style="width: 80%;"/><br>
+        </center>
+            <p style="font-size: 10pt; margin-left: 8%;">(Fonte: http://www.research.att.com/export/sites/att_labs/groups/infovis/news/img/ATT_Labs_InternetMap_0730_10.pdf)</p>
+    </div>
+    </section>
+
+    <section class="secao">
+    <div class="slideContent">
+        Filosofias e Princípios de Projeto da Internet
+    </div>
+    </section>
+
+    <section>
+    <h1>Princípios e Filosofias: Motivação</h1>
+    <div class="slideContent">
+        <ul>
+            <li><span class="alert">Administração descentralizada:</span>
+            <ul>
+                <li>A Internet é, em princípio, um esforço coletivo.
+                <ul>
+                </ul></li>
+                <li>Múltiplas entidades <span class="alert">colaboram</span> para um objetivo maior.
+                <ul>
+                    <li>Interconexão entre elementos computacionais.</li>
+                </ul></li>
+            </ul></li>
+            <li>Mas estas entidades possuem metodologias, objetivos individuais diferentes.
+            <ul>
+                <li>Algumas vezes conflitantes.</li>
+            </ul></li>
+            <li>Necessidade de <span class="alert">uniformização</span>.
+            <ul>
+                <li>Estabelecimento de princípios básicos seguidos por todos.</li>
+            </ul></li>
+        </ul>
+    </div>
+    </section>
+
+    <section>
+    <h1>Heterogeneidade</h1>
+    <div class="slideContent">
+        <ul>
+            <li>Por <span class="alert">projeto</span>, a Internet é heterogênea.
+            <ul>
+                <li><i>e.g.</i>, enlaces de tecnologias, capacidades diferentes.</li>
+                <li><i>e.g.</i>, ISPs com políticas diferentes.</li>
+                <li><i>e.g.</i>, dispositivos computacionais com arquiteturas diferentes.</li>
+            </ul></li>
+            <li>Consequências:
+            <ul>
+                <li>São necessários protocolos <span class="alert">comuns a todos os dispositivos</span>.
+                <ul>
+                    <li>Uma suíte de protocolos da Internet.</li>
+                </ul></li>
+                <li>Estes protocolos devem ser <span class="alert">flexíveis</span>.
+                <ul>
+                    <li><i>i.e.</i>, não devem assumir muitas características da rede.</li>
+                </ul></li>
+            </ul></li>
+        </ul>
+    </div>
+    </section>
+
+    <section>
+    <h1>O Argumento Fim-a-Fim (I)</h1>
+    <div class="slideContent">
+        <ul>
+            <li>Argumento apresentado por David Clark em 1981.
+            <ul>
+                <li>Chefe do desenvolvimento da arquitetura de protocolos na Internet entre 1981 e 1989.</li>
+            </ul></li>
+            <li>Guiou o desenvolvimento arquitetural da Internet.
+            <ul>
+                <li>Embora haja exceções.</li>
+            </ul></li>
+        </ul>
+
+        <center>
+            <div class="block" style="width:1100px;">
+                <div class="blockTitle" style="width: 100%;">
+                    <p>Argumento Fim-a-Fim</p>
+                </div>
+                <div class="blockBody">
+                    Uma funcionalidade só pode ser implementada de forma <b>correta e completa</b> se isto for feito com o auxílio das aplicações executadas nas pontas do sistema de comunicação.
+                </div>
+            </div>
+        </center>
+    </div>
+    </section>
+
+    <section>
+    <h1>O Argumento Fim-a-Fim (II)</h1>
+    <div class="slideContent">
+        <ul>
+            <li>Exemplo: transmissão de um arquivo entre dois computadores.</li>
+            <li>Hipóteses:
+            <ul>
+                <li>Computadores interconectados por uma rede de comunicação.</li>
+                <li>Arquivo transmitido quebrado em uma série de pacotes.</li>
+                <li>Pacotes podem ser entregues pela rede com erros.</li>
+                <li>Pacotes podem ser completamente perdidos e descartados.</li>
+            </ul></li>
+            <li>Objetivo:
+            <ul>
+                <li>Garantir que arquivo chegue <b>íntegro</b> ao destinatário.</li>
+            </ul></li>
+        </ul>
+    </div>
+    </section>
+
+    <section>
+    <h1>O Argumento Fim-a-Fim (III)</h1>
+    <div class="slideContent">
+        <ul>
+            <li>Primeira abordagem: rede &ldquo;garantirá&rdquo; a integridade dos dados.
+            <ul>
+                <li>Todo roteador/<i>host</i>, ao receber um pacote por um enlace, verificará sua integridade.
+                <ul>
+                    <li>Como?</li>
+                </ul></li>
+                <li>Caso pacote não seja íntegro, roteador/<i>host</i> requisitará uma <span class="alert">retransmissão</span>.</li>
+                <li>A rede também garantirá que pacotes <span class="alert">não cheguem fora de ordem</span>.</li>
+            </ul></li>
+            <li>Pergunta: isto é suficiente?</li>
+        </ul>
+    </div>
+    </section>
+
+    <section>
+    <h1>O Argumento Fim-a-Fim (IV)</h1>
+    <div class="slideContent">
+        <ul>
+            <li>Não, por uma série de motivos.
+            <ul>
+                <li>Quem garante que arquivo que saiu do <i>host</i> estava originalmente íntegro?</li>
+                <li>Quem garante que verificação de integridade dos pacotes não falhou?</li>
+                <li>Quem garante que as implementações dos roteadores/<i>hosts</i> estão corretas?</li>
+                <li>Em resumo: em última instância, receptor <span class="alert">ainda precisa verificar integridade</span>.</li>
+            </ul></li>
+            <li>Além disso, <span class="alert">é desejável que a rede faça este tipo de função?</span>
+            <ul>
+                <li>Adiciona complexidade.</li>
+                <li>Assume certas funcionalidades de <span class="alert">todos os roteadores intermediários</span>.
+                <ul>
+                    <li>Mas a rede é heterogênea!</li>
+                </ul></li>
+                <li>Tem <span class="alert">efeitos colaterais indesejados</span> para certas aplicações.</li>
+            </ul></li>
+        </ul>
+    </div>
+    </section>
+
+    <section>
+    <h1>O Argumento Fim-a-Fim (V)</h1>
+    <div class="slideContent">
+        <ul>
+            <li><span class="alert">Alternativa:</span> deixar que sistemas finais lidem com o problema.
+            <ul>
+                <li>Façam as verificações.</li>
+                <li>Requisitem retransmissões, se necessário.
+                <ul>
+                    <li>A partir do <i>host</i> de origem!</li>
+                </ul></li>
+            </ul></li>
+            <li>Vantagem:
+            <ul>
+                <li>Já que as pontas precisam da funcionalidade, esta é mantida <span class="alert">apenas lá</span>.</li>
+                <li>Não há redundância de implementações.</li>
+            </ul></li>
+        </ul>
+    </div>
+    </section>
+
+    <section>
+    <h1>O Argumento Fim-a-Fim: Desempenho</h1>
+    <div class="slideContent">
+        <ul>
+            <li>Nunca há vantagens em se implementar funcionalidades nas redes?
+            <ul>
+                <li>Pode haver, por conta de desempenho.</li>
+                <li>Exemplo: pode ser mais rápido retransmitir pacotes por um único enlace que em um caminho fim-a-fim.</li>
+                <li>Há exemplos destas <span class="alert">otimizações</span> na Internet.</li>
+            </ul></li>
+            <li>Mas como princípio geral, estas são evitadas.</li>
+        </ul>
+    </div>
+    </section>
+
+    <section>
+    <h1>O Argumento Fim-a-Fim: Analogias</h1>
+    <div class="slideContent">
+        <ul>
+            <li>RISC <i>vs.</i> CISC.
+            <ul>
+                <li>Processador (rede) deve implementar um grande número de funcionalidades?</li>
+                <li>Ou apenas um subconjunto básico, suficiente?
+                <ul>
+                    <li>Emulando instruções (funcionalidades) mais complexexas em <i>software</i> (nos <i>hosts</i>).</li>
+                </ul></li>
+            </ul></li>
+            <li>Navalha de Occam.
+            <ul>
+                <li>Princípio lógico que guia a escolha de explicações para fenômenos.</li>
+                <li>Se há múltiplas explicações plausíveis, opta-se pela mais simples.</li>
+            </ul></li>
+        </ul>
+    </div>
+    </section>
+
+    <section>
+    <h1>O Argumento Fim-a-Fim: Inteligência nas Bordas</h1>
+    <div class="slideContent">
+        <ul>
+            <li>Consequência direta: na Internet, procura-se manter a complexidade nas bordas.
+            <ul>
+                <li>&ldquo;Inteligência nas bordas&rdquo;.</li>
+                <li>&ldquo;Núcleo simples&rdquo;.</li>
+            </ul></li>
+            <li>Núcleo processa volume enorme de pacotes.
+            <ul>
+                <li>Mantê-lo simples, especializado, <span class="alert">rápido</span>.</li>
+                <li>Objetivo maior: <span class="alert">escalabilidade</span>.</li>
+            </ul></li>
+            <li>Volume de tráfego nas bordas é menor.
+            <ul>
+                <li>Processamentos mais complexos são mais viáveis.</li>
+                <li>Escalabilidade não é tão problemática.</li>
+            </ul></li>
+            <li>Oposição às redes telefônicas.
+            <ul>
+                <li>Núcleo complexo, bordas simples.</li>
+            </ul></li>
+        </ul>
+    </div>
+    </section>
+
+    <section>
+    <h1>Princípio KISS</h1>
+    <div class="slideContent">
+        <ul>
+            <li>KISS: <i>Keep It Simple, Stupid!</i></li>
+            <li>Princípio originado na Marinha Americana, na década de 1960.
+            <ul>
+                <li>Incorporado nas filosofias que guiam a Internet.</li>
+            </ul></li>
+        </ul>
+
+        <center>
+            <div class="block" style="width:1100px;">
+                <div class="blockTitle" style="width: 100%;">
+                    <p>Princípio KISS</p>
+                </div>
+                <div class="blockBody">
+                    Sistemas funcionam melhor quando são mantidos simples. Logo, simplicidade deve ser um objetivo de projeto, evitando complexidades desnecessárias.
+                </div>
+            </div>
+        </center>
+
+        <ul>
+            <li>Aplicado à Internet:
+            <ul>
+                <li>Protocolos &ldquo;simples&rdquo;.
+                <ul>
+                    <li>Relativamente, falando.</li>
+                </ul></li>
+                <li>Fáceis de implementar, depurar.
+                <ul>
+                    <li>Relativamente, falando.</li>
+                </ul></li>
+            </ul></li>
+        </ul>
+    </div>
+    </section>
+
+	<section>
+	<h1>Resumo da Aula...</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 47%;">
+            <ul>
+                <li>Arquitetura da Internet pode ser dividida:
+                <ul>
+                    <li><span class="alert">Borda</span>: <i>hosts</i>, redes de acesso.</li>
+                    <li><span class="alert">Núcleo</span>: roteadores, ISPs interconectados.</li>
+                </ul></li>
+                <li>Redes de acesso:
+                <ul>
+                    <li>Múltiplas tecnologias: DSL, HFC, Ethernet, Wi-Fi, ...</li>
+                    <li>Algumas vezes combinadas.</li>
+                    <li>Se conectam ao núcleo através de um <span class="alert">roteador de borda</span>.</li>
+                </ul></li>
+                <li>Roteamento e encaminhamento:
+                <ul>
+                    <li>Responsabilidades do núcleo.</li>
+                    <li>Tarefas ligadas ao repasse dos pacotes entre roteadores, <i>hosts</i>.</li>
+                </ul></li>
+            </ul>
+		</div>
+
+		<div class="column" style="width: 53%;">
+            <ul>
+                <li>Princípios e filosofias:
+                <ul>
+                    <li>Rede heterogênea.
+                    <ul>
+                        <li>Necessita <span class="alert">conjunto de protocolos comuns</span>.</li>
+                        <li><span class="alert">Não se deve assumir muito</span> sobre a rede.</li>
+                    </ul></li>
+                    <li>Argumento fim-a-fim.
+                    <ul>
+                        <li>Funcionalidades fim-a-fim dependem das pontas.</li>
+                        <li>Logo, tentar mantê-las nas pontas.</li>
+                        <li>Corolário: <span class="alert">inteligência nas bordas, núcleo simples</span>.</li>
+                    </ul></li>
+                    <li>Princípio KISS.
+                    <ul>
+                        <li>Evitar complexidades desnecessárias.</li>
+                        <li>Sistemas mais simples são melhores que equivalentes complexos.</li>
+                    </ul></li>
+                </ul></li>
+            </ul>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Próxima Aula...</h1>
+	<div class="slideContent">
+        <ul>
+            <li>Estudaremos alguns dos mecanismos fundamentais da Internet.
+            <ul>
+                <li>Comutação de pacotes.</li>
+                <li><i>Store-and-forward</i>.</li>
+                <li>Multiplexação estatística.</li>
+            </ul></li>
+            <li>E algumas de suas consequências.
+            <ul>
+                <li>Enfileiramento.</li>
+                <li>Perdas de pacotes.</li>
+                <li>Atrasos.</li>
+            </ul></li>
+        </ul>
+	</div>
+	</section>
+
+	<!-- {{{{ dzslides core
+	#
+	#
+	#     __  __  __       .  __   ___  __
+	#    |  \  / /__` |    | |  \ |__  /__`
+	#    |__/ /_ .__/ |___ | |__/ |___ .__/ core :€
+	#
+	#
+	# The following block of code is not supposed to be edited.
+	# But if you want to change the behavior of these slides,
+	# feel free to hack it!
+	#
+	-->
+
+    <!-- More CSS -->
+	<link href='../template/css/slides.css' id="slides" rel='stylesheet' type='text/css'>
+	<link href='../template/css/presentationSpecific2.css' id="presentationSpecific2" rel='stylesheet' type='text/css'>
+
+    <!-- More Javascript -->
+	<script type="text/javascript" src="../template/js/dz.js"></script>
+
+	<!-- More CSS -->
+	<link href='../template/css/notesSpecific.css' id="notesSpecific" rel='stylesheet' type='text/css'>
+	<link href='../template/css/printSpecific.css' id="printSpecific" rel='stylesheet' type='text/css'>
+</body>
+</html>

@@ -1,0 +1,1207 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <!-- Meta info -->
+	<meta charset="utf-8">
+	<meta name="shortauthor" content="Diego Passos"/>
+	<meta name="shorttitle" content="Apresentação e Conceitos"/>
+	<meta name="shortevent" content="Redes de Computadores I"/>
+	<title>Redes de Computadores I: Aula 1</title>
+
+    <!-- Math support -->
+	<script type="text/x-mathjax-config">
+		MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+			MathJax.InputJax.TeX.Definitions.number = /^(?:[0-9]+(?:\.[0-9]{3})*(?:\{,\}[0-9]*)*|\{,\}[0-9]+)/
+		});
+	</script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+	<script src="../../../../../MathJax-2.6-latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+
+    <!-- Fonts -->
+	<link href='https://fonts.googleapis.com/css?family=Lora:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
+	<link href='../../../../../Fonts/Lora/lora.css' rel='stylesheet' type='text/css'>
+
+    <!-- CSS -->
+	<link href='../template/css/template.css' id="template" rel='stylesheet' type='text/css'>
+	<link href='../template/css/presentationSpecific.css' id="presentationSpecific" rel='stylesheet' type='text/css'>
+
+    <!-- Javascript -->
+	<script type="text/javascript" src="../template/js/audio.js"></script>
+</head>
+
+<body>
+    <!-- Audio handlers -->
+	<!--<audio src="audio/La.wav" id="La.wav" preload="auto"></audio>-->
+
+    <!-- Title Slide -->
+	<section>
+
+        <div class="slideContent">
+            <h1 class="title">Aula 1 - Introdução a Disciplina e Conceitos Básicos</h1>
+            <h2 class="author">Diego Passos</h2>
+            <h4 class="institution">Universidade Federal Fluminense</h4>
+            <h3 class="date">Redes de Computadores I</h3>
+        </div>
+
+	<br>
+	<br>
+	<div style="width: 30%; float: right; padding-right: 2%;">
+	<p style="font-size: 18px; text-align: right;">Material adaptado a partir dos slides originais de J.F Kurose and K.W. Ross.</p>
+	</div>
+	</section>
+
+    <!-- Content slides -->
+
+     <section class="secao">
+     <div class="slideContent">
+     	Estrutura da Disciplina
+     </div>
+     </section>
+
+	<section>
+	<h1>Informações Gerais</h1>
+	<div class="slideContent">
+			<center>
+				<div class="block" style="width:1100px;">
+					<div class="blockTitle" style="width: 100%;">
+						<p>Salas e Horários</p>
+					</div>
+					<div class="blockBody">
+						<ul>
+							<li>Segundas, 20:00 às 22:00, sala 319.</li>
+							<li>Quartas, 20:00 às 22:00, sala 319.</li>
+						</ul>
+					</div>
+				</div>
+			</center>
+			<br>
+			<br>
+			<center>
+				<div class="block" style="width:1100px;">
+					<div class="blockTitle" style="width: 100%;">
+						<p>Contato</p>
+					</div>
+					<div class="blockBody">
+						<ul>
+							<li><tt>dpassos@ic.uff.br</tt></li>
+							<li><tt><a href="http://www.midiacom.uff.br/~diego/">http://www.midiacom.uff.br/~diego/</a></tt>
+							<li><tt><a href="http://www.ic.uff.br/~dpassos/">http://www.ic.uff.br/~dpassos/</a></tt>
+							<li><tt><a href="https://sites.google.com/site/diegogpassos/disciplinas/redesisi_2017_1">https://sites.google.com/site/diegogpassos/disciplinas/ redesisi_2017_1</a></tt>
+							<ul>
+								<li>Calendário.</li>
+								<li>Material didático.</li>
+								<li>Informações.</li>
+								<li>Avisos.</li>
+							</ul></li>
+						</ul>
+					</div>
+				</div>
+			</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Objetivos da Disciplina</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Entender os princípios de funcionamento, componentes da Internet.
+			<ul>
+				<li>Hosts, comutadores, datagramas, protocolos...</li>
+			</ul></li>
+			<li>Estudar o modelo TCP/IP e suas camadas:
+			<ul>
+				<li>Camada de Aplicação.</li>
+				<li>Camada de Transporte.</li>
+				<li>Camada de Rede.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Conteúdo Programático (E Provas)</h1>
+	<div class="slideContent">
+		<table class="align">
+			<tr>
+				<td style="text-align: center; width: 33%;"><b>P<sub>1</sub></b></td>
+				<td style="text-align: center; width: 33%;"><b>P<sub>2</sub></b></td>
+				<td style="text-align: center; width: 33%;"><b>P<sub>3</sub></b></td>
+			</tr>
+			<tr>
+				<td style="border: 2px solid #000;">
+					<ul>
+						<li>Introdução à Internet.
+						<ul>
+							<li>Conceitos Básicos.</li>
+							<li>Arquitetura.</li>
+							<li>Medidas de desempenho.</li>
+							<li>Modelos ISO/OSI e TCP/IP.</li>
+						</ul></li>
+						<li>Camada de Aplicação.
+						<ul>
+							<li>Serviços.</li>
+							<li>Arquiteturas.</li>
+							<li>Protocolos notáveis.</li>
+							<li>DNS.</li>
+							<li>P2P.</li>
+							<li>Programação com Sockets.</li>
+						</ul></li>
+					</ul>
+				</td>
+				<td style="border: 2px solid #000;">
+					<ul>
+						<li>Camada de Transporte.
+						<ul>
+							<li>Serviços.</li>
+							<li>Multiplexação.</li>
+							<li>Modelos de serviço.</li>
+							<li>UDP.</li>
+							<li>Transmissão confiável de dados.</li>
+							<li>Controle de congestionamento.</li>
+							<li>TCP.</li>
+						</ul></li>
+					</ul>
+				</td>
+				<td style="border: 2px solid #000;">
+
+				<ul>
+					<li>Camada de Rede.
+					<ul>
+						<li>Conceitos básicos.</li>
+						<li>Circuitos virtuais.</li>
+						<li>Datagramas.</li>
+						<li>Roteadores.</li>
+						<li>IP e outros protocolos.</li>
+						<li>NAT.</li>
+						<li>Protocolos de roteamento.</li>
+						<li>Roteamento multicast.</li>
+					</ul></li>
+				</ul>
+				</td>
+			</tr>
+		</table>
+	</div>
+	</section>
+
+	<section>
+	<h1>Bibliografia e Material de Apoio</h1>
+	<div class="slideContent">
+		<center>
+			<div class="block" style="width:1100px;">
+				<div class="blockTitle" style="width: 100%;">
+					<p>Bibliografia Básica</p>
+				</div>
+				<div class="blockBody">
+					<ul>
+						<li>Kurose &amp; Ross, <i>Redes de Computadores e a Internet</i>, Editora Addison-Wesley, 5a. edição, 2005 (Capítulos 1-4).</li>
+					</ul>
+				</div>
+			</div>
+			<br>
+			<center>
+				<div class="block" style="width:1100px;">
+					<div class="blockTitle" style="width: 100%;">
+						<p>Bibliografia Adicional</p>
+					</div>
+					<div class="blockBody">
+						<ul>
+							<li>Tanenbaum, <i>Computer Networks</i>, Editora Pearson, 5a. edição, 2010.</li>
+							<li>S. Keshav, <i>An Engineering Approach to Computer Networking</i>, Editora Addison-Wesley Professional, 1a. edição, 1997.</li>
+						</ul>
+					</div>
+				</div>
+			</center>
+		</center>
+		<br>
+		<center>
+			<div class="block" style="width:1100px;">
+				<div class="blockTitle" style="width: 100%;">
+					<p>Outras Referências</p>
+				</div>
+				<div class="blockBody">
+					<ul>
+						<li>Slides, listas de exercícios, links na página do curso.</li>
+					</ul>
+				</div>
+			</div>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Alguns Detalhes Sobre os Slides</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Fortemente baseados nos slides do livro-texto.
+			<ul>
+				<li>Originais disponíveis em: <tt><a href="http://www-net.cs.umass.edu/kurose-ross-ppt-6e/">http://www-net.cs.umass.edu/kurose-ross-ppt-6e/</a></tt></li>
+				<li>Alguns slides removidos, outros adicionados, outros modificados.</li>
+			</ul></li>
+			<li>Disponibilizados na página do curso em HTML5/Javascript.
+			<ul>
+				<li>Permite alguns elementos multimídia, interativos.</li>
+				<li>PDF disponibilizado em caso de problemas de compatibilidade.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Critério de Avaliação</h1>
+	<div class="slideContent">
+		<center>
+			<div class="block" style="width:1100px;">
+				<div class="blockTitle" style="width: 100%;">
+					<p>Três Provas</p>
+				</div>
+				<div class="blockBody" style="padding-top: 2px; padding-bottom: 2px;">
+					<center>
+						   <span class="math">\(M_p = \frac{P_1 + P_2 + P_3}{3}\)</span>
+					</center>
+					<ul>
+					<li>Reposição: <b>Apenas</b> para alunos que <b>faltaram a uma das provas</b>.
+					<ul>
+						<li><b>Todo o conteúdo</b>.</li>
+					</ul></li>
+					</ul>
+				</div>
+			</div>
+		</center>
+		<br>
+		<center>
+			<div class="block" style="width:1100px;">
+				<div class="blockTitle" style="width: 100%;">
+					<p>Um trabalho em grupo (de até 4 alunos)</p>
+				</div>
+				<div class="blockBody" style="padding-top: 2px; padding-bottom: 2px;">
+					<ul>
+						<li>Tema ainda será definido.</li>
+						<li>Especificação detalhada precisa a ser liberada na página da disciplina.</li>
+					</ul>
+				</div>
+			</div>
+		</center>
+		<br>
+		<center>
+			<div class="block" style="width:1100px;">
+				<div class="blockTitle" style="width: 100%;">
+					<p>Média Final</p>
+				</div>
+				<div class="blockBody" style="padding-top: 2px; padding-bottom: 2px;">
+					<center>
+						   <span class="math">\(M_f = 0{,}8\cdot M_p + 0{,}2\cdot T\)</span>
+					</center>
+				</div>
+			</div>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Calendário (Sujeito a Alterações)</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<center>
+			<style type="text/css">
+.tg  {border-collapse:collapse;border-spacing:0;border-color:#bbb;}
+.tg td{font-size:18px;padding:2px 1px;border-style:solid;border-width:0px;overflow:hidden;word-break:normal;border-color:#bbb;color:#594F4F;background-color:#E0FFEB;}
+.tg th{font-size:18px;font-weight:normal;padding:2px 1px;border-style:solid;border-width:0px;overflow:hidden;word-break:normal;border-color:#bbb;color:#493F3F;background-color:#9DE0AD;}
+.tg .tg-g4jy{color:#00009b;vertical-align:top}
+.tg .tg-rmb8{background-color:#C2FFD6;vertical-align:top}
+.tg .tg-n3ox{background-color:#C2FFD6;color:#fe0000;vertical-align:top}
+.tg .tg-9hbo{font-weight:bold;vertical-align:top}
+.tg .tg-3mlp{background-color:#C2FFD6;font-weight:bold;vertical-align:top}
+.tg .tg-yw4l{vertical-align:top}
+.tg .tg-mejs{color:#fe0000;vertical-align:top}
+</style>
+<table class="tg">
+  <tr>
+    <th class="tg-9hbo">Data</th>
+    <th class="tg-9hbo">Assunto</th>
+  </tr>
+  <tr>
+    <td class="tg-3mlp">20/03</td>
+    <td class="tg-rmb8">Introdução à disciplina. Nomenclaturas, definições, enlaces.</td>
+  </tr>
+  <tr>
+    <td class="tg-9hbo">22/03</td>
+    <td class="tg-yw4l">Internet: arquitetura e filosofias de projeto.</td>
+  </tr>
+  <tr>
+    <td class="tg-3mlp">27/03</td>
+    <td class="tg-rmb8">Comutação de pacotes, multiplexação, enfileiramento.</td>
+  </tr>
+  <tr>
+    <td class="tg-9hbo">29/03</td>
+    <td class="tg-rmb8">Medidas de desempenho, modelos em camadas, histórico.</td>
+  </tr>
+  <tr>
+    <td class="tg-3mlp">03/04</td>
+    <td class="tg-rmb8">Camada de aplicação: princípios, serviços, HTTP (I).</td>
+  </tr>
+  <tr>
+    <td class="tg-9hbo">05/04</td>
+    <td class="tg-yw4l">HTTP (II), Cookies, Web Caches, FTP, E-mail.</td>
+  </tr>
+  <tr>
+    <td class="tg-3mlp">10/04</td>
+    <td class="tg-rmb8">DNS, Peer-to-peer.</td>
+  </tr>
+  <tr>
+    <td class="tg-9hbo">12/04</td>
+    <td class="tg-yw4l">Programação com sockets.</td>
+  </tr>
+  <tr>
+    <td class="tg-3mlp">17/04</td>
+    <td class="tg-rmb8">Camada de transporte: conceitos, modelos de serviço, UDP.</td>
+  </tr>
+  <tr>
+    <td class="tg-9hbo">19/04</td>
+    <td class="tg-yw4l">Princípios de transferência confiável de dados.</td>
+  </tr>
+  <tr>
+    <td class="tg-3mlp">24/04</td>
+    <td class="tg-n3ox">P1 (Conceitos Básicos, Camada de Aplicação)</td>
+  </tr>
+  <tr>
+    <td class="tg-9hbo">26/04</td>
+    <td class="tg-rmb8">Protocolos confiáveis com pipeline, introdução ao TCP.</td>
+  </tr>
+  <tr>
+    <td class="tg-3mlp">01/05</td>
+    <td class="tg-g4jy">Feriado (Dia do Trabalho)</td>
+  </tr>
+  <tr>
+    <td class="tg-9hbo">03/05</td>
+    <td class="tg-rmb8">TCP: transferência confiável, controle de fluxo, gerenciamento.</td>
+  </tr>
+  <tr>
+    <td class="tg-3mlp">08/05</td>
+    <td class="tg-rmb8">TCP: controle de congestionamento.</td>
+  </tr>
+  <tr>
+    <td class="tg-9hbo">10/05</td>
+    <td class="tg-rmb8">Camada de rede: conceitos básicos. Circuitos virtuais vs. redes de datagramas.</td>
+  </tr>
+  <tr>
+    <td class="tg-3mlp">15/05</td>
+    <td class="tg-rmb8">Roteadores: arquitetura, buffers, políticas de enfileiramento.</td>
+  </tr>
+  <tr>
+    <td class="tg-9hbo">17/05</td>
+    <td class="tg-yw4l">Protocolos IP e DHCP.</td>
+  </tr>
+</table>
+			</center>
+		</div>
+		<div class="column" style="width: 50%;">
+			<center>
+			<style type="text/css">
+.tg  {border-collapse:collapse;border-spacing:0;border-color:#bbb;}
+.tg td{font-size:18px;padding:2px 1px;border-style:solid;border-width:0px;overflow:hidden;word-break:normal;border-color:#bbb;color:#594F4F;background-color:#E0FFEB;}
+.tg th{font-size:18px;font-weight:normal;padding:2px 1px;border-style:solid;border-width:0px;overflow:hidden;word-break:normal;border-color:#bbb;color:#493F3F;background-color:#9DE0AD;}
+.tg .tg-lktj{background-color:#C2FFD6;color:#00009b;vertical-align:top}
+.tg .tg-g4jy{color:#00009b;vertical-align:top}
+.tg .tg-rmb8{background-color:#C2FFD6;vertical-align:top}
+.tg .tg-n3ox{background-color:#C2FFD6;color:#fe0000;vertical-align:top}
+.tg .tg-9hbo{font-weight:bold;vertical-align:top}
+.tg .tg-3mlp{background-color:#C2FFD6;font-weight:bold;vertical-align:top}
+.tg .tg-yw4l{vertical-align:top}
+.tg .tg-mejs{color:#fe0000;vertical-align:top}
+</style>
+				<table class="tg">
+  <tr>
+    <th class="tg-9hbo">Data</th>
+    <th class="tg-9hbo">Assunto</th>
+  </tr>
+  <tr>
+    <td class="tg-3mlp">22/05</td>
+    <td class="tg-n3ox">P2 (Camada de Transporte)</td>
+  </tr>
+  <tr>
+    <td class="tg-9hbo">24/05</td>
+    <td class="tg-yw4l">NAT, ICMP e IPv6.</td>
+  </tr>
+  <tr>
+    <td class="tg-3mlp">29/05</td>
+    <td class="tg-rmb8">Protocolos de roteamento: introdução e classificação. Estado de enlaces.</td>
+  </tr>
+  <tr>
+    <td class="tg-9hbo">31/05</td>
+    <td class="tg-yw4l">Vetor de distância. Roteamento hierárquico.</td>
+  </tr>
+  <tr>
+    <td class="tg-3mlp">05/06</td>
+    <td class="tg-rmb8">Roteamento intra-AS vs. inter-AS. RIP, OSPF, BGP.</td>
+  </tr>
+  <tr>
+    <td class="tg-9hbo">07/06</td>
+    <td class="tg-yw4l">RIP, OSPF, BGP: Aula Prática.</td>
+  </tr>
+  <tr>
+    <td class="tg-3mlp">12/06</td>
+    <td class="tg-rmb8">Roteamento Broadcast e Multicast.</td>
+  </tr>
+  <tr>
+    <td class="tg-9hbo">14/06</td>
+    <td class="tg-yw4l">Aula de Dúvidas</td>
+  </tr>
+  <tr>
+    <td class="tg-3mlp">19/06</td>
+    <td class="tg-n3ox">P3 (Camada de Rede)</td>
+  </tr>
+  <tr>
+    <td class="tg-9hbo">21/06</td>
+    <td class="tg-mejs">VR (Se Necessária) / Entrega do Trabalho (por e-mail)</td>
+  </tr>
+  <tr>
+    <td class="tg-3mlp">26/06</td>
+    <td class="tg-rmb8">Divulgação das Notas/Vista (P3/VR)</td>
+  </tr>
+  <tr>
+    <td class="tg-9hbo">28/06</td>
+    <td class="tg-mejs">Apresentação dos Trabalhos</td>
+  </tr>
+  <tr>
+    <td class="tg-3mlp">03/07</td>
+    <td class="tg-n3ox">Apresentação dos Trabalhos</td>
+  </tr>
+  <tr>
+    <td class="tg-9hbo">05/07</td>
+    <td class="tg-g4jy">Preparação para VS (Não Haverá Aula)</td>
+  </tr>
+  <tr>
+    <td class="tg-3mlp">10/07</td>
+    <td class="tg-n3ox">VS (Se Necessária)</td>
+  </tr>
+  <tr>
+    <td class="tg-9hbo">12/07</td>
+    <td class="tg-yw4l">Divulgação das Notas Finais / Vista da VS</td>
+  </tr>
+  <tr>
+    <td class="tg-3mlp">17/07</td>
+    <td class="tg-lktj">Fim de Período (Não Haverá Aula)</td>
+  </tr>
+  <tr>
+    <td class="tg-9hbo">19/07</td>
+    <td class="tg-g4jy">Fim de Período (Não Haverá Aula)</td>
+  </tr>
+</table>
+			</center>
+		</div>
+
+	</div>
+	</section>
+
+	<section>
+	<h1>Calendário: Datas Importantes</h1>
+	<div class="slideContent">
+		<center>
+			<div class="block" style="width:1100px;">
+				<div class="blockTitle" style="width: 100%;">
+					<p>Provas</p>
+				</div>
+				<div class="blockBody">
+					<ul>
+						<li>P<sub>1</sub>: 24/04/2017.</li>
+						<li>P<sub>2</sub>: 22/05/2017.</li>
+						<li>P<sub>3</sub>: 19/06/2017.</li>
+						<li>VR: 21/06/2017.</li>
+						<li>VS: 10/07/2017.</li>
+					</ul>
+				</div>
+			</div>
+		</center>
+		<br>
+			<center>
+				<div class="block" style="width:1100px;">
+					<div class="blockTitle" style="width: 100%;">
+						<p>Entrega do Trabalho</p>
+					</div>
+					<div class="blockBody">
+						<ul>
+							<li>Data limite: 21/06/2017.</li>
+						</ul>
+					</div>
+				</div>
+			</center>
+			<br>
+			<ul>
+				<li>Problemas?</li>
+			</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Informações Sobre os Trabalhos (I)</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Documento de especificação disponibilizado na página.
+			<ul>
+				<li><b>Leiam as especificações o quanto antes</b>.</li>
+				<li>Tirem quaisquer dúvidas por e-mail ou pessoalmente.</li>
+			</ul></li>
+			<li>Trabalhos fora do prazo serão aceitos com até 5 dias de atraso, mas <b>com penalidades</b> na pontuação.
+			<ul>
+				<li>Redução de <b>1 ponto por dia de atraso</b>.</li>
+			</ul></li>
+			<li>Sobre a implementação:
+			<ul>
+				<li>Livre escolha de linguagem.</li>
+				<li>Documentação dos programas faz parte da avaliação.</li>
+				<li><b>Não serão aceitas cópias de outros trabalhos/códigos.</b></li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Informações Sobre os Trabalhos (II)</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Critério de avaliação:
+			<ul>
+				<li>Explicado no documentos de especificação.</li>
+				<li>É (espera-se) pouco subjetivo.</li>
+				<li>Pode ser discutidos <b>antes</b> da entrega dos trabalhos.
+				<ul>
+					<li>Logo, <b>leiam os critérios o quanto antes!</b></li>
+				</ul></li>
+				<li>Notem que, em alguns casos, pontos extras podem ser obtidos.</li>
+			</ul></li>
+			<li><b>Plágio não será tolerado!</b>
+			<ul>
+				<li>Trabalhos plagiados (de colegas ou de qualquer outra fonte) serão <b>desconsiderados</b>.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Informações Sobre os Trabalhos (III)</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Todos os trabalhos podem ser feitos em grupos com 2 a 5 integrantes.
+			<ul>
+				<li>Integrantes devem estar claramente discriminados no momento da entrega.
+				<ul>
+					<li><b>Não serão aceitas inserções, remoções ou substituições de membros após a entrega</b>.</li>
+				</ul></li>
+			</ul></li>
+			<li>Entregas deverão ser feitas por e-mail.
+			<ul>
+				<li>Maiores detalhes no documento de especificação.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Outros Pontos Importantes</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Presença e reprovação por faltas.</li>
+			<li>Exercícios ao final das aulas.</li>
+			<li>Demonstrações práticas e experimentos.</li>
+			<li>Estilo das provas.</li>
+		</ul>
+	</div>
+	</section>
+
+	<section class="secao">
+	<div class="slideContent">
+		Conceitos Básicos
+	</div>
+	</section>
+
+	<section>
+	<h1>O Que É a Internet: Componentes</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 15%;">
+			<img src="imagens/InternetNutsAndBoltsLegenda.svg" style="width: 90%;"/>
+		</div>
+		<div class="column" style="width: 45%;">
+			<ul>
+				<li>Milhões de dispositivos computacionais conectados:
+				<ul>
+					<li><span class="alert">Hosts</span> = <span class="alert">Sistemas finais</span>.</li>
+					<li>Executam <span class="alert">aplicações de rede</span>.</li>
+				</ul></li>
+				<br>
+				<br>
+				<br>
+				<li><span class="alert">Enlaces de comunicação</span>.
+				<ul>
+					<li>Fibra óptica, cobre, rádio, satélite, ...</li>
+					<li>Características variadas.</li>
+				</ul></li>
+				<br>
+				<br>
+				<li><span class="alert">Comutadores de pacotes:</span>
+				<ul>
+					<li>Encaminham pacotes (unidade de dados).</li>
+					<li>Roteadores e <i>switches</i>.</li>
+				</ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 40%;">
+			<img src="imagens/InternetNutsAndBolts.svg" style="width: 90%;"/>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Aplicações &ldquo;Divertidas&rdquo; da Internet</h1>
+	<div class="slideContent">
+		<center>
+			<img src="imagens/FunInternetApps.svg" style="width: 70%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>O Que É a Internet: &ldquo;Rede de Redes&rdquo;</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 60%;">
+			<br>
+			<br>
+			<br>
+			<br>
+			<ul>
+				<li>Internet: Rede de Redes.
+				<ul>
+					<li>Conjunto de <span class="alert">ISPs</span> conectados.</li>
+				</ul></li>
+				<li><span class="alert">Protocolos</span> controlam recebimento, envio de mensagens.
+				<ul>
+					<li><i>e.g.</i>, TCP, IP, HTTP, Skype, IEEE 802.11.</li>
+				</ul></li>
+				<li><span class="alert">Padrões da Internet.</span>
+				<ul>
+					<li>RFC: <i>Request For Comments</i>.</li>
+					<li>IETF: <i>Internet Engineering Task Force</i>.</li>
+				</ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 40%;">
+			<center>
+				<img src="imagens/InternetNutsAndBolts.svg" style="width: 90%;"/>
+			</center>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>O Que É a Internet: Visão de Serviço</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 60%;">
+			<br>
+			<br>
+			<br>
+			<ul>
+				<li><span class="alert">Infraestrutura que provê serviços às aplicações</span>:
+				<ul>
+					<li>Web, VoIP, email, jogos, comércio eletrônico, redes sociais, ...</li>
+				</ul></li>
+				<li><span class="alert">Provê interface de programação às aplicações</span>:
+				<ul>
+					<li>Chamadas que permitem a aplicações transmissoras e receptoras &ldquo;conectar-se&rdquo; à Internet.</li>
+					<li>Múltiplas opções de serviço, análogo ao serviço de correio.</li>
+				</ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 40%;">
+			<center>
+				<img src="imagens/InternetNutsAndBolts.svg" style="width: 90%;"/>
+			</center>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Estrutura da Internet: Rede de Redes (I)</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Sistemas finais se conectam à Internet via <span class="alert">ISPs de acesso</span>.
+			<ul>
+				<li>ISP = <i>Internet Service Provider</i> (Provedor de Acesso).</li>
+				<li>ISP de acesso: residencias, empresas, universidades.</li>
+			</ul></li>
+			<li>ISPs de acesso precisar ser interconectados de alguma forma.
+			<ul>
+				<li>De forma que quaisquer dois <i>hosts</i> possam trocar informações.</li>
+			</ul></li>
+			<li>Rede resultante é muito complexa.
+			<ul>
+				<li>Evolução guiada por <span class="alert">fatores econômicos</span>, <span class="alert">políticas nacionais</span>.</li>
+			</ul></li>
+			<li>Vamos usar uma abordagem incremental para entender a estrutura atual da Internet.</li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Estrutura da Internet: Rede de Redes (II)</h1>
+	<div class="slideContent">
+		<ul>
+			<li><span class="alert">Pergunta:</span> como conectar <b>milhões</b> de ISPs?</li>
+		</ul>
+		<center>
+			<img src="imagens/EstruturaDaInternet1.svg" style="width: 75%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Estrutura da Internet: Rede de Redes (III)</h1>
+	<div class="slideContent">
+		<ul>
+			<li><span class="alert">Opção 1:</span> conectar cada ISP a todos os outros diretamente?</li>
+		</ul>
+		<center>
+			<img src="imagens/EstruturaDaInternet2.svg" style="width: 75%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Estrutura da Internet: Rede de Redes (IV)</h1>
+	<div class="slideContent">
+		<ul>
+			<li><span class="alert">Opção 2:</span> conectar cada ISP a um ISP Global?
+			<ul>
+				<li>ISP de acesso e global possuem acordo comercial.</li>
+			</ul></li>
+		</ul>
+		<center>
+			<img src="imagens/EstruturaDaInternet3.svg" style="width: 75%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Estrutura da Internet: Rede de Redes (V)</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Mas se um ISP global é um modelo de negócio viável, haverá competidores...</li>
+		</ul>
+		<center>
+			<img src="imagens/EstruturaDaInternet4.svg" style="width: 75%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Estrutura da Internet: Rede de Redes (VI)</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Mas se um ISP global é um modelo de negócio viável, haverá competidores...
+			<ul>
+				<li>... que precisarão se interconectar de alguma forma.</li>
+			</ul></li>
+		</ul>
+		<center>
+			<img src="imagens/EstruturaDaInternet5.svg" style="width: 75%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Estrutura da Internet: Rede de Redes (VII)</h1>
+	<div class="slideContent">
+		<ul>
+			<li>E talvez também haja espaço para <span class="alert">ISPs regionais</span>.
+			<ul>
+				<li>Interconectam ISPs de acesso aos ISPs globais.</li>
+			</ul></li>
+		</ul>
+		<center>
+			<img src="imagens/EstruturaDaInternet6.svg" style="width: 75%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Estrutura da Internet: Rede de Redes (VIII)</h1>
+	<div class="slideContent">
+		<ul>
+			<li>E, quem sabe, <span class="alert">provedores de conteúdo</span> também queiram suas próprias redes.
+			<ul>
+				<li>Abrangência global, aproximam conteúdo dos usuários.</li>
+			</ul></li>
+		</ul>
+		<center>
+			<img src="imagens/EstruturaDaInternet7.svg" style="width: 75%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Estrutura da Internet: Hierarquia dos ISPs</h1>
+	<div class="slideContent">
+		<center>
+			<img src="imagens/HierarquiaISPs.svg" style="width: 70%;"/>
+		</center>
+		<ul>
+			<li>No topo: pequeno número de grandes redes bem conectadas.
+			<ul>
+				<li>ISPs comerciais <span class="alert">&ldquo;tier-1&rdquo;</span> (<i>e.g.</i>, Level 3, Sprint, AT&amp;T), abrangência nacional e internacional.</li>
+				<li><span class="alert">Redes de provedores de conteúdo</span> (<i>e.g.</i>, Google): redes privadas, conectando <i>data centers</i> à Internet, geralmente pulando ISPs tier-1 e regionais.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Estrutura da Internet: ISPs <i>tier-1</i> (<i>e.g.</i>, Sprint) e POPs</h1>
+	<div class="slideContent">
+		<center>
+			<img src="imagens/POP.svg" style="width: 75%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>O Que É um Protocolo?</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 45%;">
+			<ul>
+				<li><span class="alert">Protocolos humanos:</span>
+				<ul>
+					<li>&ldquo;Que horas são?&rdquo;</li>
+					<li>&ldquo;Posso fazer uma pergunta?&rdquo;</li>
+					<li>Apresentações.</li>
+				</ul></li>
+				<li>Mensagens específicas são enviadas.</li>
+				<li>Ações específicas são tomadas quando mensagens são recebidas, ou em outros eventos.</li>
+			</ul>
+		</div>
+
+		<div class="column" style="width: 55%;">
+			<ul>
+				<li><span class="alert">Protocolos de rede:</span>
+				<ul>
+					<li>Computadores, ao invés de humanos.</li>
+					<li>Toda comunicação na Internet é governada por protocolos.</li>
+				</ul></li>
+				<li><span class="alert">Garantem interoperabilidade</span> entre dispositivos heterogêneos.</li>
+			</ul>
+			<br>
+			<center>
+				<div style="width: 70%; border: 2px solid #19836E;">
+					Protocolos definem o <span class="alert">formato e a ordem</span> de <span class="alert">mensagens enviadas, recebidas</span> entre as entidades de rede, e quais <span class="alert">ações são tomadas</span> em cada evento.
+				</div>
+			</center>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>O Que São Protocolos: Exemplos</h1>
+	<div class="slideContent">
+		<center>
+			<img src="imagens/ExemploProtocolos.svg" style="width: 70%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Enlaces de Comunicação</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Ou <i>links</i>, em inglês.</li>
+			<li>Interconectam <span class="alert">dois ou mais</span> dispositivos computacionais.
+			<ul>
+				<li>Ponto-a-ponto <i>vs.</i> compartilhados.</li>
+			</ul></li>
+			<li>Variam em termos de:
+			<ul>
+				<li>Meio físico.</li>
+				<li>Taxa de transmissão.</li>
+				<li>Comprimento/tempo de propagação.</li>
+				<li>Probabilidade de falhas na transmissão.</li>
+				<li>...</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Enlaces de Comunicação: Meio Físico (I)</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 55%;">
+			<ul>
+				<li>O que existe &ldquo;entre&rdquo; transmissor e receptor.</li>
+				<li>Transporta os bits.
+				<ul>
+					<li>Valor do bit transmitido corresponde a alguma <span class="alert">grandeza física mensurável</span>.
+					<ul>
+						<li>Tensão em um par de fios, intensidade luminosa, frequência de uma onda sonora, ...</li>
+					</ul></li>
+					<li>Transmissor manipula a grandeza, receptor a monitora.</li>
+				</ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 45%;">
+			<ul>
+				<li><span class="alert">Meios guiados:</span>
+				<ul>
+					<li>Sinal se <span class="alert">propaga</span> ao longo de um meio solido.</li>
+					<li>Sinal é (praticamente) &ldquo;confinado&rdquo; ao meio.</li>
+				</ul></li>
+				<li><span class="alert">Meios não-guiados:</span>
+				<ul>
+					<li>Sinal se propaga de forma livre.</li>
+					<li>Tende a se espalhar pelo espaço.</li>
+				</ul></li>
+			</ul>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Enlaces de Comunicação: Meio Físico (II)</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li><span class="alert">Par-trançado:</span>
+				<ul>
+					<li>Dois fios de cobre com isolamento.
+					<ul>
+						<li>Categoria 5: Ethernet de 100 Mb/s, 1 Gb/s.</li>
+						<li>Categoria 6: Ethernet de 10 Gb/s.</li>
+					</ul></li>
+					<br>
+					<center>
+						<img src="imagens/CAT-6.svg" style="width: 60%;"/>
+					</center>
+				</ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li><span class="alert">Cabo coaxial:</span>
+				<ul>
+					<li>Dois condutores de cobre concêntricos.</li>
+					<li>Bidirecional.</li>
+					<li>Banda larga:
+					<ul>
+						<li>Múltiplos canais em um mesmo cabo.</li>
+						<li>HFC.</li>
+					</ul></li>
+				</ul></li>
+				<br>
+				<center>
+					<img src="imagens/Coaxial.svg" style="width: 60%;"/>
+				</center>
+			</ul>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Enlaces de Comunicação: Meio Físico</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 55%;">
+			<ul>
+				<li><span class="alert">Fibra óptica:</span>
+				<ul>
+					<li>Fibra de vidro carregando pulsos de luz, cada pulso um bit.</li>
+					<li>Altas velocidade de transmissão ponto-a-ponto: dezenas a centenas de Gb/s.
+					<ul>
+						<li>Em laboratório, 15,5 Tb/s em enlace de 7000 Km.</li>
+					</ul></li>
+					<li>Baixa ocorrência de erros de transmissão.
+					<ul>
+						<li>Enlaces longos, com poucos repetidores.</li>
+						<li>Imune a interferências eletromagnéticas.</li>
+					</ul></li>
+				</ul></li>
+				<br>
+				<center>
+					<img src="imagens/FibraOptica.svg" style="width: 50%;"/>
+				</center>
+			</ul>
+		</div>
+		<div class="column" style="width: 45%;">
+			<ul>
+				<li><span class="alert">Rádio:</span>
+				<ul>
+					<li>Sinal transportado no espectro eletromagnético.</li>
+					<li>Sem &ldquo;cabos&rdquo;.</li>
+					<li>Bidirecional.</li>
+					<li>Susceptível a diversos fenômenos do ambiente:
+					<ul>
+						<li>Reflexão.</li>
+						<li>Obstrução.</li>
+						<li>Interferência.</li>
+					</ul></li>
+				</ul></li>
+				<li>Diversos tipos:
+				<ul>
+					<li>Microondas terrestres.</li>
+					<li>LAN (<i>e.g.</i>, Wi-Fi).</li>
+					<li>WAN (<i>e.g.</i>, 3G, 4G, WiMax).</li>
+					<li>Satélite.</li>
+				</ul></li>
+			</ul>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Enlaces de Comunicação: Taxa de Transmissão</h1>
+	<div class="slideContent">
+		<ul>
+			<li>O quão rapidamente os bits são &ldquo;colocados&rdquo; no canal.
+			<ul>
+				<li><i>e.g.</i>, o quão rápidos são os pulsos em uma fibra óptica.</li>
+			</ul></li>
+			<li>Também chamada de: capacidade do enlace, banda, largura de banda.</li>
+			<li>Quanto maior a taxa de transmissão, <span class="alert">menor o tempo necessário para transmitir um pacote</span>.
+			<ul>
+				<li>Para um pacote de L bits, enlace de capacidade R b/s:</li>
+				<br>
+				<center>
+				Tempo para colocar bits no canal <span class="math inline"> = \(\frac{L (bits)}{R (bits/s)}\)</span>
+				</center>
+				<br>
+			</ul></li>
+			<li><span class="alert">Importante: este tempo não é o tempo total de transmissão do pacote pelo enlace!!!</span></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Enlaces de Comunicação: Propagação</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Uma vez colocado no enlace, bit <b>não</b> chega instantaneamente no receptor.</li>
+			<li>Ele precisa se <span class="alert">propagar</span> pelo meio de transmissão.
+			<ul>
+				<li><i>e.g.</i>, uma onda sonora que se propaga no ar a 340 m/s.</li>
+			</ul></li>
+			<li>Cada meio de transmissão tem sua velocidade de propagação do sinal.
+			<ul>
+				<li>Depende do tipo de sinal, características do meio, ...</li>
+			</ul></li>
+			<li>Dado o <span class="alert">comprimento do canal (d)</span> e velocidade de propagação (s), tem-se o tempo de propagação:</li>
+			<br>
+			<center>
+				Tempo de propagação de um bit <span class="math inline">\(= \frac{d}{s}\)</span>
+			</center>
+			<br>
+			<li><span class="alert">Importante: completamente independente da capacidade do enlace e do número de bits do pacote!!!</span></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Enlaces de Comunicação: Probabilidade de Falha</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Toda transmissão em um enlace <span class="alert">pode falhar</span>.
+			<ul>
+				<li>Interferências, mau-contato, falhas de <i>hardware</i>, ...</li>
+			</ul></li>
+			<li>Por qualquer motivo, receptor <span class="alert">não é capaz de entender conteúdo do pacote</span>.</li>
+			<li>Em redes de <span class="alert">comutação de pacotes</span>, pacote transmitido é <span class="alert">completamente perdido</span>.</li>
+			<li>Alguns enlaces são mais propensos a falhas que outros.
+			<ul>
+				<li><i>e.g.</i>, enlaces de rádio são muito propensos, enlaces de fibra óptica são pouco propensos.</li>
+			</ul></li>
+			<li>Transmissões mal-sucedidas reduzem o desempenho do enlace.</li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Resumo da Aula...</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li>Componentes da Internet:
+				<ul>
+					<li><i>Hosts</i>, comutadores (roteadores), enlaces.</li>
+				</ul></li>
+				<li>Várias visões da Internet:
+				<ul>
+					<li>Rede de redes, <span class="alert">ISPs</span> interconectados.</li>
+					<li>Serviço para aplicações.</li>
+				</ul></li>
+				<li>Estrutura da Internet:
+				<ul>
+					<li>ISPs de acesso, regionais, <i>tier-1</i>.</li>
+					<li>Redes de provedores de conteúdo.</li>
+					<li>PoP: <i>Point-of-Presence</i>.
+					<ul>
+						<li>Interconexão entre ISP e outras redes.</li>
+					</ul></li>
+				</ul></li>
+			</ul>
+		</div>
+
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li>Protocolos:
+				<ul>
+					<li>Convenções de comunicação.</li>
+					<li>Definem formatos de mensagens, ações.</li>
+					<li>Necessários para possibilitar comunicação entre elementos heterogêneos.</li>
+				</ul></li>
+				<li>Enlaces:
+				<ul>
+					<li>Interligam dois ou mais dispositivos computacionais.</li>
+					<li>Variam em: meio físico, taxa de transmissão, comprimento/propagação, confiabilidade, ...</li>
+				</ul></li>
+			</ul>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Próxima Aula...</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Continuaremos nossa visão geral sobre a Internet.</li>
+			<li>Próximo tópico: arquitetura e filosofias de projeto.
+			<ul>
+				<li>Núcleo <i>vs.</i> borda.</li>
+				<li>Componentes e resposabilidades.</li>
+				<li>Argumento fim-a-fim.</li>
+				<li>Princípio KISS.</li>
+			</ul></li>
+		</ul>
+		<center>
+			<h1 class="title">Sejam bem-vindos!</h1>
+		</center>
+	</div>
+	</section>
+
+	<!-- {{{{ dzslides core
+	#
+	#
+	#     __  __  __       .  __   ___  __
+	#    |  \  / /__` |    | |  \ |__  /__`
+	#    |__/ /_ .__/ |___ | |__/ |___ .__/ core :€
+	#
+	#
+	# The following block of code is not supposed to be edited.
+	# But if you want to change the behavior of these slides,
+	# feel free to hack it!
+	#
+	-->
+
+    <!-- More CSS -->
+	<link href='../template/css/slides.css' id="slides" rel='stylesheet' type='text/css'>
+	<link href='../template/css/presentationSpecific2.css' id="presentationSpecific2" rel='stylesheet' type='text/css'>
+
+    <!-- More Javascript -->
+	<script type="text/javascript" src="../template/js/dz.js"></script>
+
+	<!-- More CSS -->
+	<link href='../template/css/notesSpecific.css' id="notesSpecific" rel='stylesheet' type='text/css'>
+	<link href='../template/css/printSpecific.css' id="printSpecific" rel='stylesheet' type='text/css'>
+</body>
+</html>

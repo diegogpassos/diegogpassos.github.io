@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <!-- Meta info -->
+	<meta charset="utf-8">
+	<meta name="shortauthor" content="Diego Passos"/>
+	<meta name="shorttitle" content="Redes Sem Fio: Conceitos, Camada Física"/>
+	<meta name="shortevent" content="Redes de Computadores II"/>
+	<title>Redes de Computadores II: Aula 9</title>
+
+    <!-- Math support -->
+	<script type="text/x-mathjax-config">
+		MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+			MathJax.InputJax.TeX.Definitions.number = /^(?:[0-9]+(?:\.[0-9]{3})*(?:\{,\}[0-9]*)*|\{,\}[0-9]+)/
+		});
+	</script>
+		<!--<script src="../../../../MathJax-2.6-latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>-->
+		<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+
+    <!-- Fonts -->
+	<link href='https://fonts.googleapis.com/css?family=Lora:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
+	<!--<link href='../../../../Fonts/Lora/lora.css' rel='stylesheet' type='text/css'>-->
+
+    <!-- CSS -->
+	<link href='../template/css/template.css' id="template" rel='stylesheet' type='text/css'>
+	<link href='../template/css/presentationSpecific.css' id="presentationSpecific" rel='stylesheet' type='text/css'>
+
+    <!-- Javascript -->
+	<script type="text/javascript" src="../template/js/audio.js"></script>
+</head>
+
+<body>
+    <!-- Audio handlers -->
+     <audio src="audio/La.wav" id="La.wav" preload="auto"></audio>
+     <audio src="audio/ASCII_a_AM.wav" id="ASCII_a_AM.wav" preload="auto"></audio>
+     <audio src="audio/Do.wav" id="Do.wav" preload="auto"></audio>
+     <audio src="audio/ASCII_a_FM.wav" id="ASCII_a_FM.wav" preload="auto"></audio>
+     <audio src="audio/ASCII_a_FM_150.wav" id="ASCII_a_FM_150.wav" preload="auto"></audio>
+     <audio src="audio/ASCII_a_FM_75.wav" id="ASCII_a_FM_75.wav" preload="auto"></audio>
+     <audio src="audio/ASCII_a_FM_4niveis.wav" id="ASCII_a_FM_4niveis.wav" preload="auto"></audio>
+     <audio src="audio/ASCII_a_multiPercurso.wav" id="ASCII_a_multiPercurso.wav" preload="auto"></audio>
+
+
+    <!-- Title Slide -->
+	<section>
+
+        <div class="slideContent">
+            <h1 class="title">Aula 9 - Redes Sem Fio: Conceitos e Camada Física</h1>
+            <h2 class="author">Diego Passos</h2>
+            <h4 class="institution">Universidade Federal Fluminense</h4>
+            <h3 class="date">Redes de Computadores II</h3>
+        </div>
+
+	</section>
+
+    <!-- Content slides -->
+
+	<section>
+	<h1>Na Última Aula...</h1>
+	<div class="slideContent">
+			<ul>
+				<li>Vimos um exemplo de rede nível 2 complexa: <i>Data Center</i>.
+				<ul>
+					<li>Alto grau de interconectividade.</li>
+					<li>Cria <i>loops</i> físicos <b>propositais</b>.</li>
+					<li>Objetivo: <b>múltiplos caminhos, redundância, confiabilidade</b>.</li>
+				</ul></li>
+				<li>Vimos um exemplo do funcionamento (quase) completo da pilha TCP/IP.
+				<ul>
+					<li>Envolvendo HTTP, TCP, IP, ARP, UDP, DHCP, ...</li>
+				</ul></li>
+			</ul>
+
+	</div>
+	</section>
+
+
+	<section>
+	<h1>Capítulo 6: Motivação, Contexto e Objetivos</h1>
+	<div class="slideContent">
+
+		<ul>
+			<li> Número de linhas de celular já é maior que o de linhas de telefones fixos (6 para 1 no Brasil!).</li>
+			<li> Número de dispositivos sem fio conectados à Internet é equivalente ao de dispositivos cabeados.
+			<ul>
+				<li> Laptops, tablets, celulares prometem conectividade ubíqua à Internet.</li>
+			</ul>
+			</li>
+			<li> Dois desafios importantes (embora diferentes):
+			<ul>
+				<li> <span class="alert">redes sem fio:</span> comunicação através de enlaces sem fio.</li>
+				<li> <span class="alert">mobilidade:</span> suporte a usuários que mudam seu ponto de conexão com a rede.</li>
+			</ul>
+			</li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Agenda</h1>
+	<div class="slideContent">
+
+
+		<div class="column" style="width: 50% ;">
+			<ul>
+				<li> Introdução.</li>
+				<li> <span class="alert">Redes Sem Fio</span>.
+				<ul>
+					<li> Características dos enlaces sem fio.
+					<ul>
+						<li> CDMA.</li>
+					</ul>
+					</li>
+					<li> Redes locais IEEE 802.11 (&ldquo;Wi-Fi&rdquo;).</li>
+					<li> Acesso à Internet via Rede Celular.
+					<ul>
+						<li> Arquiteturas.</li>
+						<li> Padrões (<i>e.g.</i>, GSM).</li>
+					</ul>
+					</li>
+				</ul>
+				</li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50% ;">
+			<ul>
+				<li> <span class="alert">Mobilidade</span>
+				<ul>
+					<li> Princípios: Endereçamento e Roteamento para Usuários Móveis.</li>
+					<li> IP Móvel.</li>
+					<li> Suporte à Mobilidade em Redes Celular.</li>
+					<li> Mobilidade e Protocolos de Camadas Superiores.</li>
+					<li> Sumário.</li>
+				</ul>
+				</li>
+			</ul>
+		</div>
+
+	</div>
+	</section>
+
+	<section class="secao">
+	<div class="slideContent">
+		Introdução
+	</div>
+	</section>
+
+	<section>
+	<h1>Elementos de uma Rede Sem Fio (I)</h1>
+	<div class="slideContent">
+
+
+		<img src="imagens/Elementos.svg" style="height: 560px ;"/>
+
+	</div>
+	</section>
+
+	<section>
+	<h1>Elementos de uma Rede Sem Fio (II)</h1>
+	<div class="slideContent">
+
+
+		<div class="column" style="width: 50% ;">
+
+			<img src="imagens/Elementos.svg" style="height: 560px ;"/>
+
+		</div>
+		<div class="column" style="width: 50% ;">
+			<br>
+			<br>
+			<br>
+			<ul>
+				<li> Hosts sem fio.
+				<ul>
+					<li> Laptops, smartphones.</li>
+					<li> Rodam aplicações.</li>
+					<li> Podem ser estacionários (não-móveis) ou móveis.
+					<ul>
+						<li> Sem fio <b>não</b> é sinônimo de mobilidade!</li>
+					</ul>
+					</li>
+				</ul>
+				</li>
+			</ul>
+		</div>
+
+	</div>
+	</section>
+
+	<section>
+	<h1>Elementos de uma Rede Sem Fio (III)</h1>
+	<div class="slideContent">
+
+
+		<div class="column" style="width: 50% ;">
+
+			<img src="imagens/Elementos.svg" style="height: 560px ;"/>
+
+		</div>
+		<div class="column" style="width: 50% ;">
+			<br>
+			<br>
+			<br>
+			<ul>
+				<li> Estação base.
+				<ul>
+					<li> Tipicamente conectadas a redes cabeadas.</li>
+					<li> <i>Relay</i> &mdash; responsável por enviar pacotes entre rede cabeada e hosts sem fio na sua &ldquo;área&rdquo;.
+					<ul>
+						<li> <i>e.g.</i>, torres de celular, pontos de acesso 802.11.</li>
+					</ul>
+					</li>
+				</ul>
+				</li>
+			</ul>
+		</div>
+
+	</div>
+	</section>
+
+	<section>
+	<h1>Elementos de uma Rede Sem Fio (IV)</h1>
+	<div class="slideContent">
+
+
+		<div class="column" style="width: 50% ;">
+
+			<img src="imagens/Elementos.svg" style="height: 560px ;"/>
+
+		</div>
+		<div class="column" style="width: 50% ;">
+			<br>
+			<br>
+			<br>
+			<ul>
+				<li> Enlace sem fio.
+				<ul>
+					<li> Tipicamente, conectam hosts sem fio à estação base.</li>
+					<li> Também podem ser usadas como enlaces do <i>backbone</i>.</li>
+					<li> Protocolo de acesso múltiplo coordena uso do enlace.</li>
+					<li> Distâncias variadas, múltiplas taxas de transmissão.</li>
+				</ul>
+				</li>
+			</ul>
+		</div>
+
+	</div>
+	</section>
+
+	<section>
+	<h1>Características de Enlaces em Algumas Tecnologias Sem Fio</h1>
+	<div class="slideContent">
+
+		<center>
+			<img src="imagens/TaxasWireless.png" style="height: 560px ;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Rede Infraestruturada <i>vs.</i> Sem Infraestrutura (I)</h1>
+	<div class="slideContent">
+
+
+		<div class="column" style="width: 50% ;">
+
+			<img src="imagens/Elementos.svg" style="height: 560px ;"/>
+
+		</div>
+		<div class="column" style="width: 50% ;">
+			<br>
+			<br>
+			<br>
+			<br>
+			<ul>
+				<li> <span class="alert">Rede Infraestruturada:</span>
+				<ul>
+					<li> Estação base interconecta hosts sem fio à rede cabeada.</li>
+					<li> <i><b>Handoff:</b></i> cliente muda de estação base.</li>
+				</ul>
+				</li>
+			</ul>
+		</div>
+
+	</div>
+	</section>
+
+	<section>
+	<h1>Rede Infraestruturada <i>vs.</i> Sem Infraestrutura (II)</h1>
+	<div class="slideContent">
+
+
+		<div class="column" style="width: 50% ;">
+			<center>
+				<img src="imagens/AdHoc.svg" style="height: 560px ;"/>
+			</center>
+		</div>
+		<div class="column" style="width: 50% ;">
+			<br>
+			<br>
+			<br>
+			<ul>
+				<li> <span class="alert">Rede Sem Infraestrutura:</span>
+				<ul>
+					<li> Sem estações base.</li>
+					<li> Nós podem transmitir diretamente para outros nós dentro da sua área de cobertura.</li>
+					<li> Nós se organizam em uma rede: por exemplo, podem rotear pacotes entre eles.</li>
+					<li> Muitas vezes chamadas de <i>ad hoc</i>.</li>
+				</ul>
+				</li>
+			</ul>
+		</div>
+
+	</div>
+	</section>
+
+	<section>
+	<h1>Taxonomia de Redes Sem Fio</h1>
+	<div class="slideContent">
+
+		<center>
+			<table style="font-size: 80%; width: 90%; padding: 1%;">
+				<tr>
+					<th>     </th><th> <b>Um Salto</b> </th><th> <b>Múltiplos Saltos</b> </th>
+				</tr>
+
+				<tr>
+					<td style="width: 24%;">    <b>Infraestruturada</b> </td><td style="width: 38%;"> Host se conecta a estação base (Wi-Fi, WiMax, celular), que se conecta a uma rede maior. </td><td style="width: 38%;"> Host pode precisar usar vários <i>relays</i> para se conectar a uma rede maior: rede <i>mesh</i> (ou malha); WDS, em redes Wi-Fi.</td>
+				</tr>
+
+				<tr>
+					<td>    <b>Sem Infraestrutura</b> </td><td> Sem estação base, sem conexão a outras redes (Bluetooth, redes ad hoc). </td><td> Sem estação base, sem conexão a outras redes. Hosts podem precisar usar vários <i>relays</i> para alcançar outros nós: VANETs, MANETs.</td>
+				</tr>
+			</table>
+		</center>
+	</div>
+	</section>
+
+	<section class="secao">
+	<div class="slideContent">
+		Alguns Conceitos de Camada Física
+	</div>
+	</section>
+
+	<section>
+	<h1>Alguns Conceitos de Camada Física: Objetivos</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Camada física <b>não</b> é um dos focos da nossa disciplina.</li>
+			<li><b>Não</b> veremos detalhes técnicos sobre o funcionamento desta camada.</li>
+			<li><b>Mas...</b>
+			<ul>
+				<li>Discutiremos de forma bastante breve como transmissões ocorrem/podem ocorrer.</li>
+				<li>Veremos alguns exemplos simplificados.</li>
+			</ul></li>
+		  <li>Objetivo: estabelecer de forma <b>intuitiva</b> alguns conceitos/propriedades da camada física.</li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>(Breve) Introdução à Camada Física: Conceitos e Exemplo</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50% ;">
+			<ul>
+			<li><b>Camada física</b>:
+				<ul>
+				<li>Define como a informação é representada em um canal de comunicação.</li>
+				</ul>
+			</li>
+			<li><b>Transmissor</b>:
+				<ul>
+				<li>Manipula características do meio físico de transmissão.
+					<ul>
+						<li><i>e.g.</i>, potencial elétrico, amplitude de uma onda acústica.</li>
+					</ul>
+				</li>
+				</ul>
+			</li>
+			<li><b>Receptor</b>:
+				<ul>
+				<li>Observa as características e suas variações.</li>
+				</ul>
+			</li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50% ;">
+			<ul>
+				<li>Exemplo simples: comunicação através de lanternas.
+				<ul>
+					<li> Duas pessoas a certa distância.</li>
+					<li> Muito longe para se ouvirem.</li>
+					<li> Mas possuem lanternas.
+						<ul>
+							<li>Cada um é capaz de ver o brilho da lanterna do outro.</li>
+						</ul>
+					</li>
+					<li> Pode-se arbitrar um código:</li>
+				</ul>
+				</li>
+			</ul>
+			<center>
+				<img src="imagens/CodificacaoLanterna.svg" style="width: 90%;"/>
+			</center>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>(Breve) Introdução à Camada Física: Mensagens Complexas</h1>
+	<div class="slideContent">
+		<div class="column" style="width:60% ;">
+			<ul>
+			<li><b>Ainda usando o exemplo das lanternas</b>:
+				<ul>
+					<li>Transmitir bits individuais é simples.</li>
+					<li>Mas como transmitir mensagens complexas (mais de 1 bit)?</li>
+					<li>Simples:
+						<ul>
+							<li>Como sequência de bits.</li>
+							<li>A cada novo bit, alteramos o <b>estado</b> da lanterna.</li>
+						</ul>
+					</li>
+					<li>E quanto a bits iguais em sucessão?
+						<ul>
+							<li>Arbitramos uma <b>duração</b> para cada bit.</li>
+							<li>Tempo em que a lanterna é mantida em um estado para representar bit.</li>
+							<li>Exemplo (duração de 1 segundo): lanterna acessa por 6 segundos &rArr; 6 bits 1.</li>
+						</ul>
+					</li>
+				</ul>
+			</li>
+		</div>
+				<script type="text/javascript" >
+					var exemploLanternaASCII = '';
+					var exemploLanternaTempo;
+
+					function exemploLanternaRecomputaASCII() {
+
+						var ascii = document.getElementById('exemploLanternaASCII');
+						var entrada = document.getElementById('exemploLanternaCaractere');
+						var representacao = entrada.value.charCodeAt(0).toString(2);
+
+						representacao = ('00000000' + representacao).slice(-8);
+						ascii.value = representacao;
+					}
+
+					function exemploLanternaAnimacao() {
+
+						var svg = document.getElementById('exemploLanternaLanterna').getSVGDocument();
+						var capa = svg.getElementById('Capa');
+						var tempoLabel = document.getElementById('exemploLanternaTempo');
+
+						if (exemploLanternaASCII == '') {
+
+							exemploLanternaASCII = document.getElementById("exemploLanternaASCII").value;
+							exemploLanternaTempo = 0;
+						}
+						else {
+
+							exemploLanternaTempo += 500;
+						}
+
+						console.log(exemploLanternaASCII);
+
+						var ch = exemploLanternaASCII.charAt(0);
+
+						if (ch == '0') {
+
+							capa.removeAttribute("display");
+						}
+						else {
+
+							capa.setAttribute("display", "none");
+						}
+
+						tempoLabel.innerHTML = exemploLanternaTempo;
+
+						exemploLanternaASCII = exemploLanternaASCII.substring(1);
+
+						if (exemploLanternaASCII == '') return ;
+						setTimeout(exemploLanternaAnimacao, 500);
+					}
+				</script>
+		<div class="column" style="width: 40% ;">
+			<center>
+				<h3>Transmissão de caractere ASCII.</h3>
+				<table class="align" style="width: 70%;">
+					<tr>
+						<td style="width: 40%;">Entrada</td>
+						<td><input type="text" id="exemploLanternaCaractere" name="exemploLanternaCaractere" value="a" size="10" maxlength="1" style="font-size: 80%; padding: 0.5%;" onChange="exemploLanternaRecomputaASCII();"/></td>
+					</tr>
+					<tr>
+						<td>ASCII</td>
+						<td><input type="text" readonly="true" id="exemploLanternaASCII" name="exemploLanternaASCII" value="01100001" size="10" maxlength="8" style="font-size: 80%; padding: 0.5%;" /></td>
+					</tr>
+				</table>
+				<br>
+				<input type="submit" name="exemploLanternaTransmitir" value="Transmitir" style="padding: 0.5%; font-size: 90%; font-family: 'Lora', sans-serif;; " onClick="exemploLanternaAnimacao();"/>
+				<br>
+				<object id="exemploLanternaLanterna" type="image/svg+xml" data="imagens/Lanterna.svg" width="60%"></object>
+				<br>
+				<b>Tempo = <span id="exemploLanternaTempo">0</span> ms</b>
+			</center>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>(Breve) Introdução à Camada Física: Trocando Lanternas por Circuitos</h1>
+	<div class="slideContent">
+		<script type="text/javascript">
+			function exemploMultimetroChaveia() {
+
+				var svg = document.getElementById('exemploMultimetroMultimetro');
+				svg = svg.getSVGDocument()
+
+				var chaveOn = svg.getElementById('Chave');
+				var chaveOff = svg.getElementById('ChaveOff');
+				var leitura = svg.getElementById('Leitura');
+
+				if (chaveOn.getAttribute('display') == null) {
+
+					chaveOn.setAttribute('display', 'none');
+					chaveOff.removeAttribute('display');
+					leitura.innerHTML = "1000";
+				}
+				else {
+
+					chaveOff.setAttribute('display', 'none');
+					chaveOn.removeAttribute('display');
+					leitura.innerHTML = "0000";
+				}
+			}
+		</script>
+			<ul>
+			<li>Suponha agora que as duas pessoas não tenham mais lanternas.</li>
+			<li>Ao invés disso, cada uma tem acesso a potas de um par de fios de cobre.
+				<ul>
+					<li>Transmissor tem ainda uma bateria e uma chave.</li>
+					<li>Receptor tem um voltímetro.</li>
+				</ul>
+			</li>
+			</ul>
+			<center>
+				<object id="exemploMultimetroMultimetro" type="image/svg+xml" data="imagens/TrasmissaoEletricidade.svg" width="70%"></object>
+			</center>
+			<ul>
+			<li>Transmissor pode abrir e fechar o circuito.</li>
+			<li>Dependendo do estado da chave, a leitura do voltímetro muda.
+				<ul>
+					<li>0 ou tensão da bateria (aproximadamente).</li>
+				</ul>
+			</li>
+			</ul>
+		</div>
+	</section>
+
+	<section>
+	<h1>(Breve) Introdução à Camada Física: Sinal no Tempo</h1>
+	<div class="slideContent">
+			<ul>
+                <li>Suponha que o transmissor envie o caractere <tt>'a'</tt>.
+                    <ul>
+                        <li>ASCII: <tt>01100001</tt>.</li>
+                    </ul>
+                    <li>Receptor monitora continuamente a tensão:</li>
+                </li>
+			</ul>
+			<center>
+				<img src="imagens/SinalNoTempo.svg" style="width: 60%;"/>
+			</center>
+		</div>
+	</section>
+
+	<section>
+	<h1>(Breve) Introdução à Camada Física: Ondas Acústicas (I)</h1>
+	<div class="slideContent">
+        <div style="width: 100%; height: 340px;">
+            <div class="column" style="width: 55%;">
+                <ul>
+                    <li>Agora suponha que queremos transmitir dados através de sons.</li>
+                    <li>Para isso, usamos um piano.</li>
+                    <li>Como podemos codificar os dados?
+                        <ul>
+                            <li>Elegemos uma nota: por exemplo, um Lá central.</li>
+                            <li>Tocamos por 1 segundo para representar o bit 1.</li>
+                            <li>Um segundo <b>sem som</b> representa 0.</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div class="column" style="width: 45%;">
+                <table class="align" style="width: 90%;">
+                <tr>
+                    <td style="text-align: right; width: 80%;"><b>Vibração da Corda (440 Hz)</b></td>
+                    <td style="text-align: left;">&nbsp;&nbsp;&nbsp;<img src="../template/images/Play.svg" style="width: 31%;" onmouseover="hoverIn(this, '../template/images/Play_enabled.svg');" onmouseout="hoverOut(this, '../template/images/Play.svg');" onclick="playSound('La.wav');"/></td>
+                </tr>
+				<tr style="padding-top: 20px;">
+                    <td colspan="2" style="text-align: center;"><img src="imagens/La.svg" style="width: 70%;"/></td>
+                </tr>
+                </table>
+            </div>
+        </div>
+        <div style="width: 100%;">
+			<center>
+                <table class="align" style="width: 70%;">
+                <tr><td colspan="2" style="text-align: center;"><b>Codificação do caractere 'a'</b></td></tr>
+				<tr>
+                    <td style="text-align: center;"><img src="imagens/ASCII_a_AM.svg" style="width: 90%;"/></td>
+                    <td style="text-align: center;"><img src="../template/images/Play.svg" style="width: 40%;" onmouseover="hoverIn(this, '../template/images/Play_enabled.svg');" onmouseout="hoverOut(this, '../template/images/Play.svg');" onclick="playSound('ASCII_a_AM.wav');"/></td>
+                </tr>
+                </table>
+			</center>
+		</div>
+    </div>
+	</section>
+
+	<section>
+	<h1>(Breve) Introdução à Camada Física: Ondas Acústicas (II)</h1>
+	<div class="slideContent">
+        <div class="column" style="width: 55%;">
+            <ul>
+                <li>Outra possibilidade: elegemos duas notas, <i>e.g:</i>
+                    <ul>
+                        <li>Lá representa bit 1.</li>
+                        <li>Dó representa bit 0.</li>
+                    </ul>
+                </li>
+            </ul>
+            <center>
+            <table class="align" style="width: 90%;">
+		<tr>
+                    <td style="text-align: right; width: 30%;"><b>Lá (440 Hz)</b></td>
+                    <td style="text-align: left;">&nbsp;<img src="../template/images/Play.svg" style="width: 40%;" onmouseover="hoverIn(this, '../template/images/Play_enabled.svg');" onmouseout="hoverOut(this, '../template/images/Play.svg');" onclick="playSound('La.wav');"/></td>
+                    <td style="text-align: center; width: 60%;"><img src="imagens/La.svg" style="width: 100%;"/></td>
+                </tr>
+		<tr>
+                    <td style="text-align: right; width: 30%;"><b>Dó (261,6 Hz)</b></td>
+                    <td style="text-align: left;">&nbsp;<img src="../template/images/Play.svg" style="width: 40%;" onmouseover="hoverIn(this, '../template/images/Play_enabled.svg');" onmouseout="hoverOut(this, '../template/images/Play.svg');" onclick="playSound('Do.wav');"/></td>
+                    <td style="text-align: center; width: 60%;"><img src="imagens/Do.svg" style="width: 100%;"/></td>
+                </tr>
+
+            </table>
+            </center>
+        </div>
+        <div class="column" style="width: 45%;">
+        <center>
+		<br>
+            <table class="align" style="width: 90%;">
+            <tr>
+                <td style="text-align: right; width: 80%;"><b>Codificação do caractere 'a'</b></td>
+                <td style="text-align: left;">&nbsp;<img src="../template/images/Play.svg" style="width: 30%;" onmouseover="hoverIn(this, '../template/images/Play_enabled.svg');" onmouseout="hoverOut(this, '../template/images/Play.svg');" onclick="playSound('ASCII_a_FM.wav');"/></td>
+            </tr>
+            <tr>
+                <td colspan="2" style="text-align: center; padding-top: 40px;"><img src="imagens/ASCII_a_FM.svg" style="width: 95%;"/></td>
+            </tr>
+            </table>
+        </center>
+        </div>
+    </div>
+	</section>
+
+	<section>
+	<h1>(Breve) Introdução à Camada Física: Taxa de Transmissão (I)</h1>
+	<div class="slideContent">
+            <ul>
+                <li>Como podemos aumentar a <b>taxa de transmissão</b>?</i>
+                    <ul>
+                        <li><i>i.e.</i>, reduzir o tempo para transmitir mesma quantidade de informação.</li>
+                    </ul>
+                </li>
+                <li>Alguns caminhos: por exemplo, reduzir a duração do símbolo.
+                    <ul>
+                        <li>Com 300&nbsp;ms, taxa de <span class="math inline">\(\frac{1}{0{,}3} \approx 3{,}4\)</span> b/s.</li>
+                        <li>Com 150&nbsp;ms, dobramos a taxa.</li>
+                        <li>Com 75&nbsp;ms, quadruplicamos a taxa.</li>
+                    </ul>
+                </li>
+                <li><span class="alert">Mas há um custo:</span>
+                    <ul>
+                        <li>À medida que reduzimos a duração do símbolo, aumentamos a dificuldade em &ldquo;entender&rdquo; a transmissão.</li>
+                        <li>Exemplo para 150&nbsp;ms&nbsp;&nbsp;<img src="../template/images/Play.svg" style="width: 3%; margin-bottom: -10px;" onmouseover="hoverIn(this, '../template/images/Play_enabled.svg');" onmouseout="hoverOut(this, '../template/images/Play.svg');" onclick="playSound('ASCII_a_FM_150.wav');"/></li>
+                        <li>Exemplo para 75&nbsp;ms&nbsp;&nbsp;<img src="../template/images/Play.svg" style="width: 3%; margin-bottom: -10px;" onmouseover="hoverIn(this, '../template/images/Play_enabled.svg');" onmouseout="hoverOut(this, '../template/images/Play.svg');" onclick="playSound('ASCII_a_FM_75.wav');"/></li>
+                    </ul>
+                </li>
+            </ul>
+    </div>
+	</section>
+
+	<section>
+	<h1>(Breve) Introdução à Camada Física: Taxa de Transmissão (II)</h1>
+	<div class="slideContent">
+        <div style="width: 100%; height: 340px;">
+		<div class="column" style="width: 40%;">
+            <ul>
+                <li>Caminho alternativo:</i>
+                    <ul>
+                        <li>Usar mais &ldquo;notas&rdquo;, <i>e.g</i>:
+			    <ul>
+				<li>Dó (261,6 Hz) &rArr; 00.</li>
+				<li>Ré# (311,1 Hz) &rArr; 01.</li>
+				<li>Fá# (370 Hz) &rArr; 10.</li>
+				<li>Lá (440 Hz) &rArr; 11.</li>
+			    </ul>
+			</li>
+                    </ul>
+                </li>
+            </ul>
+		</div>
+		<div class="column" style="width: 60%;">
+			<table class="align" style="width: 95%;">
+			<tr>
+			    <td style="text-align: right; width: 60%;"><b>Resultado</b></td>
+			    <td style="text-align: left;">&nbsp;&nbsp;&nbsp;<img src="../template/images/Play.svg" style="width: 10%;" onmouseover="hoverIn(this, '../template/images/Play_enabled.svg');" onmouseout="hoverOut(this, '../template/images/Play.svg');" onclick="playSound('ASCII_a_FM_4niveis.wav');"/></td>
+			</tr>
+			<tr style="padding-top: 20px;">
+			    <td colspan="2" style="text-align: center;"><img src="imagens/ASCII_a_FM_4niveis.svg" style="width: 95%;"/></td>
+			</tr>
+			</table>
+		    </div>
+	    </div>
+
+	<div>
+		<ul>
+		<li>Dobramos o número de frequências usadas, dobramos a taxa de transmissão.</li>
+		<li>Podemos continuar este processo, aumentando ainda mais a taxa.
+                <li><span class="alert">Mas, novamente, há um custo:</span>
+                    <ul>
+                        <li>Quanto mais próximas duas frequências, mais difícil é diferenciá-las.</li>
+                    </ul>
+                </li>
+            </ul>
+	</div>
+    </div>
+	</section>
+
+	<section>
+	<h1>Resumo da Aula (I)...</h1>
+	<div class="slideContent">
+		  <ul>
+			  <li>Conceitos básicos de redes sem fio:
+			  <ul>
+				  <li>Hosts sem fio <b>não são necessariamente móveis</b>.
+				  <ul>
+					  <li>Em geral, <b>mobilidade &ne; sem fio</b>.</li>
+				  </ul></li>
+				  <li><b>Estação base</b>: interconecta clientes sem fio em sua <b>área de cobertura</b>.
+				  <ul>
+					  <li>Também conecta estes clientes a uma <b>infraestrutura cabeada</b>.</li>
+				  </ul></li>
+				  <li>Enlaces sem fio:
+				  <ul>
+					  <li><b>Distâncias</b> variadas.</li>
+					  <li><b>Taxas</b> variadas.</li>
+					  <li>Meio de transmissão <b>tipicamente compartilhado</b>.</li>
+				  </ul></li>
+				  <li>Redes infraestruturadas <i>vs. ad hoc</i>.
+				  <ul>
+					  <li><b>Com ou sem estação base</b>.</li>
+				  </ul></li>
+			  </ul></li>
+		  </ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Resumo da Aula (II)...</h1>
+	<div class="slideContent">
+		  <ul>
+			  <li>Conceitos Básicos de Camada Física:
+			  <ul>
+				  <li>Define como informação é <b>representada em canal de comunicação</b>.</li>
+				  <li>Transmissor: altera algum <b>parâmetro físico do meio</b>.</li>
+				  <li>Receptor: monitora o parâmetro, <b>interpretando seus valores</b>.</li>
+				  <li>Exemplos de parâmetros:
+				  <ul>
+					  <li>Luminosidade, tensão elétrica, ondas sonoras, ...</li>
+				  </ul></li>
+				  <li>Valores do parâmetro físico são chamados de <b>símbolos</b>.
+				  <ul>
+					  <li>Codificam <b>um ou mais bits</b>.</li>
+					  <li>Quanto <b>mais bits por símbolo, maior a taxa de transmissão, probabilidade de erro</b>.</li>
+				  </ul></li>
+				  <li>Símbolos têm <b>duração</b>.
+				  <ul>
+					  <li>Tempo pelo qual transmissor <b>mantém parâmetro naquele valor</b>.</li>
+					  <li>Quanto <b>menor a duração, maior a taxa de transmissão, probabilidade de erro</b>.</li>
+				  </ul></li>
+			  </ul></li>
+		  </ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Leituras e Exercícios Sugeridos</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Introdução e conceitos básicos.
+			<ul>
+				<li>Páginas 377 a 380 do Kurose (até Seção 6.1, inclusive).</li>
+				<li>Exercícios de fixação 1 e 2 do capítulo 6 do Kurose.</li>
+			</ul></li>
+			<li>Conceitos de camada física.
+			<ul>
+				<li>(Opcional) Para se aprofundar (um pouco), capítulo 2 do Tenenbaum.</li>
+				<li>Atividade sugerida:
+				<ul>
+					<li><a href="experimentos/SoundPhy.zip">Baixe o código fonte</a> dos programas usados nas demonstrações e execute-os em casa.</li>
+					<li>Altere parâmetros e veja o que acontece.</li>
+					<li>Tente entender os compromissos entre taxa de transmissão e probabilidade de falha.</li>
+				</ul></li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Próxima Aula...</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Continuamos estudando as redes sem fio.
+			<ul>
+				<li>Usaremos os conceitos de camada física vistos nesta aula para entender características dos enlaces sem fio.</li>
+				<li>Também conheceremos um outro método de acesso múltiplo: o CDMA.</li>
+				<li>Discutiremos os conceitos de WLAN e WPAN.
+				<ul>
+					<li>E os seus respectivos padrões, o IEEE 802.11 e o IEEE 802.15.</li>
+				</ul></li>
+			</ul></li>
+<!--
+			<li>Mas faremos isso apenas em janeiro.
+			<ul>
+				<li>Recesso de fim de ano.</li>
+			</ul></li>
+-->
+		</ul>
+<!--
+		<br>
+		<center>
+				<h1 class="title" style="margin-top: 10px;">Feliz Natal e Feliz Ano Novo!</h1>
+		</center>
+-->
+	</div>
+	</section>
+
+	<!-- {{{{ dzslides core
+	#
+	#
+	#     __  __  __       .  __   ___  __
+	#    |  \  / /__` |    | |  \ |__  /__`
+	#    |__/ /_ .__/ |___ | |__/ |___ .__/ core :€
+	#
+	#
+	# The following block of code is not supposed to be edited.
+	# But if you want to change the behavior of these slides,
+	# feel free to hack it!
+	#
+	-->
+
+    <!-- More CSS -->
+	<link href='../template/css/slides.css' id="slides" rel='stylesheet' type='text/css'>
+	<link href='../template/css/presentationSpecific2.css' id="presentationSpecific2" rel='stylesheet' type='text/css'>
+
+    <!-- More Javascript -->
+	<script type="text/javascript" src="../template/js/dz.js"></script>
+
+	<!-- More CSS -->
+	<link href='../template/css/notesSpecific.css' id="notesSpecific" rel='stylesheet' type='text/css'>
+	<link href='../template/css/printSpecific.css' id="printSpecific" rel='stylesheet' type='text/css'>
+</body>
+</html>
