@@ -190,6 +190,87 @@
 	</section>
 
 	<section>
+	<h1>Aplicação de Exemplo: Cliente UDP</h1>
+	<div class="slideContent">
+		<pre>
+			<code class="python" style="font-size: 20px;">
+				from socket import *
+
+				serverName = 'localhost'
+				serverPort = 12000
+
+				# Criacao do socket
+				clientSocket = socket(AF_INET, SOCK_DGRAM)
+
+				sentence = raw_input('Input lowercase sentence:')
+
+				# Envio de bytes. Repare que o endereco do destinatario eh necessario
+				clientSocket.sendto(sentence, (serverName, serverPort))
+
+				# Recepcao
+				modifiedSentence, addr = clientSocket.recvfrom(1024)
+				print 'From Server {}: {}'.format(addr, modifiedSentence)
+
+				# Fechamento
+				clientSocket.close()
+	  	</code>
+		</pre>
+	</div>
+	</section>
+
+	<section>
+	<h1>Aplicação de Exemplo: Servidor UDP (I)</h1>
+	<div class="slideContent">
+		<pre>
+			<code class="python" style="font-size: 20px;">
+				from socket import *
+
+				# Numero de porta na qual o servidor estara esperando conexoes.
+				serverPort = 12000
+
+				# Criar o socket. AF_INET e SOCK_DGRAM indicam UDP.
+				serverSocket = socket(AF_INET, SOCK_DGRAM)
+
+				# Associar o socket a porta escolhida. Primeiro argumento vazio indica
+				# que desejamos aceitar conexoes em qualquer interface de rede desse host
+				serverSocket.bind(('', serverPort))
+
+				print 'O servidor esta pronto para receber pacotes.'
+
+				# Loop infinito: servidor eh capaz de tratar multiplas conexoes
+				while 1:
+	  	</code>
+		</pre>
+	</div>
+	</section>
+
+	<section>
+	<h1>Aplicação de Exemplo: Servidor UDP (II)</h1>
+	<div class="slideContent">
+		<pre>
+			<code class="python" style="font-size: 20px;">
+				  # Aguardar novo pacote
+				  print 'Aguardando pacote...'
+				  sentence, addr = serverSocket.recvfrom(1024)
+				  print 'Nova pacote recebido!'
+
+				  # Processamento
+				  capitalizedSentence = sentence.upper()
+
+				  # Envio. Repare que o endereco do destinatario eh necessario.
+				  print 'Realizando envio...'
+				  serverSocket.sendto(capitalizedSentence, addr)
+
+				# Fechamento
+				print 'Fechando socket...'
+				serverSocket.close()
+	  	</code>
+		</pre>
+	</div>
+	</section>
+
+<!--
+	<section>
 	<h1>Aplicação de Exemplo: Cliente UDP (I)</h1>
 	<div class="slideContent">
 		<pre>
@@ -311,7 +392,7 @@ class UDPServer {
 			</pre>
 	</div>
 	</section>
-
+-->
 	<section>
 	<h1>Programação com Sockets TCP</h1>
 	<div class="slideContent">
@@ -358,6 +439,98 @@ class UDPServer {
 	</div>
 	</section>
 
+	<section>
+	<h1>Aplicação de Exemplo: Cliente TCP</h1>
+	<div class="slideContent">
+		<pre>
+			<code class="java" style="font-size: 20px;">
+				from socket import *
+
+				serverName = 'localhost'
+				serverPort = 12000
+
+				# Criacao do socket
+				clientSocket = socket(AF_INET, SOCK_STREAM)
+				# Conexao com o servidor
+				clientSocket.connect((serverName,serverPort))
+
+				sentence = raw_input('Input lowercase sentence:')
+				# Envio de bytes
+				clientSocket.send(sentence)
+
+				# Recepcao
+				modifiedSentence = clientSocket.recv(1024)
+				print 'From Server:', modifiedSentence
+
+				# Fechamento
+				clientSocket.close()
+	  	</code>
+		</pre>
+	</div>
+	</section>
+
+	<section>
+	<h1>Aplicação de Exemplo: Servidor TCP (I)</h1>
+	<div class="slideContent">
+		<pre>
+			<code class="java" style="font-size: 20px;">
+from socket import *
+
+# Numero de porta na qual o servidor estara esperando conexoes.
+serverPort = 12000
+
+# Criar o socket. AF_INET e SOCK_STREAM indicam TCP.
+serverSocket = socket(AF_INET, SOCK_STREAM)
+
+# Associar o socket a porta escolhida. Primeiro argumento vazio indica
+# que desejamos aceitar conexoes em qualquer interface de rede desse host
+serverSocket.bind(('', serverPort))
+
+# Habilitar socket para aceitar conexoes. O argumento 1 indica que ate
+# uma conexao sera deixada em espera, caso recebamos multiplas conexoes
+# simultaneas
+serverSocket.listen(1)
+
+print 'O servidor esta pronto para receber conexoes'
+
+# Loop infinito: servidor eh capaz de tratar multiplas conexoes
+while 1:
+
+	  	</code>
+		</pre>
+	</div>
+	</section>
+
+	<section>
+	<h1>Aplicação de Exemplo: Servidor TCP (II)</h1>
+	<div class="slideContent">
+		<pre>
+			<code class="java" style="font-size: 20px;">
+  # Aguardar nova conexao
+  print 'Aguardando conexao...'
+  connectionSocket, addr = serverSocket.accept()
+  print 'Nova conexao recebida!'
+
+  # Recepcao de dados
+  print 'Aguardando dados...'
+  sentence = connectionSocket.recv(1024)
+
+  print 'Dado recebido do cliente'
+  # Processamento
+  capitalizedSentence = sentence.upper()
+  # Envio
+  print 'Realizando envio...'
+  connectionSocket.send(capitalizedSentence)
+  # Fechamento
+  print 'Fechando socket...'
+  connectionSocket.close()
+
+	  	</code>
+		</pre>
+	</div>
+	</section>
+
+<!--
 	<section>
 	<h1>Aplicação de Exemplo: Cliente TCP (I)</h1>
 	<div class="slideContent">
@@ -477,13 +650,140 @@ class TCPServer {
 		</pre>
 	</div>
 	</section>
+-->
 
 	<section class="secao">
 	<div class="slideContent">
 	  Exemplos Mais Complexos
 	</div>
 	</section>
+	<section>
+		<h1>Um (Protótipo de) Servidor Web (I)</h1>
+		<div class="slideContent">
+			<pre>
+				<code class="python" style="font-size: 20px;">
+# Numero de porta na qual o servidor estara esperando conexoes.
+serverPort = 8001
 
+# Criar o socket. AF_INET e SOCK_STREAM indicam TCP.
+serverSocket = socket(AF_INET, SOCK_STREAM)
+
+# Associar o socket a porta escolhida. Primeiro argumento vazio indica
+# que desejamos aceitar conexoes em qualquer interface de rede desse host
+serverSocket.bind(('', serverPort))
+
+# Habilitar socket para aceitar conexoes. O argumento 1 indica que ate
+# uma conexao sera deixada em espera, caso recebamos multiplas conexoes
+# simultaneas
+serverSocket.listen(1)
+
+# Loop infinito: servidor eh capaz de tratar multiplas conexoes
+while 1:
+
+  # Aguardar nova conexao
+  connectionSocket, addr = serverSocket.accept()
+
+  # Tratamento da conexao encapsulado em uma funcao
+  trataConexao(connectionSocket)
+				</code>
+			</pre>
+		</div>
+	</section>
+
+	<section>
+		<h1>Um (Protótipo de) Servidor Web (II)</h1>
+		<div class="slideContent">
+			<pre>
+				<code class="python" style="font-size: 20px;">
+from socket import *
+import os
+import re
+
+def trataConexao(s):
+
+    # Podemos tratar um socket como um arquivo.
+    sf = s.makefile()
+    # Primeira linha deve informar a requisicao. Ignoraremos as demais (e.g., cabecalhos).
+    requestMessageLine = sf.readline()
+    # Campos sao divididos por espacos em branco. Primeiro campo deve ser tipo
+		# do metodo. Neste prototipo, tratamos apenas requisicoes do tipo GET.
+    tokens = requestMessageLine.split()
+    if tokens[0] == "GET":
+
+        # Proximo campo eh o caminho do objeto requisitado.
+        filename = tokens[1]
+
+        # Arquivos servidos pelo servidor web sao confinados ao diretorio do qual ele eh
+				# executado (e subdiretorios). Logo, se a requisicao referencia um caminho
+				# absoluto (i.e., iniciado por '/'), precisamos transformar isso em relativo
+        if filename[0] == '/':
+            filename = filename[1:]
+				</code>
+			</pre>
+		</div>
+	</section>
+
+	<section>
+		<h1>Um (Protótipo de) Servidor Web (III)</h1>
+		<div class="slideContent">
+			<pre>
+				<code class="python" style="font-size: 20px;">
+        # Requisitamos a leitura do arquivo a partir do sistema de arquivos local.
+        if os.path.isfile(filename):
+
+            # Levantar informacoes sobre o objeto
+            statinfo = os.stat(filename)
+            f = open(filename)
+            # Montar a saida
+            s.send('HTTP/1.0 200 OK\r\n')
+            # Precisamos de algumas linhas de cabecalho. A primeira eh o tipo
+            # do objeto.
+            if re.search('.jpg$', filename):
+                s.send('Content-Type: image/jpeg\r\n')
+            elif re.search('.gif$', filename):
+                s.send('Content-Type: image/gif\r\n')
+            elif re.search('.html$', filename):
+                s.send('Content-Type: text/html\r\n')
+            elif re.search('.js$', filename):
+                s.send('Content-Type: text/js\r\n')
+            elif re.search('.css$', filename):
+                s.send('Content-Type: text/css\r\n')
+            else:
+                s.send('Content-Type: application/octet-stream\r\n')
+				</code>
+			</pre>
+		</div>
+	</section>
+
+	<section>
+		<h1>Um (Protótipo de) Servidor Web (IV)</h1>
+		<div class="slideContent">
+			<pre>
+				<code class="python" style="font-size: 20px;">
+            # Precisamos tambem do tamanho do objeto
+            s.send('Content-Length: {}\r\n'.format(statinfo.st_size))
+
+            # Cabecalho eh separado do corpo da mensagem por uma linha em branco
+            s.send('\r\n')
+
+            # Agora enviamos o conteudo do arquivo no corpo da mensagem
+            s.send(f.read())
+        else:
+
+            # Se o arquivo nao foi encontrado.
+            s.send('HTTP/1.0 404 Not Found\r\n')
+    else:
+
+        # Tratamento (muito basico) de erros
+        print 'Requisicao nao compreendida!'
+
+    s.close()
+				</code>
+			</pre>
+		</div>
+	</section>
+
+<!--
 	<section>
 		<h1>Um (Protótipo de) Servidor Web (I)</h1>
 		<div class="slideContent">
@@ -602,7 +902,119 @@ if (file.exists()) {
 		</pre>
 	</div>
 	</section>
+-->
 
+<section>
+<h1>Ferramenta de Medição de Vazão TCP: Cliente (I)</h1>
+<div class="slideContent">
+	<pre>
+		<code class="python" style="font-size: 20px;">
+from socket import *
+import sys
+import time
+
+# Leitura do endereco do servidor
+serverName = sys.argv[1]
+serverPort = 6789
+
+# Criacao do socket
+clientSocket = socket(AF_INET, SOCK_STREAM)
+# Conexao com o servidor
+clientSocket.connect((serverName,serverPort))
+
+# Criacao de um buffer para envio pelo socket. O conteudo nao eh importante.
+buffer = bytearray(8192)
+
+# Pegar o horario atual para sabermos quando terminar o teste.
+now = int(round(time.time() * 1000))
+
+# Teste sempre dura 10 segundos = 10000 ms.
+end = now + 10000
+		</code>
+	</pre>
+</div>
+</section>
+
+<section>
+<h1>Ferramenta de Medição de Vazão TCP: Cliente (II)</h1>
+<div class="slideContent">
+	<pre>
+		<code class="python" style="font-size: 20px;">
+# Variavel i guarda o numero de vezes que o buffer foi escrito no socket.
+# Auxiliara no calculo da vazao.
+i = 0
+while True:
+    # Envio de bytes
+    clientSocket.send(buffer)
+    i = i + 1
+    now = int(round(time.time() * 1000))
+    if now >= end:
+        break
+
+# Calcular e imprimir a vazao. A cada iteracao do loop anterior, transmitimos
+# 64 kb. Para calcular vazao, basta multiplicar i por 64 e dividir por 10.
+print "Vazao media durante o teste foi de {} kb/s".format(i * 64 / 10.0)
+
+# Fechamento
+clientSocket.close()
+		</code>
+	</pre>
+</div>
+</section>
+
+<section>
+<h1>Ferramenta de Medição de Vazão TCP: Servidor (I)</h1>
+<div class="slideContent">
+	<pre>
+		<code class="python" style="font-size: 20px;">
+			from socket import *
+
+			serverPort = 6789
+
+			# Criacao do socket.
+			serverSocket = socket(AF_INET,SOCK_STREAM)
+
+			# Associacao do socket a porta correta.
+			serverSocket.bind(('',serverPort))
+
+			# Habilitar escuta por conexoes.
+			serverSocket.listen(1)
+		</code>
+	</pre>
+</div>
+</section>
+
+<section>
+<h1>Ferramenta de Medição de Vazão TCP: Servidor (II)</h1>
+<div class="slideContent">
+	<pre>
+		<code class="python" style="font-size: 20px;">
+			# Loop infinito para tratar multiplas conexoes
+			while 1:
+
+			    print 'Aguardando conexao...'
+			    # Aguardar nova conexao
+			    connectionSocket, addr = serverSocket.accept()
+
+			    print 'Conexao recebida.'
+
+			    # Recepcao de dados
+			    while True:
+			        try:
+			            # Leitura dos dados
+			            buffer = connectionSocket.recv(8192)
+			        except socket.error, exc:
+			            # Houve algum erro. Assumimos que a conexao foi fechada
+			            break
+
+			    connectionSocket.close()
+			    print 'Conexao encerrada'
+		</code>
+	</pre>
+</div>
+</section>
+
+<!--
 	<section>
 	<h1>Ferramenta de Medição de Vazão TCP: Cliente (I)</h1>
 	<div class="slideContent">
@@ -727,7 +1139,7 @@ class BWTestServer {
 		</pre>
 	</div>
 	</section>
-
+-->
 	<section class="secao">
 	<div class="slideContent">
 	  Outras Linguagens: Funções/Métodos Típicos
@@ -770,6 +1182,127 @@ class BWTestServer {
 	</div>
 	</section>
 
+	<section>
+	<h1>Sockets em Outras Linguagens: Java (Cliente TCP, I)</h1>
+	<div class="slideContent">
+		<pre>
+			<code class="java" style="font-size: 20px;">
+import java.io.*;
+import java.net.*;
+
+class TCPClient {
+
+	public static void main(String argv[]) throws Exception {
+
+  	String sentence;
+    String modifiedSentence;
+
+    BufferedReader inFromUser = new BufferedReader(new InputStreamReader(System.in));
+
+		// Criação do socket TCP. Note que aqui, diferentemente da versão UDP, já especificamos
+		// o endereço do servidor (nome do host/ip e porta).
+    Socket clientSocket = new Socket("hostname", 6789);
+
+		// Do ponto de vista do programador, um socket TCP pode ser manipulado de forma similar
+		// a um arquivo, com escrita e leitura de um fluxo de bytes.
+    DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
+		BufferedReader inFromServer =  new BufferedReader(new InputStreamReader(
+																											clientSocket.getInputStream()));
+		// Leitura da entrada do usuário.
+    sentence = inFromUser.readLine();
+			</code>
+		</pre>
+	</div>
+	</section>
+
+	<section>
+	<h1>Sockets em Outras Linguagens: Java (Cliente TCP, II)</h1>
+	<div class="slideContent">
+		<pre>
+			<code class="java" style="font-size: 20px;">
+		// String é simplesmente "escrita" no socket. Notem que adicionamos uma quebra de linha
+		// ao final da string (caractere '\n'). Isso demarcará ao servidor onde termina a mensagem
+		// a ser processada.
+    outToServer.writeBytes(sentence + '\n');
+
+		// Aguardamos uma resposta do servidor. Note mais uma vez a manipulação do socket como
+		// se fosse um arquivo. Aqui também uma quebra de linha denota fim da mensagem. Por fim,
+		// assim como no cliente UDP, leituras são (geralmente) bloqueantes.
+    modifiedSentence = inFromServer.readLine();
+
+		// Impressão do resultado da tela.
+    System.out.println("FROM SERVER: " + modifiedSentence);
+
+		// Fechamento do socket.
+    clientSocket.close();
+  }
+}
+			</code>
+		</pre>
+	</div>
+	</section>
+
+	<section>
+	<h1>Sockets em Outras Linguagens: Java (Servidor TCP, I)</h1>
+	<div class="slideContent">
+		<pre>
+			<code class="java" style="font-size: 20px;">
+import java.io.*;
+import java.net.*;
+
+class TCPServer {
+
+  public static void main(String argv[]) throws Exception {
+		String clientSentence;
+		String capitalizedSentence;
+
+		// Criação do socket do servidor. Este socket será usado para esperar por novas conexões.
+		// Repare que especificamos um # de porta na qual desejamos esperar pelas conexões.
+		ServerSocket welcomeSocket = new ServerSocket(6789);
+
+		// Assim como o servidor UDP, servidor TCP também executa um loop infinito permitindo
+		// o atendimento de múltiplos clientes.
+		while(true) {
+
+			// Função/método accept(): executada sobre socket, diz ao SO para aguardar (e aceitar)
+			// novas conexões. Só faz sentindo para sockets orientados a conexão (TCP). Note que
+			// o resultado da função/método é um novo socket.
+		  Socket connectionSocket = welcomeSocket.accept();
+			</code>
+		</pre>
+	</div>
+	</section>
+
+	<section>
+	<h1>Sockets em Outras Linguagens: Java (Servidor TCP, II)</h1>
+	<div class="slideContent">
+		<pre>
+			<code class="java" style="font-size: 20px;">
+			// O socket original é serve apenas para aguardar por novas conexões. Já o socket
+			// retornado pela função/método accept representa uma conexão, realmente. É dele que
+			// "leremos" os dados enviados pelo cliente e escreveremos os dados de resposta. Mais
+			//  uma vez, note a abstração de arquivo.
+			BufferedReader inFromClient = new BufferedReader(new
+																				InputStreamReader(connectionSocket.getInputStream()));
+			DataOutputStream  outToClient = new DataOutputStream(connectionSocket.getOutputStream());
+
+			// Aguardamos dados do cliente. Por convenção, dados terminam em uma quebra de linha.
+			clientSentence = inFromClient.readLine();
+
+			// Implementação da lógica da aplicação.
+			capitalizedSentence = clientSentence.toUpperCase() + '\n';
+
+			// Escrita do resultado no socket.
+			outToClient.writeBytes(capitalizedSentence);
+		}
+	}
+}
+			</code>
+		</pre>
+	</div>
+	</section>
+
+<!--
 	<section>
 	<h1>Sockets em Outras Linguagens: Python (Cliente TCP)</h1>
 	<div class="slideContent">
@@ -831,7 +1364,7 @@ while 1:
 		</pre>
 	</div>
 	</section>
-
+-->
 	<section>
 	<h1>Resumo da Aula...</h1>
 	<div class="slideContent">
