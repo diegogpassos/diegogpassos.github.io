@@ -19,7 +19,7 @@ if len(sys.argv) > 1:
 		sys.exit(1)
 
 # Preparar dispositivo de audio para transmissao
-ao = audioOutput.audioOutput(symbolDuration, 330, 440)
+ao = audioOutput.audioOutput(symbolDuration, 440, 550)
 
 # Iterar por cada linha da entrada
 while True:

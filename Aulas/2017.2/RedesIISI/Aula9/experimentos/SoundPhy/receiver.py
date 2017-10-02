@@ -50,8 +50,8 @@ def readBit(SampleTime, SymbolDuration, threshold, lastBitTime):
 SymbolDuration = 4.0
 
 # Frequencias associadas a cada bit
-freq1 = 330
-freq2 = 440
+freq1 = 440
+freq2 = 550
 
 # Limiar de aceitacao de um simbolo
 threshold = -3
