@@ -119,15 +119,23 @@
 			<li>Então:</li>
 		</ul>
 		<center>
-			<span class="math inline">\(d_x(y) = min_v\left\{c(x,y) + d_v(y)\right\}\)</span>
+			<span class="math inline">\(d_x(y) = min_v\left\{c(x,v) + d_v(y)\right\}\)</span>
 		</center>
-		<ul>
-		  <li>Em outras palavras, o melhor caminho de <span class="math inline">\(x\)</span> para <span class="math inline">\(y\)</span> <b>necessariamente</b>:
-		  <ul>
-		    <li>Tem como próximo salto um vizinho de <span class="math inline">\(x\)</span>.</li>
-		    <li>Utiliza o melhor caminho deste vizinho até <span class="math inline">\(y\)</span>.</li>
-		  </ul></li>
-		</ul>
+		<br>
+		<div class="column" style="width: 40%;">
+			<ul>
+			  <li>Em outras palavras, o melhor caminho de <span class="math inline">\(x\)</span> para <span class="math inline">\(y\)</span> <b>necessariamente</b>:
+			  <ul>
+			    <li>Tem como próximo salto um vizinho de <span class="math inline">\(x\)</span>.</li>
+			    <li>Utiliza o melhor caminho deste vizinho até <span class="math inline">\(y\)</span>.</li>
+			  </ul></li>
+			</ul>
+		</div>
+		<center>
+			<div class="column" style="width: 60%;">
+			  <img src="imagens/BellfordExemplo2.svg" style="width: 90%;"/>
+			</div>
+		</center>
 	</div>
 	</section>
 
@@ -196,7 +204,7 @@
 	      <li>Quando <span class="math inline">\(x\)</span> recebe novo vetor de distância de um vizinho, ele atualiza seu próprio vetor, aplicando a equação de Bellman-Ford:</li>
 				<center>
 					<br>
-					<span class="math inline">\(D_x(y) = min_v\left\{c(x,y) + d_v(y)\right\}\)</span>
+					<span class="math inline">\(D_x(y) = min_v\left\{c(x,v) + d_v(y)\right\}\)</span>
 				</center>
 				<br>
 	      <li>Sob hipóteses razoáveis na prática, as estimativas <span class="math inline">\(D_x(y)\)</span> convergem para os menores custos reais <span class="math inline">\(d_x(y)\)</span>.</li>
