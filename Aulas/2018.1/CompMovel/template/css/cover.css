@@ -1,0 +1,48 @@
+/*
+ * Definition of styles used in the cover slide.
+ */
+
+/*
+ * Background.
+ */
+.cover-slide {
+  background: url(../img/bg.png);
+}
+
+/*
+ * Properties of the logo image.
+ */
+.cover-slide-logo {
+
+  width: 15%;
+  height: 100%;
+  position: absolute;
+  left: 43.5%;
+  top: 40%;
+}
+
+/*
+ * Style definitions for the table used in the cover slide. Notice that much
+ * of what is done here is simply to override changes made to the default
+ * table style by table.css.
+ */
+table.cover-slide-table {
+  border-spacing: initial;
+  border-collapse: initial;
+  background: initial;
+  border-radius: initial;
+  overflow: initial;
+  width: 100%;
+  box-shadow: initial;
+}
+
+table.cover-slide-table tr {
+  color: inherit;
+  height: initial;
+}
+
+table.cover-slide-table tbody tr:hover {
+  color: inherit;
+  background-color: initial;
+  cursor: initial;
+}

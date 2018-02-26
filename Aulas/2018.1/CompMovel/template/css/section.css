@@ -1,0 +1,15 @@
+/*
+ * Style definitions for section slides.
+ */
+
+ .section-slide {
+   text-align: center;
+   vertical-align: middle;
+   background-image: url(../img/bgSection.png);
+ }
+
+ .section-slide > h1 {
+   color: #FFF;
+   font-size: 41px;
+   font-weight: normal;
+ }

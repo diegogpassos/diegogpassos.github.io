@@ -1,0 +1,34 @@
+/*
+ * Style definitions for the renderding of source code (both with <code> and
+ * code blocks).
+ */
+
+/*
+ * Font type definition.
+ */
+.remark-code, .remark-inline-code {
+  font-family: 'Roboto Mono', monospace;
+}
+
+/*
+ * Background color for highlighting (the background of) lines within code
+ * blocks.
+ */
+.remark-code-line-highlighted {
+  background-color: rgb(173, 210, 203);
+}
+
+/*
+ * Defines a shadow around the box used for code blocks.
+ */
+.remark-code {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+/*
+ * Definition of background color and rounded borders for <code>.
+ */
+code {
+  background: #e7e8e2;
+  border-radius: 5px;
+}

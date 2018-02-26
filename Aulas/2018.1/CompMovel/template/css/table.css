@@ -1,0 +1,70 @@
+/*
+ * Styles for generic tables.
+ */
+
+table {
+  border-spacing: 1;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+  width: 100%;
+  margin: 0 auto;
+  position: relative;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+table * {
+  position: relative;
+}
+
+table td, table th {
+  padding-left: 8px;
+}
+
+table thead tr {
+  height: 60px;
+  background: #137562;
+  color: #FFF;
+}
+
+table tbody tr {
+  height: 50px;
+}
+
+table tbody tr:last-child {
+  border: 0;
+}
+
+table td, table th {
+  text-align: left;
+}
+
+table td.l, table th.l {
+  text-align: right;
+}
+
+table td.c, table th.c {
+  text-align: center;
+}
+
+table td.r, table th.r {
+  text-align: center;
+}
+
+tbody tr:nth-child(even) {
+  background-color: #d8ede9;
+}
+
+tbody tr {
+  font-size: 22px;
+  color: #808080;
+  line-height: 1.2;
+  font-weight: unset;
+}
+
+tbody tr:hover {
+  color: #555555;
+  background-color: #BADADA;
+  cursor: pointer;
+}
