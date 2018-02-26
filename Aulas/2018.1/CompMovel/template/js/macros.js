@@ -19,6 +19,12 @@ remark.macros.iframe = function (height, width) {
   return '<iframe src="' + url + '" height="' + height + '" width="' + width + '"></iframe>';
 }
 
+// ![:column width](content)
+remark.macros.column = function(width) {
+
+    return '<div style="width: ' + width + '; float: left;">' + window.remark.convert(this) + "</div>";
+}
+
 // Creates a "block" on the slide. The content is passed as the parameter
 // between parenthesis. If you want the block to contain a title, it should be
 // placed alone in the first line of the parameter. The remaining lines are the
