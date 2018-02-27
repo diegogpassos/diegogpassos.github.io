@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Computação Móvel: Aula 2</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" type="text/css" href="../template/css/roboto.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/general.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/code.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/cover.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/section.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/elements.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/table.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/block.css">
+  </head>
+  <body>
+
+    <textarea id="source">
+
+class: cover-slide
+
+![:cover](
+Computação Móvel
+Aula 2: Introdução às Redes Móveis
+Diego Passos
+../template/img/logo.svg
+)
+
+---
+
+class: section-slide
+
+# Histórico e Motivação
+
+---
+
+class: middle
+layout: true
+name: conteudo
+
+.title[
+{{slideTitle}}
+<hr>]
+
+---
+
+slideTitle: Redes Sem Fio
+
+#### Popularização
+* Final dos anos 1990.
+    * Redes celular.
+    * Redes Locais Sem Fio (WLAN).
+
+![:column 90%](
+#### Comparação com redes cabeadas
+
+| Prós | Contras |
+| ---- | ------- |
+| .blue[Praticidade] | .red[Escalabilidade] |
+| .blue[Custo] | .red[Desempenho] |
+| .blue[Novas aplicações] | .red[Segurança] |
+| .blue[...] | .red[...] |
+)
+
+---
+
+slideTitle: Comunicação Sem Fio
+
+#### História mais longa
+| Época  | Marco |
+| :----- | ----- |
+| Década de 1890 | Surgimento do rádio |
+| Meados do Século XX | Rádio e TV: comunicação em massa |
+| Final do Século XX | Telefonia móvel |
+| Final do Século XX | Redes Locais Sem Fio |
+
+#### Desafios específicos
+.col-3[
+* Atenuação
+]
+.col-3[
+* Interferências
+]
+.col-3[
+* Segurança.
+]
+
+---
+
+slideTitle: Comunicação de Dados Sem Fio
+
+#### Sistemas especializados (TV, rádio, telefonia)
+* Incorporação pela Internet.
+* Fluxo contínuo &rArr; comutação de pacotes.
+
+<br>
+<br>
+
+![:block ](Pacotes: informação fracionada
+* Acréscimo de endereços e outros parâmetros da comunicação:
+    * Cabeçalhos.
+    * *Trailers*.
+)
+
+---
+
+slideTitle: Sistemas de Comunicação de Dados Móvel
+
+#### Evolução em dois ramos
+
+|     | Telefonia Móvel | Redes Locais Sem Fio |
+| :-- | :-------------- | :------------------- |
+| Comutação de pacotes? | Originalmente, não | Sim |
+| Investimento | Alto | Baixo |
+| Área de atuação principal | *outdoor* | *indoor* |
+
+---
+
+slideTitle: Níveis de Abrangência
+
+#### Classificação quanto ao alcance
+
+| Tipo | Abrangência | Exemplos |
+| ---- | :---------- | -------- |
+| WBAN | Corporal    | IEEE 802.15.6? |
+| WPAN | Pessoal | Bluetooth, Zigbee |
+| WLAN | Local | Wi-Fi |
+| WMAN | Metropolitana | LTE, WiMax |
+| WWAN | Longa distância | LTE, WiMax? |
+| WRAN | Regional | IEEE 802.22? |
+
+---
+
+slideTitle: WLANs: Precursores
+
+#### ALOHAnet
+* Universidade do Havaí, 1970.
+* .alert[Comutação de pacotes].
+* .alert[MAC: ALOHA e *slotted* ALOHA].
+
+.col-2[#### WaveLAN
+* AT&T, Lucent e NCR, 1988.
+* Precursor direto do Wi-Fi.]
+
+.col-2[#### HiperLAN.
+* ETSI, 1992.
+* Sem êxito comercial.]
+
+---
+
+layout: false
+class: section-slide
+
+# Faixas de Frequência
+
+---
+
+layout: true
+template: conteudo
+
+---
+
+slideTitle: Comunicação de Rádio
+
+![:column 60%](
+#### Método mais comum
+* Ondas eletromagnéticas
+* 3 kHz a 300 GHz.
+#### Espectro
+* Dividido em .alert[bandas]
+    * Faixas de frequência.
+    * Características diferentes.
+)
+![:column 40%](
+#### Alternativas
+* Infra-vermelho.
+* Luz visível.
+* Ondas acústicas.
+* ...
+)
+
+---
+
+slideTitle: Bandas Não Licenciadas
+
+![:column 100%](
+.col-2[
+#### Espectro é regulado
+* Agências governamentais.
+    * *e.g.*, ANATEL.
+    * *e.g.*, FCC.
+* Recomendações da ITU.]
+.col-2[
+#### Licença
+* Concessão para uso.
+* Leilões bilhonários.
+* Burocracia.]
+)
+.col-2[
+#### Bandas não licenciadas
+* Dispensam licença.]
+.col-2[
+#### Exemplos:
+* Bandas ISM.
+* Banda U-NII.]
+
+---
+
+slideTitle: Mapa de Atribuição de Frequências no Brasil
+
+.center[
+![](mapaANATEL.png)
+]
+
+---
+
+slideTitle: Bandas ISM
+
+#### *Industrial, Scientific and Medical*
+* Diversas faixas.
+* Mais populares: 2,4 GHz e 5,8 GHz.
+    * *e.g.*, Wi-Fi
+* Outras faixas de interesse: 900 MHz e 60 GHz.
+
+---
+
+slideTitle: Bandas ISM segundo a ITU (MHz)
+
+| Faixa de frequências | Largura da faixa | Abrangência |
+| :------------------- | ---------------- | :---------- |
+| 6,765 a 6,795 MHz | 30 kHz | Sujeita à aceitação local |
+| 13,553 a 13,567 MHz | 14 kHz | Mundial |
+| 26,957 a 27,283 MHz | 326 kHz | Mundial |
+| 40,66 a 40,7 MHz | 40 kHz | Mundial |
+| 433,05 a 434,79 MHz | 1,74 MHz | Região 1, sujeita à aceitação |
+| 902 a 928 MHz | 28 MHz | Região 2 (com exceções) |
+
+---
+
+slideTitle: Bandas ISM segundo a ITU (GHz)
+
+| Faixa de frequências | Largura da faixa | Abrangência |
+| :------------------- | ---------------- | :---------- |
+| 2,4 a 2,5 GHz | 100 MHz | Mundial |
+| 5,725 a 5,875 GHz  | 150 MHz | Mundial |
+| 24 a 25 GHz | 250 MHz | Mundial |
+| 61 a 61,5 GHz |500 MHz | Sujeita à aceitação local |
+| 122 a 123 GHz |1 GHz | Sujeita à aceitação local |
+| 244 a 246 GHz | 2 GHz | Sujeita à aceitação local |
+
+---
+
+slideTitle: Bandas U-NII
+
+| Sub-banda | Faixa de frequência | Largura da faixa |
+| :-------- | ------------------- | ---------------- |
+| U-NII 1 (ou Baixa) | 5,15 a 5,25 GHz | 100 MHz |
+| U-NII 2 (ou Média) | 5,25 a 5,35 GHz | 100 MHz |
+| U-NII 2e (ou Mundial) | 5,47 a 5,725 GHz | 255 MHz |
+| U-NII 3 (ou Alta) | 5,725 a 5,825 GHz | 150 MHz |
+
+---
+
+layout: false
+class: section-slide
+
+# IEEE 802.11
+
+---
+
+layout: true
+template: conteudo
+
+---
+
+slideTitle: IEEE 802.11 e Wi-Fi
+
+* O padrão IEEE 802.11 foi publicado em 1997.
+    * Problemas de interoperabilidade.
+* WI-Fi Alliance criada em 1999.
+    * Certificação de produtos para garantir interoperabilidade.
+    * Mais de 550 membros.
+
+---
+
+slideTitle: Evolução do padrão IEEE 802.11
+
+* Evolução do padrão IEEE 802.11 tem sido permanente.
+    * Melhorias na segurança.
+    * Maiores taxas de transferência de dados.
+    * Adequação à legislação.
+* A evolução se dá por emendas publicadas por Forças Tarefa.
+    * A forças tarefa são identificadas por letras “a”, “b”, ..., “z”, “aa", “ab”, ..., “ay”, ...
+
+---
+
+slideTitle: Principais emendas ao IEEE 802.11
+
+* Aumento da taxa de transmissão:
+    * Padrão original: 1 e 2 Mb/s.
+    * "a" (1999) taxas de até 54 Mb/s, na faixa de 5 GHz.
+    * "b" (1999) taxas de até 11 Mb/s, na faixa de 2,4 GHz.
+    * "g" (2003) taxas de até 54 Mb/s, na faixa de 2,4 GHz.
+    * "n" (2009) taxas de até 600 Mb/s, nas faixa de 2,4 e 5 GHz.
+    * "ac" (2013) taxas de até 3,39 Gb/s, na faixa de 5 GHz.
+    * "ad" (2012) taxas de até 6,75 Gb/s, na faixa de 60 GHz.
+* Outros exemplos de emendas:
+    * "i" melhorou a segurança do padrão original.
+    * "p" redes veiculares.
+    * "af" utilização de canais de TV ociosos.
+    * "j" adequação à legislação japonesa.
+    * "s" comunicação em múltiplos saltos.
+
+---
+
+slideTitle: Consolidações do padrão
+
+* Após a publicação original (1997) o padrão já foi atualizado 3 vezes:
+    * IEEE 802.11-1997: Versão original (legada).
+    * IEEE 802.11-1999: Pequenas mudanças no texto.
+    * IEEE 802.11-2007: Consolidação (802.11a, b, d, e, g, h, i, j).
+    * IEEE 802.11-2012: Consolidação (802.11k, r, y, n, w, p, z, v, u, s).
+
+---
+
+slideTitle: O futuro do padrão: *drafts* e emendas recentes
+
+* As emendas atuais apontam para o futuro do Wi-Fi.
+    * "ah" - Internet das Coisas, 900 MHz, maior alcance.
+    * "ax" - Evolução do IEEE 802.11ac.
+    * "ay" - Evolução do IEEE 802.11ad.
+
+---
+
+slideTitle: Aplicações das redes locais sem fio
+
+* Conectar dispositivos sem fio à infraestrutura cabeada é a principal aplicação.
+    * Residências;
+    * Empresas;
+    * Espaços públicos.
+* Enlaces ponto-a-ponto também são possíveis.
+    * Baixo custo dos equipamentos.
+* Aplicações futuras:
+    * Internet das Coisas: IEEE 802.11ah.
+    * Redes veiculares: IEEE 802.11p.
+
+---
+
+layout: false
+class: section-slide
+
+# Conceitos Básicos de Camada Física
+
+---
+
+layout: true
+template: conteudo
+
+---
+
+slideTitle: Introdução
+
+* Camada física = PHY.
+    * Implementada em um chipset Wi-Fi.
+    * Transmissão efetiva dos bits no canal de comunicação.
+    * Presta serviços à camada MAC.
+        * Recepção: recebe o sinal vindo da antena, decodifica os bits montando um quadro que será repassado para a camada MAC.
+        * Transmissão: Recebe o quadro da camada MAC, o codifica e transmite o sinal resultante através da antena.
+    * São diversas as PHYs do IEEE 802.11.
+        * Diversas taxas de transmissão, frequência de operação e vários níveis de robustez.
+
+---
+
+slideTitle: Preparando o quadro para transmissão: Preâmbulo
+
+* Antecede o quadro.
+* Prepara o receptor para interpretar o quadro corretamente.
+* Permite selecionar a antena de recepção em sistemas com diversidade de antenas.
+* Permite sincronização do receptor com o transmissor.
+
+---
+
+slideTitle: Preparando o quadro para transmissão: Postâmbulo (FCS)
+
+* Inserido ao final do quadro.
+* Verificação de integridade do quadro.
+* Utiliza o algoritmo CRC32: 4 bytes.
+* Quadros que passem na verificação serão repassados à camada MAC e confirmados.
+    * Confirmados se forem quadros unicast.
+* Quadros que falhem na verificação serão descartados.
+
+---
+
+slideTitle: Preparando o quadro para transmissão: Codificação
+
+* Inserção de bits adicionais para tornar o sinal imune a erros de transmissão.
+* Possibilita detecção e correção de erros.
+* Etapa adicional à inserção do FCS ao final do quadro.
+* O nível de redundância e, portanto, a robustez é variável.
+    * Maior robustez, menor taxa de transmissão.
+    * Taxas de codificação comuns são 1/2, 2/3 e 3/4.
+
+---
+
+slideTitle: Portadora
+
+* A onda eletromagnética que transporta o sinal.
+* Matematicamente, tratada como equivalente a um sinal senoidal com certa frequência, amplitude e fase.
+* Portadoras na faixa de MHz e GHz são as usadas em Wi-Fi.
+    * Exemplo: portadora para o canal 1 do IEEE 802.11g = 2,412 GHz.
+
+---
+
+slideTitle: Portadora: Exemplo
+
+.center[
+![:image 70%](portadora.png)]
+
+---
+
+slideTitle: Modulação
+
+* A modulação é o processo que altera as características da portadora, introduzindo nela a informação a ser transmitida.
+* O sinal modulante (informação) é combinado à portadora.
+* A portadora tem a frequência adequada ao sistema sem fio em questão.
+* Existem diversos tipos de modulação, variando em função da forma como a portadora é alterada para inserir a informação.
+
+---
+
+slideTitle: Modulação por amplitude
+
+* AM = Amplitude Modulation.
+* A amplitude (nível de energia) da portadora é alterada de acordo com os dados a serem transmitidos.
+* ASK: modulação por amplitude binária.
+    * Dois níveis de amplitude são usados para representar 0s e 1s.
+
+---
+
+slideTitle: Modulação por amplitude: Exemplo
+
+.center[
+![:image 70%](am.png)
+]
+
+---
+
+slideTitle: Modulação por frequência
+
+* FM = Frequency Modulation.
+* A frequência (ou, de forma equivalente, o período) da portadora é alterada de acordo com os dados a serem transmitidos.
+* FSK: modulação por frequência binária.
+    * Duas frequências são usadas para representar 0s e 1s.
+
+---
+
+slideTitle: Modulação por Frequência: Exemplo
+
+.center[
+![:image 70%](fm.png)
+]
+
+---
+
+slideTitle: Modulação por fase
+
+* PM = phase modulation
+* A fase (o deslocamento temporal) da portadora é alterada de acordo com os dados a serem transmitidos.
+* BPSK: modulação por fase binária.
+    * Duas fases são usadas para representar 0s e 1s.
+* Modulação bastante usada em redes Wi-Fi.
+
+---
+
+slideTitle: Modulação por Fase: Exemplo
+
+.center[
+![:image 70%](fase.png)
+]
+
+---
+
+slideTitle: Bits e símbolos: modulação multinível
+
+* Símbolo: o estado da portadora modulada.
+* Símbolos binários: a portadora assume apenas dois estados.
+* Símbolos multiníveis: a portadora assume $2^N$ níveis distintos e cada símbolo transporta N bits.
+* Exemplos:
+    * ASK: dois níveis de amplitude usados para designar “0” e “1”
+    * 4ASK: quatro níveis de amplitude usados para designar “00”, “01”, “10” e “11”
+    * 256QAM: 256 combinações distintas de fase e amplitude: 8 bits por símbolo.
+
+---
+
+slideTitle: Largura de banda
+
+* A faixa de frequências do espectro utilizada para a transmissão.
+    * Exemplos:
+    * No IEEE 802.11a, os canais têm 20 MHz de largura.
+    * No IEEE 802.11n, os canais podem ter 20 ou 40 MHz de largura.
+    * No IEEE 802.11ac, os canais podem chegar a 160 MHz de largura.
+* Quanto maior a largura de banda, maior a capacidade (em b/s).
+
+---
+
+slideTitle: Espalhamento espectral
+
+* Dispersar o sinal por uma banda mais larga do que a necessária.
+* Em bandas não licenciadas, costuma ser obrigatório o uso de técnicas de espalhamento espectral.
+    * Redução das interferências, melhor coexistência.
+* Existem diversas técnicas de espalhamento espectral.
+    * Exemplos: Salto de frequências, DSSS e OFDM.
+
+---
+
+slideTitle: Salto de frequências
+
+* Criado durante a Segunda Guerra Mundial.
+* Transmissor e receptor saltam de canal rapidamente e sincronizadamente.
+    * Dificuldade de interceptação da comunicação.
+    * Efeito de espelhamento espectral.
+* Umas das PHY propostas no IEEE 802.11 legado.
+* Não mais usado no Wi-Fi, mas ainda usado em sistemas como o Bluetooth.
+
+---
+
+slideTitle: Salto de Frequências: Exemplo
+
+.center[
+![:image 70%](freqHopping.png)
+]
+
+---
+
+slideTitle: DSSS (Direct Sequence Spread Spectrum)
+
+* Introduzido no IEEE 802.11 legado, juntamente com o salto de frequências.
+* Foi escolhido como técnica de espalhamento espectral na emenda “b”.
+    * 5,5 e 11 Mb/s.
+* Cada bit é substituído por uma sequência de bits de menor duração (chips).
+
+---
+
+slideTitle: DSSS: Exemplo
+
+.center[
+![:image 70%](dsss.png)
+]
+
+---
+
+slideTitle: OFDM (Orthogonal Frequency Division Multiplexing)
+
+* Utilizada em diversas tecnologias de redes sem fio e cabeadas.
+* Diversas subportadoras, ao invés de uma única portadora.
+    * É como se o canal fosse dividido em subcanais usados em paralelo.
+    * Cada subportadora é modulada por um esquema de modulação tradicional (ex. BPSK, 64QAM, 256QAM).
+* Robustez contra interferências de banda estreita e poluição espectral.
+
+---
+
+layout: false
+class: section-slide
+
+# Próxima aula
+
+---
+
+layout: true
+template: conteudo
+
+---
+
+slideTitle: Próxima aula
+
+### Início (de verdade) do curso
+* Mais conceitos básicos de comunicação sem fio.
+
+### Tarefas
+| Pós-graduação | Todos os alunos |
+| ------------- | --------------- |
+| Escolher primeiro artigo a ser apresentado (dentre os 10 primeiros da lista) | Ler páginas 74 a 83 (antenas) e 111 a 118 (propagação) do livro *Tecnologias de Redes Sem Fio* |
+
+</figcaption>
+</template>
+    </textarea>
+
+    <script src="../template/js/remark-latest.min.js" type="text/javascript"></script>
+    <script src="../template/js/macros.js" type="text/javascript"></script>
+    <script src="../template/js/callbacks.js" type="text/javascript"></script>
+    <script src="../template/js/katex.min.js"></script>
+    <script src="../template/js/auto-render.min.js"></script>
+    <link rel="stylesheet" href="../template/css/katex.min.css">
+    <script type="text/javascript">
+      var renderMath = function() {
+        renderMathInElement(document.body, {delimiters: [
+           {left: "$$", right: "$$", display: true},
+           {left: "$", right: "$", display: false},
+        ]});
+      }
+      var slideshow = remark.create({highlightStyle: "github", highlightLines: "true", highlightSpans: "true", slideNumberFormat: onSlideCallback}, renderMath);
+    </script>
+</body>
+</html>
