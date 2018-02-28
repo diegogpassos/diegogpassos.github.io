@@ -171,11 +171,12 @@ slideTitle: Comunicação de Rádio
     * Características diferentes.
 )
 ![:column 40%](
-#### Alternativas
+![:block](Alternativas
 * Infra-vermelho.
 * Luz visível.
 * Ondas acústicas.
 * ...
+\)
 )
 
 ---
@@ -290,192 +291,285 @@ slideTitle: Camada Física = PHY
 
 .center[
 ### Mesma tecnologia pode definir múltiplas PHYs!]
+
 ---
 
 slideTitle: Preparando o Quadro para Transmissão
 
-![:column 40%](
-#### Preâmbulo
-* Antecede quadro.
-* Auxilia recepção.
-    * *e.g.*, seleção de antena.
-    * *e.g.*, sincronização.
-)
+#### Informações de controle adicionadas
 
-![:column 60%](
-#### Postâmbulo
-* Após o quadro.
-* Geralmente, para integridade.
-    * *e.g.*, CRC32 no Ethernet, Wi-Fi.
-    * Falha na verificação &rArr; descarte!
-)
+|       | Preâmbulo |  Postâmbulo |
+| :---- | :-------- | :---------- |
+| **Posição** | Antes do quadro |  Após o quadro |
+| **Finalidade** | Auxilia recepção |  Geralmente, para integridade |
+| **Exemplos** | Seleção de antena, sincronização | CRC32 no Ethernet, Wi-Fi |
 
 ---
 
-slideTitle: Preparando o quadro para transmissão: Codificação
+slideTitle: Codificação
 
-* Inserção de bits adicionais para tornar o sinal imune a erros de transmissão.
-* Possibilita detecção e correção de erros.
-* Etapa adicional à inserção do FCS ao final do quadro.
-* O nível de redundância e, portanto, a robustez é variável.
-    * Maior robustez, menor taxa de transmissão.
-    * Taxas de codificação comuns são 1/2, 2/3 e 3/4.
+![:column 45%](
+### Bits redundantes.
+* Maior imunidade à erros.
+* Possibilita detecção e correção.
+)
+![:column 55%](
+### Redundância ajustável
+* .blue[&uArr; Robustez] .red[&dArr; Taxa de Transmissão]
+* Taxas de codificação comuns:
+    * 1/2, 2/3, 3/4.
+)
+
+.center[
+### Usado em adição ao mecanismo de verificação de integridade.
+]
 
 ---
 
 slideTitle: Portadora
 
-* A onda eletromagnética que transporta o sinal.
-* Matematicamente, tratada como equivalente a um sinal senoidal com certa frequência, amplitude e fase.
-* Portadoras na faixa de MHz e GHz são as usadas em Wi-Fi.
-    * Exemplo: portadora para o canal 1 do IEEE 802.11g = 2,412 GHz.
-
----
-
-slideTitle: Portadora: Exemplo
+.col-2[
+### Onda que transporta sinal
+* Matematicamente, senoide.
+* Parâmetros: .alert[frequência, amplitude, fase].]
+.col2[
+### Exemplo: Wi-Fi
+* Canal 1: portadora em 2,412 GHz.]
 
 .center[
-![:image 70%](portadora.png)]
+![:image 60%](portadora.png)]
 
 ---
 
 slideTitle: Modulação
 
-* A modulação é o processo que altera as características da portadora, introduzindo nela a informação a ser transmitida.
-* O sinal modulante (informação) é combinado à portadora.
-* A portadora tem a frequência adequada ao sistema sem fio em questão.
-* Existem diversos tipos de modulação, variando em função da forma como a portadora é alterada para inserir a informação.
+![:block](Definição
+Processo que altera características da portadora, introduzindo informação a ser transmitida
+)
 
+.col-2[
+#### Informação e portadora
+* Portadora adequada ao sistema em questão.
+* Independente da representação da informação.
+]
+.col-2[
+#### Sinal modulante
+* Informação.
+* Combinado à portadora.
+
+#### Diversos tipos
+* Variam na forma de alteração da portadora.
+]
 ---
 
-slideTitle: Modulação por amplitude
+slideTitle: Modulação por Amplitude
 
-* AM = Amplitude Modulation.
-* A amplitude (nível de energia) da portadora é alterada de acordo com os dados a serem transmitidos.
-* ASK: modulação por amplitude binária.
-    * Dois níveis de amplitude são usados para representar 0s e 1s.
 
----
-
-slideTitle: Modulação por amplitude: Exemplo
+![:column 50%](
+#### AM = *Amplitude Modulation*
+* .blue[Dados diferentes] &rArr; .red[Amplitudes diferentes].
+)
+![:column 50%](
+#### Exemplo: ASK
+* Modulação por amplitude .alert[binária].
+    * Duas amplitudes &rArr; 0 e 1;
+)
 
 .center[
-![:image 70%](am.png)
+![:imageS width: 70%; margin-top: 40px;](AM.svg)
 ]
 
 ---
 
-slideTitle: Modulação por frequência
+slideTitle: Modulação por Frequência
 
-* FM = Frequency Modulation.
-* A frequência (ou, de forma equivalente, o período) da portadora é alterada de acordo com os dados a serem transmitidos.
-* FSK: modulação por frequência binária.
-    * Duas frequências são usadas para representar 0s e 1s.
+.center[
+![:imageS width: 70%; margin-top: 40px;](FM.svg)
+]
+
+![:column 50%](
+#### FM = *Frequency Modulation*
+* .blue[Dados diferentes] &rArr; .red[Frequências diferentes].
+    * Relativas à frequência da portadora.
+)
+![:column 50%](
+#### Exemplo: FSK
+* Modulação por frequência .alert[binária].
+    * Duas frequências &rArr; 0 e 1;
+)
 
 ---
 
-slideTitle: Modulação por Frequência: Exemplo
+slideTitle: Modulação por Fase
+
+![:column 50%](
+#### PM = *Phase Modulation*
+* .blue[Dados diferentes] &rArr; .red[Fases diferentes].
+    * Deslocamento temporal.
+)
+![:column 50%](
+#### Exemplo: BPSK
+* Modulação por fase .alert[binária].
+    * Duas fases &rArr; 0 e 1;
+)
 
 .center[
-![:image 70%](fm.png)
+![:imageS width: 70%; margin-top: 40px;](BPSK.svg)
 ]
 
 ---
 
-slideTitle: Modulação por fase
+slideTitle: Modulação Multinível
 
-* PM = phase modulation
-* A fase (o deslocamento temporal) da portadora é alterada de acordo com os dados a serem transmitidos.
-* BPSK: modulação por fase binária.
-    * Duas fases são usadas para representar 0s e 1s.
-* Modulação bastante usada em redes Wi-Fi.
+![:block](Símbolo
+Estado discreto da portadora modulada.)
 
----
-
-slideTitle: Modulação por Fase: Exemplo
-
-.center[
-![:image 70%](fase.png)
+.col-2[
+#### Símbolos Binários
+* Exemplos anteriores.
+* .blue[1 símbolo] &hArr; .red[1 bit].
+]
+.col-2[
+#### Símbolos Multinível
+* a .blue[1 símbolo] &hArr; .red[$N$ bits].
+    * $2^N$ estados da portadora.
 ]
 
----
-
-slideTitle: Bits e símbolos: modulação multinível
-
-* Símbolo: o estado da portadora modulada.
-* Símbolos binários: a portadora assume apenas dois estados.
-* Símbolos multiníveis: a portadora assume $2^N$ níveis distintos e cada símbolo transporta N bits.
-* Exemplos:
-    * ASK: dois níveis de amplitude usados para designar “0” e “1”
-    * 4ASK: quatro níveis de amplitude usados para designar “00”, “01”, “10” e “11”
-    * 256QAM: 256 combinações distintas de fase e amplitude: 8 bits por símbolo.
+| Modulação | Característica Modulada | Níveis | Símbolos |
+| --------- | ------------------------ | ------ | -------- |
+| ASK       | Amplitude                | 2      | `0` e `1`|
+| 4ASK      | Amplitude                | 4      | `00`, `01`, `10` e `11`|
+| 256QAM    | Amplitude e Fase         | 256    | `00000000`, `00000001`, ...|
 
 ---
 
-slideTitle: Largura de banda
+slideTitle: Largura de Banda
 
-* A faixa de frequências do espectro utilizada para a transmissão.
-    * Exemplos:
-    * No IEEE 802.11a, os canais têm 20 MHz de largura.
-    * No IEEE 802.11n, os canais podem ter 20 ou 40 MHz de largura.
-    * No IEEE 802.11ac, os canais podem chegar a 160 MHz de largura.
-* Quanto maior a largura de banda, maior a capacidade (em b/s).
+.container[
+.col-2[
+![:block](
+.center[
+### Tamanho da faixa de frequência utilizada para transmissão]
+)
+]
+
+.col-2[
+| Padrão   | Largura de banda |
+| -------- | ---------------- |
+| 802.11a  | 20 MHz |
+| 802.11n  | 20 ou 40 MHz |
+| 802.11ac | 80 MHz |
+| 802.11ah | 2, 4, 8 ou 16 MHz |
+
+]
+]
+
+#### Largura de banda *vs.* capacidade (b/s)
+* .blue[&uArr; largura de banda] &rArr; .blue[&uArr; maior a capacidade].
+* .red[&dArr; largura de banda] &rArr; .red[&dArr; maior a capacidade].
 
 ---
 
 slideTitle: Espalhamento espectral
 
-* Dispersar o sinal por uma banda mais larga do que a necessária.
-* Em bandas não licenciadas, costuma ser obrigatório o uso de técnicas de espalhamento espectral.
-    * Redução das interferências, melhor coexistência.
-* Existem diversas técnicas de espalhamento espectral.
-    * Exemplos: Salto de frequências, DSSS e OFDM.
+.center[
+### Tipicamente obrigatório em bandas não licenciadas
+]
 
+.container[
+.col-2[
+![:block margin-top: 30px;](
+.center[
+### Dispersar o sinal por uma banda mais larga que a necessária
+]
+)
+]
+
+.col-2[
+#### Motivação
+* Redução da interferência
+* Melhor coexistência.
+]
+]
+
+![:block]( Diversas técnicas
+* Salto de frequências.
+* DSSS.
+* OFDM.
+)
 ---
 
-slideTitle: Salto de frequências
+slideTitle: Salto de Frequências
 
-* Criado durante a Segunda Guerra Mundial.
-* Transmissor e receptor saltam de canal rapidamente e sincronizadamente.
-    * Dificuldade de interceptação da comunicação.
-    * Efeito de espelhamento espectral.
-* Umas das PHY propostas no IEEE 802.11 legado.
-* Não mais usado no Wi-Fi, mas ainda usado em sistemas como o Bluetooth.
+.col-2[
+#### Histórico
+* Segunda Guerra Mundial.
+
+#### Princípio
+* Transmissor e receptor saltam de canal.
+    * Rápido.
+    * Sincronizado.
+]
+.col-2[
+#### Vantagens
+* Dificuldade de interceptação da comunicação.
+* Espalhamento espectral.
+
+#### Exemplos de uso
+* IEEE 802.11 (legado).
+* Bluetooth.
+]
 
 ---
 
 slideTitle: Salto de Frequências: Exemplo
 
 .center[
-![:image 70%](freqHopping.png)
+![:image 70%](FH.svg)
 ]
 
 ---
 
-slideTitle: DSSS (Direct Sequence Spread Spectrum)
+slideTitle: DSSS (*Direct Sequence Spread Spectrum*)
 
-* Introduzido no IEEE 802.11 legado, juntamente com o salto de frequências.
-* Foi escolhido como técnica de espalhamento espectral na emenda “b”.
-    * 5,5 e 11 Mb/s.
-* Cada bit é substituído por uma sequência de bits de menor duração (chips).
-
----
-
-slideTitle: DSSS: Exemplo
-
+.container[
+![:column 70%](
+#### Funcionamento
+* Cada bit &rArr; sequência de *chips*.
+    * Pseudo-aleatória.
+* .alert[Duração de um *chip* bem menor que de um bit].
+)
+![:column 30%](
+#### Uso
+* IEEE 802.11 (legado\)
+)
+]
 .center[
-![:image 70%](dsss.png)
+![:image 100%](DSSS.svg)
 ]
 
 ---
 
-slideTitle: OFDM (Orthogonal Frequency Division Multiplexing)
+slideTitle: OFDM (*Orthogonal Frequency Division Multiplexing*)
 
-* Utilizada em diversas tecnologias de redes sem fio e cabeadas.
-* Diversas subportadoras, ao invés de uma única portadora.
-    * É como se o canal fosse dividido em subcanais usados em paralelo.
-    * Cada subportadora é modulada por um esquema de modulação tradicional (ex. BPSK, 64QAM, 256QAM).
+#### Funcionamento
+* Várias **subportadoras**.
+    * Analogia: subcanais usados em paralelo.
+* Informação quebrada entre subportadoras.
+* Modulações tradicionais em cada subportadora.
+
+![:column 60%](
+#### Vantagem
 * Robustez contra interferências de banda estreita e poluição espectral.
+)
+
+![:column 40%](
+![:block](
+<br>
+#### Ampla utilização: tecnologias sem fio e cabeadas.
+<br>
+\)
+)
 
 ---
 
@@ -494,7 +588,7 @@ template: conteudo
 slideTitle: Próxima aula
 
 ### Início (de verdade) do curso
-* Mais conceitos básicos de comunicação sem fio.
+* Mais conceitos básicos, agora sobre propagação.
 
 ### Tarefas
 | Pós-graduação | Todos os alunos |

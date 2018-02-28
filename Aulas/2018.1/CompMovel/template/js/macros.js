@@ -19,10 +19,10 @@ remark.macros.iframe = function (height, width) {
   return '<iframe src="' + url + '" height="' + height + '" width="' + width + '"></iframe>';
 }
 
-// ![:column width](content)
-remark.macros.column = function(width) {
+// ![:column width, optional style definition](content)
+remark.macros.column = function(width, style) {
 
-    return '<div style="width: ' + width + '; float: left;">' + window.remark.convert(this) + "</div>";
+    return '<div style="width: ' + width + '; float: left;' + style + '">' + window.remark.convert(this) + "</div>";
 }
 
 // Creates a "block" on the slide. The content is passed as the parameter
@@ -37,7 +37,7 @@ remark.macros.column = function(width) {
 // ![:block](
 //This block will have no title, just this sentence.
 //)
-remark.macros.block = function () {
+remark.macros.block = function (style) {
 
   var ret = "";
   var title = "";
@@ -49,7 +49,9 @@ remark.macros.block = function () {
   args.splice(0, 1);
   md = args.join('\n');
 
-  ret = '<table class="block">';
+  if (style != "") ret = '<table class="block" style="' + style + '">';
+  else ret = '<table class="block">';
+
   if (title != "") {
 
     ret += '<thead>';

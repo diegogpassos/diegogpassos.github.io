@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Computação Móvel: Aula 2</title>
+    <title>Computação Móvel: Aula 3</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <link rel="stylesheet" type="text/css" href="../template/css/roboto.css">
     <link rel="stylesheet" type="text/css" href="../template/css/general.css">
@@ -20,7 +20,7 @@ class: cover-slide
 
 ![:cover](
 Computação Móvel
-Aula 2: Introdução às Redes Móveis
+Aula 3: Mais Conceitos: Antenas e Propagação
 Diego Passos
 ../template/img/logo.svg
 )
@@ -29,7 +29,7 @@ Diego Passos
 
 class: section-slide
 
-# Histórico e Motivação
+# Antenas
 
 ---
 
@@ -43,517 +43,263 @@ name: conteudo
 
 ---
 
-slideTitle: Redes Sem Fio
-
-#### Popularização
-* Final dos anos 1990.
-    * Redes celular.
-    * Redes Locais Sem Fio (WLAN).
-
-![:column 90%](
-#### Comparação com redes cabeadas
-
-| Prós | Contras |
-| ---- | ------- |
-| .blue[Praticidade] | .red[Escalabilidade] |
-| .blue[Custo] | .red[Desempenho] |
-| .blue[Novas aplicações] | .red[Segurança] |
-| .blue[...] | .red[...] |
-)
-
----
-
-slideTitle: Comunicação Sem Fio
-
-#### História mais longa
-| Época  | Marco |
-| :----- | ----- |
-| Década de 1890 | Surgimento do rádio |
-| Meados do Século XX | Rádio e TV: comunicação em massa |
-| Final do Século XX | Telefonia móvel |
-| Final do Século XX | Redes Locais Sem Fio |
-
-#### Desafios específicos
-.col-3[
-* Atenuação
-]
-.col-3[
-* Interferências
-]
-.col-3[
-* Segurança.
-]
-
----
-
-slideTitle: Comunicação de Dados Sem Fio
-
-#### Sistemas especializados (TV, rádio, telefonia)
-* Incorporação pela Internet.
-* Fluxo contínuo &rArr; comutação de pacotes.
-
-<br>
-<br>
-
-![:block ](Pacotes: informação fracionada
-* Acréscimo de endereços e outros parâmetros da comunicação:
-    * Cabeçalhos.
-    * *Trailers*.
-)
-
----
-
-slideTitle: Sistemas de Comunicação de Dados Móvel
-
-#### Evolução em dois ramos
-
-|     | Telefonia Móvel | Redes Locais Sem Fio |
-| :-- | :-------------- | :------------------- |
-| Comutação de pacotes? | Originalmente, não | Sim |
-| Investimento | Alto | Baixo |
-| Área de atuação principal | *outdoor* | *indoor* |
-
----
-
-slideTitle: Níveis de Abrangência
-
-#### Classificação quanto ao alcance
-
-| Tipo | Abrangência | Exemplos |
-| ---- | :---------- | -------- |
-| WBAN | Corporal    | IEEE 802.15.6? |
-| WPAN | Pessoal | Bluetooth, Zigbee |
-| WLAN | Local | Wi-Fi |
-| WMAN | Metropolitana | LTE, WiMax |
-| WWAN | Longa distância | LTE, WiMax? |
-| WRAN | Regional | IEEE 802.22? |
-
----
-
-slideTitle: WLANs: Precursores
-
-#### ALOHAnet
-* Universidade do Havaí, 1970.
-* .alert[Comutação de pacotes].
-* .alert[MAC: ALOHA e *slotted* ALOHA].
-
-.col-2[#### WaveLAN
-* AT&T, Lucent e NCR, 1988.
-* Precursor direto do Wi-Fi.]
-
-.col-2[#### HiperLAN.
-* ETSI, 1992.
-* Sem êxito comercial.]
-
----
-
-layout: false
-class: section-slide
-
-# Faixas de Frequência
-
----
-
-layout: true
-template: conteudo
-
----
-
-slideTitle: Comunicação de Rádio
-
-![:column 60%](
-#### Método mais comum
-* Ondas eletromagnéticas
-* 3 kHz a 300 GHz.
-#### Espectro
-* Dividido em .alert[bandas]
-    * Faixas de frequência.
-    * Características diferentes.
-)
-![:column 40%](
-#### Alternativas
-* Infra-vermelho.
-* Luz visível.
-* Ondas acústicas.
-* ...
-)
-
----
-
-slideTitle: Bandas Não Licenciadas
-
-![:column 100%](
-.col-2[
-#### Espectro é regulado
-* Agências governamentais.
-    * *e.g.*, ANATEL.
-    * *e.g.*, FCC.
-* Recomendações da ITU.]
-.col-2[
-#### Licença
-* Concessão para uso.
-* Leilões bilhonários.
-* Burocracia.]
-)
-.col-2[
-#### Bandas não licenciadas
-* Dispensam licença.]
-.col-2[
-#### Exemplos:
-* Bandas ISM.
-* Banda U-NII.]
-
----
-
-slideTitle: Mapa de Atribuição de Frequências no Brasil
-
-.center[
-![](mapaANATEL.png)
-]
-
----
-
-slideTitle: Bandas ISM
-
-#### *Industrial, Scientific and Medical*
-* Diversas faixas.
-* Mais populares: 2,4 GHz e 5,8 GHz.
-    * *e.g.*, Wi-Fi
-* Outras faixas de interesse: 900 MHz e 60 GHz.
-
----
-
-slideTitle: Bandas ISM segundo a ITU (MHz)
-
-| Faixa de frequências | Largura da faixa | Abrangência |
-| :------------------- | ---------------- | :---------- |
-| 6,765 a 6,795 MHz | 30 kHz | Sujeita à aceitação local |
-| 13,553 a 13,567 MHz | 14 kHz | Mundial |
-| 26,957 a 27,283 MHz | 326 kHz | Mundial |
-| 40,66 a 40,7 MHz | 40 kHz | Mundial |
-| 433,05 a 434,79 MHz | 1,74 MHz | Região 1, sujeita à aceitação |
-| 902 a 928 MHz | 28 MHz | Região 2 (com exceções) |
-
----
-
-slideTitle: Bandas ISM segundo a ITU (GHz)
-
-| Faixa de frequências | Largura da faixa | Abrangência |
-| :------------------- | ---------------- | :---------- |
-| 2,4 a 2,5 GHz | 100 MHz | Mundial |
-| 5,725 a 5,875 GHz  | 150 MHz | Mundial |
-| 24 a 25 GHz | 250 MHz | Mundial |
-| 61 a 61,5 GHz |500 MHz | Sujeita à aceitação local |
-| 122 a 123 GHz |1 GHz | Sujeita à aceitação local |
-| 244 a 246 GHz | 2 GHz | Sujeita à aceitação local |
-
----
-
-slideTitle: Bandas U-NII
-
-| Sub-banda | Faixa de frequência | Largura da faixa |
-| :-------- | ------------------- | ---------------- |
-| U-NII 1 (ou Baixa) | 5,15 a 5,25 GHz | 100 MHz |
-| U-NII 2 (ou Média) | 5,25 a 5,35 GHz | 100 MHz |
-| U-NII 2e (ou Mundial) | 5,47 a 5,725 GHz | 255 MHz |
-| U-NII 3 (ou Alta) | 5,725 a 5,825 GHz | 150 MHz |
-
----
-
-layout: false
-class: section-slide
-
-# IEEE 802.11
-
----
-
-layout: true
-template: conteudo
-
----
-
-slideTitle: IEEE 802.11 e Wi-Fi
-
-* O padrão IEEE 802.11 foi publicado em 1997.
-    * Problemas de interoperabilidade.
-* WI-Fi Alliance criada em 1999.
-    * Certificação de produtos para garantir interoperabilidade.
-    * Mais de 550 membros.
-
----
-
-slideTitle: Evolução do padrão IEEE 802.11
-
-* Evolução do padrão IEEE 802.11 tem sido permanente.
-    * Melhorias na segurança.
-    * Maiores taxas de transferência de dados.
-    * Adequação à legislação.
-* A evolução se dá por emendas publicadas por Forças Tarefa.
-    * A forças tarefa são identificadas por letras “a”, “b”, ..., “z”, “aa", “ab”, ..., “ay”, ...
-
----
-
-slideTitle: Principais emendas ao IEEE 802.11
-
-* Aumento da taxa de transmissão:
-    * Padrão original: 1 e 2 Mb/s.
-    * "a" (1999) taxas de até 54 Mb/s, na faixa de 5 GHz.
-    * "b" (1999) taxas de até 11 Mb/s, na faixa de 2,4 GHz.
-    * "g" (2003) taxas de até 54 Mb/s, na faixa de 2,4 GHz.
-    * "n" (2009) taxas de até 600 Mb/s, nas faixa de 2,4 e 5 GHz.
-    * "ac" (2013) taxas de até 3,39 Gb/s, na faixa de 5 GHz.
-    * "ad" (2012) taxas de até 6,75 Gb/s, na faixa de 60 GHz.
-* Outros exemplos de emendas:
-    * "i" melhorou a segurança do padrão original.
-    * "p" redes veiculares.
-    * "af" utilização de canais de TV ociosos.
-    * "j" adequação à legislação japonesa.
-    * "s" comunicação em múltiplos saltos.
-
----
-
-slideTitle: Consolidações do padrão
-
-* Após a publicação original (1997) o padrão já foi atualizado 3 vezes:
-    * IEEE 802.11-1997: Versão original (legada).
-    * IEEE 802.11-1999: Pequenas mudanças no texto.
-    * IEEE 802.11-2007: Consolidação (802.11a, b, d, e, g, h, i, j).
-    * IEEE 802.11-2012: Consolidação (802.11k, r, y, n, w, p, z, v, u, s).
-
----
-
-slideTitle: O futuro do padrão: *drafts* e emendas recentes
-
-* As emendas atuais apontam para o futuro do Wi-Fi.
-    * "ah" - Internet das Coisas, 900 MHz, maior alcance.
-    * "ax" - Evolução do IEEE 802.11ac.
-    * "ay" - Evolução do IEEE 802.11ad.
-
----
-
-slideTitle: Aplicações das redes locais sem fio
-
-* Conectar dispositivos sem fio à infraestrutura cabeada é a principal aplicação.
-    * Residências;
-    * Empresas;
-    * Espaços públicos.
-* Enlaces ponto-a-ponto também são possíveis.
-    * Baixo custo dos equipamentos.
-* Aplicações futuras:
-    * Internet das Coisas: IEEE 802.11ah.
-    * Redes veiculares: IEEE 802.11p.
-
----
-
-layout: false
-class: section-slide
-
-# Conceitos Básicos de Camada Física
-
----
-
-layout: true
-template: conteudo
-
----
-
 slideTitle: Introdução
 
-* Camada física = PHY.
-    * Implementada em um chipset Wi-Fi.
-    * Transmissão efetiva dos bits no canal de comunicação.
-    * Presta serviços à camada MAC.
-        * Recepção: recebe o sinal vindo da antena, decodifica os bits montando um quadro que será repassado para a camada MAC.
-        * Transmissão: Recebe o quadro da camada MAC, o codifica e transmite o sinal resultante através da antena.
-    * São diversas as PHYs do IEEE 802.11.
-        * Diversas taxas de transmissão, frequência de operação e vários níveis de robustez.
+#### Transdutor
+    * Corrente elétrica &hArr; onda eletromagnética.
+* Principais parâmetros de uma antena.
+    * Ganho e padrão de irradiação:
+        * Omnidirecionais, setoriais e direcionais.
+    * Frequência de operação:
+        * Para o Wi-Fi são de interesse as antenas para 2,4 GHz e 5 GHz.
+    * Outras características serão brevemente mencionadas adiante.
 
 ---
 
-slideTitle: Preparando o quadro para transmissão: Preâmbulo
+slideTitle: Diretividade de uma antena
 
-* Antecede o quadro.
-* Prepara o receptor para interpretar o quadro corretamente.
-* Permite selecionar a antena de recepção em sistemas com diversidade de antenas.
-* Permite sincronização do receptor com o transmissor.
-
----
-
-slideTitle: Preparando o quadro para transmissão: Postâmbulo (FCS)
-
-* Inserido ao final do quadro.
-* Verificação de integridade do quadro.
-* Utiliza o algoritmo CRC32: 4 bytes.
-* Quadros que passem na verificação serão repassados à camada MAC e confirmados.
-    * Confirmados se forem quadros unicast.
-* Quadros que falhem na verificação serão descartados.
+* Radiador isotrópico: energia distribuída uniformemente em todas as direções.
+    * O Sol é um radiador isotrópico.
+    * Uma lanterna é não isotrópica.
+* Antenas práticas são não isotrópicas.
+* Quando a energia é concentrada em uma direção há um ganho.
+    * Não é amplificação do sinal, apenas concentração espacial.
 
 ---
 
-slideTitle: Preparando o quadro para transmissão: Codificação
+slideTitle: Padrão de irradiação
 
-* Inserção de bits adicionais para tornar o sinal imune a erros de transmissão.
-* Possibilita detecção e correção de erros.
-* Etapa adicional à inserção do FCS ao final do quadro.
-* O nível de redundância e, portanto, a robustez é variável.
-    * Maior robustez, menor taxa de transmissão.
-    * Taxas de codificação comuns são 1/2, 2/3 e 3/4.
+* O padrão de irradiação de uma antena pode ser representado graficamente:
+    * Cortes no plano horizontal e vertical.
+    * Seriam dois círculos perfeitos, no caso de um radiador isotrópico.
 
 ---
 
-slideTitle: Portadora
+slideTitle: Ganho em dBi
 
-* A onda eletromagnética que transporta o sinal.
-* Matematicamente, tratada como equivalente a um sinal senoidal com certa frequência, amplitude e fase.
-* Portadoras na faixa de MHz e GHz são as usadas em Wi-Fi.
-    * Exemplo: portadora para o canal 1 do IEEE 802.11g = 2,412 GHz.
-
----
-
-slideTitle: Portadora: Exemplo
-
-.center[
-![:image 70%](portadora.png)]
+* Ganho de diretividade é medido em dBi.
+    * Escala logarítmica.
+    * Ganho (dBi) = 10 log10 (DMAX/DREF).
+        * DMAX é a densidade de potência na direção para a qual a antena irradia mais fortemente.
+        * DREF  é a densidade de potência do radiador isotrópico.
 
 ---
 
-slideTitle: Modulação
+slideTitle: Antenas omnidirecionais
 
-* A modulação é o processo que altera as características da portadora, introduzindo nela a informação a ser transmitida.
-* O sinal modulante (informação) é combinado à portadora.
-* A portadora tem a frequência adequada ao sistema sem fio em questão.
-* Existem diversos tipos de modulação, variando em função da forma como a portadora é alterada para inserir a informação.
-
----
-
-slideTitle: Modulação por amplitude
-
-* AM = Amplitude Modulation.
-* A amplitude (nível de energia) da portadora é alterada de acordo com os dados a serem transmitidos.
-* ASK: modulação por amplitude binária.
-    * Dois níveis de amplitude são usados para representar 0s e 1s.
+* Irradia uniformemente no plano horizontal, mas de forma variável no plano vertical.
+    * O prefixo “omni” é enganoso.
+* Tipo mais comum de ser encontrado nos APs e estações.
+* Escolha natural quando não se conhece, à priori, a distribuição espacial dos usuários.
 
 ---
 
-slideTitle: Modulação por amplitude: Exemplo
+slideTitle: Antenas setoriais
 
-.center[
-![:image 70%](am.png)
+* Concentram a energia em uma faixa.
+    * Ângulos comuns: 30, 45, 60, 90, 120 e 180 graus.
+* Indicado para os limites de uma área de cobertura.
+    * Paredes externas e tetos.
+---
+
+slideTitle: Antenas direcionais
+
+* Concentram a energia em um feixe estreito.
+    * Para cobrir longas distâncias (enlaces ponto-a-ponto).
+* O padrão de irradiação costuma apresentar lobos secundários.
+    * Direções onde a antena apresenta um repentino ganho (além da direção primária).
+* O alinhamento é importante nos enlaces ponto-a-ponto.
+    * Deve-se atentar para os lobos secundários (não alinhar por eles).
+
+---
+
+slideTitle: Formação de feixe
+
+* Beamforming.
+* Técnica que combina várias antenas omnidirecionais, para a formação de um feixe direcional.
+    * Usada em sistemas de sonar, radar e em telefonia móvel.
+* Introduzida no IEEE 802.11n.
+    * Sem sucesso (padronização incompleta).
+* Reintroduzida no IEEE 802.11ac.
+
+---
+
+layout: false
+class: section-slide
+
+# Potência do Sinal e Parâmetros Correlatos
+
+---
+
+layout: true
+template: conteudo
+
+---
+
+slideTitle: Medidas logarítmicas, dB, dBi e dBm.
+
+* Medidas logarítmicas são mais práticas para estudar um sistema de telecomunicações.
+    * Nos equipamentos, medidas para potência de transmissão, atenuação, ganhos de antenas e sensibilidade de rádios são fornecidas em escala logarítmica.
+    * Grandes variações de amplitude são achatadas na escala logarítmica.
+    * Multiplicações e divisões viram somas e subtrações (respectivamente).
+* dB: expressa aumento (ganho) ou redução (perda) de grandeza ou a relação entre duas grandezas distintas.
+    * Como veremos, um aumento de 1000 vezes, equivale a um ganho de 30 dB.
+    * Se um sinal é 100 vezes mais forte do que o ruído, a relação sinal ruído será de 20 dB.
+* dBi: expressa um ganho em relação ao radiador isotrópico, ou seja, o ganho de diretividade.
+    * Como vimos no Capítulo 5, uma antena com ganho de 23 dBi, irradia 200 vezes mais potência em uma dada direção do que um radiador isotrópico.
+* dBm: expressa uma potência em escala logarítmica:
+    * Como veremos, 100 mW, equivale a 20 dBm.
+
+---
+
+slideTitle: Ganhos expressos em decibéis, dB.
+
+* Ganhos são geralmente expressos em decibéis.
+* Um bel (B) corresponde a um aumento de uma ordem de grandeza.
+* Algo que aumentou 10 vezes, aumentou 1 Bel.
+* Algo que aumentou 100 vezes, aumentou 2 Béis.
+* O decibel é o décimo de um bel: 1 B = 10 dB.
+* Algo que aumentou 10 vezes, aumentou 10 dB.
+* Algo que aumentou 100 vezes, aumentou 20 dB.
+* GdB = 10 log10 GLIN; ou  GLIN = 10(GdB/10)
+* GdB  é o ganho em dB e, GLIN  é o ganho linear.
+* Se algo dobra de valor, aumenta aproximadamente 3 dB.
+* 10 log10 2 = 3,01, aproximado para 3 dB.
+* Se algo cai pela metade, reduz em 3 dB.
+* 10 log10 0,5 = - 3,01, aproximado para – 3 dB.
+* Perdas são ganhos negativos: 3 dB é o dobro, -3 dB é a metade.
+
+---
+
+slideTitle: Potência em dBm
+
+* Expressar as potências em dBm facilita os cálculos de viabilidade de um enlace.
+    * Além disso, é o que se encontra nos manuais dos fabricantes.
+* Potência (dBm) = 10 log10 Potência (mW)
+    * 100 mW -> 20 dBm
+    * 50 mW -> 17 dBm
+    * 10 mW -> 10 dBm
+    * 1 mW -> 0 dBm
+    * 0,5 mW -> -3 dBm
+    * 0,1 mW -> -10 dBm
+* Atenção: valores em dBm negativos representam potência abaixo de 1 mW.
+
+---
+
+slideTitle: Ganho de diretividade, em dBi
+
+* Estudamos o ganho de diretividade na Seção 5.
+    * Lembrando: Ganho (dBi) = 10 log10 (DMAX/DREF).
+    * DMAX é densidade de energia enviada na direção de maior ganho.
+    * DREF é a densidade de energia enviada pelo radiador isotrópico.
+* O ganho de diretividade pode ser somado à potência do rádio transmissor para determinar a quantidade de energia transmitida na direção de maior ganho.
+    * Exemplo: Potência de transmissão: 15 dBm, Antena setorial com 8 dBi de ganho:
+        * Potência irradiada: 15 dBm + 8 dBi = 23 dBm.
+        * Em escala linear: 31,6 mW * 6,31 = 199,4 mW (~200 mW).
+
+---
+
+slideTitle: Sensibilidade de um rádio, em dBm
+
+* A potência mínima do sinal recebido para que seja corretamente decodificado.
+    * Varia com a taxa de transmissão, por causa da diferente robustez das técnicas de modulação empregadas.
+    * Também é especificada em dBm.
+
+---
+
+slideTitle: Exemplos de Valores de Sensibilidade
+
+.container[
+| Taxa | IEEE 802.11g | IEEE 802.11a |
+| ---- | ------------ | ------- |
+| 6 Mb/s | -90 dBm | -87 dBm |
+| 9 Mb/s  | -84 dBm | -87 dBm |
+| 12 Mb/s  | -82 dBm | -85 dBm |
+| 18 Mb/s  | -80 dBm | -84 dBm |
+| 24 Mb/s | -77 dBm | -81 dBm |
+| 36 Mb/s  | -73 dBm | -78 dBm |
+| 48 Mb/s | -72 dBm | -73 dBm |
+| 54 Mb/s | -72 dBm | -72 dBm |
 ]
+.footnote[Segundo a Cisco, para o rádio do ponto de acesso Aironet Série 1200.]
 
 ---
 
-slideTitle: Modulação por frequência
+slideTitle: Relação Sinal-Ruído, SNR
 
-* FM = Frequency Modulation.
-* A frequência (ou, de forma equivalente, o período) da portadora é alterada de acordo com os dados a serem transmitidos.
-* FSK: modulação por frequência binária.
-    * Duas frequências são usadas para representar 0s e 1s.
-
----
-
-slideTitle: Modulação por Frequência: Exemplo
-
-.center[
-![:image 70%](fm.png)
-]
-
----
-
-slideTitle: Modulação por fase
-
-* PM = phase modulation
-* A fase (o deslocamento temporal) da portadora é alterada de acordo com os dados a serem transmitidos.
-* BPSK: modulação por fase binária.
-    * Duas fases são usadas para representar 0s e 1s.
-* Modulação bastante usada em redes Wi-Fi.
+* A correta decodificação depende, além da sensibilidade, da relação sinal-ruído, ou SNR.
+    * Uma medida da razão entre a potência do sinal (PSINAL) e a potência do ruído na recepção (PRUÍDO).
+    * SNR é expressa em dB. Quando maior, melhor.
+        * SNR (dB) = 10 log10 (PSINAL/PRUÍDO).
+* Um sinal pode ser recebido com potência acima da sensibilidade, mas se o ruído for também alto, a SNR pode ser baixa e o quadro será irrecuperável.
+* Nível de ruído:
+    * O ruído termal é inevitável.
+    * Segundo a física, o ruído termal mínimo em um canal depende da largura de banda:
+        * -101 dBm para canais de 20 MHz.
+        * Adicione 3dB para cada vez que dobrar a banda do canal (- 98 dBm para 40 MHz,
+        * -95 dBm para 80 MHz, e assim por diante).
+    * Redes distantes e outras fontes de poluição espectral também contribuem para o nível de ruído.
+        * Principalmente em ambientes urbanos.
 
 ---
 
-slideTitle: Modulação por Fase: Exemplo
+layout: false
+class: section-slide
 
-.center[
-![:image 70%](fase.png)
-]
-
----
-
-slideTitle: Bits e símbolos: modulação multinível
-
-* Símbolo: o estado da portadora modulada.
-* Símbolos binários: a portadora assume apenas dois estados.
-* Símbolos multiníveis: a portadora assume $2^N$ níveis distintos e cada símbolo transporta N bits.
-* Exemplos:
-    * ASK: dois níveis de amplitude usados para designar “0” e “1”
-    * 4ASK: quatro níveis de amplitude usados para designar “00”, “01”, “10” e “11”
-    * 256QAM: 256 combinações distintas de fase e amplitude: 8 bits por símbolo.
+# Propagação
 
 ---
 
-slideTitle: Largura de banda
-
-* A faixa de frequências do espectro utilizada para a transmissão.
-    * Exemplos:
-    * No IEEE 802.11a, os canais têm 20 MHz de largura.
-    * No IEEE 802.11n, os canais podem ter 20 ou 40 MHz de largura.
-    * No IEEE 802.11ac, os canais podem chegar a 160 MHz de largura.
-* Quanto maior a largura de banda, maior a capacidade (em b/s).
+layout: true
+template: conteudo
 
 ---
 
-slideTitle: Espalhamento espectral
+slideTitle: Propagação
 
-* Dispersar o sinal por uma banda mais larga do que a necessária.
-* Em bandas não licenciadas, costuma ser obrigatório o uso de técnicas de espalhamento espectral.
-    * Redução das interferências, melhor coexistência.
-* Existem diversas técnicas de espalhamento espectral.
-    * Exemplos: Salto de frequências, DSSS e OFDM.
-
----
-
-slideTitle: Salto de frequências
-
-* Criado durante a Segunda Guerra Mundial.
-* Transmissor e receptor saltam de canal rapidamente e sincronizadamente.
-    * Dificuldade de interceptação da comunicação.
-    * Efeito de espelhamento espectral.
-* Umas das PHY propostas no IEEE 802.11 legado.
-* Não mais usado no Wi-Fi, mas ainda usado em sistemas como o Bluetooth.
+* Ao se propagar, um sinal é fortemente atenuado:
+    * Diversas ordens de grandeza.
+    * Motivo 1: Dispersão da energia no espaço.
+    * Motivo 2: Absorção da energia por partículas e obstáculos.
+* Para prever a atenuação sofrida, existem modelos de propagação.
+    * São geralmente complexos, com muitos parâmetros.
+        * Típicos: frequência, distância e altura das antenas.
+        * Outros relacionados à vegetação, rugosidade do solo, etc.
 
 ---
 
-slideTitle: Salto de Frequências: Exemplo
+slideTitle: Modelos de propagação no espaço livre
 
-.center[
-![:image 70%](freqHopping.png)
-]
-
----
-
-slideTitle: DSSS (Direct Sequence Spread Spectrum)
-
-* Introduzido no IEEE 802.11 legado, juntamente com o salto de frequências.
-* Foi escolhido como técnica de espalhamento espectral na emenda “b”.
-    * 5,5 e 11 Mb/s.
-* Cada bit é substituído por uma sequência de bits de menor duração (chips).
+* Muitas vezes chamado free-space path loss (FSPL).
+* Modelo simples, que considera apenas a dispersão da energia ao se propagar.
+    * A energia está espalhada na superfície de uma esfera que cresce de diâmetro à medida que o sinal de afasta do transmissor.
+        * FSPL (dB) = 20 log10 (d) + 20 log10 (f) + 32,45
+        * d = distância em Km, f = frequência em MHz.
 
 ---
 
-slideTitle: DSSS: Exemplo
+slideTitle: Obstáculos à propagação
 
-.center[
-![:image 70%](dsss.png)
-]
+* Ao atravessar obstáculos, parte da energia de uma onda eletromagnética é perdida.
+* O nível de absorção depende do material e da espessura:
+    * Madeira e vidro: atenuação moderada.
+    * Paredes de alvenaria e concreto: forte atenuação.
+    * Água: atenuação extrema.
+    * Metal: muitas vezes intransponível (energia refletida).
 
 ---
 
-slideTitle: OFDM (Orthogonal Frequency Division Multiplexing)
+slideTitle: Exemplos de Obstáculos
 
-* Utilizada em diversas tecnologias de redes sem fio e cabeadas.
-* Diversas subportadoras, ao invés de uma única portadora.
-    * É como se o canal fosse dividido em subcanais usados em paralelo.
-    * Cada subportadora é modulada por um esquema de modulação tradicional (ex. BPSK, 64QAM, 256QAM).
-* Robustez contra interferências de banda estreita e poluição espectral.
+| Tipo de obstáculo | Atenuação típica (2,4 GHz) |
+| :---------------- | -------------------------------------- |
+| Parede de concreto (20 cm) ou laje | 35 dB |
+| Parede de alvenaria | 15 dB |
+| Parede de gesso acartonado | 3 dB |
+| Divisórias (núcleo colmeia) | 2 dB |
+| Porta de madeira | 3 dB |
+| Janela de vidro | 3 dB |
+.footnote[Fonte: Daniel M. Dobkin, *RF Engineering for Wireless Networks*.]
 
 ---
 
@@ -571,13 +317,13 @@ template: conteudo
 
 slideTitle: Próxima aula
 
-### Início (de verdade) do curso
-* Mais conceitos básicos de comunicação sem fio.
+### Começamos a estudar o IEEE 802.11
+* Características básicas e acesso ao meio.
 
 ### Tarefas
 | Pós-graduação | Todos os alunos |
 | ------------- | --------------- |
-| Escolher primeiro artigo a ser apresentado (dentre os 10 primeiros da lista) | Ler páginas 74 a 83 (antenas) e 111 a 118 (propagação) do livro *Tecnologias de Redes Sem Fio* |
+| | |
 
 </figcaption>
 </template>

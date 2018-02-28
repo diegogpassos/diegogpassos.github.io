@@ -93,8 +93,10 @@ ol li:before {
  */
 
 .col-2 {
- width: 50%;
+ width: 46%;
  float: left;
+ padding-left: 2%;
+ padding-right: 2%;
 }
 
 .col-3 {
@@ -124,10 +126,25 @@ ol li:before {
 }
 
 /*
- * Centering.
+ * Horizontall alignments.
  */
 
 .center {text-align: center;}
+.right {text-align: right;}
+.left {text-align: left;}
+
+/*
+ * Container: a simple div that encloses other divs.
+ * The "overflow: hidden" property guarantees that this div will have height
+ * equal of that needed for its content. This is useful in order to allow
+ * floating div's (e.g., columns) to be placed on top of other content in the
+ * slide properly.
+ */
+
+.container {
+    overflow: hidden;
+    padding: 20px;
+}
 
 /*
  * Headers.
@@ -135,4 +152,12 @@ ol li:before {
 
 h1, h2, h3, h4 {
   color: #137562;
+}
+
+/*
+ * A simple footnote.
+ */
+
+.footnote {
+    font-size: 12px;
 }
