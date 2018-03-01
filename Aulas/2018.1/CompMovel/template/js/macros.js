@@ -117,3 +117,25 @@ remark.macros.cover = function() {
 
   return ret;
 }
+
+// ![:translate](md)
+// Translates the markdown passed as argument to html.
+remark.macros.translate = function() {
+
+    console.log(window.remark.convert(this));
+    return window.remark.convert(this);
+}
+
+// ![:dagre width, height](graphDefinition)
+remark.macros.dagre = function(width, height) {
+
+    var g = graphlibDot.read(this);
+    g.graph().marginx = 20;
+    g.graph().marginy = 20;
+
+    if (typeof window.dagreGraphs === 'undefined') window.dagreGraphs = [];
+    var idx = window.dagreGraphs.push(g) - 1;
+
+    return '<svg idx="' + idx + '" height="' + height + '" width="' + width + '"><g/></svg>';
+}
+
