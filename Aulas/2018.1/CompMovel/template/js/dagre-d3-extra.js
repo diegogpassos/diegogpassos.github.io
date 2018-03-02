@@ -15,8 +15,9 @@ function dagreRenderAllSlides() {
             if ('idx' in svgList[i].attributes) {
 
                 var svg = svgList[i];
-                var idx = parseInt(svg.attributes.idx);
-                d3.select(svgList[i]).call(dagreD3.render(), window.dagreGraphs[0]);
+                var idx = parseInt(svg.attributes.idx.value);
+console.log('idx = ' + idx);
+                d3.select(svgList[i]).call(dagreD3.render(), window.dagreGraphs[idx]);
                 svg.attributes.removeNamedItem('idx');
             }
         }

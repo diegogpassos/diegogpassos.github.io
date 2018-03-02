@@ -126,16 +126,20 @@ remark.macros.translate = function() {
     return window.remark.convert(this);
 }
 
-// ![:dagre width, height](graphDefinition)
-remark.macros.dagre = function(width, height) {
+// ![:dagre css-like style definition](dot-like graph definition)
+remark.macros.dagre = function(style) {
 
     var g = graphlibDot.read(this);
+
     g.graph().marginx = 20;
     g.graph().marginy = 20;
 
     if (typeof window.dagreGraphs === 'undefined') window.dagreGraphs = [];
     var idx = window.dagreGraphs.push(g) - 1;
 
-    return '<svg idx="' + idx + '" height="' + height + '" width="' + width + '"><g/></svg>';
+    return '<svg idx="' + idx + '" style="' + style + '"><g/></svg>';
 }
 
+// ![:comment]()
+remark.macros.comment = function() {
+}

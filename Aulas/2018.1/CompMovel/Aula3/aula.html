@@ -44,109 +44,125 @@ name: conteudo
 
 ---
 
-slideTitle: Introdução
+slideTitle: Antena
 
-#### Transdutor
-* Corrente elétrica &hArr; onda eletromagnética.
-#### Principais parâmetros
-* Ganho.
-* Padrão de irradiação:
-    * Omnidirecionais, setoriais e direcionais.
-* Frequência de operação:
-    * Para o Wi-Fi são de interesse as antenas para 2,4 GHz e 5 GHz.
-* Outras características serão brevemente mencionadas adiante.
+### Transdutor
+![:block](
+.center[
+#### Corrente elétrica &hArr; onda eletromagnética
+]
+)
 
----
-
-slideTitle: Teste
-
-![:dagre 850, 300](
+![:dagre width: 850px; height: 530px; font-size: 18px;](
 digraph {
+    ranksep=20;
+    nodesep=20;
     A[label="Antena"];
-    B[label="Irradiação"];
-    C[label="Operação"];
-    D[label="2,4 GHz"];
-    E[label="5 GHz"];
-    F[label="Omnidirecional"];
-    G[label="Setorial"];
-    H[label="Direcional"];
-    A -> B
+    subgraph cluster_0 {
+        label="Características Importantes";
+        B[label="Irradiação"];
+        C[label="Frequência"];
+    }
+    subgraph cluster_1 {
+        D[label="2,4 GHz"];
+        E[label="5 GHz"];
+        F[label="..."];
+        G[label="Omnidirecional"];
+        H[label="Setorial"];
+        I[label="Direcional"];
+        J[label="..."];
+    }
+    A -> B;
     A -> C;
-    B -> F
     B -> G;
     B -> H;
-    C -> D
+    B -> I;
+    B -> J;
+    C -> D;
     C -> E;
+    C -> F;
 }
 )
 
 ---
 
-slideTitle: Diretividade de uma antena
+slideTitle: Diretividade de uma Antena
 
-* Radiador isotrópico: energia distribuída uniformemente em todas as direções.
-    * O Sol é um radiador isotrópico.
-    * Uma lanterna é não isotrópica.
-* Antenas práticas são não isotrópicas.
-* Quando a energia é concentrada em uma direção há um ganho.
-    * Não é amplificação do sinal, apenas concentração espacial.
+### Irradiador .alert[isotrópico] *vs.* .alert[não-isotrópico].
 
----
+![:column 60%](
+.center[
+![:image 85%](Irradiacao.svg\)
+]
+)
 
-slideTitle: Padrão de irradiação
-
-* O padrão de irradiação de uma antena pode ser representado graficamente:
-    * Cortes no plano horizontal e vertical.
-    * Seriam dois círculos perfeitos, no caso de um radiador isotrópico.
-
----
-
-slideTitle: Ganho em dBi
-
-* Ganho de diretividade é medido em dBi.
-    * Escala logarítmica.
-    * Ganho (dBi) = 10 log10 (DMAX/DREF).
-        * DMAX é a densidade de potência na direção para a qual a antena irradia mais fortemente.
-        * DREF  é a densidade de potência do radiador isotrópico.
+![:column 40%](
+#### Antenas práticas
+* Não-isotrópicas.
+#### Diretividade
+* Concentração da energia.
+* .alert[Ganho].
+)
 
 ---
 
-slideTitle: Antenas omnidirecionais
+slideTitle: Padrão de Irradiação (I)
 
-* Irradia uniformemente no plano horizontal, mas de forma variável no plano vertical.
-    * O prefixo “omni” é enganoso.
-* Tipo mais comum de ser encontrado nos APs e estações.
-* Escolha natural quando não se conhece, à priori, a distribuição espacial dos usuários.
+### Representação gráfica
+* Cortes horizontal e vertical.
 
----
 
-slideTitle: Antenas setoriais
-
-* Concentram a energia em uma faixa.
-    * Ângulos comuns: 30, 45, 60, 90, 120 e 180 graus.
-* Indicado para os limites de uma área de cobertura.
-    * Paredes externas e tetos.
----
-
-slideTitle: Antenas direcionais
-
-* Concentram a energia em um feixe estreito.
-    * Para cobrir longas distâncias (enlaces ponto-a-ponto).
-* O padrão de irradiação costuma apresentar lobos secundários.
-    * Direções onde a antena apresenta um repentino ganho (além da direção primária).
-* O alinhamento é importante nos enlaces ponto-a-ponto.
-    * Deve-se atentar para os lobos secundários (não alinhar por eles).
+.center[
+#### Exemplo para antena omnidirecional
+![:image 85%](padraoOmni.png)
+]
 
 ---
 
-slideTitle: Formação de feixe
+slideTitle: Padrão de Irradiação (II)
 
-* Beamforming.
-* Técnica que combina várias antenas omnidirecionais, para a formação de um feixe direcional.
-    * Usada em sistemas de sonar, radar e em telefonia móvel.
-* Introduzida no IEEE 802.11n.
-    * Sem sucesso (padronização incompleta).
-* Reintroduzida no IEEE 802.11ac.
+### Representação gráfica
+* Cortes horizontal e vertical.
+
+
+.center[
+#### Exemplo para antena direcional
+![:image 85%](padraoDir.png)
+]
+
+---
+
+slideTitle: Ganho de Diretividade
+
+#### Medido em dBi
+* Escala logarítmica.
+
+$$Ganho(dBi) = 10\cdot\log_{10}\left(\frac{DMAX}{DREF}\right)$$
+
+#### DMAX e DREF: densidades de potência
+* DMAX: na direção de irradia mais intensa.
+* DREF: do irradiador isotrópico.
+
+---
+
+slideTitle: Formação de Feixe
+
+#### *Beamforming*.
+* Várias antenas omnidirecionais &rArr; um feixe direcional.
+#### Usos
+
+.col-2[
+* Sonar.
+* Radar.
+* Telefonia móvel.
+]
+
+.col-2[
+![:block height:200px;](
+* IEEE 802.11n (sem sucesso\).
+* IEEE 802.11ac.
+)
+]
 
 ---
 
@@ -162,74 +178,163 @@ template: conteudo
 
 ---
 
-slideTitle: Medidas logarítmicas, dB, dBi e dBm.
+slideTitle: Mais Medidas Logarítimicas
 
-* Medidas logarítmicas são mais práticas para estudar um sistema de telecomunicações.
-    * Nos equipamentos, medidas para potência de transmissão, atenuação, ganhos de antenas e sensibilidade de rádios são fornecidas em escala logarítmica.
-    * Grandes variações de amplitude são achatadas na escala logarítmica.
-    * Multiplicações e divisões viram somas e subtrações (respectivamente).
-* dB: expressa aumento (ganho) ou redução (perda) de grandeza ou a relação entre duas grandezas distintas.
-    * Como veremos, um aumento de 1000 vezes, equivale a um ganho de 30 dB.
-    * Se um sinal é 100 vezes mais forte do que o ruído, a relação sinal ruído será de 20 dB.
-* dBi: expressa um ganho em relação ao radiador isotrópico, ou seja, o ganho de diretividade.
-    * Como vimos no Capítulo 5, uma antena com ganho de 23 dBi, irradia 200 vezes mais potência em uma dada direção do que um radiador isotrópico.
-* dBm: expressa uma potência em escala logarítmica:
-    * Como veremos, 100 mW, equivale a 20 dBm.
+![:comment](
+![:dagre width: 615px; height: 373px; font-size: 18px;](
+digraph {
+    ranksep=30;
+    nodesep=30;
+    rankdir=LR;
+    subgraph cluster_0 {
+        rankdir="TB";
+        B[label="Amplitude"];
+        C[label="Simplificação\n            de      \nMultiplicações"];
+        D[label="Simplificação\n            de      \n     Divisões"];
+    }
+    A[label="Medidas\nLogaríticas"];
+    subgraph cluster_1 {
+        rankdir=TB;
+        E[label="dB"]
+        F[label="dBi"]
+        G[label="dBm"]
+    }
+    subgraph cluster_2 {
+        rankdir=TB;
+        H[label="Atenuação"];
+        I[label="Ganho"];
+        J[label="     Ganho\n          de\nDiretividade"];
+        K[label="Potência"];
+    }
+
+    B -> A;
+    C -> A;
+    D -> A;
+
+    A -> E;
+    A -> F;
+    A -> G;
+
+    E -> H;
+    E -> I;
+
+    F -> J;
+
+    G -> K;
+}
+\)
+)
+
+.container[
+
+![:column 70%](
+#### Medidas Logarítmicas
+* Práticas para grandes amplitudes de valores.
+* Multiplicações &rArr; somas.
+* Divisões &rArr; subtrações.
+)
+
+![:column 30%](
+#### Usos
+* Potência.
+* Atenuação.
+* Ganhos.
+* Sensibilidade.
+)]
+
+| dB | dBi | dBm |
+| --- | --- | --- |
+| Relativa | Relativa | Absoluta |
+| Ganho ou Perda | Ganho relativo a irradiador isotrópico | Potência |
+| Aumento de 1000 vezes &equiv; ganho de 30 dB | Ganho de 23 dBi &equiv; 200 vezes mais potência irradiada | 100 mW = 20 dBm |
 
 ---
 
-slideTitle: Ganhos expressos em decibéis, dB.
+slideTitle: Ganhos e Perdas em dB
 
-* Ganhos são geralmente expressos em decibéis.
-* Um bel (B) corresponde a um aumento de uma ordem de grandeza.
-* Algo que aumentou 10 vezes, aumentou 1 Bel.
-* Algo que aumentou 100 vezes, aumentou 2 Béis.
-* O decibel é o décimo de um bel: 1 B = 10 dB.
-* Algo que aumentou 10 vezes, aumentou 10 dB.
-* Algo que aumentou 100 vezes, aumentou 20 dB.
-* GdB = 10 log10 GLIN; ou  GLIN = 10(GdB/10)
-* GdB  é o ganho em dB e, GLIN  é o ganho linear.
-* Se algo dobra de valor, aumenta aproximadamente 3 dB.
-* 10 log10 2 = 3,01, aproximado para 3 dB.
-* Se algo cai pela metade, reduz em 3 dB.
-* 10 log10 0,5 = - 3,01, aproximado para – 3 dB.
-* Perdas são ganhos negativos: 3 dB é o dobro, -3 dB é a metade.
+![:column 55%](
+#### Bel (B\)
+* Aumento de uma ordem de grandeza.
+    * Aumento de 10 vezes &rArr; 1 Bel.
+    * Aumento de 100 vezes &rArr; 2 Béis.
+
+#### Decibel (dB\)
+* 1 B = 10 dB.
+    * Aumento de 10 vezes &rArr; 10 dB.
+    * Aumento de 100 vezes &rArr; 20 dB.
+)
+
+![:column 45%](
+![:block](Propriedades úteis
+* Dobrar de valor:
+    * $10\cdot\log_{10} 2 \approx 3$ dB.
+* Cair pela metade:
+    * $10\cdot\log_{10} 0,5 \approx - 3$ dB.
+* Corolário: perdas são ganhos negativos.
+\)
+)
+
+$$G(dB) = 10\cdot\log_{10} G(lin)\rightarrow G(lin) = 10^{{G(dB)}\over{10}}$$
+
 
 ---
 
 slideTitle: Potência em dBm
 
-* Expressar as potências em dBm facilita os cálculos de viabilidade de um enlace.
-    * Além disso, é o que se encontra nos manuais dos fabricantes.
-* Potência (dBm) = 10 log10 Potência (mW)
-    * 100 mW -> 20 dBm
-    * 50 mW -> 17 dBm
-    * 10 mW -> 10 dBm
-    * 1 mW -> 0 dBm
-    * 0,5 mW -> -3 dBm
-    * 0,1 mW -> -10 dBm
-* Atenção: valores em dBm negativos representam potência abaixo de 1 mW.
+
+![:column 60%](
+#### Usual
+* Facilita cálculos.
+* Comum em *datasheets*, manuais.
+
+#### Definição
+* Ganho/perda em relação  1 mW:
+
+$$ Pwr(dBm\) = 10\cdot\log_{10} Pwr(mW\)$$
+)
+
+![:column 40%](
+.center[
+### Exemplos
+]
+
+| mW | dBm |
+| :--: | :---: |
+| 100 | 20 |
+| 50 | 17 |
+| 10 | 10 |
+| 1 | 0 |
+| 0,5 | -3 |
+| 0,1 | -10 |
+)
 
 ---
 
-slideTitle: Ganho de diretividade, em dBi
+slideTitle: Ganho de Diretividade em dBi
 
-* Estudamos o ganho de diretividade na Seção 5.
-    * Lembrando: Ganho (dBi) = 10 log10 (DMAX/DREF).
-    * DMAX é densidade de energia enviada na direção de maior ganho.
-    * DREF é a densidade de energia enviada pelo radiador isotrópico.
-* O ganho de diretividade pode ser somado à potência do rádio transmissor para determinar a quantidade de energia transmitida na direção de maior ganho.
-    * Exemplo: Potência de transmissão: 15 dBm, Antena setorial com 8 dBi de ganho:
-        * Potência irradiada: 15 dBm + 8 dBi = 23 dBm.
-        * Em escala linear: 31,6 mW * 6,31 = 199,4 mW (~200 mW).
+#### Relembrando
+$$Ganho(dBi) = 10\cdot\log_{10}\left(\frac{DMAX}{DREF}\right)$$
+
+#### Uso
+* Determinar energia transmitida na direção do ganho.
+* Exemplo:
+    * $P_{trans}$: 15 dBm.
+    * Ganho: 8 dBi.
+    * Potência irradiada: $15 + 8 = 23$ dBm.
+    * Em escala linear: 31,6 mW * 6,31 = 199,4 mW.
 
 ---
 
-slideTitle: Sensibilidade de um rádio, em dBm
+slideTitle: Sensibilidade do Rádio em dBm
 
-* A potência mínima do sinal recebido para que seja corretamente decodificado.
-    * Varia com a taxa de transmissão, por causa da diferente robustez das técnicas de modulação empregadas.
-    * Também é especificada em dBm.
+#### Significado
+* Menor potência tal que sinal possa ser decodificado.
+
+#### Varios fatores
+* Características do receptor.
+* Taxa de transmissão.
+    * Robustez da modulação.
+* ...
 
 ---
 
@@ -253,20 +358,26 @@ slideTitle: Exemplos de Valores de Sensibilidade
 
 slideTitle: Relação Sinal-Ruído, SNR
 
-* A correta decodificação depende, além da sensibilidade, da relação sinal-ruído, ou SNR.
-    * Uma medida da razão entre a potência do sinal (PSINAL) e a potência do ruído na recepção (PRUÍDO).
-    * SNR é expressa em dB. Quando maior, melhor.
-        * SNR (dB) = 10 log10 (PSINAL/PRUÍDO).
-* Um sinal pode ser recebido com potência acima da sensibilidade, mas se o ruído for também alto, a SNR pode ser baixa e o quadro será irrecuperável.
-* Nível de ruído:
-    * O ruído termal é inevitável.
-    * Segundo a física, o ruído termal mínimo em um canal depende da largura de banda:
-        * -101 dBm para canais de 20 MHz.
-        * Adicione 3dB para cada vez que dobrar a banda do canal (- 98 dBm para 40 MHz,
-        * -95 dBm para 80 MHz, e assim por diante).
-    * Redes distantes e outras fontes de poluição espectral também contribuem para o nível de ruído.
-        * Principalmente em ambientes urbanos.
+#### *Signal to Noise Ratio*
+* Razão entre potência do sinal desejado e ruído:
 
+$$SNR(dB) = 10\cdot\log_{10}\frac{sinal}{ruido}$$
+
+.col-2[
+#### Importância
+* Capacidade de decodificação.
+    * .red[&dArr; SNR], .red[&dArr; probabilidade de sucesso].
+    * Mesmo acima da sensibilidade!
+]
+.col-2[
+#### Fontes de ruído
+* Ruído térmico.
+    * Inevitável.
+    * Depende da largura de banda:
+        * -101 dBm para 20 MHz.
+        * Dobra com a largura.
+* Outros equipamentos.
+]
 ---
 
 layout: false
@@ -281,37 +392,51 @@ template: conteudo
 
 ---
 
-slideTitle: Propagação
+slideTitle: Atenuação
 
-* Ao se propagar, um sinal é fortemente atenuado:
-    * Diversas ordens de grandeza.
-    * Motivo 1: Dispersão da energia no espaço.
-    * Motivo 2: Absorção da energia por partículas e obstáculos.
-* Para prever a atenuação sofrida, existem modelos de propagação.
-    * São geralmente complexos, com muitos parâmetros.
-        * Típicos: frequência, distância e altura das antenas.
-        * Outros relacionados à vegetação, rugosidade do solo, etc.
+#### Motivos
+* Dispersão da energia no espaço.
+* Absorção da energia por partículas e obstáculos.
+
+#### Representativa
+* Várias ordens de grandeza.
+
+#### Modelos de propagação
+* Prever atenuação
+* Às vezes complexos, muitos parâmetros.
+    * Típicos: frequência, distância e altura das antenas.
+    * Mais raros: vegetação, rugosidade do solo, ...
 
 ---
 
-slideTitle: Modelos de propagação no espaço livre
+slideTitle: Modelo de Propagação no Espaço Livre
 
-* Muitas vezes chamado free-space path loss (FSPL).
-* Modelo simples, que considera apenas a dispersão da energia ao se propagar.
-    * A energia está espalhada na superfície de uma esfera que cresce de diâmetro à medida que o sinal de afasta do transmissor.
-        * FSPL (dB) = 20 log10 (d) + 20 log10 (f) + 32,45
-        * d = distância em Km, f = frequência em MHz.
+.col-2[
+#### *Free-space path loss* (FSPL)
+* Simples
+    * Considera apenas a dispersão da energia.]
+.col-2[
+#### Ideia básica
+* Energia espalhada na superfície de uma esfera.
+* Raio aumenta com distância.]
+
+$$FSPL(dB) = 20\cdot\log_{10}(d) + 20\cdot\log{10}(f) + 32,45$$
+* Onde:
+    * d = distância em Km
+    * f = frequência em MHz.
 
 ---
 
 slideTitle: Obstáculos à propagação
 
-* Ao atravessar obstáculos, parte da energia de uma onda eletromagnética é perdida.
-* O nível de absorção depende do material e da espessura:
-    * Madeira e vidro: atenuação moderada.
-    * Paredes de alvenaria e concreto: forte atenuação.
-    * Água: atenuação extrema.
-    * Metal: muitas vezes intransponível (energia refletida).
+#### Efeitos
+* Absorção.
+* Reflexão.
+* ...
+#### Material e espessura
+* *e.g.*, madeira e vidro: atenuação moderada.
+* *e.g.*, paredes de alvenaria e concreto: forte atenuação.
+* *e.g.*, água: atenuação extrema.
 
 ---
 
@@ -344,12 +469,12 @@ template: conteudo
 slideTitle: Próxima aula
 
 ### Começamos a estudar o IEEE 802.11
-* Características básicas e acesso ao meio.
+* Características básicas e arquiteturas.
 
 ### Tarefas
-| Pós-graduação | Todos os alunos |
-| ------------- | --------------- |
-| | |
+| Todos os alunos |
+| --------------- |
+| Ler capítulo 2 do livro *Tecnologias de Redes Sem Fio*|
 
 </figcaption>
 </template>
