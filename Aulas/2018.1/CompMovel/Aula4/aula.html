@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Computação Móvel: Aula 4</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" type="text/css" href="../template/css/roboto.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/general.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/code.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/cover.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/section.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/elements.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/table.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/block.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/dagre.css">
+  </head>
+  <body>
+
+    <textarea id="source">
+
+class: cover-slide
+
+![:cover](
+Computação Móvel
+Aula 4: IEEE 802.11 &mdash; Características Básicas e Arquiteturas
+Diego Passos
+../template/img/logo.svg
+)
+
+---
+
+class: section-slide
+
+# IEEE 802.11: Conceitos Básicos
+
+---
+
+class: middle
+layout: true
+name: conteudo
+
+.title[
+{{slideTitle}}
+<hr>]
+
+---
+
+slideTitle: IEEE 802.11 e Wi-Fi
+
+![:block width: 65%; margin-left: 0; margin-bottom: 50px;](IEEE 802.11
+* Publicado em 1997.
+* Problemas de interoperabilidade.
+)
+
+.right[
+![:block width: 65%; margin-right: 0;](WI-Fi Alliance
+* Criada em 1999.
+* Certificação de interoperabilidade.
+* Mais de 550 membros.
+)]
+
+---
+
+slideTitle: Evolução do Padrão
+
+#### Evolução permanente
+* Maiores taxas.
+* Segurança.
+* Adequação à legislação.
+#### Emendas e Forças Tarefa
+* Letras
+    * a, b, ..., z, aa, ab, ..., ay, ...
+
+---
+
+slideTitle: Principais Emendas (I)
+
+#### Taxa de transmissão
+
+| Documento | Ano | Taxas | Faixa de Frequência |
+| :-------- | --- | :---- | --------------------|
+| Padrão original| 1997 | 1 e 2 Mb/s | 2.4 GHz |
+| IEEE 802.11a  | 1999 | Até 54 Mb/s   | 5 GHz |
+| IEEE 802.11b  | 1999 | Até 11 Mb/s   | 2,4 GHz |
+| IEEE 802.11g  | 2003 | Até 54 Mb/s   | 2,4 GHz |
+| IEEE 802.11n  | 2009 | Até 600 Mb/s  | 2,4 e 5 GHz |
+| IEEE 802.11ac | 2013 | Até 3,39 Gb/s | 5 GHz |
+| IEEE 802.11ad | 2012 | Até 6,75 Gb/s | 60 GHz |
+
+---
+
+slideTitle: Principais Emendas (II)
+
+#### Outros exemplos
+
+| Documento | Ano | Objetivo |
+| :-------- | --- | --------------------|
+| IEEE 802.11i | 2004 | Melhorias de segurança |
+| IEEE 802.11j | 2004 | Legislação japonesa |
+| IEEE 802.11p | 2010 | Redes veiculares |
+| IEEE 802.11s | 2011  | Múltiplos saltos |
+| IEEE 802.11af | 2014 | Canais de TV ociosos |
+
+---
+
+slideTitle: Consolidações
+
+#### Atualizações do padrão
+* Incorporam emendas.
+
+| Documento | Detalhes |
+| :-------- | :------- |
+| IEEE 802.11-1997 | Versão original |
+| IEEE 802.11-1999 | Pequenas mudanças |
+| IEEE 802.11-2007 | Consolidação (emendas a, b, d, e, g, h, i, j) |
+| IEEE 802.11-2012 | Consolidação (emendas k, r, y, n, w, p, z, v, u, s) |
+| IEEE 802.11-2016 | Consolidação (emendas aa, ac, ad, ae, af) |
+
+---
+
+slideTitle: O Futuro
+
+#### Emendas atuais e futuras
+
+| Documento | Ano | Objetivo |
+| :-------- | --- | :------- |
+| IEEE 802.11ah | 2017 | Internet das Coisas, 900 MHz, maior alcance |
+| IEEE 802.11ax | 2019? | Evolução do IEEE 802.11ac |
+| IEEE 802.11ay | 2019? | Evolução do IEEE 802.11ad |
+
+---
+
+slideTitle: Aplicações
+
+### Atuais
+.center[
+![:dagre width: 650px; height: 200px; font-size: 18px;](
+digraph {
+    ranksep=50;
+    nodesep=60;
+    A[label="Estender\nLANs cabeadas"];
+    B[label="Enlaces\nponto-a-ponto"];
+    C[label="Residências"];
+    D[label="Empresas"];
+    E[label="Espaços\npúblicos"];
+    F[label="Baixo custo"];
+    A -> C;
+    A -> D;
+    A -> E;
+    B -> F;
+}
+)]
+
+### Futuros
+* Internet das Coisas: IEEE 802.11ah.
+* Redes veiculares: IEEE 802.11p.
+
+---
+
+layout: false
+class: section-slide
+
+# IEEE 802.11: Arquiteturas
+
+---
+
+layout: true
+template: conteudo
+
+---
+
+slideTitle: Introdução
+
+.col-2[
+#### Motivações
+* Mobilidade.
+* Dificuldades de cabeamento.
+* Redes provisórias.
+* Ligações entre redes.
+]
+
+.col-2[
+.center[
+![:dagre width: 200px; height: 300px; font-size: 18px;](
+digraph {
+    ranksep=50;
+    nodesep=60;
+    B[label="Motivações"];
+    A[label="Requisitos"];
+    C[label="Arquiteturas"];
+    B -> A;
+    A -> C;
+}
+)]]
+
+---
+
+slideTitle: Modos de operação
+
+
+.center[
+![:dagre width: 500px; height: 300px; font-size: 18px;](
+digraph {
+    ranksep=50;
+    nodesep=60;
+    rankdir=LR;
+    A[label="  Modos\n       de\nOperação"];
+    B[label="Infraestruturado"];
+    C[label="Ad Hoc"];
+    D[label="Master"];
+    E[label="Managed"];
+    A -> B;
+    A -> C;
+    B -> D;
+    B -> E;
+}
+)]
+
+---
+
+slideTitle: Modos Infraestruturados
+
+.col-2[
+#### Objetivo
+* Estender LANs cabeadas.
+
+#### Arquitetura hierárquica
+* Pontos de acesso.
+* Estações ou clientes.
+]
+
+.col-2[
+![:block margin-top: 100px;](AP
+* Dispositivo dedicado
+* .alert[Sempre] intermedia comunicações.
+)]
+
+---
+
+slideTitle: Modo Ad Hoc
+
+.container[
+.col-2[
+#### "Rede de clientes"
+* Sem AP.
+* Sem hierarquia.
+* Comunicação direta.
+    * Limitada pelo alcance.
+]
+
+.col-2[
+#### Uso
+* Comunicação ocasional.]
+]
+
+![:block](Modo ad hoc + roteamento &rArr; múltiplos saltos
+* Alternativa: IEEE 802.11s.
+)
+
+---
+
+slideTitle: Outros Modos
+
+.center[
+### Não padronizados
+]
+
+| Monitor | Bridge | Repetidor |
+| :------ | :----- | :-------- |
+| Captura de pacotes | Enlaces ponto a ponto | Extensão do alcance de um AP|
+
+---
+
+slideTitle: Elementos de uma Rede
+
+.col-3[
+<br>
+<br>
+
+
+| Ad hoc |
+| ------ |
+| Nós    |
+]
+
+.col-3[
+.center[
+.veryLarge[
+.alert[**X**]
+]
+]
+]
+
+.col-3[
+<br>
+
+| Infraestruturado |
+| ---------------- |
+| Nós clientes |
+| Pontos de acesso |
+| Infraestrutura cabeada |
+]
+
+---
+
+layout: false
+class: section-slide
+
+# IEEE 802.11: Conceitos Arquiteturais
+
+---
+
+layout: true
+template: conteudo
+
+---
+
+slideTitle: BSS
+
+![:block](*Basic Service Set*
+* Conjunto de estações que se comunicam "diretamente".
+)
+
+.col-3[
+![:block margin-top: 60px;](
+.center[
+### Rede IEEE 802.11: conjunto de BSSs
+]
+)
+]
+
+.col-3[
+.center[
+.veryLarge[
+.alert[**&rArr;**]
+]
+]
+]
+
+.col-3[
+![:block margin-top: 70px;](
+.center[
+### Modo ad hoc ou infraestruturado
+]
+)
+]
+
+---
+
+slideTitle: BSS Infraestruturado
+
+.col-2[
+#### Subconjunto de nós da rede
+* AP.
+* Clientes associados.
+
+#### Define um BSA
+* *Basic Service Area*.
+* Área de cobertura do AP.
+]
+
+.col-2[
+![:image 100%](BSSInfra.svg)
+]
+---
+
+slideTitle: IBSS
+
+.col-2[
+![:image 100%](IBSS.svg)
+]
+
+.col-2[
+#### *Independent Basic Service Set*
+* BSS ad hoc.
+* Conjunto de nós.
+    * Comunicação direta.
+    * Exceto por restrições de alcance.
+]
+
+---
+
+slideTitle: BSSID
+
+.col-2[
+#### Indentificador do BSS
+* 48 bits (6 bytes).
+    * Similar a um MAC.
+
+#### Uso
+* Cabeçalho de quadros.
+    * .alert[Quadro pertence ao BSS].
+    * Ignorado pelos demais BSSs.]
+
+.col-2[
+.center[
+![:image 80%](BSSID.png)]
+]
+
+---
+
+slideTitle: ESS
+
+.col-2[
+#### *Extended Service Set*
+* Conjunto de BSSs.
+* .alert[Sistema de Distribuição].
+    * Tipicamente cabeado.
+* Maior cobertura.
+]
+
+.col-2[
+.center[
+![:image 100%](ESS.svg)]
+]
+---
+
+slideTitle: ESSID
+
+.col-2[
+.center[
+![:image 80%](ESSID.png)]
+]
+
+.col-2[
+#### Identificador do ESS.
+* Tamanho variável, (0 a 32 B).
+* .alert[Normalmente textual].
+    * Facilita manipulação humana.
+    * "Nome da rede".
+* SSID, no caso de um BSS.
+]
+
+---
+
+slideTitle: Redes de Distribuição Sem Fio
+
+.col-2[
+#### WDS: Wireless Distribution System
+* Alternativa ao sistema de distribuição.
+* Sem conectividade física.
+* Comunicação entre APs: sem fio.
+]
+
+.col-2[
+![:image 100%](WDS.svg)
+]
+
+---
+
+layout: false
+class: section-slide
+
+# Próxima aula
+
+---
+
+layout: true
+template: conteudo
+
+---
+
+slideTitle: Próxima aula
+
+### Mais sobre o IEEE 802.11
+* Acesso ao meio.
+
+### Tarefas
+| Todos os alunos |
+| --------------- |
+| Ler capítulo 3 do livro *Tecnologias de Redes Sem Fio*|
+
+</figcaption>
+</template>
+    </textarea>
+
+    <script src="../template/js/remark-latest.min.js" type="text/javascript"></script>
+    <script src="../template/js/d3.v4.js"></script>
+    <script src="../template/js/graphlib-dot.js"></script>
+    <script src="../template/js/dagre-d3.min.js"></script>
+    <script src="../template/js/dagre-d3-extra.js"></script>
+    <script src="../template/js/macros.js" type="text/javascript"></script>
+    <script src="../template/js/callbacks.js" type="text/javascript"></script>
+    <script src="../template/js/katex.min.js"></script>
+    <script src="../template/js/auto-render.min.js"></script>
+    <link rel="stylesheet" href="../template/css/katex.min.css">
+
+    <script type="text/javascript">
+      var renderMath = function() {
+        renderMathInElement(document.body, {delimiters: [
+           {left: "$$", right: "$$", display: true},
+           {left: "$", right: "$", display: false},
+        ]});
+      }
+
+      var slideshow = remark.create({highlightStyle: "github", highlightLines: "true", highlightSpans: "true", slideNumberFormat: onSlideCallback}, renderMath);
+
+      dagreRenderAllSlides();
+
+    </script>
+</body>
+</html>

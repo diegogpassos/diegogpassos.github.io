@@ -56,7 +56,7 @@ remark.macros.block = function (style) {
 
     ret += '<thead>';
     ret += '<tr>';
-    ret += '<td>' + title + '</td>';
+    ret += '<td>' + window.remark.convert(title) + '</td>';
     ret += '</tr>';
     ret += '</thead>';
   }
