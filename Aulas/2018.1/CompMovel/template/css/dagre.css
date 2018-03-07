@@ -4,7 +4,8 @@
 
 .node rect,
 .node circle,
-.node ellipse {
+.node ellipse,
+.node polygon {
   fill: #BADADA;
   /*stroke: #137562;
   stroke-width: 3px;*/

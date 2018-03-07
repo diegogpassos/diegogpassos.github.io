@@ -143,3 +143,8 @@ remark.macros.dagre = function(style) {
 // ![:comment]()
 remark.macros.comment = function() {
 }
+
+remark.macros.position = function(posSpec) {
+
+    return '<div style="' + posSpec + '; display: inline-block; position: absolute;">' + window.remark.convert(this) + '</div>';
+}
