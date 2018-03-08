@@ -508,16 +508,23 @@ slideTitle: Associação
 
 slideTitle: Outras Operações
 
-| Exemplos |
-| :------: |
-| Desassociação |
-| Desautenticação |
-| Reassociação |
+![:column 55%](
+| Exemplos | Comentário |
+| :------ | :--------- |
+| Desassociação | Auto-explicativo |
+| Desautenticação |  Auto-explicativo |
+| Reassociação | Mesmo AP ou outro do mesmo ESS |
 
+
+<br>
+<br>
+)
+
+![:position width: 35%; right: 10%; bottom: 15%;](
 ![:block](Reassociação
-* Mesmo AP ou com outro AP do mesmo ESS.
 * Estado preservado.
 * Suporte à mobilidade.
+\)
 )
 
 ---
@@ -525,7 +532,7 @@ slideTitle: Outras Operações
 layout: false
 class: section-slide
 
-# MAC 802.11: Eficiência
+# Eficiência
 
 ---
 
@@ -536,19 +543,22 @@ template: conteudo
 
 slideTitle: Eficiência do Wi-Fi
 
-* Novas emendas do IEEE 802.11 oferecem taxas de transmissão altas.
-* Até 600 Mb/s no IEEE 802.11n, por exemplo.
-* Mas, na prática, estes valores são alcançados?
-* Não, por vários motivos:
+.col-2[
+#### Fontes de ineficiência
 * Perda de quadros.
-* Adição de cabeçalhos.
-* Intervalos entre quadros.
-* Eficiência é um dos desafios das novas emendas.
-* Através, por exemplo, da agregação de quadros.
+* Cabeçalhos.
+* IFSs.
 
----
+![:block margin-top: 70px;](Nota
+* Atacado por emendas recentes.
+    * *e.g.*, agregação de pacotes.
+    * *e.g.*, reuso espacial.
+)]
 
-slideTitle:
+.col-2[
+![:image 95%](Eficiencia2.png)
+.footnote[Fonte: *Tecnologias de Redes Sem Fio*.]
+]
 
 ---
 
