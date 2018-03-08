@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Computação Móvel: Aula 10</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" type="text/css" href="../template/css/roboto.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/general.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/code.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/cover.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/section.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/elements.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/table.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/block.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/dagre.css">
+  </head>
+  <body>
+
+    <textarea id="source">
+
+class: cover-slide
+
+![:cover](
+Computação Móvel
+Aula 10: Arquiteturas de Redes Sem Fio
+Diego Passos
+../template/img/logo.svg
+)
+
+---
+
+class: section-slide
+
+# Conceitos Básicos
+
+---
+
+class: middle
+layout: true
+name: conteudo
+
+.title[
+{{slideTitle}}
+<hr>]
+
+---
+
+slideTitle: Rede Sem Fio Infraestruturada
+
+![:block](Característica básica
+* Presença de .alert[estação base].
+)
+
+.col-2[
+#### Estação base
+* Intermedeia comunicações.
+* (Possivelmente) conectada a *backbone*.
+]
+
+.col-2[
+#### Estação cliente
+* Associada à estação base.
+]
+
+---
+
+slideTitle: Rede Sem Fio Não Infraestruturada
+
+![:block](Característica básica
+* .red[Ausência] de estação base.
+)
+
+.col-2[
+#### Sem hierarquia
+* Estações homogêneas.
+]
+
+.col-2[
+#### Comunicação direta
+* Só limitada por alcance.
+]
+
+---
+
+slideTitle: Rede Sem Fio de Múltiplos Saltos
+
+![:block margin-bottom: 40px;](Característica básica
+* (Potencial\) encaminhamento de pacotes.
+)
+
+.center[
+![:image 50%](MultiSalto.svg)
+]
+
+---
+
+slideTitle: Rede Sem Fio de Um Salto
+![:block](Característica básica
+* Comunicação "direta" entre origem e destino.
+    * *i.e.*, pacote não sofre "encaminhamento".
+)
+
+#### Simples, mas...
+
+.col-3[
+![:image 98%](APUmSalto.svg)
+]
+
+.col-3[
+.center[
+.alert[.veryLarge[&rarr;]]
+]
+]
+
+.col-3[
+<br>
+###.red[Um salto?]
+]
+
+---
+
+slideTitle: Taxonomia
+
+|                    | Um Salto | Múltiplos Saltos |
+| :---               | :------- | :--------------- |
+| **Infraestruturada**    | Celular, WLAN Doméstica, ... | Wi-Fi com WDS, Mesh, ... |
+| **Sem Infraestrutura** | Bluetooth, Wi-Fi ad hoc, ... | MANETs, DTNs, ...                  |
+
+---
+
+layout: false
+class: section-slide
+
+# Redes de Multiplos Saltos
+
+---
+
+class: middle
+layout: true
+name: conteudo
+
+.title[
+{{slideTitle}}
+<hr>]
+
+---
+
+slideTitle: Motivação (I)
+
+#### Estender alcance das redes sem fio
+.center[
+![:image 80%](MultiSaltoCobertura.svg)
+]
+
+![:position top:17%; right: 5%; width: 30%](
+![:block](Nota
+* Alternativas?\)
+)
+
+---
+
+slideTitle: Motivação (II)
+
+#### Alternativa
+* Rede de um salto
+* Enlaces de longo alcance.
+
+#### Boa ideia?
+* Complexidade do *hardware*?
+* Consumo energético?
+* Questões regulatórias?
+* Número de usuários + recursos compartilhados?
+
+---
+
+slideTitle: Tipos
+
+#### Aplicações diferentes, redes diferentes
+| Tipo | Exemplo de Aplicação |
+| :---:| :------------------- |
+| .alert[MANET] | Comunicação eventual, temporária, com mobilidade |
+| .alert[Mesh]  | Redes comunitárias |
+| .alert[RSSF]  | Monitoramento ambiental |
+| .alert[VANET] | Comunicação veicular |
+| .alert[DTN]   | Comunicação interplanetária, desastres |
+
+---
+
+layout: false
+class: section-slide
+
+# Desafios Comuns
+
+---
+
+class: middle
+layout: true
+name: conteudo
+
+.title[
+{{slideTitle}}
+<hr>]
+
+---
+
+slideTitle: Desempenho vs. Número de Saltos (I)
+
+#### Auto-interferência
+
+.center[
+![:image 60%](AutoInterferencia.svg)]
+
+![:block](Nota
+* Nome alternativo: Interferência intra- (ou inter-\) fluxo.
+)
+
+
+---
+
+slideTitle: Desempenho vs. Número de Saltos (II)
+
+#### Consequência
+
+![:column 63%](
+![:image 95%](VazaoVsHops.svg\)
+.footnote[Passos *et al.*, *Mesh Network Performance Measurements*.]
+)
+
+![:column 36%](
+#### Outro fator
+* Perda de pacotes.
+
+#### Limita tamanho da rede
+* Ao menos, distância entre nós.
+
+)
+
+---
+
+slideTitle: Roteamento (I)
+
+![:position width: 60%; bottom: 5%; left: 5%;](
+![:image 100%](Metricas.svg\)
+.footnote[Passos, *Flow-Based Interference-Aware Routing in Multihop Wireless Networks*.]
+)
+
+![:position width: 45%; top: 12%; right: 0%;](
+#### Escolha de caminhos
+* Faz .red[muita] diferença.
+    * Enlaces muito heterogêneos.
+* .alert[critérios?]
+)
+
+---
+
+slideTitle: Roteamento (II)
+
+![:column 43%](
+#### Variabilidade
+* Inerente ao meio sem fio.
+* Dificulta problema.
+* Levar em consideração?
+)
+
+![:column 57%](
+![:image 100%](variabilidadeEnlaces.svg\)
+)
+
+---
+
+slideTitle: Economia de Energia
+
+#### Importância
+* Equipamentos móveis.
+* Alimentação por bateria.
+* .alert[Computação verde].
+
+#### Abordagens
+* Controle de potência.
+    * .red[Eficaz?]
+* *Duty cycle*.
+    * .red[Coordenação?]
+</figcaption>
+</template>
+    </textarea>
+
+    <script src="../template/js/remark-latest.min.js" type="text/javascript"></script>
+    <script src="../template/js/d3.v4.js"></script>
+    <script src="../template/js/graphlib-dot.js"></script>
+    <script src="../template/js/dagre-d3.min.js"></script>
+    <script src="../template/js/dagre-d3-extra.js"></script>
+    <script src="../template/js/macros.js" type="text/javascript"></script>
+    <script src="../template/js/callbacks.js" type="text/javascript"></script>
+    <script src="../template/js/katex.min.js"></script>
+    <script src="../template/js/auto-render.min.js"></script>
+    <link rel="stylesheet" href="../template/css/katex.min.css">
+
+    <script type="text/javascript">
+      var renderMath = function() {
+        renderMathInElement(document.body, {delimiters: [
+           {left: "$$", right: "$$", display: true},
+           {left: "$", right: "$", display: false},
+        ]});
+      }
+
+      var slideshow = remark.create({highlightStyle: "github", highlightLines: "true", highlightSpans: "true", slideNumberFormat: onSlideCallback}, renderMath);
+
+      dagreRenderAllSlides();
+
+    </script>
+</body>
+</html>

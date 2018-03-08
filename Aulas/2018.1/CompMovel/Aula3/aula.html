@@ -21,7 +21,7 @@ class: cover-slide
 
 ![:cover](
 Computação Móvel
-Aula 3: Mais Conceitos: Antenas e Propagação
+Aula 3: Mais Conceitos &mdash; Antenas e Propagação
 Diego Passos
 ../template/img/logo.svg
 )
@@ -88,7 +88,7 @@ digraph {
 
 slideTitle: Diretividade de uma Antena
 
-### Irradiador .alert[isotrópico] *vs.* .alert[não-isotrópico].
+### Irradiador .alert[isotrópico] *vs.* .alert[não-isotrópico]
 
 ![:column 60%](
 .center[
@@ -147,7 +147,7 @@ $$Ganho\_{(dBi)} = 10\cdot\log\_{10}\left(\frac{DMAX}{DREF}\right)$$
 
 slideTitle: Formação de Feixe
 
-#### *Beamforming*.
+#### *Beamforming*
 * Várias antenas omnidirecionais &rArr; um feixe direcional.
 #### Usos
 
@@ -178,52 +178,7 @@ template: conteudo
 
 ---
 
-slideTitle: Mais Medidas Logarítimicas
-
-![:comment](
-![:dagre width: 615px; height: 373px; font-size: 18px;](
-digraph {
-    ranksep=30;
-    nodesep=30;
-    rankdir=LR;
-    subgraph cluster_0 {
-        rankdir="TB";
-        B[label="Amplitude"];
-        C[label="Simplificação\n            de      \nMultiplicações"];
-        D[label="Simplificação\n            de      \n     Divisões"];
-    }
-    A[label="Medidas\nLogaríticas"];
-    subgraph cluster_1 {
-        rankdir=TB;
-        E[label="dB"]
-        F[label="dBi"]
-        G[label="dBm"]
-    }
-    subgraph cluster_2 {
-        rankdir=TB;
-        H[label="Atenuação"];
-        I[label="Ganho"];
-        J[label="     Ganho\n          de\nDiretividade"];
-        K[label="Potência"];
-    }
-
-    B -> A;
-    C -> A;
-    D -> A;
-
-    A -> E;
-    A -> F;
-    A -> G;
-
-    E -> H;
-    E -> I;
-
-    F -> J;
-
-    G -> K;
-}
-\)
-)
+slideTitle: Mais Medidas Logarítmicas
 
 .container[
 
@@ -244,7 +199,6 @@ digraph {
 
 | dB | dBi | dBm |
 | --- | --- | --- |
-| Relativa | Relativa | Absoluta |
 | Ganho ou Perda | Ganho relativo a irradiador isotrópico | Potência |
 | Aumento de 1000 vezes &equiv; ganho de 30 dB | Ganho de 23 dBi &equiv; 200 vezes mais potência irradiada | 100 mW = 20 dBm |
 
@@ -274,7 +228,7 @@ slideTitle: Ganhos e Perdas em dB
 \)
 )
 
-$$G(dB) = 10\cdot\log_{10} G(lin)\rightarrow G(lin) = 10^{{G(dB)}\over{10}}$$
+$$G\_{(dB)} = 10\cdot\log\_{10} G\_{(lin)}\rightarrow G\_{(lin)} = 10^{{G\_{(dB)}}\over{10}}$$
 
 
 ---
@@ -290,7 +244,7 @@ slideTitle: Potência em dBm
 #### Definição
 * Ganho/perda em relação  1 mW:
 
-$$ Pwr(dBm\) = 10\cdot\log_{10} Pwr(mW\)$$
+$$ Pwr\_{(dBm\)} = 10\cdot\log\_{10} Pwr\_{(mW\)}$$
 )
 
 ![:column 40%](
@@ -313,15 +267,15 @@ $$ Pwr(dBm\) = 10\cdot\log_{10} Pwr(mW\)$$
 slideTitle: Ganho de Diretividade em dBi
 
 #### Relembrando
-$$Ganho(dBi) = 10\cdot\log_{10}\left(\frac{DMAX}{DREF}\right)$$
+$$Ganho\_{(dBi)} = 10\cdot\log\_{10}\left(\frac{DMAX}{DREF}\right)$$
 
 #### Uso
 * Determinar energia transmitida na direção do ganho.
 * Exemplo:
-    * $P_{trans}$: 15 dBm.
+    * $Pwr_{trans}$: 15 dBm.
     * Ganho: 8 dBi.
     * Potência irradiada: $15 + 8 = 23$ dBm.
-    * Em escala linear: 31,6 mW * 6,31 = 199,4 mW.
+    * Em escala linear: 31,6 mW $\times$ 6,31 = 199,4 mW.
 
 ---
 
@@ -361,7 +315,7 @@ slideTitle: Relação Sinal-Ruído, SNR
 #### *Signal to Noise Ratio*
 * Razão entre potência do sinal desejado e ruído:
 
-$$SNR(dB) = 10\cdot\log_{10}\frac{sinal}{ruido}$$
+$$SNR\_{(dB)} = 10\cdot\log\_{10}\frac{sinal}{ruido}$$
 
 .col-2[
 #### Importância
@@ -422,7 +376,7 @@ slideTitle: Modelo de Propagação no Espaço Livre
 
 $$FSPL(dB) = 20\cdot\log_{10}(d) + 20\cdot\log{10}(f) + 32,45$$
 * Onde:
-    * d = distância em Km
+    * d = distância em Km.
     * f = frequência em MHz.
 
 ---
