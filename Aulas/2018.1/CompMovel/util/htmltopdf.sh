@@ -30,11 +30,13 @@ then
 fi
 
 mkdir /tmp/pdf-out
+mkdir /tmp/pdf-out/cache
+
 for i in $(eval echo "{1..$PAGES}"); do
   #echo "Generating page $i..."
   #phantomjs $(dirname $0)/rasterize.js ${URL}#${i} /tmp/pdf-out/${i}.png "1200px*900px"
   echo $(dirname $0)/rasterize.js ${URL}#${i} /tmp/pdf-out/${i}.png "1200px*900px"
-done | xargs -l -P 4 phantomjs
+done | xargs -l -P 1 phantomjs --web-security=false --debug=true --disk-cache=true --disk-cache-path=/tmp/pdf-out/cache
 
 convert $(eval echo "/tmp/pdf-out/{1..$PAGES}.png") ${OUT}
 rm -r /tmp/pdf-out
