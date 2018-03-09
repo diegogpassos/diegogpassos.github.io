@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html>
+  <head>
+
+    <meta charset="utf-8">
+    <title>Paridade Bidimensional</title>
+    <style>
+      table.paridade {
+        border-collapse: collapse;
+      }
+      table.paridade td {
+        width: 25px;
+        text-align: center;
+        font-size: 20px;
+        padding: 1px;
+      }
+      tr:last-child {
+        border-top: 2px solid #000;
+      }
+
+      table.paridade td:last-child {
+        border-left: 2px solid #000;
+      }
+
+      table.controle>tbody>tr>td {
+        text-align: center;
+        padding-left: 100px;
+      }
+
+      input.bit {
+        width: 25px;
+        border: none;
+        text-align: center;
+        font-size: 18px;
+      }
+    </style>
+    <script>
+      function update() {
+
+        //alert('update!');
+        var t = document.getElementById('transmissor').children[0];
+        var r = document.getElementById('receptor').children[0];
+        var nLinhas = parseInt(document.getElementById('nLinhas').value);
+        var nColunas = parseInt(document.getElementById('nColunas').value);
+        var convencao = parseInt(document.getElementById('convencao').value);
+        var i, j;
+        var linha;
+        var celula;
+        var paridadeLinhas = Array.apply(null, Array(nLinhas)).map(Number.prototype.valueOf,convencao);
+        var paridadeColunas = Array.apply(null, Array(nColunas)).map(Number.prototype.valueOf,convencao);
+
+        // transmissor
+        for (i = 0; i < nLinhas; i++) {
+
+          linha = t.children[i];
+          for (j = 0; j < nColunas; j++) {
+
+            celula = linha.children[j];
+            if (celula.children[0].value == "1") {
+
+              paridadeLinhas[i] = (paridadeLinhas[i] + 1) % 2;
+              paridadeColunas[j] = (paridadeColunas[j] + 1) % 2;
+            }
+          }
+        }
+
+        for (i = 0; i < nLinhas; i++) {
+
+          linha = t.children[i];
+          celula = linha.lastChild;
+          celula.innerHTML = paridadeLinhas[i];
+        }
+
+        linha = t.lastChild;
+        for (i = 0; i < nColunas; i++) {
+
+          celula = linha.children[i];
+          celula.innerHTML = paridadeColunas[i];
+        }
+
+        // receptor
+        paridadeLinhas = Array.apply(null, Array(nLinhas)).map(Number.prototype.valueOf,convencao);
+        paridadeColunas = Array.apply(null, Array(nColunas)).map(Number.prototype.valueOf,convencao);
+        var linhaErrada = [];
+        var colunaErrada = [];
+
+        for (i = 0; i < nLinhas; i++) {
+
+          linha = r.children[i];
+          for (j = 0; j < nColunas; j++) {
+
+            celula = linha.children[j];
+            celula.children[0].style.color = "black";
+            if (celula.children[0].value == "1") {
+
+              paridadeLinhas[i] = (paridadeLinhas[i] + 1) % 2;
+              paridadeColunas[j] = (paridadeColunas[j] + 1) % 2;
+            }
+          }
+        }
+
+        for (i = 0; i < nLinhas; i++) {
+
+          linha = r.children[i];
+          celula = linha.lastChild.children[0];
+          if (parseInt(celula.value) != paridadeLinhas[i]) {
+
+            celula.style.color = "red";
+            linhaErrada.push(i);
+          }
+          else {
+
+            celula.style.color = "blue";
+          }
+        }
+
+        linha = r.lastChild;
+        for (i = 0; i < nColunas; i++) {
+
+          celula = linha.children[i].children[0];
+          if (parseInt(celula.value) != paridadeColunas[i]) {
+
+            celula.style.color = "red";
+            colunaErrada.push(i);
+          }
+          else {
+
+            celula.style.color = "blue";
+          }
+        }
+
+        if (colunaErrada.length == 1 && linhaErrada.length == 1) {
+
+          linha = r.children[linhaErrada[0]];
+          celula = linha.children[colunaErrada[0]].children[0];
+          celula.style.color = "yellow";
+        }
+        //console.log(paridadeColunas);
+        //console.log(paridadeLinhas);
+      }
+
+      function buildMatrix() {
+
+        var t = document.getElementById('transmissor');
+        var r = document.getElementById('receptor');
+        var nLinhas = parseInt(document.getElementById('nLinhas').value);
+        var nColunas = parseInt(document.getElementById('nColunas').value);
+        var i, j;
+        var st, sr;
+
+        t.innerHTML = "";
+        r.innerHTML = "";
+        st = "";
+        sr = "";
+        for (i = 0; i < nLinhas; i++) {
+
+          st += "<tr>";
+          sr += "<tr>";
+          for (j = 0; j < nColunas; j++) {
+
+            st += "<td><input class=\"bit\" value=\"0\" onchange=\"update();\"/></td>";
+            sr += "<td><input class=\"bit\" value=\"0\" onchange=\"update();\"/></td>";
+          }
+
+          st += "<td>0</td></tr>";
+          sr += "<td><input class=\"bit\" value=\"0\" onchange=\"update();\"/></td></tr>";
+        }
+
+        st += "<tr class=\"paridade\">";
+        sr += "<tr class=\"paridade\">";
+        for (j = 0; j < nColunas; j++) {
+
+          st += "<td>0</td>";
+          sr += "<td><input class=\"bit\" value=\"0\" onchange=\"update();\"/></td>";
+        }
+
+        st += "<td></td></tr>";
+        sr += "<td></td></tr>";
+
+        t.innerHTML = st;
+        r.innerHTML = sr;
+
+        update();
+      }
+    </script>
+  </head>
+  <body onload="buildMatrix();">
+    <table class="controle">
+      <tr>
+        <td>
+          <h2>
+          Configurações
+          </h2>
+        </td>
+        <td>
+          <h2>
+            Transmissor
+          </h2>
+        </td>
+        <td>
+          <h2>
+            Receptor
+          </h2>
+        </td>
+      </tr>
+      <tr>
+      <td>
+        <table style="text-align:right; border: 2px solid #000; padding-left: 5px;">
+          <tr>
+            <td>
+              <b>Linhas</b>
+            </td>
+            <td>
+              <input id="nLinhas" style="width: 30px;" value="3" onchange="buildMatrix();"/>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <b>Colunas</b>
+            </td>
+            <td>
+              <input id="nColunas" style="width: 30px;" value="3" onchange="buildMatrix();"/>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <b>Convenção</b>
+            </td>
+            <td>
+              <select id="convencao" onchange="update();">
+                <option value="0">Par</option>
+                <option value="1">Ímpar</option>
+              </select>
+            </td>
+          </tr>
+        </table>
+      </td>
+      <td>
+        <table class="paridade" id="transmissor">
+          <!--
+          <tr><td><input class="bit" value="0"/></td><td><input class="bit" value="0"/></td><td><input class="bit" value="0"/></td><td class="paridade">0</td></tr>
+          <tr><td><input class="bit" value="0"/></td><td><input class="bit" value="0"/></td><td><input class="bit" value="0"/></td><td class="paridade">0</td></tr>
+          <tr><td><input class="bit" value="0"/></td><td><input class="bit" value="0"/></td><td><input class="bit" value="0"/></td><td class="paridade">0</td></tr>
+          <tr class="paridade"><td>0</td><td>0</td><td>0</td><td class"paridade">0</td></tr>
+        -->
+        </table>
+      </td>
+      <td>
+        <table class="paridade" id="receptor">
+          <!--
+          <tr><td><input class="bit" value="0"/></td><td><input class="bit" value="0"/></td><td><input class="bit" value="0"/></td><td class="paridade"><input class="bit" value="0"/></td></tr>
+          <tr><td><input class="bit" value="0"/></td><td><input class="bit" value="0"/></td><td><input class="bit" value="0"/></td><td class="paridade"><input class="bit" value="0"/></td></tr>
+          <tr><td><input class="bit" value="0"/></td><td><input class="bit" value="0"/></td><td><input class="bit" value="0"/></td><td class="paridade"><input class="bit" value="0"/></td></tr>
+          <tr class="paridade"><td><input class="bit" value="0"/></td><td><input class="bit" value="0"/></td><td><input class="bit" value="0"/></td><td><input class="bit" value="0"/></td></tr>
+        -->
+        </table>
+      </td>
+  </body>
+</html>

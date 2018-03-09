@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <!-- Meta info -->
+	<meta charset="utf-8">
+	<meta name="shortauthor" content="Diego Passos"/>
+	<meta name="shorttitle" content="Redes Sem Fio de Múltiplos Saltos"/>
+	<meta name="shortevent" content="Redes de Computadores II"/>
+	<title>Redes de Computadores II: Aula 12</title>
+
+    <!-- Math support -->
+	<script type="text/x-mathjax-config">
+		MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+			MathJax.InputJax.TeX.Definitions.number = /^(?:[0-9]+(?:\.[0-9]{3})*(?:\{,\}[0-9]*)*|\{,\}[0-9]+)/
+		});
+	</script>
+	<!--<script src="../../../../MathJax-2.6-latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>-->
+	<script>window.MathJax || document.write('<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">\x3C/script>')</script>
+
+	<!-- Fonts -->
+	<link href='https://fonts.googleapis.com/css?family=Lora:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
+	<!--<link href='../../../../Fonts/Lora/lora.css' rel='stylesheet' type='text/css'>-->
+
+    <!-- CSS -->
+	<link href='../template/css/template.css' id="template" rel='stylesheet' type='text/css'>
+	<link href='../template/css/presentationSpecific.css' id="presentationSpecific" rel='stylesheet' type='text/css'>
+
+    <!-- Javascript -->
+	<script type="text/javascript" src="../template/js/audio.js"></script>
+</head>
+
+<body>
+
+    <!-- Title Slide -->
+	<section>
+
+		<div class="slideContent">
+			<h1 class="title">Aula 12 - Redes de Múltiplos Saltos</h1>
+			<h2 class="author">Diego Passos</h2>
+			<h4 class="institution">Universidade Federal Fluminense</h4>
+			<h3 class="date">Redes de Computadores II</h3>
+		</div>
+
+	</section>
+
+    <!-- Content slides -->
+
+	<section>
+	<h1>Na Última Aula (I)...</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li>RTS/CTS: mecanismo de <b>reserva virtual.</b>
+				<ul>
+					<li>RTS: <i>Request-To-Send</i>.</li>
+					<li>CTS: <i>Clear-To-Send</i>.
+					<ul>
+						<li>Enviado pelo receptor, autorizando.</li>
+					</ul></li>
+					<li>Pode <b>reduzir quantidade e efeito</b> de colisões.
+					<ul>
+						<li>Principalmente em casos de terminais escondidos.</li>
+						<li></li>
+					</ul></li>
+					<li>Nem sempre efetivo.</li>
+					<li>Introduz <i>overheads</i>.</li>
+														<li><b>Limiar de RTS/CTS.</b></li>
+				</ul></li>
+										<li><b>Problema do terminal exposto:</b>
+										<ul>
+											<li>Transmissões simultâneas que não causariam colisão são suprimidas pelo CSMA/CA.</li>
+											<li>Não resolvido pelo RTS/CTS.</li>
+										</ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50%;">
+			<ul>
+										<li>IEEE 802.11: endereços.
+										<ul>
+											<li>Quatro campos previstos no cabeçalho.</li>
+											<li>Origem e destino <b>daquela transmissão sem fio</b>.</li>
+											<li>Mas também BSSID, destinatário final, ...</li>
+										</ul></li>
+										<li>IEEE 802.11: mobilidade.
+										<ul>
+											<li>Suportada pelo padrão entre APs de um mesmo ESSID.</li>
+											<li><b>Decisão do cliente</b>.</li>
+										</ul></li>
+										<li>Adaptação automática de taxa.
+										<ul>
+											<li>Geralmente baseada em quadros perdidos.</li>
+											<li>Reduz taxas para enlaces &ldquo;piores&rdquo;.</li>
+										</ul></li>
+										<li>IEEE 802.11: economia de energia.
+										<ul>
+											<li>Detecção virtual de portadora.</li>
+											<li><i>Duty cycle</i> entre <i>beacons</i>.</li>
+										</ul></li>
+			</ul>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Na Última Aula (II)...</h1>
+	<div class="slideContent">
+		<ul>
+									<li>IEEE 802.11: eficiência.
+									<ul>
+													<li>Várias fontes de <i>overhead</i>.</li>
+													<li><b>Eficiência mais baixa para taxas mais altas</b>.</li>
+													<li>Perdas de quadros também contribuem.</li>
+									</ul></li>
+									<li>Redes densas:
+									<ul>
+													<li>Muitos clientes, muitos APs.</li>
+													<li>Balanceamento de carga.</li>
+													<li>Escolha dinâmica de canais.</li>
+													<li>Planejamento.</li>
+													<li>Micro-células.</li>
+													<li>Instabilidade de associação.</li>
+									</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Introdução/Motivação (I)</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 45%;">
+			<br>
+			<br>
+			<br>
+		  <ul>
+		    <li>Redes infraestruturadas (de um salto):
+		    <ul>
+		      <li>AP intermedia todas as comunicações.</li>
+		      <li>Um único salto (até a &ldquo;infraestrutura&rdquo;).</li>
+					<li><b>Alcance limitado</b>.</li>
+		    </ul></li>
+		  </ul>
+			<br>
+			<div style="margin: 5px;">
+				<center>
+					<img src="imagens/RedeAdHocUmSalto.svg" style="width: 70%;"/>
+				</center>
+			</div>
+		</div>
+		<div class="column" style="width: 55%;">
+			<center>
+			  <img src="imagens/RedeInfra.svg" style="width: 90%;"/>
+			</center>
+			<br>
+			<ul>
+			  <li>Redes <i>ad hoc</i> de um salto:
+			  <ul>
+			    <li>Comunicação direta entre <i>hosts.</i></li>
+			    <li><b>Alcance limitado</b>.</li>
+			  </ul></li>
+			</ul>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Introdução/Motivação (II)</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li><span class="alert">Pergunta:</span> Como estender o alcance das redes sem fio?</li>
+	    <li><b>Primeira tentativa</b>: aumentar alcance de rádio.
+	    <ul>
+	      <li>Aumentar potência de transmissão/aumentar sensibilidade de recepção.</li>
+	      <li><i>Hardware</i> mais sofisticado necessário.
+	      <ul>
+	        <li>Pode ser <b>inviável</b> técnica ou economicamente.</li>
+	      </ul></li>
+				<li>Área de alcance aumenta, mas capacidade se mantém.
+				<ul>
+				  <li><b>Mais nós compartilhando mesma banda.</b></li>
+				</ul></li>
+	      <li>Outros problemas:
+	      <ul>
+	        <li>Consumo energético.</li>
+					<li>Interferência com outros equipamentos.</li>
+	        <li>Questões regulatórias.</li>
+	        <li>...</li>
+	      </ul></li>
+	    </ul></li>
+	  </ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Introdução/Motivação (III)</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li><span class="alert">Pergunta:</span> Como estender o alcance das redes sem fio?</li>
+	    <li><b>Segunda tentativa</b>: permitir comunicação em múltiplos saltos.
+	    <ul>
+				<li>Cobertura da rede depende do espalhamento dos nós.</li>
+				<li>Para aumentar o alcance, basta implantar mais nós.</li>
+				<li>Desde que nenhum nó esteja isolado, caminhos se criam espontaneamente.</li>
+				<li>Pode ser realizado com <i>hardware</i> comum, barato.</li>
+	    </ul></li>
+	  </ul>
+		<center>
+		  <img src="imagens/RedeMultiplosSaltosCobertura.svg" style="width: 60%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Redes Sem Fio de Múltiplos Saltos: Tipos</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li><span class="alert">Aplicações diferentes, redes diferentes:</span>
+	    <ul>
+	      <li>Redes <i>ad hoc</i> móveis.</li>
+	      <li>Redes em malha sem fio.</li>
+	      <li>Redes de sensores sem fio.</li>
+	      <li>Redes veículares.</li>
+	      <li>...</li>
+	    </ul></li>
+	    <li>Cada uma destas redes possui suas particularidades.
+	    <ul>
+	      <li>Tanto em termos de qualidades/requisitos, quanto em termos de desafios.</li>
+	    </ul></li>
+	    <li>Mas há também vários pontos em comum.</li>
+	  </ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Redes <i>Ad Hoc</i> Móveis (I)</h1>
+	<div class="slideContent">
+		<ul>
+		  <li><b>Possível cenário: resgates após desastres naturais</b>.
+		  <ul>
+		    <li>Furacão/terremoto/maremoto atinge área urbana.</li>
+		    <li>Equipes de resgate varrem região em busca de sobreviventes.</li>
+		    <li>Equipes devem trocar informações para coordenação.</li>
+		    <li>Problema: <b>infraestruturas de comunicação típicas ainda estarão disponíveis?</b>
+		    <ul>
+		      <li><i>e.g.</i>, celular, Wi-Fi.</li>
+		      <li><b>Possivelmente, não.</b></li>
+		    </ul></li>
+				<li>Características do problema:
+				<ul>
+			    <li>Região de cobertura desejada é grande.</li>
+				  <li>Não há tempo de implantação/configuração de uma infraestrutura de rede.</li>
+				  <li>Nós (equipes) são <b>potencialmente móveis</b>.</li>
+				</ul></li>
+		  </ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Redes <i>Ad Hoc</i> Móveis (II)</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<ul>
+			  <li>Ausência de infraestrutura.
+			  <ul>
+			    <li>Não há estações base, nós com função especial.</li>
+			  </ul></li>
+			  <li>Auto-configuração.
+			  <ul>
+			    <li>Novos nós podem entrar na rede com pouca configuração manual.</li>
+			    <li>&ldquo;Descobrem sozinhos&rdquo; informações importantes.
+			    <ul>
+			      <li><i>e.g.</i>, rotas para outros nós.</li>
+			    </ul></li>
+			  </ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50%;">
+		  <ul>
+		    <li>Mobilidade.
+		    <ul>
+		      <li>Mudanças topológicas frequentes.</li>
+		      <li>E profundas.</li>
+		      <li>Topologia inteira pode mudar em questão de segundos.</li>
+		    </ul></li>
+		  </ul>
+		</div>
+		<br>
+		<center>
+		  <img src="imagens/MANET.svg" style="width: 60%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Redes <i>Ad Hoc</i> Móveis (III)</h1>
+	<div class="slideContent">
+		<ul>
+		  <li>Aplicações militares.
+		  <ul>
+		    <li><i>e.g.</i>, comunicação entre tropas durante um ataque.</li>
+		  </ul></li>
+			<li>Serviços de emergência.</li>
+	  	<li>Redes de comunicação eventual/esporádica.</li>
+			<li>Jogos multiusuário.</li>
+		  <li>...</li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Redes em Malha Sem Fio (I)</h1>
+	<div class="slideContent">
+		<ul>
+		  <li>Redes <i>ad hoc</i> são baratas, fáceis de configurar, ...</li>
+		  <li>Mas falta de estrutura tem seu preço: <b>baixo desempenho</b>.
+		  <ul>
+		    <li>Clientes atuam como roteadores, mas podem entrar e sair da rede.
+		    <ul>
+		      <li>Caminho pode simplesmente &ldquo;sumir&rdquo;.</li>
+		    </ul></li>
+		    <li>Topologia varia muito, impondo dificuldades ao roteamento.</li>
+		    <li>Mesmo se a topologia é estável, qualidade dos enlaces tende a variar.</li>
+		  </ul></li>
+		  <li>Algumas aplicações exigem um certo nível de desempenho.</li>
+		  <li>Solução: criar uma infraestrutura sem fio auxiliar, além dos clientes.</li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Redes em Malha Sem Fio (II)</h1>
+	<div class="slideContent">
+		<center>
+		  <img src="imagens/RedeMesh.svg" style="width: 70%;"/>
+		</center>
+		<div class="column" style="width: 50%;">
+		  <ul>
+		    <li>Clientes mesh se comunicam com roteador mesh.</li>
+		  </ul>
+		</div>
+		<div class="column" style="width: 50%;">
+		  <ul>
+		    <li>Roteadores mesh se comunicam em múltiplos saltos.</li>
+		    <li>Encaminham pacotes de cliente para cliente.</li>
+		  </ul>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Redes em Malha Sem Fio (III)</h1>
+	<div class="slideContent">
+		<ul>
+		  <li>Redes em Malha <i>vs.</i> MANETs:
+		  <ul>
+		    <li>Topologia ainda é dinâmica.
+		    <ul>
+		      <li>Qualidade dos enlaces ainda varia.</li>
+		      <li>Clientes ainda são móveis.</li>
+		    </ul></li>
+		    <li><b>Mas:</b>
+		    <ul>
+		      <li>Roteadores mesh formam <i>backbone</i> estático.</li>
+		      <li>Topologia do <i>backbone</i> muda bem menos.</li>
+					<li>Localização, antenas dos roteadores podem ser <b>planejadas</b> para melhor desempenho.</li>
+		    </ul></li>
+		  </ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Redes em Malha Sem Fio: Aplicações (I)</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>Redes comunitárias para acesso à Internet:
+	    <ul>
+	      <li>Sub-conjunto dos roteadores mesh atua como <i>gateway</i>.</li>
+	      <li><i>Gateways</i> se conectam à Internet, proveem conectividade aos demais nós.</li>
+	      <li>Muitas vezes, proveem serviços como NAT, <i>firewalls</i>, ...</li>
+	    </ul></li>
+	    <li>Diversos projetos pelo mundo:
+	    <ul>
+	      <li>Roofnet.</li>
+				<li>VMesh.</li>
+	      <li>Remesh.</li>
+				<li>...</li>
+	    </ul></li>
+	  </ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Redes em Malha Sem Fio: Aplicações (II)</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>Exemplo: Roofnet.
+	    <ul>
+	      <li>Desenvolvido pelo MIT.</li>
+	      <li>Provia acesso à Internet banda-larga a usuários em Cambridge.</li>
+	    </ul></li>
+	  </ul>
+		<div class="column" style="width: 50%;">
+		  <center>
+		    <img src="imagens/cambridge.png" style="width: 70%;"/>
+		  </center>
+		</div>
+		<div class="column" style="width: 50%;">
+		  <center>
+		    <img src="imagens/roofnet.jpg" style="width: 40%;"/>
+		  </center>
+		</div>
+	</div>
+	<br>
+	<br>
+	<br>
+	<br>
+	<span style="font-size: 12px;">* Figuras adaptadas de Bicket <i>et al.</i>, &ldquo;Architecture and Evaluation of the MIT Roofnet Mesh Network&rdquo;.</span>
+	</section>
+
+	<section>
+	<h1>Redes em Malha Sem Fio: Aplicações (III)</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>Exemplo: Remesh.
+	    <ul>
+	      <li>Desenvolvido pela UFF.</li>
+	      <li>Provia acesso à Internet banda-larga a alunos/funcionários da Universidade.</li>
+				<li>Nós instalados nas casas dos usuários.</li>
+	    </ul></li>
+	  </ul>
+		<div class="column" style="width: 50%;">
+		  <center>
+		    <img src="imagens/RemeshGoogleEarth.jpg" style="width: 70%;"/>
+				<br>
+				<span style="font-size: 12px;">* Figura adaptada de Passos <i>et al.</i>, &ldquo;Mesh Network Performance Measurements&rdquo;.</span>
+		  </center>
+		</div>
+		<div class="column" style="width: 50%;">
+		  <center>
+		    <img src="imagens/RemeshPrototipo.jpg" style="width: 85%;"/>
+		  </center>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Redes em Malha Sem Fio: Aplicações (IV)</h1>
+	<div class="slideContent">
+	  <ul>
+			<li>Prover conectividade de dados em locais sem infraestrutura.</li>
+	    <li>Exemplo: Projeto Remote.
+	    <ul>
+	      <li>Desenvolvido pela UFF.</li>
+	      <li>Rede em malha interconectando torres de linhas de transmissão.</li>
+				<li>Permite monitoramento em tempo real, comunicação barata de técnicos em campo, ...</li>
+	    </ul></li>
+	  </ul>
+		<div class="column" style="width: 50%;">
+		  <center>
+		    <img src="imagens/Machadinho_CamposNovos.jpg" style="width: 90%;"/>
+		  </center>
+		</div>
+		<div class="column" style="width: 50%;">
+		  <center>
+		    <img src="imagens/RemoteNo.jpg" style="width: 85%;"/>
+		  </center>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Outras Variações: Redes Veiculares</h1>
+	<div class="slideContent">
+		<center>
+		  <img src="imagens/VANET.jpg" style="width: 80%;"/>
+		</center>
+	</div>
+	<br>
+	<br>
+	<br>
+	<span style="font-size: 12px;">* Figura adaptada de Alves <i>et al.</i>, &ldquo;Redes Veiculares: Princípios, Aplicações e Desafios&rdquo;.</span>
+	</section>
+
+	<section>
+	<h1>Redes de Sensores Sem Fio (I)</h1>
+	<div class="slideContent">
+
+		<div class="column" style="width: 50%;">
+		  <ul>
+		    <li>Objetivo: &ldquo;permanentemente&rdquo; coletar informações sobre determinada região.
+		    <ul>
+		      <li>Monitoramento periódico de parâmetros.</li>
+		      <li>Geração de alertas.</li>
+		    </ul></li>
+		    <li>Ideia:
+		    <ul>
+		      <li>Espalhar nós <b>sensores</b> pela região.
+		      <ul>
+		        <li>De forma planejada ou não.</li>
+		      </ul></li>
+		      <li>Sensores medem parâmetros, coletam informações.</li>
+		      <li>Enviam dados brutos ou processados para um <b>sorvedouro</b>.</li>
+		    </ul></li>
+		  </ul>
+		</div>
+		<div class="column" style="width: 50%;">
+			<center>
+			  <img src="imagens/RSSF.svg" style="width: 80%;"/>
+			</center>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Redes de Sensores Sem Fio (II)</h1>
+	<div class="slideContent">
+		<ul>
+		  <li>Algumas características:
+		  <ul>
+		    <li>Áreas a serem cobertas são geralmente grandes.</li>
+		    <li>Sensores têm raio de atuação limitado.</li>
+		    <li>Resultado:
+		    <ul>
+		      <li>Grande número de sensores são necessários.</li>
+		      <li>Viabilidade econômica: sensores devem ser baratos, <b>simples</b>.</li>
+		    </ul></li>
+				<li>Comumente, alimentados por bateria.</li>
+		    <li>Mais: em certas aplicações, não é viável dar manutenção aos sensores.
+		    <ul>
+		      <li>Troca/recarga de baterias é impossível.</li>
+		      <li>Consumo energético deve ser reduzido.</li>
+		    </ul></li>
+		  </ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Redes de Sensores Sem Fio: Aplicações (I)</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>Aplicações em diversas áreas:
+	    <ul>
+	      <li>Saúde:
+	      <ul>
+	        <li>Sensores são &ldquo;vestidos&rdquo; ou implantados nos pacientes.</li>
+	        <li>Monitoram pressão arterial, nível de glicose, ...</li>
+	      </ul></li>
+	      <li>Meio-ambiente e biologia:
+	      <ul>
+	        <li><i>e.g.</i>, monitoramento da qualidade da água em uma lagoa.</li>
+	        <li><i>e.g.</i>, monitoramento do posicionamento de animais em uma região.</li>
+	      </ul></li>
+	      <li>Clima:
+	      <ul>
+	        <li>Monitoramento de temperatura, pressão atmosférica, ...</li>
+	      </ul></li>
+	    </ul></li>
+	  </ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Redes de Sensores Sem Fio: Aplicações (II)</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+		  <ul>
+				<li>Projeto Genome.</li>
+		    <li>Objetivo: monitorar temperatura em <i>datacenters</i>.
+		    <ul>
+		      <li>Gerenciamento da temperatura é um grande problema.</li>
+		      <li>Muito da energia consumida utilizada para resfriamento.</li>
+		      <li>Monitoramento em tempo real permite controle eficiente.</li>
+		    </ul></li>
+		  </ul>
+		</div>
+		<div class="column" style="width: 50%;">
+		  <center>
+		    <img src="imagens/Genome.jpg" style="width: 70%;"/>
+				<br>
+				<span style="font-size: 12px;">* Figura adaptada de Liu <i>et al.</i>, &ldquo;Project Genome: Wireless Sensor Network for Data Center Cooling&rdquo;.</span>
+		  </center>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Desafios: Desempenho <i>vs.</i> Número de Saltos (I)</h1>
+	<div class="slideContent">
+		<ul>
+		  <li>Considere uma comunicação sem fio em múltiplos saltos.</li>
+			<li>Cada nó alcança os nós imediatamente antes e depois no caminho.</li>
+			<li>Suponha que desejamos enviar dois pacotes em sequência.</li>
+		</ul>
+		<center>
+		  <img src="imagens/MultiplosSaltos.svg" style="width: 50%;"/>
+		</center>
+		<ul>
+		  <li>Segundo pacote tem que &ldquo;esperar&rdquo; pois interferiria com o primeiro.</li>
+		  <li><b>Interferência inter- (ou intra-) fluxo.</b></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Desafios: Desempenho <i>vs.</i> Número de Saltos (II)</h1>
+	<div class="slideContent">
+		<ul>
+		  <li>Consequência: <b>vazão cai rapidamente com o aumento do número de saltos</b>.
+		  <ul>
+		    <li>Impõe limite prático no tamanho da rede.</li>
+		    <li>Ou, ao menos, nas distâncias máximas entre nós que se comunicam.</li>
+		  </ul></li>
+		</ul>
+		<center>
+		  <img src="imagens/VazaoVsHops.svg" style="width: 50%;"/>
+			<br>
+			<span style="font-size: 12px;">* Figura adaptada de Passos <i>et al.</i>, &ldquo;Mesh Network Performance Measurements&rdquo;.</span>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Desafios: Roteamento (I)</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 45%;">
+			<br>
+			<br>
+		  <ul>
+		    <li>Rotas fazem (muita) diferença no desempenho.</li>
+		    <li>Como escolher uma &ldquo;boa&rdquo; rota?</li>
+		    <li>Critério com base no slide anterior:
+		    <ul>
+		      <li>Minimizar número de saltos.</li>
+		    </ul></li>
+				<li>Funciona bem?
+				<ul>
+				  <li><b>Não! Nem todo enlace sem fio é igual.</b></li>
+				</ul></li>
+		  </ul>
+		</div>
+		<div class="column" style="width: 55%;">
+			<center>
+			  <img src="imagens/HopCount.svg" style="width: 99%;"/>
+				<br>
+				<span style="font-size: 12px;">* Figura adaptada de Passos, &ldquo;Flow-Based Interference-Aware Routing in Multihop Wireless Networks&rdquo;.</span>
+			</center>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Desafios: Roteamento (II)</h1>
+	<div class="slideContent">
+	  <div class="column" style="width: 50%;">
+	    <ul>
+	      <li>Problema difícil por vários fatores:
+	      <ul>
+	        <li><b>Alta variabilidade na qualidade dos enlaces.</b></li>
+	        <li>Interferências inter- e intra-fluxos.</li>
+	        <li>Dependência da taxa de transmissão.</li>
+	        <li>...</li>
+	      </ul></li>
+	    </ul>
+	  </div>
+		<div class="column" style="width: 50%;">
+		  <center>
+		    <img src="imagens/variabilidadeEnlaces.svg" style="width: 90%;"/>
+				<br>
+				<span style="font-size: 12px;">* Tabela adaptada de Passos <i>et al.</i>, &ldquo;Mesh Network Performance Measurements&rdquo;.</span>
+		  </center>
+		</div>
+	</div>
+	</section>
+
+
+	<section>
+	<h1>Desafios: Economia de Energia</h1>
+	<div class="slideContent">
+		<ul>
+		  <li>Relevante, principalmente, em redes de sensores.
+		  <ul>
+		    <li>Mas também aplicável a outras redes.</li>
+		  </ul></li>
+		  <li>Abordagem popular: desligar o rádio quando este não é necessário.</li>
+		  <li>Mas <b>como saber quando o rádio não é necessário</b>? Especialmente para recepção?</li>
+		  <li>Alguns métodos:
+		  <ul>
+		    <li>Coordenar a rede toda para ligar e desligar rádios simultaneamente.</li>
+		    <li>Utilizar &ldquo;rádio de baixo consumo&rdquo; para pedir ao receptor que ligue &ldquo;rádio principal&rdquo;.</li>
+		    <li>Deixar nós ligarem e desligarem seus rádios independentemente, mas <b>garantindo</b> que vizinhos ficarão com rádio ligado simultaneamente em <b>determinados instantes</b>.</li>
+				<li>...</li>
+		  </ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Resumo da Aula...</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<ul>
+			  <li>Redes de Múltiplos Saltos: Motivação.
+			  <ul>
+					<li><b>Estender alcance</b> das redes sem fio tradicionais.</li>
+			    <li>Enlaces curtos, mas comunicação em múltiplos saltos.</li>
+					<li><i>Hardware</i> barato, comum.</li>
+		      <li>Tolerância a falhas.</li>
+		      <li>Aumento de capacidade.</li>
+		    </ul></li>
+		    <li>MANETs:
+		    <ul>
+					<li>Formada apenas por clientes, <b>potencialmente móveis</b>.</li>
+		      <li><b>Topologia altamente variável</b>, instável.</li>
+		    </ul></li>
+		    <li>Redes em Malha Sem Fio:
+		    <ul>
+					<li>Alguns <b>roteadores fixos</b>.</li>
+		      <li>Reduz instabilidade da topologia.</li>
+		      <li>Simplifica roteamento.</li>
+		    </ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50%;">
+		  <ul>
+				<li>Redes Veiculares:
+		    <ul>
+					<li>Clientes móveis, altas velocidades.</li>
+		      <li>Topologia ainda mais instável.</li>
+		    </ul></li>
+		    <li>Redes de Sensores Sem Fio:
+		    <ul>
+		      <li><b>Coleta/monitoramento de dados</b>.</li>
+					<li>Dispositivos de baixa capacidade.</li>
+		      <li><b>Severas restrições energéticas</b>.</li>
+		    </ul></li>
+				<li><b>Desempenho <i>vs.</i> número de saltos</b>.</li>
+			  <li>Roteamento:
+			  <ul>
+			    <li><b>Reagir rapidamente</b>.</li>
+			    <li>Lidar com <b>alta variabilidade dos enlaces</b>.</li>
+			    <li>Lidar com interferências inter- e intra-fluxos.</li>
+			  </ul></li>
+			  <li>Economia de energia:
+			  <ul>
+			    <li>Ligar rádio <b>apenas se necessário</b>.</li>
+			    <li>Evitar <i>overheads</i> de coordenação.</li>
+			  </ul></li>
+		  </ul>
+		</div>
+	</div>
+	</section>
+
+<!--
+	<section>
+	<h1>Leitura e Exercícios Sugeridos</h1>
+	<div class="slideContent">
+	</div>
+	</section>
+-->
+
+	<section>
+	<h1>Próxima Aula...</h1>
+	<div class="slideContent">
+		<ul>
+						<li>Dois tópicos diferentes, porém interconectados:
+						<ul>
+										<li>Rede Celular.
+										<ul>
+														<li>Evolução, arquitetura, funcionamento.</li>
+										</ul></li>
+										<li>Mobilidade:
+										<ul>
+														<li>Conceitos básicos.</li>
+														<li>Ideias para soluções.</li>
+										</ul></li>
+						</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<!-- {{{{ dzslides core
+	#
+	#
+	#     __  __  __       .  __   ___  __
+	#    |  \  / /__` |    | |  \ |__  /__`
+	#    |__/ /_ .__/ |___ | |__/ |___ .__/ core :€
+	#
+	#
+	# The following block of code is not supposed to be edited.
+	# But if you want to change the behavior of these slides,
+	# feel free to hack it!
+	#
+	-->
+
+    <!-- More CSS -->
+	<link href='../template/css/slides.css' id="slides" rel='stylesheet' type='text/css'>
+	<link href='../template/css/presentationSpecific2.css' id="presentationSpecific2" rel='stylesheet' type='text/css'>
+
+    <!-- More Javascript -->
+	<script type="text/javascript" src="../template/js/dz.js"></script>
+
+	<!-- More CSS -->
+	<link href='../template/css/notesSpecific.css' id="notesSpecific" rel='stylesheet' type='text/css'>
+	<link href='../template/css/printSpecific.css' id="printSpecific" rel='stylesheet' type='text/css'>
+</body>
+</html>
