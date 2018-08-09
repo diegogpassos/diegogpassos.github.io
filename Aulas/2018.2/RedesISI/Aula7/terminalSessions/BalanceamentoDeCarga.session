@@ -1,0 +1,86 @@
+Script started on Mon 16 May 2016 02:50:55 PM BRT
+ExperimentosRedesI:# ping www.googe[Kle.com
+PING www.google.com (216.58.222.100) 56(84) bytes of data.
+64 bytes from rio01s16-in-f4.1e100.net (216.58.222.100): icmp_seq=1 ttl=55 time=224 ms
+64 bytes from rio01s16-in-f4.1e100.net (216.58.222.100): icmp_seq=2 ttl=55 time=7.35 ms
+64 bytes from rio01s16-in-f4.1e100.net (216.58.222.100): icmp_seq=3 ttl=55 time=7.61 ms
+^C
+--- www.google.com ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2003ms
+rtt min/avg/max/mdev = 7.352/79.826/224.511/102.307 ms
+ExperimentosRedesI:# ping www.google.com
+PING www.google.com (216.58.222.100) 56(84) bytes of data.
+64 bytes from rio01s16-in-f4.1e100.net (216.58.222.100): icmp_seq=1 ttl=55 time=8.13 ms
+64 bytes from rio01s16-in-f4.1e100.net (216.58.222.100): icmp_seq=2 ttl=55 time=7.80 ms
+^C
+--- www.google.com ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1001ms
+rtt min/avg/max/mdev = 7.803/7.970/8.137/0.167 ms
+ExperimentosRedesI:# ping www.google.com
+PING www.google.com (216.58.222.100) 56(84) bytes of data.
+64 bytes from rio01s16-in-f4.1e100.net (216.58.222.100): icmp_seq=1 ttl=55 time=7.27 ms
+64 bytes from rio01s16-in-f4.1e100.net (216.58.222.100): icmp_seq=2 ttl=55 time=7.41 ms
+^C
+--- www.google.com ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1001ms
+rtt min/avg/max/mdev = 7.276/7.346/7.417/0.110 ms
+ExperimentosRedesI:# ping www.google.com
+PING www.google.com (216.58.222.100) 56(84) bytes of data.
+64 bytes from rio01s16-in-f4.1e100.net (216.58.222.100): icmp_seq=1 ttl=55 time=7.48 ms
+64 bytes from rio01s16-in-f4.1e100.net (216.58.222.100): icmp_seq=2 ttl=55 time=7.38 ms
+64 bytes from rio01s16-in-f4.1e100.net (216.58.222.100): icmp_seq=3 ttl=55 time=53.3 ms
+^C
+--- www.google.com ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2003ms
+rtt min/avg/max/mdev = 7.388/22.736/53.337/21.638 ms
+ExperimentosRedesI:# ping www.google.com
+PING www.google.com (216.58.222.100) 56(84) bytes of data.
+^C64 bytes from 216.58.222.100: icmp_seq=1 ttl=55 time=7.85 ms
+
+--- www.google.com ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 7.858/7.858/7.858/0.000 ms
+ExperimentosRedesI:# ping www.google.com
+PING www.google.com (216.58.222.68) 56(84) bytes of data.
+64 bytes from rio01s15-in-f4.1e100.net (216.58.222.68): icmp_seq=1 ttl=55 time=8.03 ms
+64 bytes from rio01s15-in-f4.1e100.net (216.58.222.68): icmp_seq=2 ttl=55 time=7.40 ms
+64 bytes from rio01s15-in-f4.1e100.net (216.58.222.68): icmp_seq=3 ttl=55 time=7.34 ms
+^C
+--- www.google.com ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2002ms
+rtt min/avg/max/mdev = 7.342/7.594/8.032/0.318 ms
+ExperimentosRedesI:# ping www.google.com
+PING www.google.com (216.58.222.100) 56(84) bytes of data.
+64 bytes from rio01s16-in-f4.1e100.net (216.58.222.100): icmp_seq=1 ttl=55 time=7.58 ms
+64 bytes from rio01s16-in-f4.1e100.net (216.58.222.100): icmp_seq=2 ttl=55 time=7.79 ms
+^C
+--- www.google.com ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1001ms
+rtt min/avg/max/mdev = 7.584/7.687/7.791/0.135 ms
+ExperimentosRedesI:# ping www.google.com
+PING www.google.com (216.58.222.100) 56(84) bytes of data.
+64 bytes from rio01s16-in-f4.1e100.net (216.58.222.100): icmp_seq=1 ttl=55 time=7.46 ms
+64 bytes from rio01s16-in-f4.1e100.net (216.58.222.100): icmp_seq=2 ttl=55 time=7.74 ms
+^C
+--- www.google.com ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1001ms
+rtt min/avg/max/mdev = 7.462/7.603/7.745/0.166 ms
+ExperimentosRedesI:# ping www.google.com
+PING www.google.com (216.58.222.100) 56(84) bytes of data.
+64 bytes from rio01s16-in-f4.1e100.net (216.58.222.100): icmp_seq=1 ttl=55 time=7.62 ms
+64 bytes from rio01s16-in-f4.1e100.net (216.58.222.100): icmp_seq=2 ttl=55 time=7.74 ms
+^C
+--- www.google.com ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1001ms
+rtt min/avg/max/mdev = 7.629/7.688/7.748/0.105 ms
+ExperimentosRedesI:# ping www.google.com
+PING www.google.com (216.58.222.68) 56(84) bytes of data.
+64 bytes from rio01s15-in-f4.1e100.net (216.58.222.68): icmp_seq=1 ttl=55 time=7.65 ms
+64 bytes from rio01s15-in-f4.1e100.net (216.58.222.68): icmp_seq=2 ttl=55 time=7.43 ms
+^C
+--- www.google.com ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1000ms
+rtt min/avg/max/mdev = 7.432/7.544/7.657/0.142 ms
+ExperimentosRedesI:# exit
+
+Script done on Mon 16 May 2016 02:51:35 PM BRT

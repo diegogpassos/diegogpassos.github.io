@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <!-- Meta info -->
+		<meta charset="utf-8">
+		<meta name="shortauthor" content="Diego Passos"/>
+		<meta name="shorttitle" content="RIP, OSPF, BGP"/>
+		<meta name="shortevent" content="Redes de Computadores I"/>
+		<title>Redes de Computadores I: Aula 20</title>
+
+		<!-- Math support -->
+		<script type="text/x-mathjax-config">
+		MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+			MathJax.InputJax.TeX.Definitions.number = /^(?:[0-9]+(?:\.[0-9]{3})*(?:\{,\}[0-9]*)*|\{,\}[0-9]+)/
+		});
+		</script>
+		<!--<script src="js/plotly-latest.min.js"></script>-->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+		<script src="../../../../../MathJax-2.6-latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+		<script type="text/javascript" src="../template/js/dz_pre.js"></script>
+
+		<!-- Fonts -->
+		<link href='https://fonts.googleapis.com/css?family=Lora:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
+		<link href='../../../../../Fonts/Lora/lora.css' rel='stylesheet' type='text/css'>
+
+		<!-- CSS -->
+		<link href='../template/css/template.css' id="template" rel='stylesheet' type='text/css'>
+		<link href='../template/css/presentationSpecific.css' id="presentationSpecific" rel='stylesheet' type='text/css'>
+
+
+		<!-- Javascript -->
+		<!--
+		<script type="text/javascript" src="../template/js/audio.js"></script>
+		<script src="js/term.js" charset="utf-8"></script>
+    <script src="js/termcast.js" charset="utf-8"></script>
+		<link rel="stylesheet" href="css/googlecode.css">
+		<script src="js/highlight.pack.js"></script>
+		<script>
+			hljs.initHighlightingOnLoad();
+			hljs.configure({
+				tabReplace: '  '
+			});
+		</script>
+		-->
+</head>
+
+<body>
+    <!-- Audio handlers -->
+	<!--<audio src="audio/La.wav" id="La.wav" preload="auto"></audio>-->
+
+    <!-- Title Slide -->
+	<section>
+
+        <div class="slideContent">
+            <h1 class="title">Aula 20 - RIP, OSPF, BGP</h1>
+            <h2 class="author">Diego Passos</h2>
+            <h4 class="institution">Universidade Federal Fluminense</h4>
+            <h3 class="date">Redes de Computadores I</h3>
+        </div>
+		<br>
+		<br>
+			<div style="width: 30%; float: right; padding-right: 2%;">
+			<p style="font-size: 18px; text-align: right;">Material adaptado a partir dos slides originais de J.F Kurose and K.W. Ross.</p>
+		</div>
+	</section>
+
+	<section>
+	<h1>Revisão da Última Aula...</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 55%;">
+			<ul>
+			  <li><b>Roteamento baseado em Vetor de Distâncias</b>:
+			  <ul>
+			    <li>Ideia: melhor caminho até destino composto por enlace até vizinho e melhor caminho do vizinho até destino.</li>
+			    <li>Nós anunciam suas <span class="alert">estimativas</span> de custo até cada destino.</li>
+			    <li>Ao <span class="alert">receber</span> novas estimativas, nó <span class="alert">atualiza</span> suas próprias.</li>
+			    <li>Processo iterativo, <span class="alert">converge para melhores rotas</span>.</li>
+			    <li>Algoritmo <span class="alert">distribuído</span>: nós precisam conhecer apenas vizinhança.</li>
+			  </ul></li>
+			  <li><b>Contagem ao infinito:</b>
+			  <ul>
+			    <li>Potencial problema, ocorre em caso de grandes pioras nos custos dos enlaces.</li>
+			    <li>Solução (parcial): <span class="alert">envenenamento reverso</span>.</li>
+			  </ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 45%;">
+			<ul>
+			  <li><b>Roteamento Hierárquico:</b>
+			  <ul>
+			    <li>Dois níveis: dentro e fora de <span class="alert">Sistemas Autônomos</span>.
+			    <ul>
+			      <li>Intra-AS e Inter-AS.</li>
+			    </ul></li>
+					<li>Tabela de roteamento construída por <span class="alert">colaboração dos dois processos</span>.</li>
+			    <li>Reduz escopo, complexidade do roteamento.</li>
+					<li><span class="alert">Nem sempre é globalmente ótimo!</span></li>
+			  </ul></li>
+			  <li><b>Roteamento batata-quente:</b>
+			  <ul>
+			    <li>Tirar datagrama do AS o mais rápido possível.</li>
+			  </ul></li>
+			</ul>
+		</div>
+	</div>
+	</section>
+
+	<section class="secao">
+	<div class="slideContent">
+	  Roteamento Intra-AS
+	</div>
+	</section>
+
+	<section>
+	<h1>Roteamento Intra-AS</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>Também conhecido como <span class="alert">IGP (<i>Interior Gateway Protocols</i>)</span>.</li>
+	    <li>Protocolos mais conhecidos desta categoria:
+	    <ul>
+	      <li>RIP: <i>Routing Information Protocol</i>.</li>
+	      <li>OSPF: <i>Open Shortest Path First</i>.</li>
+	      <li>IGRP: <i>Interior Gateway Routing Protocol</i> (Proprietário da Cisco).</li>
+	    </ul></li>
+	  </ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>RIP (<i>Routing Information Protocol</i>)</h1>
+	<div class="slideContent">
+		<ul>
+		  <li>Incluído no BSD-UNIX em 1982.</li>
+		  <li>Baseado em Vetor de Distâncias.
+		  <ul>
+		    <li>Métrica de roteamento: # de saltos (máximo = 15), cada enlace tem custo 1.</li>
+		    <li>Vetores de distância anunciados a cada 30 segundos.</li>
+		    <li>Cada anúncio: lista de até 25 <span class="alert">sub-redes de destino</span>.</li>
+		  </ul></li>
+		</ul>
+		<br>
+	  <center>
+	    <img src="imagens/RIP1.svg" style="width: 70%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>RIP: Exemplo (I)</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/RIPExemplo.svg" style="width: 70%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>RIP: Exemplo (II)</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/RIPExemplo2.svg" style="width: 70%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>RIP: Falha de Enlaces, Recuperação</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>Se nenhum anúncio é ouvido após 180 segundos, vizinho/enlace declarado morto.
+	    <ul>
+	      <li>Rotas através daquele vizinho são invalidadas.</li>
+	      <li>Novos anúncios enviados aos demais vizinhos.</li>
+	      <li>Vizinhos, por sua vez, enviam outros anúnicios (se suas tabelas mudaram).</li>
+	      <li>Informação de falha de enlaces se propaga rapidamente (?) pela rede toda.</li>
+	      <li><span class="alert">Envenenamento reverso</span> usado para previnir <i>loops</i> em ping-pong (distância infinita = 16 saltos).</li>
+	    </ul></li>
+	  </ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>RIP: Processamento da Tabela de Roteamento</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>Tabela de roteamento no RIP é gerenciada por um processo <span class="alert">no nível da aplicação</span> chamado de <tt>route-d</tt> (<i>daemon</i>).</li>
+	    <li>Anúncios são enviados em <span class="alert">pacotes UDP</span>, periodicamente repetidos.</li>
+	  </ul>
+		<center>
+		  <img src="imagens/RIP_UDP.svg" style="width: 70%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>OSPF (<i>Open Shortest Path First</i>)</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>&ldquo;<i>open</i>&rdquo;: publicamente disponível.</li>
+	    <li>Utiliza roteamento baseado em Estado de Enlace.
+	    <ul>
+	      <li>Disseminação de mensagem de estado dos enlaces locais.</li>
+	      <li>Mapa da topologia mantido locamente em cada nó.</li>
+	      <li>Rotas computadas através do Algoritmo de Dijkstra.</li>
+	    </ul></li>
+	    <li>Anúnicios do OSPF carregam uma entrada para cada vizinho do nó.</li>
+	    <li>Anúncios inundados para o AS <span class="alert">inteiro</span>.
+	    <ul>
+	      <li>Transportados em mensagens OSPF diretamente sobre IP (ao invés de TCP ou UDP).</li>
+	    </ul></li>
+	    <li>Protocolo <span class="alert">IS-IS</span>: praticamente idêntico ao OSPF.</li>
+	  </ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Funcionalidades &ldquo;Avançadas&rdquo; do OSPF (Não Encontradas no RIP)</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li><b>Segurança:</b> todas as mensagens são autenticadas (para previnir ataques).</li>
+	    <li><b>multipath:</b> múltiplos caminhos de mesmo custo são permitidos (RIP seleciona um único).</li>
+	    <li>Para cada enlace, múltiplas métricas para diferentes valores de <span class="alert">ToS</span>.
+	    <ul>
+	      <li><i>e.g.</i>, enlaces de satélite tem custo &ldquo;baixo&rdquo; para tráfego de melhor esforço, mas alto para tráfego de tempo real.</li>
+	    </ul></li>
+	    <li>Suporte integrado para roteamento <span class="alert"><i>multicast</i></span>:
+	    <ul>
+	      <li>OSPF Multicast (MOSPF) usa as mesmas informações de topologia usadas pelo OSPF.</li>
+	    </ul></li>
+	    <li><b>OSPF Hierárquico:</b> para execução em grandes domínios.</li>
+	  </ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>OSPF Hierárquico (I)</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/OSPFHierarquico.svg" style="width: 70%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>OSPF Hierárquico (II)</h1>
+	<div class="slideContent">
+  	<ul>
+  	  <li><b>Hierarquia em dois níveis:</b> área local e <i>backbone</i>.
+  	  <ul>
+  	    <li>Anúncios de estado de enlace apenas dentro da área.</li>
+  	    <li>Cada nó conhece detalhadamente a topologia da sua área, mas conhece apenas a direção (caminho mais curto) para redes em outras áreas.</li>
+  	  </ul></li>
+  	  <li><b>Roteadores de borda de área:</b> &ldquo;resume&rdquo; distâncias para redes na própria área, anunciam para outros Roteadores de Borda de Área.</li>
+  	  <li><b>Roteadores de <i>backbone</i>:</b> executam o OSPF limitado ao <i>backbone</i>.</li>
+  	</ul>
+	</div>
+	</section>
+
+	<section class="secao">
+	<div class="slideContent">
+	  Roteamento Inter-AS
+	</div>
+	</section>
+
+	<section>
+	<h1>Roteamento Inter-AS na Internet: BGP</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li><b>BGP (<i>Border Gateway Protocol</i>):</b> o padrão <i>de facto</i> para roteamento inter-domínios.
+	    <ul>
+	      <li>&ldquo;A cola que mantém a Internet junta&rdquo;.</li>
+	    </ul></li>
+	    <li>BGP provê a cada AS uma maneira de:
+	    <ul>
+	      <li><b>eBGP:</b> obter informações sobre sub-redes alcançáveis de ASs vizinhos.</li>
+	      <li><b>iBGP:</b> propagar informações de sub-redes externas alcançáveis para todos os roteadores do AS.</li>
+				<li>Determinar &ldquo;boas&rdquo; rotas para outras redes com base nas informações das sub-redes alcançáveis e políticas diversas.</li>
+	    </ul></li>
+	    <li>Permite a uma sub-rede anunciar sua existência para o resto da Internet: <span class="alert">&ldquo;estou aqui!&rdquo;</span></li>
+	  </ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>BGP: Conceitos Básicos</h1>
+	<div class="slideContent">
+		<ul>
+		  <li><span class="alert">Sessão BGP:</span> dois roteadores BGP (&ldquo;<i>peers</i>&rdquo;) trocam mensagens BGP.
+		  <ul>
+		    <li>Anunciam <span class="alert">caminhos</span> para vários prefixos de sub-redes diferentes (protocolo baseado em &ldquo;vetor de caminhos&rdquo;).</li>
+		    <li>Trocadas sobre conexões TCP semi-permanentes.</li>
+		  </ul></li>
+		  <li>Quando o AS3 anuncia um prefixo para o AS1:
+		  <ul>
+		    <li>AS3 <span class="alert">se compromete</span> a encaminhar datagramas em direção àquele prefixo.</li>
+		    <li>AS3 pode agregar prefixos nos seus anúnicios.</li>
+		  </ul></li>
+		</ul>
+		<br>
+	  <center>
+	    <img src="imagens/BGP1.svg" style="width: 70%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>BGP: Distribuindo Informação de Caminhos</h1>
+	<div class="slideContent">
+		<ul>
+		  <li>Usando a sessão eBGP entre 3a e 1c, AS3 envia prefixos alcançáveis para o AS1.
+		  <ul>
+		    <li>1c pode, então, usar o iBGP para distribuir novas informações de prefixos conhecidos para todos os roteadores no AS1.</li>
+		    <li>1b pode, então, re-anunciar a informação de prefixos alcançáveis para o AS2 através da sessão eBGP entre 1b e 2a.</li>
+		  </ul></li>
+		  <li>Quanto roteador aprende um novo prefixo, ele cria uma entrada para o prefixo na sua tabela de roteamento.</li>
+		</ul>
+		<br>
+	  <center>
+	    <img src="imagens/BGP2.svg" style="width: 70%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Atributos de Caminhos e Rotas BGP</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>Prefixos anunciados incluem atributos BGP.
+	    <ul>
+	      <li>prefixo + atributos = &ldquo;rota&rdquo;.</li>
+	    </ul></li>
+	    <li>Dois atributos importantes:
+	    <ul>
+	      <li><span class="alert">AS-PATH:</span> contém lista de ASs pelos quais o anúncio do prefixo passou: <i>e.g.</i>, AS 67, AS 17.</li>
+				<li><span class="alert">NEXT-HOP:</span> indica roteador do AS de próximo salto (que pode estar a vários saltos do roteador atual).</li>
+	    </ul></li>
+	    <li>Roteador <i>gateway</i> que recebe anúncios utiliza <span class="alert">política de importação</span> para aceitá-los ou não.
+	    <ul>
+	      <li><i>e.g.</i>, nunca encaminhe para o AS x.</li>
+	      <li>Roteamento baseado em <span class="alert">políticas</span>.</li>
+	    </ul></li>
+	  </ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>BGP: Seleção de Rota</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>Roteador pode aprender múltiplas rotas para um AS de destino. Seleção é baseada em:
+	    <ol>
+	      <li>Valor do atributo <i>Local Preference</i>: decisão baseada em política.</li>
+	      <li>AS-PATH mais curto.</li>
+	      <li>Roteador NEXT-HOP mais próximo: roteamento batata-quente.</li>
+	      <li>Critérios adicionais.</li>
+	    </ol></li>
+	  </ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Mensagens BGP</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>Mensagens BGP trocadas entre <i>peers</i> sobre conexão TCP.</li>
+	    <li>Mensagens BGP:
+	    <ul>
+	      <li><b>OPEN:</b> abre conexão TCP para o <i>peer</i> e autentica transmissor.</li>
+	      <li><b>UPDATE:</b> anuncia novo caminho (ou anula anúnicio antigo).</li>
+	      <li><b>KEEPALIVE:</b> mantém a conexão aberta em caso de inatividade prolongada; também serve de ACK para mensagem OPEN.</li>
+	      <li><b>NOTIFICATION:</b> reporta erros na mensagem anterior; também usada para fechar conexão.</li>
+	    </ul></li>
+	  </ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Juntando Tudo</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li><span class="alert">Como uma entrada é colocada na tabela de roteamento de um roteador?</span>
+	    <ul>
+	      <li>Resposta é complicada!</li>
+	      <li>Junta Roteamento Hierárquico, BGP e OSPF.</li>
+	      <li>Provê boa visão geral do funcionamento do BGP!</li>
+	    </ul></li>
+	  </ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Como a Entrada é Inserida na Tabela de Roteamento? (I)</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/BGPExemplo1.svg" style="width: 70%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Como a Entrada é Inserida na Tabela de Roteamento? (II)</h1>
+	<div class="slideContent">
+		<ul>
+		  <li><b>Visão de alto nível:</b>
+		  <ol>
+		    <li>Roteador passa a conhecer o prefixo.</li>
+		    <li>Roteador determina a porta de saída para alcançar o prefixo.</li>
+		    <li>Roteador insere mapeamento <tt>porta-prefixo</tt> na tabela de roteamento.</li>
+		  </ol></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Roteador Passa a Conhecer o Prefixo</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/BGP1.svg" style="width: 70%;"/>
+	  </center>
+		<br>
+		<ul>
+		  <li>Mensagem BGP contém &ldquo;rotas&rdquo;.</li>
+		  <li>&ldquo;Rota&rdquo; é um prefixo, mais seus atributos: AS-PATH, NEXT-HOP, ...</li>
+		  <li>Exemplo de rota BGP:
+		  <ul>
+		    <li>Prefixo: 138.16.64/22.</li>
+		    <li>AS-PATH: AS3 AS131.</li>
+		    <li>NEXT-HOP: 201.44.13.125.</li>
+		  </ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Roteador Pode Receber Múltiplas Rotas</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/BGPMultiplasRotas.svg" style="width: 70%;"/>
+	  </center>
+		<br>
+		<ul>
+		  <li>Roteador pode receber múltiplos anúncios de rotas para <span class="alert">um mesmo prefixo</span>.</li>
+		  <li>Precisa selecionar um.</li>
+		</ul>
+		<br>
+		<br>
+		<br>
+		<br>
+	</div>
+	</section>
+
+	<section>
+	<h1>Seleção da Melhor Rota BGP para o Prefixo</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>Roteador seleciona rota com base no AS-PATH mais curto.</li>
+	    <li>Por exemplo:
+	    <ul>
+	      <li>AS2 AS17 para alcançar 138.16.64/22 (<span class="alert">selecionada</span>).</li>
+	      <li>AS3 AS131 AS201 para alcançar 138.16.64/22.</li>
+	    </ul></li>
+	    <li>E se ocorrer um empate? Voltaremos a este ponto em breve!</li>
+	  </ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Encontrar Melhor Rota Interna para a Rota BGP</h1>
+	<div class="slideContent">
+		<ul>
+		  <li>Use o atributo NEXT-HOP da rota selecionada.
+		  <ul>
+		    <li>É o endereço IP da interface do roteamento que inicia o AS PATH.</li>
+		  </ul></li>
+		  <li>Exemplo:
+		  <ul>
+		    <li>AS-PATH: AS2 AS17; NEXT-HOP: 111.99.86.55.</li>
+		  </ul></li>
+		  <li>Roteador usa OSPF para encontrar caminho mais curto de 1c para 111.99.86.55.</li>
+		</ul>
+		<br>
+	  <center>
+	    <img src="imagens/BGPRotaInterna.svg" style="width: 70%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Roteador Identifica Porta para Rota</h1>
+	<div class="slideContent">
+		<ul>
+		  <li>Identifica porta no caminho mais curto apontado pelo OSPF.</li>
+		  <li>Adiciona entrada mapeamento o prefixo à porta na sua tabela de roteamento.
+		  <ul>
+		    <li><span class="alert"><tt>(183.16.64/22, porta 4)</tt></span>.</li>
+		  </ul></li>
+		</ul>
+		<br>
+	  <center>
+	    <img src="imagens/BGPIdentificarPorta.svg" style="width: 70%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Roteamento Batata-Quente</h1>
+	<div class="slideContent">
+		<ul>
+		  <li>Suponha que haja duas ou mais melhores rotas BGP.</li>
+		  <li>Então escolha aquela com o NEXT-HOP mais próximo.
+		  <ul>
+		    <li><span class="alert">Use o OSPF para determinar qual <i>gateway</i> está mais próximo</span>.</li>
+		    <li><span class="alert">Pergunta:</span> de 1c, escolher AS3 AS131 ou AS2 AS17?</li>
+		    <li><span class="alert">Resposta:</span> rota AS3 AS 131, já que NEXT-HOP é mais próximo.</li>
+		  </ul></li>
+		</ul>
+		<br>
+	  <center>
+	    <img src="imagens/BGPBatataQuente.svg" style="width: 70%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Como uma Entrada é Inserida na Tabela de Roteamento?</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>Sumário:
+	    <ol>
+	      <li>Roteador passa a conhecer o prefixo.
+	      <ul>
+	        <li>Através de anúncios BGP de outros roteadores.</li>
+	      </ul></li>
+	      <li>Determina porta de saída para o prefixo.
+	      <ul>
+	        <li>Usa seleção de rotas BGP para encontrar a melhor rota BGP.</li>
+	        <li>Usa OSPF para encontrar melhor rota interna ao AS que leva o pacote até o início da melhor rota BGP.</li>
+	        <li>Roteador identifica porta de saída para esta rota.</li>
+	      </ul></li>
+	      <li>Insere o mapeamento <tt>(prefixo, porta)</tt> na tabela de roteamento.</li>
+	    </ol></li>
+	  </ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>BGP: Políticas de Roteamento (I)</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/BGPPoliticas.svg" style="width: 70%;"/>
+	  </center>
+		<br>
+		<ul>
+		  <li>A, B e C são redes de provedores.</li>
+		  <li>X, W, e Y são consumidores (clientes dos provedores).</li>
+		  <li>X é <span class="alert"><i>dual-homed</i></span>: se conecta à Internet por dois provedores diferentes.
+		  <ul>
+		    <li>X não quer rotear pacotes de B para C.</li>
+		    <li>...logo, X não irá anunciar para B uma rota para C.</li>
+		  </ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>BGP: Políticas de Roteamento (II)</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/BGPPoliticas.svg" style="width: 70%;"/>
+	  </center>
+		<br>
+		<ul>
+		  <li>A anuncia caminho AW para B.</li>
+		  <li>B anuncia caminho BAW para X.</li>
+		  <li>B deve anunciar caminho BAW para C?
+		  <ul>
+		    <li>Claro que não! B não lucra roteando CBAW, já que nem W nem C são clientes de B.</li>
+		    <li>B quer forçar C a rotear para W por A.</li>
+		    <li>B quer rotear <span class="alert">apenas</span> tráfego de e para seus clientes!</li>
+		  </ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Por que Roteamentos Diferentes Intra- e Inter-AS?</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li><b>Políticas:</b>
+	    <ul>
+	      <li>Inter-AS: administrador quer controle sobre como seu tráfego é roteado, quem roteia pela sua rede.</li>
+	      <li>Intra-AS: único administrador, não são necessárias decisões políticas.</li>
+	    </ul></li>
+	    <li><b>Escala:</b>
+	    <ul>
+	      <li>Roteamento hierárquico reduz tamanho das tabelas, reduz tráfego de atualização de rotas.</li>
+	    </ul></li>
+	    <li><b>Desempenho:</b>
+	    <ul>
+	      <li>Intra-AS: foco no desempenho.</li>
+	      <li>Inter-AS: políticas podem dominar decisões.</li>
+	    </ul></li>
+	  </ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Resumo da Aula...</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+		  <ul>
+		    <li><b>Roteamento Intra-AS</b>:
+		    <ul>
+		      <li>Critério: desempenho.</li>
+		      <li>Principais protocolos: OSPF, RIP, IGRP.</li>
+		      <li>Também conhecido como IGP.</li>
+		    </ul></li>
+		    <li><b>RIP:</b>
+		    <ul>
+		      <li>Vetor de Distâncias.</li>
+		      <li>Entradas para sub-redes.</li>
+		      <li>Métrica: número de saltos.</li>
+		      <li>Distância máxima: 16.</li>
+		      <li>Envenenamento reverso.</li>
+		      <li>Roda sobre UDP.</li>
+		    </ul></li>
+		    <li><b>OSPF:</b>
+		    <ul>
+		      <li>Estado de Enlace.</li>
+		      <li>Mais moderno que o RIP.</li>
+		      <li>Considera segurança, múltiplos caminhos, hierarquia, ...</li>
+		      <li>Roda diretamente sobre IP.</li>
+		    </ul></li>
+		  </ul>
+		</div>
+		<div class="column" style="width: 50%;">
+		  <ul>
+				<li><b>Roteamento Inter-AS</b>:
+		    <ul>
+		      <li>Orientado a políticas.</li>
+		      <li>Principal protocolo: BGP.</li>
+		    </ul></li>
+		    <li><b>BGP:</b>
+		    <ul>
+		      <li>&ldquo;Vetor de Caminhos&rdquo;.</li>
+		      <li>Sessões BGP: TCP.</li>
+		      <li>Anúncios: <span class="alert">compromisso de rotear</span>.</li>
+					<li><span class="alert">eBGP</span> <i>vs.</i> <span class="alert">iBGP</span>.</li>
+		    </ul></li>
+		    <li><b>BGP: rotas</b>.
+		    <ul>
+		      <li>Possuem atributos.</li>
+		      <li><i>e.g.</i>, AS-PATH.</li>
+		      <li><i>e.g.</i>, NEXT-HOP.</li>
+		    </ul></li>
+		    <li><b>BGP: seleção de rotas.</b>
+		    <ul>
+		      <li><span class="alert">Baseada em políticas</span>.</li>
+		      <li>AS-PATH mais curto.</li>
+		      <li>NEXT-HOP mais próximo: <span class="alert">roteamento batata-quente</span>.</li>
+		      <li>Outros critérios.</li>
+		    </ul></li>
+		  </ul>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Próxima Aula...</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Última aula de conteúdo!
+			<li>Ainda discutiremos roteamento, mas ao invés de comunicação <i>unicast</i>:
+			<ul>
+			  <li>Roteamento <i>broadcast</i>.</li>
+			  <li>Roteamento <i>multicast</i>.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<!-- {{{{ dzslides core
+	#
+	#
+	#     __  __  __       .  __   ___  __
+	#    |  \  / /__` |    | |  \ |__  /__`
+	#    |__/ /_ .__/ |___ | |__/ |___ .__/ core :€
+	#
+	#
+	# The following block of code is not supposed to be edited.
+	# But if you want to change the behavior of these slides,
+	# feel free to hack it!
+	#
+	-->
+
+    <!-- More CSS -->
+	<link href='../template/css/slides.css' id="slides" rel='stylesheet' type='text/css'>
+	<link href='../template/css/presentationSpecific2.css' id="presentationSpecific2" rel='stylesheet' type='text/css'>
+
+    <!-- More Javascript -->
+	<script type="text/javascript" src="../template/js/dz.js"></script>
+
+	<!-- More CSS -->
+	<link href='../template/css/notesSpecific.css' id="notesSpecific" rel='stylesheet' type='text/css'>
+	<link href='../template/css/printSpecific.css' id="printSpecific" rel='stylesheet' type='text/css'>
+</body>
+</html>

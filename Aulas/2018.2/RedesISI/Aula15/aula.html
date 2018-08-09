@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <!-- Meta info -->
+		<meta charset="utf-8">
+		<meta name="shortauthor" content="Diego Passos"/>
+		<meta name="shorttitle" content="Roteadores"/>
+		<meta name="shortevent" content="Redes de Computadores I"/>
+		<title>Redes de Computadores I: Aula 15</title>
+
+		<!-- Math support -->
+		<script type="text/x-mathjax-config">
+		MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+			MathJax.InputJax.TeX.Definitions.number = /^(?:[0-9]+(?:\.[0-9]{3})*(?:\{,\}[0-9]*)*|\{,\}[0-9]+)/
+		});
+		</script>
+		<!--<script src="js/plotly-latest.min.js"></script>-->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+		<script src="../../../../../MathJax-2.6-latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+		<script type="text/javascript" src="../template/js/dz_pre.js"></script>
+
+		<!-- Fonts -->
+		<link href='https://fonts.googleapis.com/css?family=Lora:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
+		<link href='../../../../../Fonts/Lora/lora.css' rel='stylesheet' type='text/css'>
+
+		<!-- CSS -->
+		<link href='../template/css/template.css' id="template" rel='stylesheet' type='text/css'>
+		<link href='../template/css/presentationSpecific.css' id="presentationSpecific" rel='stylesheet' type='text/css'>
+
+
+		<!-- Javascript -->
+		<!--
+		<script type="text/javascript" src="../template/js/audio.js"></script>
+		<script src="js/term.js" charset="utf-8"></script>
+    <script src="js/termcast.js" charset="utf-8"></script>
+		<link rel="stylesheet" href="css/googlecode.css">
+		<script src="js/highlight.pack.js"></script>
+		<script>
+			hljs.initHighlightingOnLoad();
+			hljs.configure({
+				tabReplace: '  '
+			});
+		</script>
+		-->
+</head>
+
+<body>
+    <!-- Audio handlers -->
+	<!--<audio src="audio/La.wav" id="La.wav" preload="auto"></audio>-->
+
+    <!-- Title Slide -->
+	<section>
+
+        <div class="slideContent">
+            <h1 class="title">Aula 15 - Roteadores: Arquitetura, <i>Buffers</i>, Políticas de Enfileiramento</h1>
+            <h2 class="author">Diego Passos</h2>
+            <h4 class="institution">Universidade Federal Fluminense</h4>
+            <h3 class="date">Redes de Computadores I</h3>
+        </div>
+		<br>
+		<br>
+			<div style="width: 30%; float: right; padding-right: 2%;">
+			<p style="font-size: 18px; text-align: right;">Material adaptado a partir dos slides originais de J.F Kurose and K.W. Ross.</p>
+		</div>
+	</section>
+
+	<section>
+	<h1>Revisão da Última Aula...</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 53%;">
+		  <ul>
+		    <li><b>Camada de rede:</b>
+		    <ul>
+		      <li>Comunicação fim a fim <span class="alert">entre <i>hosts</i>.</span></li>
+		      <li>Encapsula segmentos em <span class="alert">datagramas</span>.</li>
+		      <li>Roda em todos os nós.</li>
+		    </ul></li>
+		    <li><b>Funções chave:</b>
+		    <ul>
+		      <li>Encaminhamento: mover datagrama da entrada para saída.</li>
+		      <li>Roteamento: encontrar <span class="alert">rota</span> fim-a-fim.</li>
+		    </ul></li>
+		    <li><b>Tabela de roteamento</b>:
+		    <ul>
+		      <li>Montada pelo roteamento.</li>
+		      <li>Usada pelo encaminhamento.</li>
+		    </ul></li>
+		    <li><b>Modelos de Serviço:</b>
+		    <ul>
+		      <li>O que a rede promete.</li>
+		      <li><i>e.g.</i>, banda mínima, atraso máximo, entrega ordenada.</li>
+					<li>Modelo da Internet: <span class="alert">melhor esforço</span>.</li>
+		    </ul></li>
+		  </ul>
+		</div>
+		<div class="column" style="width: 47%;">
+		  <ul>
+		    <li><b>Redes de Circuitos Virtuais:</b>
+		    <ul>
+		      <li>Serviço orientado a conexão.</li>
+		      <li>Pacotes corregam identificador do VC.
+		      <ul>
+		        <li>E não endereço de destino.</li>
+		      </ul></li>
+		      <li>Recursos muitas vezes reservados.</li>
+		      <li>Tabela de roteamento associa:
+		      <ul>
+		        <li>Interface, # do VC de entrada.</li>
+		        <li>Interface, # do VC de saída.</li>
+		      </ul></li>
+		    </ul></li>
+		    <li><b>Redes de datagramas:</b>
+		    <ul>
+		      <li>Paradigma usado na Internet.</li>
+		      <li>Encaminhamento baseado no <span class="alert">endereço de destino</span>.</li>
+		      <li><span class="alert">Agregação de endereço.</span></li>
+		      <li><span class="alert">Casamento por prefixo mais longo</span>.</li>
+		    </ul></li>
+		  </ul>
+		</div>
+	</div>
+	</section>
+
+	<section class="secao">
+	<div class="slideContent">
+	  Roteadores: Arquiteturas
+	</div>
+	</section>
+
+	<section>
+	<h1>Aquiteturas de Roteadores: Visão Geral</h1>
+	<div class="slideContent">
+  	<ul>
+  	  <li>Duas funções chave em um roteador:
+  	  <ul>
+  	    <li>Execução de algoritmos/protocolos de roteamento (RIP, OSPF, BGP).</li>
+  	    <li><b>Encaminhamento de datagramas de enlaces de entrada para enlaces de saída.</b></li>
+  	  </ul></li>
+  	</ul>
+		<br>
+		<center>
+		  <img src="imagens/ArquiteturaVisaoGeral.svg" style="width: 70%;"/>
+		</center>
+
+	</div>
+	</section>
+
+	<section>
+	<h1>Funções das Portas de Entrada</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/PortasDeEntrada.svg" style="width: 55%;"/>
+	  </center>
+		<br>
+		<div class="column" style="width: 45%;">
+		  <ul>
+		    <li><b>Camada física:</b>
+		    <ul>
+		      <li>Recepção no nível dos bits.</li>
+		    </ul></li>
+		    <li><b>Camada de enlace:</b>
+		    <ul>
+		      <li><i>e.g.</i>, Ethernet.</li>
+		      <li>Vide capítulo 5 (Redes II).</li>
+		    </ul></li>
+		  </ul>
+		</div>
+		<div class="column" style="width: 55%;">
+		  <ul>
+		    <li><b>Comutação:</b>
+		    <ul>
+		      <li>Dado destino do datagrama, procurar porta de saída usando tabela de roteamento em memória.</li>
+		      <li>Objetivo: completar processamento da porta de entrada na &ldquo;velocidade de linha&rdquo;.</li>
+		      <li>Enfileiramento: se datagramas chegam mais rápido que taxa de encaminhamento para dentro da malha de comutação.</li>
+		    </ul></li>
+		  </ul>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Malhas de Comutação</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>Transferem pacotes do <i>buffer</i> da porta de entrada para o <i>buffer</i> da porta de saída apropriada.</li>
+	    <li><b>Taxa de comutação:</b> taxa na qual pacotes podem ser transferidos das entradas para as saídas.
+	    <ul>
+	      <li>Comumente medida como um múlitplo da velocidade da linha das portas de entrada/saída.</li>
+	      <li>N entradas: taxa de comutação desejada de N vezes a velocidade da linha.</li>
+	    </ul></li>
+	    <li>Três tipos básicos de malha de comutação:</li>
+	  </ul>
+		<br>
+		<center>
+		  <img src="imagens/MalhasDeComutacao.svg" style="width: 70%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Comutação Através da Memória</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li><b>Primeira geração de roteadores:</b>
+	    <ul>
+	      <li>Computadores comuns com comutação feita diretamente pelo processador.</li>
+	      <li>Pacotes copiados para a memória principal do sistema.</li>
+	      <li>Taxa limitada pela vazão da memória.
+	      <ul>
+	        <li>Dois usos do barramento por datagrama.</li>
+	      </ul></li>
+	    </ul></li>
+	  </ul>
+		<br>
+		<center>
+		  <img src="imagens/MalhasDeComutacaoMemoria.svg" style="width: 70%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Comutação Através de um Barramento</h1>
+	<div class="slideContent">
+	  <div class="column" style="width: 55%;">
+	    <ul>
+	      <li>Datagrama passa da porta de entrada para a porta de saída através de um barramento compartilhado.</li>
+	      <li><span class="alert">Contenção no barramento:</span> taxa de comutação limitada pela banda do barramento.</li>
+	      <li>Barramento de 32 Gb/s, Cisto 5600: taxa suficiente para roteadores de acesso e empresariais.</li>
+	    </ul>
+	  </div>
+		<div class="column" style="width: 45%;">
+		  <center>
+		    <img src="imagens/MalhasDeComutacaoBarramento.svg" style="width: 50%;"/>
+		  </center>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Comutação Através de uma Rede de Interconexão</h1>
+	<div class="slideContent">
+	  <div class="column" style="width: 55%;">
+			<ul>
+			  <li>Supera limitações de banda do barramento.</li>
+			  <li>Rede banyan, <i>crossbar</i>, outras redes de interconexão inicialmente desenvolvidas para conectar processadores em computadores multiprocessados.</li>
+			  <li>Projeto avançado: fragmentam datagramas em células de comprimento fixo comutadas pela malha.</li>
+			  <li>Cisco 12000: comuta 60 Gb/s através da rede de interconexão.</li>
+			</ul>
+	  </div>
+	  <div class="column" style="width: 45%;">
+			<center>
+			  <img src="imagens/MalhasDeComutacaoCrossbar.svg" style="width: 50%;"/>
+			</center>
+	  </div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Portas de Saída</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/PortasDeSaida.svg" style="width: 70%;"/>
+	  </center>
+		<ul>
+		  <li><b>Enfileiramento</b> necessário devido à taxa mais alta da malha de comutação.
+		  <ul>
+		    <li>Datagramas podem ser perdidos devido a congestionamento, falta de <i>buffer</i>.</li>
+		  </ul></li>
+		  <li><b>Escalonamento</b> de datagramas.
+		  <ul>
+		    <li>Prioridades: quem recebe melhor desempenho? Neutralidade da rede?</li>
+		  </ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Enfileiramento na Porta de Saída</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/PortasDeSaidaEnfileiramento.svg" style="width: 70%;"/>
+	  </center>
+		<br>
+		<ul>
+		  <li>Ocorre quando a taxa de chegada da malha de comutação excede velocidade da linha da porta de saída.</li>
+		  <li><span class="alert">Enfileiramento (atraso) e perdas devido a <i>overflow</i> do <i>buffer</i> da porta de saída!</span></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Quanto <i>Buffer</i> Alocar?</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>Recomendação da RFC 3439: <i>buffer</i> deve ser capaz de armazenar aproximadamente 250 ms de dados.
+	    <ul>
+	      <li>250 ms: RTT &ldquo;típico&rdquo; da Internet.</li>
+	      <li>Tamanho do <i>buffer</i>: <span class="math inline">\(RTT\times C\)</span>.
+	      <ul>
+	        <li>Onde <span class="math inline">\(C\)</span> é a capacidade do enlace.</li>
+	        <li><i>e.g.</i>, C = 10 Gb/s, RTT = 250 ms, 2,5 Gb de <i>buffer</i>.</li>
+	      </ul></li>
+	      <li>Recomendação recente: com N fluxos, tamanho do <i>buffer</i> igual a:</li>
+	    </ul></li>
+	  </ul>
+		<br>
+		<center>
+		  <span class="math inline">\(\frac{RTT\times C}{\sqrt{N}}\)</span>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Enfileiramento na Porta de Entrada</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>Malha de comutação mais lenta que portas de entrada combinadas &rArr; enfileiramento pode ocorrer nas filas das portas de entrada.
+	    <ul>
+			  <li><span class="alert">Enfileiramento (atraso) e perdas devido a <i>overflow</i> do <i>buffer</i> da porta de saída!</span></li>
+	    </ul></li>
+	    <li><span class="alert">Bloqueio de cabeça de linha (<i>Head-of-line Blocking</i>, ou HOL):</span> datagrama da frente da fila não permite que outros enfileirados sejam comutados.</li>
+	  </ul>
+		<br>
+		<center>
+		  <img src="imagens/HOL.svg" style="width: 70%;"/>
+		</center>
+
+	</div>
+	</section>
+	<section class="secao">
+	<div class="slideContent">
+	  Roteadores: Políticas de Enfileiramento
+	</div>
+	</section>
+
+	<section>
+	<h1>Políticas de Enfileiramento: Escalonamento e Descarte</h1>
+	<div class="slideContent">
+	  <ul>
+			<li>Também chamadas de <span class="alert">disciplinas</span>.</li>
+	    <li>Duas decisões importantes:
+	    <ul>
+	      <li><b>Escalonamento:</b> em que ordem transmitir os pacotes.
+	      <ul>
+	        <li><i>e.g.</i>, há pacotes mais importantes que outros?</li>
+	        <li><i>e.g.</i>, um pacote deve pode &ldquo;passar a frente&rdquo; dos demais?</li>
+	        <li>Prioridades?</li>
+	      </ul></li>
+	      <li><b>Descarte:</b> quem (e quando) descartar.
+	      <ul>
+	        <li>Descartar o último pacote?</li>
+	        <li>Descartar o primeiro?</li>
+	        <li>Descartar aleatoriamente?</li>
+	        <li>Descartar apenas quando fila está <b>completamente cheia</b>?</li>
+	      </ul></li>
+	    </ul></li>
+	  </ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Políticas de Enfileiramento: Por Quê?</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li><b>Solução óbvia:</b> respeitar ordem de chegada.
+	    <ul>
+	      <li>Transmitir pacotes na ordem em que são recebidos.</li>
+	      <li>Descartar novos pacotes quando não há espaço em <i>buffer</i>.</li>
+	    </ul></li>
+	    <li><b>Nem sempre é o ideal:</b>
+	    <ul>
+	      <li>Podemos querer <span class="alert">dar importância maior</span> a certos pacotes/fluxos.
+	      <ul>
+	        <li><i>e.g.</i>, datagrama de um <i>download</i> pode esperar, de uma chamada VoIP não.</li>
+	      </ul></li>
+	      <li><span class="alert">Controle de congestionamento do TCP pode ser afetado.</span>
+	      <ul>
+	        <li>Infere congestionamento por perdas.</li>
+	        <li>É possível <span class="alert">avisar mais rápido e a todos os fluxos</span>.</li>
+	      </ul></li>
+	    </ul></li>
+	  </ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Políticas de Escalonamento: FIFO</h1>
+	<div class="slideContent">
+		<ul>
+		  <li><b><i>First-In, First-Out</i></b>.
+		  <ul>
+		    <li>Também chamada de FCFS (<i>First-Come, First-Served</i>).</li>
+		  </ul></li>
+		  <li>&ldquo;Solução óbvia&rdquo;: pacotes servidos na ordem em que chegam.</li>
+		  <li>Não há prioridades.
+		  <ul>
+		    <li>Nenhum pacote &ldquo;fura fila&rdquo;.</li>
+		  </ul></li>
+			<li>Simples, popular.</li>
+		</ul>
+		<br>
+		<div class="column" style="width: 50%;">
+			<center>
+				<br>
+				<br>
+			  <img src="imagens/Fifo.gif" style="width: 70%;"/>
+			</center>
+		</div>
+		<div class="column" style="width: 50%;">
+			<center>
+			  <img src="imagens/FifoTempo.gif" style="width: 70%;"/>
+			</center>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Políticas de Escalonamento: <i>Priority Queuing</i> (I)</h1>
+	<div class="slideContent">
+		<ul>
+		  <li>Divide pacotes em <b>classes</b>.
+		  <ul>
+		    <li>Uma fila separada para cada classe.</li>
+		  </ul></li>
+		  <li>Cada classe possui uma <b>prioridade diferente</b>.</li>
+		  <li>Pacotes de classes prioritárias <b>sempre</b> são transmitidos antes.
+		  <ul>
+		    <li><i>i.e.</i>, fila de uma classe só é atendida se filas de <b>todas as classes mais prioritárias estão vazias</b>.</li>
+		  </ul></li>
+		</ul>
+	  <div class="column" style="width: 50%;">
+			<center>
+			  <img src="imagens/Prio.gif" style="width: 70%;"/>
+			</center>
+	  </div>
+	  <div class="column" style="width: 50%;">
+			<center>
+			  <img src="imagens/Prio2.gif" style="width: 70%;"/>
+			</center>
+	  </div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Políticas de Escalonamento: <i>Priority Queuing</i> (II)</h1>
+		<br>
+		<br>
+		<br>
+		<br>
+	  <ul>
+	    <li>Classe do pacote é definida de acordo com sua importância.
+	    <ul>
+	      <li>Termo relativo, definido pelo administrador do roteador.</li>
+	    </ul></li>
+	    <li><b>Exemplo:</b>
+	    <ul>
+	      <li>Pacotes VoIP ficam na classe de mais alta prioridade.</li>
+	      <li>Demais pacotes ficam na classe de prioridade mais baixa.</li>
+	    </ul></li>
+	    <li><b>Problemas?</b></li>
+	  </ul>
+	</section>
+
+	<section>
+	<h1>Políticas de Escalonamento: <i>Priority Queuing</i> (III)</h1>
+		<br>
+		<br>
+		<br>
+		<br>
+	  <ul>
+	    <li>Classe do pacote é definida de acordo com sua importância.
+	    <ul>
+	      <li>Termo relativo, definido pelo administrador do roteador.</li>
+	    </ul></li>
+	    <li><b>Exemplo:</b>
+	    <ul>
+	      <li>Pacotes VoIP ficam na classe de mais alta prioridade.</li>
+	      <li>Demais pacotes ficam na classe de prioridade mais baixa.</li>
+	    </ul></li>
+	    <li><b>Problemas?</b>
+	    <ul>
+	      <li>Pode causar <span class="alert">esfomeação</span> (<i>starvation</i>).</li>
+	    </ul></li>
+	  </ul>
+	</section>
+
+	<section>
+	<h1>Políticas de Escalonamento: <i>Round-Robin</i></h1>
+	<div class="slideContent">
+		<ul>
+		  <li>Assim como a <i>Priority Queuing</i>, pacotes são divididos em classes.</li>
+		  <li><b>Mas objetivo é diferente:</b>
+		  <ul>
+		    <li>Garantir uma divisão <span class="alert">justa</span> do uso dos recursos.</li>
+		    <li>Todas as classes recebem <span class="alert">oportunidades iguais</span>.</li>
+		  </ul></li>
+		  <li>Filas das classes são servidas através de um <i>round-robim</i>, um pacote por vez.</li>
+		</ul>
+	  <div class="column" style="width: 50%;">
+			<center>
+			  <img src="imagens/Prio.gif" style="width: 70%;"/>
+			</center>
+	  </div>
+	  <div class="column" style="width: 50%;">
+			<center>
+			  <img src="imagens/round_robin.gif" style="width: 70%;"/>
+			</center>
+	  </div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Políticas de Escalonamento: <i>Round-Robin</i> e Prioridades?</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li><i>Round-Robin</i> não incorre em esfomeação.</li>
+			<li><b>Mas também não atribui prioridades diferentes!</b></li>
+			<li>É possível <span class="alert">combinar</span> as duas abordagens?
+			<ul>
+			  <li><i>i.e.</i>, atribuir prioridades maiores a certas classes, <span class="alert">mas garantindo que todas as classes receberão</span> um certo grau de oportunidade?</li>
+			</ul></li>
+	    <li><b>Sim!</b>
+	    <ul>
+	      <li>Alcançado pela política <i>Weighted Fair Queueing</i>.</li>
+	      <li>Mais detalhes em Redes II.</li>
+	    </ul></li>
+	  </ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Políticas de Descarte: <i>Drop-tail</i> (I)</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>Está para o descarte como a FIFO está para o escalonamento.
+	    <ul>
+	      <li>Ideia simples, imediata.</li>
+	    </ul></li>
+	    <li>Funcionamento:
+	    <ul>
+	      <li>Quando fila está cheia e novo pacote chega, <span class="alert">novo pacote sempre é descartado.</span></li>
+	    </ul></li>
+	  </ul>
+		<br>
+		<center>
+		  <img src="imagens/DropTail.svg" style="width: 55%;"/>
+		</center>
+		<ul>
+		  <li>Política amplamente implementada e adotada.
+		  <ul>
+		    <li>Mas não necessariamente a melhor em todos os casos.</li>
+		  </ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Políticas de Descarte: <i>Drop-tail</i> (II)</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>Potencial problema: sincronização de fluxos.
+	    <ul>
+	      <li>Suponha dois <i>hosts</i> compartilhando um único enlace de saída de um roteador.</li>
+	      <li>Assuma que ambos geram <span class="alert">tráfego em rajada</span>.
+	      <ul>
+	        <li><i>i.e.</i>, quando <i>host</i> transmite, envia <b>vários pacotes em sequência.</b></li>
+	        <li>Em seguida, passa algum sem geração de tráfego.</li>
+	      </ul></li>
+	      <li>Dependendo da ordem dos envios, um dos <i>hosts</i> pode ser prejudicado.
+	      <ul>
+	        <li><i>i.e.</i>, seus pacotes comumente encontram a fila cheia e são descartados.</li>
+	      </ul></li>
+	    </ul></li>
+	  </ul>
+		<br>
+		<center>
+		  <img src="imagens/DropTailSinc.svg" style="width: 70%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Políticas de Descarte: <i>Drop-head</i> (I)</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>&ldquo;Contrário&rdquo; da <i>drop-tail</i>.</li>
+	    <li>Se novo pacote chega e fila está cheia, <span class="alert">primeiro pacote da fila é sempre descartado</span>.
+	    <ul>
+	      <li><i>i.e.</i>, o pacote a mais tempo na fila.</li>
+	    </ul></li>
+	  </ul>
+		<center>
+		  <img src="imagens/DropHead.svg" style="width: 55%;"/>
+		</center>
+		<ul>
+		  <li><span class="alert">Pergunta:</span> resolve o problema da injustiça na <i>Drop-tail</i>?</li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Políticas de Descarte: <i>Drop-head</i> (II)</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>Qual é a vantagem de se descartar o primeiro pacote da fila?</li>
+	    <li>Não é injusto descartar o pacote que espera há mais tempo?</li>
+	    <li>Talvez, mas se este pacote for um segmento TCP, há uma grande vantagem:
+	    <ul>
+	      <li>TCP <b>precisa ser avisado do congestionamento o mais rápido possível</b>.</li>
+	      <li>Descartar primeiro pacote provavelmente gerará mais rapidamente:
+	      <ul>
+	        <li>Estouro do temporizador do TCP.</li>
+	        <li>Ou ACKs duplicados.</li>
+	      </ul></li>
+				<li><b>Resultado:</b> TCP reage mais rapidamente reduzindo janela.</li>
+	    </ul></li>
+	  </ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Políticas de Descarte: RED (I)</h1>
+	<div class="slideContent">
+		<ul>
+		  <li><b><i>Random Early Detection</i></b>.</li>
+		  <li>Começa (possivelmente) a descartar pacotes <span class="alert">antes que a fila esteja completamente cheia</span>.</li>
+		  <li>Funcionamento (Simplificado):
+		  <ul>
+		    <li><b><tt>Mínimo</tt></b>: menor ocupação da fila para a qual pacotes podem ser descartados.</li>
+		    <li><b><tt>Máximo</tt></b>: tamanho máximo da fila.</li>
+				<li>Quando novo pacote chega:
+				<ul>
+			    <li>Se fila está menor que <tt>Mínimo</tt>, nunca descarte.</li>
+			    <li>Se fila está igual a <tt>Máximo</tt>, sempre descarte.</li>
+					<li>Caso contrário, <span class="alert">descarte último pacote com probabilidade <span class="math inline">\(p\)</span> proporcional ao tamanho atual da fila.</span></li>
+				</ul></li>
+		  </ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Políticas de Descarte: RED (II)</h1>
+	<div class="slideContent">
+		<ul>
+		  <li>Esquema simplificado de funcionamento do RED:</li>
+		</ul>
+		<center>
+		  <img src="imagens/REDAlgoritmo2.svg" style="width: 85%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Políticas de Descarte: RED (III)</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>Mar <b>por que descartar</b> pacotes se o <i>buffer</i> ainda não está totalmente cheio?</li>
+	    <li>Lembre-se:
+	    <ul>
+	      <li>Congestionamento se manifesta como um <b>aumento no nível de enfileiramento</b>.</li>
+	      <li><i>Overflow</i> é apenas uma <b>consequência</b> após um <b>período estendido de congestionamento</b>.</li>
+				<li>TCP identifica congestionamento por perdas.</li>
+	    </ul></li>
+	    <li>Ao descartar pacotes quando <i>buffer</i> está parcialmente cheio, <span class="alert">sinalizamos congestionamento antecipadamente</span>.</li>
+	    <li><b>Efeito colateral:</b> evita problema da sincronização.
+	    <ul>
+	      <li>Descartes tendem a ser mais bem distribuídos entre fluxos.</li>
+	    </ul></li>
+	  </ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Resumo da Aula...</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+		  <ul>
+		    <li><b>Roteadores: arquitetura</b>.
+		    <ul>
+		      <li>Plano de controle: protocolos de roteamento.</li>
+		      <li>Plano de encaminhamento: portas, malha de comutação.</li>
+		    </ul></li>
+		    <li><b>Portas de entrada:</b>
+		    <ul>
+		      <li>Terminação do enlace físico.</li>
+		      <li>Camada de enlace.</li>
+		      <li>Decisões de comutação, <span class="alert">fila</span>.</li>
+					<li><i>Head-of-line Blocking</i>.</li>
+		    </ul></li>
+		    <li><b>Malha de comutação:</b>
+		    <ul>
+		      <li>Transporta pacotes de entradas para saída.</li>
+		      <li><span class="alert">Memória, barramento, rede de interconexão</span>.</li>
+					<li>Taxa de comutação.</li>
+		    </ul></li>
+		    <li><b>Portas de saída:</b>
+		    <ul>
+		      <li><span class="alert">Fila, atraso, perdas</span>.</li>
+		    </ul></li>
+		  </ul>
+		</div>
+		<div class="column" style="width: 50%;">
+		  <ul>
+		    <li><b><i>Buffers</i>: tamanho.</b>
+		    <ul>
+		      <li>Objetivo: absorver variações temporárias.</li>
+		      <li><i>Buffer</i> excessivo &rarr; atrasos altos, mascara congestionamento.</li>
+		    </ul></li>
+		    <li><b>Políticas de enfileiramento:</b>
+		    <ul>
+		      <li>Descarte e escalonamento.</li>
+		      <li>Impacto em QoS, no TCP.</li>
+		    </ul></li>
+		    <li><b>Políticas de Escalonamento:</b>
+		    <ul>
+		      <li>FIFO, <i>Priority Scheduling</i>, <i>Round-Robin</i>.</li>
+		      <li>Esfomeação <i>vs.</i> Justiça <i>vs.</i> Simplicidade.</li>
+		    </ul></li>
+		    <li><b>Políticas de Descarte:</b>
+		    <ul>
+		      <li><i>Drop-tail, Drop-head</i>, RED.</li>
+		      <li>Sincronização.</li>
+		      <li>Detecção adiantada de congestionamento.</li>
+		    </ul></li>
+		  </ul>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Próxima Aula...</h1>
+	<div class="slideContent">
+		<ul>
+		  <li>Discutiremos o principal protocolo da Internet: o IP.
+		  <ul>
+		    <li>Convenções.</li>
+		    <li>Formato do datagrama.</li>
+		    <li>Fragmentação.</li>
+				<li>Endereçamento.</li>
+		    <li>Sub-redes.</li>
+		  </ul></li>
+		  <li>Também discutiremos outro protocolo importante: o DHCP.</li>
+			<li><b>Aula muito importante!</b></li>
+		</ul>
+	</div>
+	</section>
+
+	<!-- {{{{ dzslides core
+	#
+	#
+	#     __  __  __       .  __   ___  __
+	#    |  \  / /__` |    | |  \ |__  /__`
+	#    |__/ /_ .__/ |___ | |__/ |___ .__/ core :€
+	#
+	#
+	# The following block of code is not supposed to be edited.
+	# But if you want to change the behavior of these slides,
+	# feel free to hack it!
+	#
+	-->
+
+    <!-- More CSS -->
+	<link href='../template/css/slides.css' id="slides" rel='stylesheet' type='text/css'>
+	<link href='../template/css/presentationSpecific2.css' id="presentationSpecific2" rel='stylesheet' type='text/css'>
+
+    <!-- More Javascript -->
+	<script type="text/javascript" src="../template/js/dz.js"></script>
+
+	<!-- More CSS -->
+	<link href='../template/css/notesSpecific.css' id="notesSpecific" rel='stylesheet' type='text/css'>
+	<link href='../template/css/printSpecific.css' id="printSpecific" rel='stylesheet' type='text/css'>
+</body>
+</html>

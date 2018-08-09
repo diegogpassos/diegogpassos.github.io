@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <!-- Meta info -->
+	<meta charset="utf-8">
+	<meta name="shortauthor" content="Diego Passos"/>
+	<meta name="shorttitle" content="Apresentação do Curso"/>
+	<meta name="shortevent" content="Redes de Computadores II"/>
+	<title>Redes de Computadores II: Apresentação do Curso</title>
+
+    <!-- Math support -->
+	<script type="text/x-mathjax-config">
+		MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+			MathJax.InputJax.TeX.Definitions.number = /^(?:[0-9]+(?:\.[0-9]{3})*(?:\{,\}[0-9]*)*|\{,\}[0-9]+)/
+		});
+	</script>
+	<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+	<!--<script src="../../../../MathJax-2.6-latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>-->
+
+    <!-- Fonts -->
+	<link href='https://fonts.googleapis.com/css?family=Lora:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
+	<!--<link href='../../../../Fonts/Lora/lora.css' rel='stylesheet' type='text/css'>-->
+
+    <!-- CSS -->
+	<link href='../template/css/template.css' id="template" rel='stylesheet' type='text/css'>
+	<link href='../template/css/presentationSpecific.css' id="presentationSpecific" rel='stylesheet' type='text/css'>
+
+    <!-- Javascript -->
+	<script type="text/javascript" src="../template/js/audio.js"></script>
+
+</head>
+
+<body>
+    <!-- Audio handlers -->
+	<!--<audio src="audio/La.wav" id="La.wav" preload="auto"></audio>-->
+
+    <!-- Title Slide -->
+	<section>
+
+        <div class="slideContent">
+            <h1 class="title">Aula 1 - Apresentação do Curso</h1>
+            <h2 class="author">Diego Passos</h2>
+            <h4 class="institution">Universidade Federal Fluminense</h4>
+            <h3 class="date">Redes de Computadores II</h3>
+        </div>
+
+	</section>
+
+    <!-- Content slides -->
+
+     <section class="secao">
+     <div class="slideContent">
+     	Estrutura da Disciplina
+     </div>
+     </section>
+
+	<section>
+	<h1>Informações Gerais</h1>
+	<div class="slideContent">
+			<center>
+				<div class="block" style="width:1100px;">
+					<div class="blockTitle" style="width: 100%;">
+						<p>Salas e Horários</p>
+					</div>
+					<div class="blockBody">
+						<ul>
+							<li>Quartas, 20:00 às 22:00, sala 313.</li>
+							<li>Sextas, 20:00 às 22:00, sala 313.</li>
+						</ul>
+					</div>
+				</div>
+			</center>
+			<br>
+			<center>
+				<div class="block" style="width:1100px;">
+					<div class="blockTitle" style="width: 100%;">
+						<p>Contato</p>
+					</div>
+					<div class="blockBody">
+						<ul>
+							<li><tt>dpassos@ic.uff.br</tt></li>
+							<li><tt><a href="http://www.ic.uff.br/~dpassos/">http://www.ic.uff.br/~dpassos/</a></tt>
+							<li><tt><a href="http://www.midiacom.uff.br/~diego/">http://www.midiacom.uff.br/~diego/</a></tt>
+							<li><tt><a href="https://sites.google.com/site/diegogpassos/disciplinas/redesiisi_2018_1">https://sites.google.com/site/diegogpassos/disciplinas/ redesiisi_2018_1</a></tt>
+							<ul>
+								<li>Calendário.</li>
+								<li>Material didático.</li>
+								<li>Informações.</li>
+								<li>Avisos.</li>
+							</ul></li>
+						</ul>
+					</div>
+				</div>
+			</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Objetivos da Disciplina</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Concluir o estudo das camadas da pilha TCP/IP.
+			<ul>
+				<li>Em Redes I, foram vistas as camadas de aplicação, transporte e rede.</li>
+				<li>Em Redes II, será estudada a camada de enlace.
+				<ul>
+					<li>E alguns conceitos da camada física.</li>
+				</ul></li>
+			</ul></li>
+			<li>Além disso, veremos quatro outros tópicos:
+			<ul>
+				<li>Redes sem fio.</li>
+				<li>Mobilidade.</li>
+				<li>Multimídia.</li>
+				<li>Gerência de redes.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Conteúdo Programático (E Provas)</h1>
+	<div class="slideContent">
+		<table class="align">
+			<tr>
+				<td style="text-align: center; width: 33%;"><b>P<sub>1</sub></b></td>
+				<td style="text-align: center; width: 33%;"><b>P<sub>2</sub></b></td>
+				<td style="text-align: center; width: 33%;"><b>P<sub>3</sub></b></td>
+			</tr>
+			<tr>
+				<td style="border: 2px solid #000;">
+					<ul>
+						<li>Camada de enlace.
+						<ul>
+							<li>Correção de erros.</li>
+							<li>Endereçamento, ARP.</li>
+							<li>Ethernet.</li>
+							<li>Switches.</li>
+							<li>VLANs.</li>
+							<li>MPLS.</li>
+						</ul></li>
+				</td>
+				<td style="border: 2px solid #000;">
+					<ul>
+						<li>Redes Sem Fio.
+						<ul>
+							<li>Enlaces sem fio.</li>
+							<li>IEEE 802.11.</li>
+							<li>Celular.</li>
+						</ul></li>
+						<li>Mobilidade.
+						<ul>
+							<li>IP Móvel.</li>
+							<li>Mobilidade Celular.</li>
+						</ul></li>
+					</ul>
+					<!--
+						<li>Segurança.
+						<ul>
+							<li>Requisitos.</li>
+							<li>Criptografia.</li>
+							<li>Autenticação.</li>
+							<li>Integridade.</li>
+							<li>Certificados.</li>
+							<li>E-mail seguro.</li>
+							<li>SSL.</li>
+							<li>VPNs.</li>
+							<li>IPSec.</li>
+							<li>WLANs.</li>
+							<li>Segurança Operacional.</li>
+						</ul></li>
+					-->
+				</ul>
+				</td>
+				<td style="border: 2px solid #000;">
+
+				<ul>
+					<li>Multimídia.
+					<ul>
+						<li>Aplicações.</li>
+						<li>CDNs.</li>
+						<li>VoIP.</li>
+						<li>RTP, RTCP, SIP.</li>
+						<li>QoS.</li>
+						<li>DiffServ.</li>
+					</ul></li>
+					<li>Gerência.
+					<ul>
+						<li>Conceitos.</li>
+						<li>SNMP, MIBs.</li>
+						<li>ASN.1.</li>
+						<li>Exemplos Práticos.</li>
+					</ul></li>
+				</ul>
+				</td>
+			</tr>
+		</table>
+	</div>
+	</section>
+
+	<section>
+	<h1>Bibliografia e Material de Apoio</h1>
+	<div class="slideContent">
+		<center>
+			<div class="block" style="width:1100px;">
+				<div class="blockTitle" style="width: 100%;">
+					<p>Bibliografia Básica</p>
+				</div>
+				<div class="blockBody">
+					<ul>
+						<li>Kurose &amp; Ross, <i>Redes de Computadores e a Internet</i>, Editora Addison-Wesley, 5a. edição, 2005 (Capítulos 5-9, exceto 8).</li>
+					</ul>
+				</div>
+			</div>
+			<br>
+			<center>
+				<div class="block" style="width:1100px;">
+					<div class="blockTitle" style="width: 100%;">
+						<p>Bibliografia Adicional</p>
+					</div>
+					<div class="blockBody">
+						<ul>
+							<li>Tanenbaum, <i>Computer Networks</i>, Editora Pearson, 5a. edição, 2010 (Capítulos 2-5, 7).</li>
+							<li>S. Keshav, <i>An Engineering Approach to Computer Networking</i>, Editora Addison-Wesley Professional, 1a. edição, 1997 (Capítulos 1-16).</li>
+						</ul>
+					</div>
+				</div>
+			</center>
+		</center>
+		<br>
+		<center>
+			<div class="block" style="width:1100px;">
+				<div class="blockTitle" style="width: 100%;">
+					<p>Outras Referências</p>
+				</div>
+				<div class="blockBody">
+					<ul>
+						<li>Slides, listas de exercícios, links na página do curso.</li>
+					</ul>
+				</div>
+			</div>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Alguns Detalhes Sobre os Slides</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Fortemente baseados nos slides do livro-texto.
+			<ul>
+				<li>Originais disponíveis em: <tt><a href="http://www-net.cs.umass.edu/kurose-ross-ppt-6e/">http://www-net.cs.umass.edu/kurose-ross-ppt-6e/</a></tt></li>
+				<li>Alguns slides removidos, outros adicionados, outros modificados.</li>
+			</ul></li>
+			<li>Disponibilizados na página do curso em algumas versões diferentes:
+			<ul>
+				<li>HTML5/CSS3/Javascript: versão usada nas aulas, contém alguns elementos multimídia.</li>
+				<li>PDF: versão disponibilizada por questão de compatibilidade, sem recursos multimídia.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Critério de Avaliação</h1>
+	<div class="slideContent">
+		<center>
+			<div class="block" style="width:1100px;">
+				<div class="blockTitle" style="width: 100%;">
+					<p>Provas</p>
+				</div>
+				<div class="blockBody" style="padding-top: 2px; padding-bottom: 2px;">
+					<ul>
+					<li>Reposição: <b>Apenas</b> para alunos que <b>faltaram a uma das provas</b>.
+					<ul>
+						<li><b>Todo o conteúdo</b>.</li>
+					</ul></li>
+					</ul>
+					<center>
+						   <span class="math">\(M_p = \frac{P_1 + P_2 + P_3}{3}\)</span>
+					</center>
+				</div>
+			</div>
+		</center>
+		<br>
+		<center>
+			<div class="block" style="width:1100px;">
+				<div class="blockTitle" style="width: 100%;">
+					<p>Trabalho (grupos de 2 a 5 alunos)</p>
+				</div>
+				<div class="blockBody" style="padding-top: 2px; padding-bottom: 2px;">
+					<ul>
+					  <li>Tema: métodos de detecção/correção de erros.</li>
+						<li>Entrega de relatório.</li>
+					  <li>Apresentação do trabalho durante a aula.</li>
+					</ul>
+				</div>
+			</div>
+		</center>
+		<br>
+		<center>
+			<div class="block" style="width:1100px;">
+				<div class="blockTitle" style="width: 100%;">
+					<p>Média Final</p>
+				</div>
+				<div class="blockBody" style="padding-top: 2px; padding-bottom: 2px;">
+					<center>
+						   <span class="math">\(M_f = 0{,}8\cdot M_p + 0{,}2\cdot M_t\)</span>
+					</center>
+				</div>
+			</div>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Calendário (Sujeito a Alterações)</h1>
+	<div class="slideContent">
+		<center>
+			<img src="imagens/calendario.svg" style="width: 90%;"/>
+		</center>
+
+	</div>
+	</section>
+
+	<section>
+	<h1>Calendário: Datas Importantes</h1>
+	<div class="slideContent">
+		<center>
+			<div class="block" style="width:1100px;">
+				<div class="blockTitle" style="width: 100%;">
+					<p>Provas</p>
+				</div>
+				<div class="blockBody">
+					<ul>
+						<li>P<sub>1</sub>: 18/04/2018.</li>
+						<li>P<sub>2</sub>: 09/05/2018.</li>
+						<li>P<sub>3</sub>: 15/06/2018.</li>
+						<li>VR: 22/06/2018.</li>
+						<li>VS: 04/07/2018.</li>
+					</ul>
+				</div>
+			</div>
+		</center>
+		<br>
+			<center>
+				<div class="block" style="width:1100px;">
+					<div class="blockTitle" style="width: 100%;">
+						<p>Entrega do Trabalho</p>
+					</div>
+					<div class="blockBody">
+						<ul>
+							<li>Entrega do relatório: 05/06/2018.</li>
+							<li>Apresentações: 06/06/2018 e 08/06/2018.</li>
+						</ul>
+					</div>
+				</div>
+			</center>
+			<br>
+			<ul>
+				<li>Problemas?</li>
+			</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Informações Sobre os Trabalhos (I)</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Documento de especificação disponível na página.
+			<ul>
+				<li><b>Leiam as especificações o quanto antes</b>.</li>
+				<li>Tirem quaisquer dúvidas por e-mail ou pessoalmente.</li>
+			</ul></li>
+			<li>Relatório:
+				<ul>
+					<li>Formato livre.</li>
+					<li>Deve ser objetivo (quatro páginas são suficientes).</li>
+					<li>Deve contemplar conteúdo pedido no documento de especificação.</li>
+					<li>Deve explicar como o grupo chegou a estas respostas.</li>
+				</ul></li>
+				<li>Apresentação:
+				<ul>
+				  <li>Mesmo conteúdo do relatório.</li>
+				  <li>Oportunidade para esclarecimentos.</li>
+				  <li>Perguntas.</li>
+				</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Informações Sobre os Trabalhos (II)</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Critérios de avaliação:
+			<ul>
+				<li>Explicados nos respectivos documentos de especificação.</li>
+				<li>São (espera-se) pouco subjetivos.</li>
+				<li>Podem ser discutidos <b>antes</b> da entrega dos trabalhos.
+				<ul>
+					<li>Logo, <b>leiam os critérios o quanto antes!</b></li>
+				</ul></li>
+			</ul></li>
+			<li><b>Plágio não será tolerado!</b>
+			<ul>
+				<li>Trabalhos plagiados (de colegas ou de qualquer outra fonte) serão <b>desconsiderados</b>.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Informações Sobre os Trabalhos (III)</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Trabalhos podem ser feitos em grupos de 2 a 5 integrantes.
+			<ul>
+				<li>Integrantes devem estar claramente discriminados no momento da entrega.
+				<ul>
+					<li><b>Não serão aceitas inserções, remoções ou substituições de membros após a entrega</b>.</li>
+				</ul></li>
+			</ul></li>
+			<li>Entregas deverão ser feitas por e-mail.
+			<ul>
+				<li>Maiores detalhes no documento de especificação.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Outros Pontos Importantes</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Presença e reprovação por faltas.</li>
+			<li>Exercícios ao final das aulas.</li>
+			<li>Demonstrações práticas e experimentos.</li>
+			<li>Estilo das provas.</li>
+		</ul>
+	</div>
+	</section>
+
+	<section class="secao">
+	<div class="slideContent">
+		Visão Geral da Ementa e Motivação
+	</div>
+	</section>
+
+	<section>
+	<h1>Pilha TCP/IP</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 60%;">
+		<ul>
+			<li>Objetivo principal da disciplina de Redes I.
+			<ul>
+				<li>Estuda as 3 camadas do topo da pilha.</li>
+			</ul></li>
+			<li>Em Redes II, veremos mais uma camada em detalhes.
+			<ul>
+				<li>Camada de enlace.
+				<ul>
+					<li>Serviços providos.</li>
+					<li>Técnicas utilizadas.</li>
+					<li>Protocolos envolvidos.</li>
+					<li>Equipamentos.</li>
+					<li>...</li>
+				</ul></li>
+			</ul></li>
+			<li>A camada física, por outro lado, não é nosso objetivo principal.
+			<ul>
+				<li>Embora alguns conceitos sejam importantes para a disciplina.</li>
+			</ul></li>
+		</ul>
+		</div>
+		<div class="column" style="width: 40%;">
+			<br>
+			<br>
+			<br>
+			<center>
+				<img src="imagens/pilha.svg" style="width: 85%;"/>
+			</center>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Camada de Enlace: Por Que Estudar?</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Grande diversidade de tecnologias, padrões, protocolos.
+			<ul>
+				<li>Enlaces cabeados, sem fio, ópticos, ...</li>
+				<li>Enlaces dedicados, compartilhados.</li>
+				<li>Wi-Fi, Ethernet, DSL, ...</li>
+			</ul></li>
+			<li>Há uma série de perguntas a se responder:
+			<ul>
+				   <li>Quais são as vantagens e desvantagens?</li>
+				   <li>Qual é a opção mais adequada para determinado cenário?</li>
+			</ul></li>
+			<li>Características da camada de enlace podem afetar desempenho da rede.
+			<ul>
+				<li>Atrasos de acesso ao meio.</li>
+				<li>Colisões.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Camada Física: Por Que <i>Não</i> Estudar?</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Baseada em resultados de áreas específicas da física e matemática.
+			<ul>
+				<li>Algumas das quais não são comumente estudadas em CC e SI.</li>
+			</ul></li>
+			<li>Não é possível estudar a camada física em detalhes sem uma base sólida nestas áreas.
+			<ul>
+				<li>Algo fora do escopo destes cursos de graduação.</li>
+			</ul></li>
+			<li>Mas...
+			<ul>
+				<li>É possível ter uma &ldquo;ideia&rdquo; de como/porque certos fenômenos ocorrem.</li>
+				<li>Importante para entender por que certos serviços são providos por camadas superiores.
+				<ul>
+					<li><i>e.g.</i>, detecção/correção de bits errados.</li>
+				</ul></li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Redes Sem Fio (I)</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			   <ul>
+				   <li>Cada vez mais, substituímos cabos por tecnologias sem fio.
+				   <ul>
+					   <li>Não só em redes, mas até para alimentação de equipamentos.</li>
+				   </ul></li>
+				   <li>Comunicação sem fio já é lugar comum.
+				   <ul>
+				   	<li>Usada diariamente por grande parte da população do mundo.</li>
+					<li>Em várias formas, também: celulares, Wi-Fi, Bluetooth, ...</li>
+				   </ul></li>
+				   <li>Uma boa formação em redes <b>precisa</b> cobrir este tópico.</li>
+			   </ul>
+		</div>
+		<div class="column" style="width: 50%;">
+			<center>
+				<img src="imagens/WirelessCharging.jpg" style="width: 80%;"/>
+			</center>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Redes Sem Fio (II)</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Mas como as redes sem fio diferem de outras redes estudadas em Redes I e Redes II?</li>
+			<li>Várias características muito particulares:
+			<ul>
+				<li>Alta ocorrência de corrupção nas transmissões.</li>
+				<li>Meio compartilhado com &ldquo;terminais ocultos&rdquo;.
+				<ul>
+					<li>Dois transmissores podem atrapalhar um ao outro sem mesmo perceber!</li>
+				</ul></li>
+				<li>Segurança: sinal transmitido &ldquo;no ar&rdquo;, qualquer um pode recebê-lo.
+				<ul>
+					<li>Não é necessário acesso físico a algum equipamento, infraestrutura.</li>
+				</ul></li>
+				<li>Características dos enlaces mudam rapidamente.
+				<ul>
+					<li>Dispositivos podem se mover, obstáculos podem surgir, ...</li>
+				</ul></li>
+				<li>Topologias arbitrárias e altamente dinâmicas são possíveis.</li>
+			</ul></li>
+			<li>Em resumo: uma série de soluções específicas são necessárias.</li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Mobilidade</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Dispositivos de rede não são mais estáticos.
+			<ul>
+				<li>Celulares, laptops, tablets, todos podem facilmente ser levados de um local para outro.</li>
+				<li>Seja em uma mesma rede, seja através de redes diferentes.</li>
+			</ul></li>
+			<li>Mais que isso: queremos nos mover <b>enquanto utilizamos a rede</b>.
+			<ul>
+				<li><i>e.g.</i>, utilizar um smartphone com um plano de dados 3G como GPS em uma viagem.</li>
+				<li><i>e.g.</i>, andar por um shopping com um smartphone se conectando em vários pontos de acesso e recebendo notificações, e-mails.</li>
+			</ul></li>
+			<li>Como isso se encaixa no modelo TCP/IP visto em Redes I?
+			<ul>
+				<li>&ldquo;Cada dispositivo na Internet possui um endereço IP&rdquo;.</li>
+				<li>&ldquo;Endereços IP são hierárquicos, pertencem a subredes&rdquo;.</li>
+				<li>&ldquo;O TCP utiliza os endereços IP de origem/destino para demultiplexar conexões&rdquo;.</li>
+			</ul></li>
+			<li>Problemas?</li>
+		</ul>
+	</div>
+	</section>
+
+  <!--
+	<section>
+	<h1>Segurança</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+		<ul>
+			<li>Tema de especial importância em redes.
+			<ul>
+				<li>E em computação, em geral.</li>
+			</ul></li>
+			<li>Muito em voga nos últimos anos.
+			<ul>
+				<li>Espionagem digital, ataques de negação de serviço, invasões, ...</li>
+			</ul></li>
+			<li>Assunto bastante extenso, poderia preencher toda uma disciplina.
+			<ul>
+				<li>Ou mais até.</li>
+			</ul></li>
+		</ul>
+		</div>
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li>Nesta disciplina, cobriremos apenas o básico.
+				<ul>
+					<li>Princípios e requisitos de segurança em redes.</li>
+					<li>Tipos comuns de ataques.</li>
+					<li>Tipos mais comuns de criptografia.</li>
+					<li>Como utilizar a criptografia para garantir requisitos de segurança.</li>
+					<li>Protocolos e aplicações tradicionais com foco em segurança.</li>
+					<li>Segurança operacional.</li>
+				</ul></li>
+			</ul>
+		</div>
+	</div>
+	</section>
+-->
+	<section>
+	<h1>Multimídia (I)</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Aplicações iniciais da Internet eram &ldquo;simples&rdquo;.
+			<ul>
+				<li>Correio eletrônico.</li>
+				<li>Transferência de arquivos.</li>
+				<li>Web.</li>
+				<li>Mensagens de texto.</li>
+				<li>...</li>
+			</ul></li>
+			<li>Uma Internet &ldquo;mais rápida&rdquo; sempre foi desejável, mas aplicações funcionavam de uma maneira ou de outra.</li>
+			<li>Hoje, somos mais exigentes, queremos conteúdo multimídia.
+			<ul>
+				<li><i>Streaming</i> de áudio/vídeo gravado: youtube, Netflix, Hulu, ...</li>
+				<li>Conversas de voz/vídeo (ao-vivo): Skype, WhatsApp, ...</li>
+			</ul></li>
+			<li>Aplicações agora possuem requisitos fortes de desempenho.
+			<ul>
+				<li>Vazão mínima, atraso máximo, perda de pacotes máxima, <i>jitter</i> máximo, ...</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Multimídia (II)</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Mas a Internet é uma rede do tipo &ldquo;melhor esforço&rdquo;!</li>
+			<li>Como prover este tipo de garantia de desempenho?
+			<ul>
+				<li>Ou qualquer outra garantia, na verdade?</li>
+			</ul></li>
+			<li>Resposta:
+			<ul>
+				<li>Através de protocolos específicos, soluções e técnicas não triviais.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Gerência de Rede (I)</h1>
+		<br>
+		<br>
+		<ul>
+			<li>Uma rede (cabeada) entre dois computadores para de funcionar. Como resolver o problema?</li>
+			<li>Algumas ideias:
+			<ul>
+				<li>Substituir o cabo de rede.</li>
+				<li>Substituir as interfaces de rede de cada computador.</li>
+				<li>Verificar a configuração de cada computador.</li>
+				<li>Verificar se não há <i>bugs</i> nos componentes de <i>software</i>.
+				<ul>
+					<li>Aplicações, implementação de protocolos no SO, ...</li>
+				</ul></li>
+			</ul></li>
+		</ul>
+	</section>
+
+	<section>
+	<h1>Gerência de Rede (II)</h1>
+		<br>
+		<br>
+		<ul>
+			<li>Uma rede (cabeada) entre dois computadores para de funcionar. Como resolver o problema?</li>
+			<li>Algumas ideias:
+			<ul>
+				<li>Substituir o cabo de rede.</li>
+				<li>Substituir as interfaces de rede de cada computador.</li>
+				<li>Verificar a configuração de cada computador.</li>
+				<li>Verificar se não há <i>bugs</i> nos componentes de <i>software</i>.
+				<ul>
+					<li>Aplicações, implementação de protocolos no SO, ...</li>
+				</ul></li>
+			</ul></li>
+			<li>Agora considere o problema em escala maior: a rede da UFF parou de funcionar.
+			<ul>
+				<li>Como resolver o problema?</li>
+				<li>Antes disso: como diagnosticar o problema?</li>
+				<li>Antes disso: como isolar o dispositivo (host, roteador, <i>switch</i>, ...) que causa o problema?</li>
+				<li>Antes disso: como identificar a &ldquo;região&rdquo; da rede na qual se encontra o dispositivo culpado?</li>
+			</ul></li>
+		</ul>
+	</section>
+
+	<section>
+	<h1>Gerência de Rede (III)</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Com o crescimento de uma rede, tudo se torna (bem) mais complexo.</li>
+			<li>A gerência, portanto, é uma tarefa <b>difícil</b>.</li>
+			<li>Além disso, a gerência é <b>importante</b>.
+			<ul>
+				<li>Problemas acontecem frequentemente em redes de grande porte.</li>
+				<li>Equipamentos dão defeito, configurações erradas são feitas, cabos são conectados no lugar errado, ...</li>
+			</ul></li>
+			<li>Mas a gerência de redes <b>não</b> se resume apenas a resolver problemas.</li>
+			<li>Mais genericamente, é desejável:</li>
+			<ul>
+				<li>Prever/prevenir potenciais problemas.</li>
+				<li>Identificar mudanças nos perfis de uso da rede.</li>
+				<li>Identificar comportamentos anômalos da rede.</li>
+				<li>...</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Gerência de Rede (IV)</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Como alcançar estes objetivos?
+			<ul>
+				<li>Em especial, levando em conta a heterogeneidade da Internet.</li>
+			</ul></li>
+			<li>Através do emprego de protocolos e soluções especializadas, padronizadas.</li>
+			<li>Protocolos, soluções que permitam:</li>
+			<ul>
+				<li>Monitoramento.</li>
+				<li>Configuração.</li>
+				<li>Atuação.</li>
+				<li>...</li>
+			</ul></li>
+			<li>Problema complexo, mercado em expansão.
+			<ul>
+				<li>Gerência de redes movimenta bilhões de dólares por ano e valor deve aumentar.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Próxima Aula...</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Começaremos a disciplina &ldquo;de verdade&rdquo;.</li>
+			<li>Primeiro tópico: camada de enlace.
+			<ul>
+				<li>Introdução.</li>
+				<li>Serviços.</li>
+				<li>Métodos de detecção e correção de erros.</li>
+			</ul></li>
+		</ul>
+		<center>
+			<h1 class="title">Sejam bem-vindos!</h1>
+		</center>
+	</div>
+	</section>
+
+	<!-- {{{{ dzslides core
+	#
+	#
+	#     __  __  __       .  __   ___  __
+	#    |  \  / /__` |    | |  \ |__  /__`
+	#    |__/ /_ .__/ |___ | |__/ |___ .__/ core :€
+	#
+	#
+	# The following block of code is not supposed to be edited.
+	# But if you want to change the behavior of these slides,
+	# feel free to hack it!
+	#
+	-->
+
+    <!-- More CSS -->
+	<link href='../template/css/slides.css' id="slides" rel='stylesheet' type='text/css'>
+	<link href='../template/css/presentationSpecific2.css' id="presentationSpecific2" rel='stylesheet' type='text/css'>
+
+    <!-- More Javascript -->
+	<script type="text/javascript" src="../template/js/dz.js"></script>
+
+	<!-- More CSS -->
+	<link href='../template/css/notesSpecific.css' id="notesSpecific" rel='stylesheet' type='text/css'>
+	<link href='../template/css/printSpecific.css' id="printSpecific" rel='stylesheet' type='text/css'>
+</body>
+</html>

@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <!-- Meta info -->
+		<meta charset="utf-8">
+		<meta name="shortauthor" content="Diego Passos"/>
+		<meta name="shorttitle" content="TCP: Confiabilidade, Controle de Fluxo"/>
+		<meta name="shortevent" content="Redes de Computadores I"/>
+		<title>Redes de Computadores I: Aula 12</title>
+
+		<!-- Math support -->
+		<script type="text/x-mathjax-config">
+		MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+			MathJax.InputJax.TeX.Definitions.number = /^(?:[0-9]+(?:\.[0-9]{3})*(?:\{,\}[0-9]*)*|\{,\}[0-9]+)/
+		});
+		</script>
+		<!--<script src="js/plotly-latest.min.js"></script>-->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+		<script src="../../../../../MathJax-2.6-latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+		<script type="text/javascript" src="../template/js/dz_pre.js"></script>
+
+		<!-- Fonts -->
+		<link href='https://fonts.googleapis.com/css?family=Lora:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
+		<link href='../../../../../Fonts/Lora/lora.css' rel='stylesheet' type='text/css'>
+
+		<!-- CSS -->
+		<link href='../template/css/template.css' id="template" rel='stylesheet' type='text/css'>
+		<link href='../template/css/presentationSpecific.css' id="presentationSpecific" rel='stylesheet' type='text/css'>
+
+
+		<!-- Javascript -->
+		<!--
+		<script type="text/javascript" src="../template/js/audio.js"></script>
+		<script src="js/term.js" charset="utf-8"></script>
+    <script src="js/termcast.js" charset="utf-8"></script>
+		<link rel="stylesheet" href="css/googlecode.css">
+		<script src="js/highlight.pack.js"></script>
+		<script>
+			hljs.initHighlightingOnLoad();
+			hljs.configure({
+				tabReplace: '  '
+			});
+		</script>
+		-->
+</head>
+
+<body>
+    <!-- Audio handlers -->
+	<!--<audio src="audio/La.wav" id="La.wav" preload="auto"></audio>-->
+
+    <!-- Title Slide -->
+	<section>
+
+        <div class="slideContent">
+            <h1 class="title">Aula 12 - TCP: Confiabilidade, Controle de Fluxo, Gerenciamento</h1>
+            <h2 class="author">Diego Passos</h2>
+            <h4 class="institution">Universidade Federal Fluminense</h4>
+            <h3 class="date">Redes de Computadores I</h3>
+        </div>
+		<br>
+		<br>
+			<div style="width: 30%; float: right; padding-right: 2%;">
+			<p style="font-size: 18px; text-align: right;">Material adaptado a partir dos slides originais de J.F Kurose and K.W. Ross.</p>
+		</div>
+	</section>
+
+	<section>
+	<h1>Revisão da Última Aula (I)...</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 55%;">
+		  <ul>
+		    <li><b>Pipeline:</b>
+		    <ul>
+		      <li>Múltiplos segmentos em trânsito.</li>
+		      <li><i>i.e.</i>, transmitidos, mas ainda sem ACK.</li>
+		      <li>Aumenta utilização.
+		      <ul>
+		        <li>Transmissor passa menos tempo ocioso.</li>
+				    <li>Dois exemplos: <span class="alert">Go-Back-N, Repetição Seletiva</span>.</li>
+		      </ul></li>
+		    </ul></li>
+		    <li><b>Go-Back-N:</b>
+		    <ul>
+		      <li>Até N (fixo) segmentos em trânsito.</li>
+		      <li>Uso de janela.</li>
+		      <li><span class="alert">ACKs cumulativos</span>.</li>
+		      <li><span class="alert">Um único temporizador</span>.<ul>
+		        <li>Timeout: retransmite todos os segmentos em trânsito.</li>
+		      </ul></li>
+					<li>Segmentos fora de ordem descartados.</li>
+		    </ul></li>
+		  </ul>
+		</div>
+		<div class="column" style="width: 45%;">
+		  <ul>
+				<li><b>Repetição Seletiva:</b>
+		    <ul>
+		      <li>Até N (fixo) segmentos em trânsito.</li>
+		      <li>Uso de janela.</li>
+		      <li>ACKs individuais.</li>
+		      <li>Um temporizador por segmento.
+		      <ul>
+		        <li><span class="alert">Timeout: retransmite apenas segmento correspondente</span>.</li>
+		      </ul></li>
+					<li>Segmentos fora de ordem armazenados em <i>buffer</i>.</li>
+		    </ul></li>
+				<li><b># de seq. e tamanho da janela:</b>
+		    <ul>
+		      <li><span class="alert">Janela tem que ser no máximo metade da qtd de # de seq</span>.</li>
+		    </ul></li>
+		  </ul>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Revisão da Última Aula... (II)</h1>
+	<div class="slideContent">
+		  <ul>
+				<li><b>TCP: características.</b>
+		    <ul>
+		      <li>Ponto-a-ponto (<i>i.e.</i>, apenas dois participantes).</li>
+					<li><i>Full-duplex</i>.</li>
+		      <li>Pipeline.</li>
+		      <li><i>Handshake</i>: abertura de conexão.</li>
+					<li>Controle de fluxo, congestionamento.</li>
+		    </ul></li>
+				<li><b>TCP: segmento</b>.
+				<ul>
+					<li><span class="alert">Todo segmento de dados é também um ACK</span>.</li>
+				</ul></li>
+				<li><b>TCP: # de seq. e ACKs</b>.
+				<ul>
+					<li><span class="alert"># de seq. conta bytes, não segmentos</span>.</li>
+					<li><span class="alert">ACKs cumulativos</span>.</li>
+					<li><span class="alert">ACK informa próximo byte esperado</span>.</li>
+				</ul></li>
+		  </ul>
+	</div>
+	</section>
+
+	<section class="secao">
+	<div class="slideContent">
+	  <i>Timeout</i> do TCP
+	</div>
+	</section>
+
+	<section>
+	<h1>TCP: RTT, Timeout (I)</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li><span class="alert">Pergunta:</span> como o <i>timeout</i> do temporizador do TCP é configurado?
+				<ul>
+					<li>Precisa ser mais longo que o RTT.
+					<ul>
+						<li>Mas RTT varia.</li>
+					</ul></li>
+					<li><b>Curto demais:</b> <i>timeout</i> prematuro, retransmissões desnecessárias.</li>
+					<li><b>Longo demais:</b> reação lenta às perdas de segmentos.</li>
+				</ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li><span class="alert">Pergunta:</span> como estimar o RTT?
+				<ul>
+					<li><span class="alert"><tt>SampleRTT</tt>:</span> tempo medido desde a transmissão do segmento até recepção do ACK.
+					<ul>
+						<li>Ignora retransmissões.</li>
+					</ul></li>
+					<li><tt>SampleRTT</tt> varia muito, é melhor ter uma estimativa mais &ldquo;suave&rdquo;.
+					<ul>
+						<li>Calcular média sobre várias amostras recentes, não usar apenas a última.</li>
+					</ul></li>
+				</ul></li>
+			</ul>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>TCP: RTT, Timeout (II)</h1>
+	<div class="slideContent">
+		<center>
+			<span class="math inline">\(\text{EstimatedRTT} = (1-\alpha)\times\text{EstimatedRTT} + \alpha\times\text{SampleRTT}\)</span>
+		</center>
+		<ul>
+			<li>Média Movente Exponencialmente Ponderada.</li>
+			<li>Influência das amostras passadas decai exponencialmente.</li>
+			<li>Valor típico de <span class="math inline">\(\alpha\)</span>: 0,125.</li>
+		</ul>
+		<center>
+			<img src="imagens/EstimativaRTT.svg" style="width: 50%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>TCP: RTT, Timeout (III)</h1>
+	<div class="slideContent">
+		<ul>
+			<li><b>Timeout do temporizador:</b> <tt>EstimatedRTT</tt> mais &ldquo;margem de segurança&rdquo;.
+			<ul>
+				<li>Quanto maior o <tt>EstimatedRTT</tt>, maior a margem.</li>
+			</ul></li>
+			<li>Estima-se o <span class="alert">desvio</span> do <tt>SampleRTT</tt> em relação ao <tt>EstimatedRTT</tt>:</li>
+		</ul>
+		<br>
+		<center>
+			<span class="math inline">\(\text{DevRTT} = (1-\beta)\times\text{DevRTT} + \beta\times\|\text{SampleRTT}-\text{EstimatedRTT}\|\)</span>
+		</center>
+		<br>
+		<ul>
+			<li>Tipicamente, <span class="math inline">\(\beta = 0{,}25\)</span>.</li>
+		</ul>
+		<br>
+		<center>
+			<img src="imagens/timeout.svg" style="width: 70%;"/>
+		</center>
+
+	</div>
+	</section>
+
+	<section class="secao">
+	<div class="slideContent">
+	  TCP: Transmissão Confiável de Dados
+	</div>
+	</section>
+
+	<section>
+	<h1>TCP: Transmissão Confiável de Dados</h1>
+	<div class="slideContent">
+	  <div class="column" style="width: 50%;">
+			<ul>
+			  <li>TCP cria serviço de transmissão confiável sobre serviço não confiável do IP.
+			  <ul>
+			    <li>Utiliza pipeline.</li>
+			    <li>ACKs cumulativos.</li>
+			    <li>Único temporizador de retransmissão.</li>
+			  </ul></li>
+			  <li>Retransmissões disparadas por:
+			  <ul>
+			    <li>Eventos de <i>timeout</i>.</li>
+			    <li>ACKs duplicados.</li>
+			  </ul></li>
+			</ul>
+	  </div>
+	  <div class="column" style="width: 50%;">
+			<ul>
+			  <li>Vamos considerar inicialmente um transmissor TCP simplificado.
+			  <ul>
+			    <li>Ignorando ACKs duplicados.</li>
+			    <li>Ignorando controle de fluxo, controle de congestionamento.</li>
+			  </ul></li>
+			</ul>
+	  </div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Eventos do Transmissor TCP</h1>
+	<div class="slideContent">
+	  <div class="column" style="width: 50%;">
+	    <ul>
+	      <li><b>Dados recebidos da aplicação:</b>
+	      <ul>
+	        <li>Cria segmento com # de sequência.</li>
+	        <li># de sequência é <span class="alert">índice da posição do primeiro byte no fluxo de dados da aplicação</span>.</li>
+	        <li>Inicia o temporizador, se ele já não estiver rodando.
+	        <ul>
+	          <li>Pense no temporizador como para o segmento mais antigo com ACK pendente.</li>
+	          <li>Intervalo de expiração: <tt>TimeOutInterval</tt>.</li>
+	        </ul></li>
+	      </ul></li>
+	    </ul>
+	  </div>
+		<div class="column" style="width: 50%;">
+		  <ul>
+		    <li><b>Estouro de temporizador:</b>
+		    <ul>
+		      <li>Retransmita segmento que causou o estouro.</li>
+		      <li>Reinicie o temporizador.</li>
+		    </ul></li>
+		    <li><b>Recepção de ACK:</b>
+		    <ul>
+		      <li>Se ACK reconhece segmentos ainda pendentes:
+		      <ul>
+		        <li>Atualize os números de sequência já reconhecidos.</li>
+		        <li><span class="alert">Reinicie o temporizador se ainda há segmentos não reconhecidos</span>.</li>
+		      </ul></li>
+		    </ul></li>
+		  </ul>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Transmissor TCP (Simplificado)</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/TCPSender.svg" style="width: 70%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>TCP: Cenários de Retransmissão (I)</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/TCPCenarios.svg" style="width: 70%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>TCP: Cenários de Retransmissão (II)</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/TCPCenarios2.svg" style="width: 35%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Geração de ACKs pelo TCP [RFC 1122, RFC 2581]</h1>
+	<div class="slideContent">
+	  <center>
+	    <table>
+				<tr>
+		    	<th>
+	    			Evento no Receptor
+					</td>
+		    	<th>
+						Ação Realizada
+					</td>
+	    	</th>
+			</tr>
+				<tr>
+					<td>
+						Chegada de segmento em ordem com # de seq. esperado. Já foram enviados ACKs para todos os números de sequência menores que o recebido.
+					</td>
+					<td>
+						ACK atrasado. Esperar até 500 ms pelo próximo segmento. Se nenhum novo segmento chegar, enviar o ACK.
+					</td>
+				</tr>
+				<tr>
+					<td>
+						Chegada de segmento em ordem com # de seq. esperado. Segmento anterior teve seu ACK atrasado (envio pendente).
+					</td>
+					<td>
+						Imediatamente enviar ACK cumulativo reconhecendo ambos os segmentos.
+					</td>
+				</tr>
+				<tr>
+					<td>
+						Chegada de segmento fora de ordem, com # de seq. maior que o esperado. Lacuna detectada.
+					</td>
+					<td>
+						Imediatamente enviar um <span class="alert">ACK duplicado</span>, indicando o # de seq. do próximo byte esperado.
+					</td>
+				</tr>
+				<tr>
+					<td>
+						Chegada de segmento que parcialmente ou completamente preenche uma lacuna.
+					</td>
+					<td>
+						Imediatamente enviar um ACK, desde que o segmento comece no início da lacuna.
+					</td>
+				</tr>
+	    </table>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1><i>Fast Retransmit</i></h1>
+	<div class="slideContent">
+	  <div class="column" style="width: 50%;">
+			<ul>
+			  <li>Tempo de expiração do temporizador normalmente é relativamente longo.
+			  <ul>
+			    <li>Atraso longo antes do reenvio do pacote perdido.</li>
+			  </ul></li>
+			  <li>Detecção de segmentos perdidos através de ACKs duplicados.
+			  <ul>
+			    <li>Transmissor geralmente envia vários segmentos em sequência.</li>
+			    <li>Se um segmento é perdido, provavelmente haverá múltiplos ACKs duplicados.</li>
+			  </ul></li>
+			</ul>
+	  </div>
+	  <div class="column" style="width: 50%;">
+			<center>
+			<div class="block" style="width:550px;">
+			    <div class="blockTitle" style="width: 100%;">
+			        <p>TCP Fast Retransmist</p>
+			    </div>
+			    <div class="blockBody">
+			        Se transmissor recebe 3 ACKs repetidos para um mesmo número de sequência (&ldquo;ACK duplicado triplo&rdquo;), reenvie segmento com menor # de seq.
+							<ul>
+							  <li>Provavelmente, segmento foi perdido. Então, não esperamos pelo <i>timeout</i>.</li>
+							</ul>
+			    </div>
+			</div>
+			</center>
+	  </div>
+	</div>
+	</section>
+
+	<section>
+	<h1><i>Fast Retransmit</i>: Exemplo</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/FastRetransmit.svg" style="width: 30%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section class="secao">
+	<div class="slideContent">
+	  TCP: Controle de Fluxo
+	</div>
+	</section>
+
+	<section>
+	<h1>TCP: Controle de Fluxo (I)</h1>
+	<div class="slideContent">
+	  <div class="column" style="width: 50%;">
+			<br>
+			<ul>
+			  <li>Aplicação pode ler dados do <i>buffer</i> do socket TCP mais devagar que estes chegam ao <i>host</i> de destino.</li>
+			</ul>
+			<br>
+			<br>
+			<center>
+			<div class="block" style="width:550px;">
+			    <div class="blockTitle" style="width: 100%;">
+			        <p>Controle de Fluxo</p>
+			    </div>
+			    <div class="blockBody">
+			        Receptor controla transmissor, de forma que transmissor não sobrecarregue o <i>buffer</i> do receptor transmitindo muitos dados, rápido demais.
+			    </div>
+			</div>
+			</center>
+	  </div>
+	  <div class="column" style="width: 50%;">
+			<center>
+			  <img src="imagens/TCPFlowControl.svg" style="width: 70%;"/>
+			</center>
+
+	  </div>
+	</div>
+	</section>
+
+	<section>
+	<h1>TCP: Controle de Fluxo (II)</h1>
+	<div class="slideContent">
+	  <div class="column" style="width: 50%;">
+			<ul>
+			  <li>Receptor &ldquo;anuncia&rdquo; espaço livre no seu <i>buffer</i>, incluindo este valor no campo <tt>rwnd</tt> do cabeçalho TCP dos segmentos enviados do receptor para o transmissor.
+			  <ul>
+			    <li>Tamanho do <i>buffer</i> de recepção do TCP pode ser alterado via API de sockets (valor padrão típico é 4096 bytes).</li>
+			    <li>Muitos sistemas operacionais ajustam o valor automaticamente.</li>
+			  </ul></li>
+			  <li>Transmissor limita quantidade de segmentos pendentes (&ldquo;em trânsito&rdquo;) ao <tt>rwnd</tt> do receptor.</li>
+			  <li>Garante que não haverá <i>overflow</i> no <i>buffer</i> do receptor.</li>
+			</ul>
+	  </div>
+	  <div class="column" style="width: 50%;">
+			<br>
+			<br>
+			<br>
+			<center>
+			  <img src="imagens/TCPFlowControlBuffer.svg" style="width: 70%;"/>
+			</center>
+	  </div>
+	</div>
+	</section>
+
+	<section class="secao">
+	<div class="slideContent">
+	  TCP: Gerenciamento da Conexão
+	</div>
+	</section>
+
+	<section>
+	<h1>Gerenciamento da Conexão</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>Antes de trocar dados, transmissor e receptor fazem um &ldquo;handshake&rdquo;.
+	    <ul>
+	      <li>Concordam em estabelecer conexão.</li>
+	      <li>Acordam parâmetros da conexão.</li>
+	    </ul></li>
+	  </ul>
+		<br>
+		<center>
+		  <img src="imagens/Gerenciamento.svg" style="width: 80%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Concordando em Estabelecer uma Conexão (I)</h1>
+	<div class="slideContent">
+	  <div class="column" style="width: 50%;">
+			<center>
+			  <b>Handshake de duas fases:</b>
+				<br>
+				<img src="imagens/2wayhandshake.svg" style="width: 70%;"/>
+			</center>
+	  </div>
+	  <div class="column" style="width: 50%;">
+			<br>
+			<br>
+			<br>
+			<br>
+			<ul>
+			  <li><span class="alert">Pergunta:</span> um <i>handshake</i> de duas fases sempre irá funcionar em uma rede?
+			  <ul>
+			    <li>Atrasos variáveis.</li>
+			    <li>Mensagens retransmitidas.
+			    <ul>
+			      <li><i>e.g.</i>, <tt>req_conn(x)</tt>, devido a perda de mensagem.</li>
+			    </ul></li>
+			    <li>Reordenação de mensagem.</li>
+			    <li>É impossível &ldquo;ver&rdquo; o outro lado.</li>
+			  </ul></li>
+			</ul>
+	  </div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Concordando em Estabelecer uma Conexão (II)</h1>
+	<div class="slideContent">
+		<ul>
+		  <li>Cenários de falha do 2-way handshake:</li>
+		</ul>
+		<br>
+	  <div class="column" style="width: 50%;">
+			<center>
+			  <img src="imagens/2wayhandshakeFalha1.svg" style="width: 70%;"/>
+			</center>
+	  </div>
+	  <div class="column" style="width: 50%;">
+			<center>
+			  <img src="imagens/2wayhandshakeFalha2.svg" style="width: 70%;"/>
+			</center>
+	  </div>
+	</div>
+	</section>
+
+	<section>
+	<h1>TCP: <i>3-way handshake</i></h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/3wayhandshake.svg" style="width: 80%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>TCP: Máquina de Estados do <i>3-way handshake</i></h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/3wayhandshakeFSM.svg" style="width: 70%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>TCP: Fechando uma Conexão (I)</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>Cliente, servidor fecham cada um seu lado da conexão.
+	    <ul>
+	      <li>Enviam segmento TCP com bit FIN = 1.</li>
+	    </ul></li>
+	    <li>Sempre respondem segmento com FIN = 1 com um ACK.
+	    <ul>
+	      <li>Ao receber um FIN, ACK pode ser combinado também com um FIN.</li>
+	    </ul></li>
+	    <li>Protocolo também lida com troca simultânea de FINs.</li>
+	  </ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>TCP: Fechando uma Conexão (II)</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/TCPFIN.svg" style="width: 70%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Resumo da Aula...</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 44%;">
+		  <ul>
+				<li><b>TCP: Timeout</b>.
+				<ul>
+					<li>Estimado <span class="alert">dinamicamente</span>.</li>
+					<li>Amostras a cada ACK recebido.</li>
+					<li><span class="alert">Média Movente Exponencialmente Ponderada</span>.</li>
+					<li>Estima-se também o desvio das amostras.</li>
+					<li>Timeout: RTT estimado mais 4X o desvio.</li>
+				</ul></li>
+		    <li><b>TCP: Confiabilidade</b>.
+		    <ul>
+		      <li>Baseado em pipeline.</li>
+		      <li>ACKs cumulativos.</li>
+		      <li>Temporizador único.</li>
+		    </ul></li>
+		    <li><b>TCP infere perdas por:</b>
+		    <ul>
+		      <li>Estouro do temporizador.</li>
+		      <li>ACKs duplicados.
+		      <ul>
+		        <li><span class="alert">Fast Retransmit</span>.</li>
+		      </ul></li>
+		    </ul></li>
+		  </ul>
+		</div>
+		<div class="column" style="width: 56%;">
+		  <ul>
+				<li><b>TCP: Retransmissões.</b>
+				<ul>
+				  <li>Apenas do segmento &ldquo;perdido&rdquo;.</li>
+				  <li>Mais antigo ainda pendente.</li>
+				</ul></li>
+		    <li><b>TCP: ACKs.</b>
+		    <ul>
+		      <li>Podem ser atrasados.</li>
+		      <li>Sempre indicam próximo # de sequência esperado.</li>
+		    </ul></li>
+				<li><b>Controle de fluxo:</b>
+				<ul>
+				  <li><span class="alert">Transmissor não sobrecarregará receptor</span>.</li>
+				  <li>Receptor anuncia quantidade de <i>buffer</i> disponível.</li>
+				  <li>Janela do transmissor não excede valor.</li>
+				</ul></li>
+				<li><b>Gerenciamento de conexão:</b>
+				<ul>
+				  <li><i><span class="alert">3-way handshake</span></i>: abertura de conexão.
+				  <ul>
+				    <li>Parâmetros, <i>e.g.</i>, # de seq.</li>
+				  </ul></li>
+				  <li>Fechamento de conexão: bit FIN.</li>
+				</ul></li>
+		  </ul>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Próxima Aula...</h1>
+	<div class="slideContent">
+		<ul>
+		  <li>Encerraremos nossa discussão sobre TCP (e sobre camada de transporte).</li>
+		  <li>Tópicos:
+		  <ul>
+		    <li>Controle de congestionamento em redes.</li>
+		    <li>O mecanismo de controle de congestionamento do TCP.</li>
+		  </ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<!-- {{{{ dzslides core
+	#
+	#
+	#     __  __  __       .  __   ___  __
+	#    |  \  / /__` |    | |  \ |__  /__`
+	#    |__/ /_ .__/ |___ | |__/ |___ .__/ core :€
+	#
+	#
+	# The following block of code is not supposed to be edited.
+	# But if you want to change the behavior of these slides,
+	# feel free to hack it!
+	#
+	-->
+
+    <!-- More CSS -->
+	<link href='../template/css/slides.css' id="slides" rel='stylesheet' type='text/css'>
+	<link href='../template/css/presentationSpecific2.css' id="presentationSpecific2" rel='stylesheet' type='text/css'>
+
+    <!-- More Javascript -->
+	<script type="text/javascript" src="../template/js/dz.js"></script>
+
+	<!-- More CSS -->
+	<link href='../template/css/notesSpecific.css' id="notesSpecific" rel='stylesheet' type='text/css'>
+	<link href='../template/css/printSpecific.css' id="printSpecific" rel='stylesheet' type='text/css'>
+</body>
+</html>

@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <!-- Meta info -->
+		<meta charset="utf-8">
+		<meta name="shortauthor" content="Diego Passos"/>
+		<meta name="shorttitle" content="Princípios de Transmissão Confiável"/>
+		<meta name="shortevent" content="Redes de Computadores I"/>
+		<title>Redes de Computadores I: Aula 10</title>
+
+		<!-- Math support -->
+		<script type="text/x-mathjax-config">
+		MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+			MathJax.InputJax.TeX.Definitions.number = /^(?:[0-9]+(?:\.[0-9]{3})*(?:\{,\}[0-9]*)*|\{,\}[0-9]+)/
+		});
+		</script>
+		<!--<script src="js/plotly-latest.min.js"></script>-->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+		<script src="../../../../../MathJax-2.6-latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+		<script type="text/javascript" src="../template/js/dz_pre.js"></script>
+
+		<!-- Fonts -->
+		<link href='https://fonts.googleapis.com/css?family=Lora:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
+		<link href='../../../../../Fonts/Lora/lora.css' rel='stylesheet' type='text/css'>
+
+		<!-- CSS -->
+		<link href='../template/css/template.css' id="template" rel='stylesheet' type='text/css'>
+		<link href='../template/css/presentationSpecific.css' id="presentationSpecific" rel='stylesheet' type='text/css'>
+
+
+		<!-- Javascript -->
+		<!--
+		<script type="text/javascript" src="../template/js/audio.js"></script>
+		<script src="js/term.js" charset="utf-8"></script>
+    <script src="js/termcast.js" charset="utf-8"></script>
+		<link rel="stylesheet" href="css/googlecode.css">
+		<script src="js/highlight.pack.js"></script>
+		<script>
+			hljs.initHighlightingOnLoad();
+			hljs.configure({
+				tabReplace: '  '
+			});
+		</script>
+		-->
+</head>
+
+<body>
+    <!-- Audio handlers -->
+	<!--<audio src="audio/La.wav" id="La.wav" preload="auto"></audio>-->
+
+    <!-- Title Slide -->
+	<section>
+
+        <div class="slideContent">
+            <h1 class="title">Aula 10 - Princípios de Transmissão Confiável de Dados</h1>
+            <h2 class="author">Diego Passos</h2>
+            <h4 class="institution">Universidade Federal Fluminense</h4>
+            <h3 class="date">Redes de Computadores I</h3>
+        </div>
+		<br>
+		<br>
+			<div style="width: 30%; float: right; padding-right: 2%;">
+			<p style="font-size: 18px; text-align: right;">Material adaptado a partir dos slides originais de J.F Kurose and K.W. Ross.</p>
+		</div>
+	</section>
+
+	<section>
+	<h1>Revisão da Última Aula...</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+		  <ul>
+		    <li><b>Camada de transporte:</b>
+		    <ul>
+		      <li>Comunicação <span class="alert">entre processos</span>.</li>
+		      <li>Executada nas bordas.</li>
+		      <li>Transmite <span class="alert">segmentos</span>.</li>
+					<li>Dois protocolos: TCP, UDP.</li>
+		    </ul></li>
+		    <li>Camada de transporte &ne; camada de rede:
+		    <ul>
+		      <li><span class="alert">Processos <i>vs.</i> <i>hosts</i></span>.</li>
+		    </ul></li>
+		    <li>Modelos de serviço:
+		    <ul>
+		      <li>TCP: confiável, controle de taxa, conexão.</li>
+		      <li>UDP: não-confiável, sem controle taxa, sem conexão.</li>
+		    </ul></li>
+				<li><b>Multiplexação:</b>
+				<ul>
+					<li>Segmentos de múltiplos sockets para a camada de rede.</li>
+					<li>Cabelhos auxiliam demultiplexação.</li>
+				</ul></li>
+		  </ul>
+		</div>
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li><b>Demultiplexação:</b>
+				<ul>
+					<li>IPs, # de porta, identificam socket de destino.</li>
+					<li>UDP: apenas informações do destino.</li>
+					<li>TCP: quatro componentes.</li>
+				</ul></li>
+				<li><b>UDP:</b>
+				<ul>
+					<li>Serviço básico: datagramas perdidos, fora de ordem.</li>
+					<li>Aplicações que <span class="alert">toleram perda, mas são sensíveis a taxa</span>.</li>
+					<li>DNS também.</li>
+				</ul></li>
+				<li><b><i>Checksum</i> do UDP:</b>
+				<ul>
+					<li>Verificação de erros.</li>
+					<li>Soma em complemento a 1.</li>
+				</ul></li>
+			</ul>
+		</div>
+	</div>
+	</section>
+
+	<section class="secao">
+	<div class="slideContent">
+	  Princípios de Transferência Confiável de Dados
+	</div>
+	</section>
+
+	<section>
+	<h1>Princípios de Transferência Confiável de Dados</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>Importante nas camadas de aplicação, transporte e enlace.
+	    <ul>
+	      <li>Um dos 10 problemas mais importantes em redes de computadores!</li>
+	    </ul></li>
+	  </ul>
+		<center>
+		  <img src="imagens/TransmissaoConfiavel1.svg" style="width: 70%;"/>
+		</center>
+		<ul>
+		  <li>Características do canal não-confiável determinarão complexidade do protocolo de transmissão confiável de dados.
+		  <ul>
+		    <li>Ou rdt, do inglês <i>reliable data transfer</i>.</li>
+		  </ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Princípios de Transferência Confiável de Dados</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>Importante nas camadas de aplicação, transporte e enlace.
+	    <ul>
+	      <li>Um dos 10 problemas mais importantes em redes de computadores!</li>
+	    </ul></li>
+	  </ul>
+		<center>
+		  <img src="imagens/TransmissaoConfiavel2.svg" style="width: 70%;"/>
+		</center>
+		<ul>
+		  <li>Características do canal não-confiável determinarão complexidade do protocolo de transmissão confiável de dados.
+		  <ul>
+		    <li>Ou rdt, do inglês <i>reliable data transfer</i>.</li>
+		  </ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Princípios de Transferência Confiável de Dados</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>Importante nas camadas de aplicação, transporte e enlace.
+	    <ul>
+	      <li>Um dos 10 problemas mais importantes em redes de computadores!</li>
+	    </ul></li>
+	  </ul>
+		<center>
+		  <img src="imagens/TransmissaoConfiavel3.svg" style="width: 70%;"/>
+		</center>
+		<ul>
+		  <li>Características do canal não-confiável determinarão complexidade do protocolo de transmissão confiável de dados.
+		  <ul>
+		    <li>Ou rdt, do inglês <i>reliable data transfer</i>.</li>
+		  </ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Transmissão Confiável de Dados: Início (I)</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/TransmissaoConfiavelInicio.svg" style="width: 70%;"/>
+	  </center>
+		<ul>
+		  <li><b>rdt_send():</b> chamada pela aplicação para enviar dados para o transporte.</li>
+		  <li><b>udt_send():</b> chamado pelo transporte para passa pacote para a rede.</li>
+		  <li><b>rdt_rcv():</b> chamada quando pacote chega pela rede no lado receptor.</li>
+		  <li><b>deliver_data():</b> chamado pelo transporte para entregar dados para aplicação.</li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Transmissão Confiável de Dados: Início (II)</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>Nós iremos:
+	    <ul>
+	      <li>Incrementalmente desenvolver os lados transmissor e receptor de um protocolo rdt.</li>
+	      <li>Consideraremos apenas transmissão unidirecional de dados.
+	      <ul>
+	        <li>Mas informação de controle trafegará nos dois sentidos!</li>
+	      </ul></li>
+	      <li>Usar máquinas de estado para especificar transmissor, receptor.</li>
+	    </ul></li>
+	  </ul>
+		<br>
+		<center>
+		  <img src="imagens/MaquinaDeEstados.svg" style="width: 70%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>rdt1.0: Transmissão Confiável sobre Canal Confiável</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>Canal de comunicação (rede) perfeitamente confiável.
+	    <ul>
+	      <li>Pacotes nunca são perdidos.</li>
+	      <li>Sempre são entregues íntegros.</li>
+	    </ul></li>
+	    <li>Máquinas de estado separadas para transmissor, receptor:
+	    <ul>
+	      <li>Transmissor envia dados pelo canal.</li>
+	      <li>Receptor lê dados a partir do canal.</li>
+	    </ul></li>
+	  </ul>
+		<br>
+		<center>
+			<div class="column" style="width: 50%;">
+				<span class="alert">Transmissor</span><br>
+			  <img src="imagens/rdt1_0Transmissor.svg" style="width: 70%;"/>
+			</div>
+			<div class="column" style="width: 50%;">
+			  <span class="alert">Receptor</span><br>
+				<img src="imagens/rdt1_0Receptor.svg" style="width: 70%;"/>
+			</div>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>rdt2.0: Canal com Erros de Bit (I)</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>Canal (rede) pode alterar valor de determinados bits.
+	    <ul>
+	      <li>Mas pacotes <span class="alert">sempre</span> são entregues, ainda que <span class="alert">corrompidos</span>.</li>
+	    </ul></li>
+	    <li>Já vimos uma maneira de verificar erros: <i>checksum</i>.</li>
+	    <li>Mas a pergunta é: como o protocolo <span class="alert">se recupera dos erros</span>?</li>
+	  </ul>
+		<br>
+		<br>
+		<br>
+		<br>
+		<br>
+		<center>
+			<span class="alert" style="font-size: 36px;">Como humanos se recuperam de &ldquo;erros&rdquo; durante uma conversa?</span>
+		</center>
+		<br>
+		<br>
+		<br>
+		<br>
+	</div>
+	</section>
+
+	<section>
+	<h1>rdt2.0: Canal com Erros de Bit (II)</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>Canal (rede) pode alterar valor de determinados bits.
+	    <ul>
+	      <li>Mas pacotes <span class="alert">sempre</span> são entregues, ainda que <span class="alert">corrompidos</span>.</li>
+	    </ul></li>
+	    <li>Já vimos uma maneira de verificar erros: <i>checksum</i>.</li>
+	    <li>Mas a pergunta é: como o protocolo <span class="alert">se recupera dos erros</span>?
+	    <ul>
+	      <li><span class="alert">Pacotes de reconhecimento (ACKs):</span> receptor diz explicitamente ao transmissor que pacote foi recebido corretamente.</li>
+	      <li><span class="alert">Reconhecimento negativo (NAKs):</span> receptor diz explicitamente ao transmissor que pacote foi recebido com erros.</li>
+	      <li>Transmissor retransmite pacote sempre que receber um NAK.</li>
+	    </ul></li>
+			<li>Novo mecanismo no rdt2.0 (e versões posteriores):
+			<ul>
+			  <li>Detecção de erros (via <i>checksum</i>).</li>
+			  <li>Retro-alimentação: mensagens de controle (ACK, NAK) do receptor para o transmissor.</li>
+			</ul></li>
+	  </ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>rdt2.0: Especificação da Máquina de Estados</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<center>
+				<span class="alert">Transmissor</span><br><br>
+		    <img src="imagens/rdt2_0Transmissor.svg" style="width: 95%;"/>
+		</center>
+		</div>
+		<div class="column" style="width: 50%;">
+			<center>
+				<span class="alert">Receptor</span><br><br>
+		    <img src="imagens/rdt2_0Receptor.svg" style="width: 40%;"/>
+			</center>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>rdt2.0: Operação Sem Erros (I)</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/rdt2_0Exemplo1_1.svg" style="width: 90%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>rdt2.0: Operação Sem Erros (II)</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/rdt2_0Exemplo1_2.svg" style="width: 90%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>rdt2.0: Operação Sem Erros (III)</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/rdt2_0Exemplo1_3.svg" style="width: 90%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>rdt2.0: Operação Sem Erros (IV)</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/rdt2_0Exemplo1_4.svg" style="width: 90%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>rdt2.0: Operação Sem Erros (V)</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/rdt2_0Exemplo1_5.svg" style="width: 90%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>rdt2.0: Operação Com Erros (I)</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/rdt2_0Exemplo1_1.svg" style="width: 90%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>rdt2.0: Operação Com Erros (II)</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/rdt2_0Exemplo1_2.svg" style="width: 90%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>rdt2.0: Operação Com Erros (III)</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/rdt2_0Exemplo2_3.svg" style="width: 90%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>rdt2.0: Operação Com Erros (IV)</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/rdt2_0Exemplo2_4.svg" style="width: 90%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>rdt2.0: Operação Com Erros (V)</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/rdt2_0Exemplo2_5.svg" style="width: 90%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>rdt2.0: Operação Com Erros (VI)</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/rdt2_0Exemplo2_6.svg" style="width: 90%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>rdt2.0: Operação Com Erros (VII)</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/rdt2_0Exemplo2_7.svg" style="width: 90%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>rdt2.0: Uma Falha Fatal!</h1>
+	<div class="slideContent">
+		<div style="height: 300px;">
+	  <div class="column" style="width: 50%;">
+	    <ul>
+	      <li><b>O que acontece se ACK/NAK são corrompidos?</b>
+	      <ul>
+	        <li>Transmissor não sabe o que ocorreu no receptor!</li>
+	        <li>Não pode simplesmente retransmitir: pode gerar duplicatas.</li>
+	      </ul></li>
+	    </ul>
+	  </div>
+		<div class="column" style="width: 50%;">
+		  <ul>
+		    <li><b>Lidando com duplicatas:</b>
+		    <ul>
+		      <li>Transmissor retransmite pacote atual se ACK/NAK é corrompido.</li>
+		      <li>Transmissor adiciona um <span class="alert">número de sequência</span> a cada pacote.</li>
+		      <li>Receptor descarta (não entrega à aplicação) pacotes duplicados.</li>
+		    </ul></li>
+		  </ul>
+		</div>
+		</div>
+		<center>
+		<div class="block" style="width:700px;">
+		    <div class="blockTitle" style="width: 100%;">
+		        <p>Stop and wait</p>
+		    </div>
+		    <div class="blockBody">
+		        Transmissor envia um pacote, espera pela resposta antes da próxima transmissão
+		    </div>
+		</div>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>rdt2.1: Lida com ACK/NAK Corrompido (Transmissor)</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/rdt2_1Transmissor.svg" style="width: 50%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>rdt2.1: Lida com ACK/NAK Corrompido (Receptor)</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/rdt2_1Receptor.svg" style="width: 83%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>rdt2.1: Discussão</h1>
+	<div class="slideContent">
+	  <div class="column" style="width: 50%;">
+	    <ul>
+	      <li><b>Transmissor:</b>
+	      <ul>
+	        <li># de sequência adicionado a pacotes.</li>
+	        <li>Dois valores (0 e 1) bastam. Por quê?</li>
+	        <li>Precisa verificar se ACK/NAK recebidos estão corrompidos.</li>
+	        <li>Duas vezes mais estados.
+	        <ul>
+	          <li>Estado &ldquo;lembra&rdquo; se # de sequência esperado é 0 ou 1.</li>
+	        </ul></li>
+	      </ul></li>
+	    </ul>
+	  </div>
+		<div class="column" style="width: 50%;">
+		  <ul>
+		    <li><b>Receptor:</b>
+		    <ul>
+		      <li>Deve verificar se pacote recebido é duplicado.
+		      <ul>
+		        <li>Estados indicam se pacote esperado é o 0 ou o 1.</li>
+		      </ul></li>
+		      <li>Note: receptor não tem como saber se último ACK/NAK enviado chegou corretamente no transmissor.</li>
+		    </ul></li>
+		  </ul>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>rdt2.2: Um Protocolo Sem NAK</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>Mesma funcionalidade do rdt2.1 usando apenas ACKs.</li>
+	    <li>Ao invés de um NAK, receptor envia <span class="alert">ACK para o último pacote recebido corretamente</span>.
+	    <ul>
+	      <li>Receptor precisará incluir no ACK <b>explicitamente</b> o # de sequência do pacote reconhecido.</li>
+	    </ul></li>
+	    <li>ACK duplicado no receptor resulta nas mesmas ações que um NAK: retransmitir pacote corrente.</li>
+	  </ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>rdt2.2: Transmissor</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/rdt2_2Transmissor.svg" style="width: 50%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>rdt2.2: Receptor</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/rdt2_2Receptor.svg" style="width: 70%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>rdt3.0: Canal com Erros e Perdas</h1>
+	<div class="slideContent">
+	  <div class="column" style="width: 45%;">
+			<ul>
+			  <li><b>Nova hipótese:</b>
+			  <ul>
+			    <li>Canal (rede) pode também descartar pacotes (tanto dados, quanto ACKs).
+			    <ul>
+			      <li><i>Checksum</i>, # de sequência, ACKs, retransmissões ajudarão... mas não serão suficientes.</li>
+			    </ul></li>
+			  </ul></li>
+			</ul>
+	  </div>
+	  <div class="column" style="width: 55%;">
+			<ul>
+			  <li><b>Abordagem:</b> transmissor aguarda ACK por um tempo &ldquo;razoável&rdquo;.
+			  <ul>
+			    <li>Retransmite pacote se ACK não é recebido neste período.</li>
+			    <li>Se o pacote (ou seu ACK) estão simplesmente atrasados (e não perdidos):
+			    <ul>
+			      <li>Retransmissão será duplicada, mas # de sequência já lida com isso.</li>
+			      <li>Receptor deve especificar # de sequência do pacote sendo reconhecido pelo ACK.</li>
+			    </ul></li>
+			    <li>Requer um <span class="alert">temporizador</span> regressivo.</li>
+			  </ul></li>
+			</ul>
+	  </div>
+	</div>
+	</section>
+
+	<section>
+	<h1>rdt3.0: Transmissor</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/rdt3_0Transmissor.svg" style="width: 70%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>rdt3.0 em Ação (I)</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/rdt3_0a1.svg" style="width: 80%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>rdt3.0 em Ação (II)</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/rdt3_0a2.svg" style="width: 80%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Desempenho do rdt3.0</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>rdt3.0 funciona, mas desempenho é péssimo.</li>
+	    <li><i>e.g.</i>, enlace de 1 Gb/s, com 15 ms de atraso de propagação, pacote de 8000 bits:</li>
+	  </ul>
+		<center>
+			<span class="math inline">\(D_{trans} = \frac{L}{R} = \frac{8000}{10^9} = 8\;\mu s\)</span>
+		</center>
+		<ul>
+		  <li><span class="math inline">\(U_{sender}\)</span>: <span class="alert">utilização</span> &mdash; fração do tempo em que transmissor efetivamente usa o canal.</li>
+		</ul>
+		<center>
+			<span class="math inline">\(U_{sender} = \frac{L/R}{RTT + L/R} = \frac{0{,}008}{30{,}008} = 0{,}00027\)</span>
+		</center>
+		<ul>
+		  <li>Se RTT=30 ms, um pacote de 1 KB é enviado a cada 30 ms.
+		  <ul>
+		    <li>Vazão de 33 kB/s em enlace de 1 Gb/s</li>
+		  </ul></li>
+		  <li>Protocolo está limitando o uso dos recursos físicos!</li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>rdt3.0: Operação do Tipo <i>Stop-and-Wait</i></h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/StopAndWaitNovo.svg" style="width: 90%;"/>
+	  </center>
+		<br>
+	  <center>
+			<span class="math inline">\(U_{sender} = \frac{L/R}{RTT + L/R} = \frac{0{,}008}{30{,}008} = 0{,}00027\)</span>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Resumo da Aula...</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+		  <ul>
+		    <li><b>Transferência confiável de dados:</b>
+		    <ul>
+		      <li>Garantir entrega.</li>
+		      <li>Garantir integridade.</li>
+		      <li>Garantir ordenação.</li>
+		      <li><span class="alert">Embora a rede não garanta.</span></li>
+		    </ul></li>
+		    <li><b><i>Checksum</i>:</b>
+		    <ul>
+		      <li>Verificação de integridade.</li>
+		      <li>Pacotes errados são descartados.</li>
+		    </ul></li>
+				<li><b>ACK:</b>
+				<ul>
+				  <li>Confirmação <span class="alert">positiva do recebimento</span>.</li>
+				</ul></li>
+				<li><b>NAK:</b>
+				<ul>
+				  <li>Confirmação <span class="alert">negativa do recebimento</span>.</li>
+				</ul></li>
+				<li><b>Retransmissões:</b>
+		    <ul>
+		      <li>Pacotes perdidos/errados são retransmitidos.</li>
+		    </ul></li>
+		  </ul>
+		</div>
+		<div class="column" style="width: 50%;">
+		  <ul>
+				<li><b>Números de sequência:</b>
+				<ul>
+				  <li>Identifica duplicatas.</li>
+				  <li>Duplicatas descartadas.</li>
+					<li>Dá mais flexibilidade às retransmissões.</li>
+					<li>Permite supressão dos NAKs:
+					<ul>
+					  <li><span class="alert">ACK duplicado = NAK</span>.</li>
+					</ul></li>
+				</ul></li>
+				<li><b>Temporizador:</b>
+				<ul>
+				  <li>Necessario se rede descarta pacotes.</li>
+				  <li><span class="alert">Estouro de temporizador interpretado como pacote perdido.</span>
+				  <ul>
+				    <li>Retransmissão.</li>
+				  </ul></li>
+				</ul></li>
+				<li><b><i>Stop-and-wait</i>:</b>
+				<ul>
+				  <li>Novo pacote transmitido apenas após ACK.</li>
+				  <li><span class="alert">Limita desempenho</span>.</li>
+				</ul></li>
+		  </ul>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Próxima Aula...</h1>
+	<div class="slideContent">
+		<ul>
+		  <li>Discutiremos como resolver a ineficiência dos protocolos do tipo <i>stop-and-wait</i>.
+		  <ul>
+		    <li>Protocolos baseados em <i>pipeline</i>:
+		    <ul>
+		      <li>Go-Back-N.</li>
+		      <li>Repetição Seletiva.</li>
+		    </ul></li>
+		  </ul></li>
+		  <li>Também começaremos a discutir as características básicas do TCP.</li>
+		</ul>
+	</div>
+	</section>
+
+	<!-- {{{{ dzslides core
+	#
+	#
+	#     __  __  __       .  __   ___  __
+	#    |  \  / /__` |    | |  \ |__  /__`
+	#    |__/ /_ .__/ |___ | |__/ |___ .__/ core :€
+	#
+	#
+	# The following block of code is not supposed to be edited.
+	# But if you want to change the behavior of these slides,
+	# feel free to hack it!
+	#
+	-->
+
+    <!-- More CSS -->
+	<link href='../template/css/slides.css' id="slides" rel='stylesheet' type='text/css'>
+	<link href='../template/css/presentationSpecific2.css' id="presentationSpecific2" rel='stylesheet' type='text/css'>
+
+    <!-- More Javascript -->
+	<script type="text/javascript" src="../template/js/dz.js"></script>
+
+	<!-- More CSS -->
+	<link href='../template/css/notesSpecific.css' id="notesSpecific" rel='stylesheet' type='text/css'>
+	<link href='../template/css/printSpecific.css' id="printSpecific" rel='stylesheet' type='text/css'>
+</body>
+</html>

@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <!-- Meta info -->
+	<meta charset="utf-8">
+	<meta name="shortauthor" content="Diego Passos"/>
+	<meta name="shorttitle" content="Comutação de Pacotes"/>
+	<meta name="shortevent" content="Redes de Computadores I"/>
+	<title>Redes de Computadores I: Aula 3</title>
+
+    <!-- Math support -->
+	<script type="text/x-mathjax-config">
+		MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+			MathJax.InputJax.TeX.Definitions.number = /^(?:[0-9]+(?:\.[0-9]{3})*(?:\{,\}[0-9]*)*|\{,\}[0-9]+)/
+		});
+	</script>
+	<script src="js/plotly-latest.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+    <script src="../../../../../MathJax-2.6-latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+
+    <!-- Fonts -->
+    <link href='https://fonts.googleapis.com/css?family=Lora:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
+    <link href='../../../../../Fonts/Lora/lora.css' rel='stylesheet' type='text/css'>
+
+    <!-- CSS -->
+	<link href='../template/css/template.css' id="template" rel='stylesheet' type='text/css'>
+	<link href='../template/css/presentationSpecific.css' id="presentationSpecific" rel='stylesheet' type='text/css'>
+
+
+    <!-- Javascript -->
+	<script type="text/javascript" src="../template/js/audio.js"></script>
+</head>
+
+<body>
+    <!-- Audio handlers -->
+	<!--<audio src="audio/La.wav" id="La.wav" preload="auto"></audio>-->
+
+    <!-- Title Slide -->
+	<section>
+
+        <div class="slideContent">
+            <h1 class="title">Aula 3 - Comutação de pacotes, Multiplexação, Enfileiramento</h1>
+            <h2 class="author">Diego Passos</h2>
+            <h4 class="institution">Universidade Federal Fluminense</h4>
+            <h3 class="date">Redes de Computadores I</h3>
+        </div>
+
+	<br>
+	<br>
+	<div style="width: 30%; float: right; padding-right: 2%;">
+	<p style="font-size: 18px; text-align: right;">Material adaptado a partir dos slides originais de J.F Kurose and K.W. Ross.</p>
+	</div>
+	</section>
+
+	<section>
+	<h1>Revisão da Última Aula...</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 47%;">
+		    <ul>
+			<li>Arquitetura da Internet pode ser dividida:
+			<ul>
+			    <li><span class="alert">Borda</span>: <i>hosts</i>, redes de acesso.</li>
+			    <li><span class="alert">Núcleo</span>: roteadores, ISPs interconectados.</li>
+			</ul></li>
+			<li>Redes de acesso:
+			<ul>
+			    <li>Múltiplas tecnologias: DSL, HFC, Ethernet, Wi-Fi, ...</li>
+			    <li>Algumas vezes combinadas.</li>
+			    <li>Se conectam ao núcleo através de um <span class="alert">roteador de borda</span>.</li>
+			</ul></li>
+			<li>Roteamento e encaminhamento:
+			<ul>
+			    <li>Responsabilidades do núcleo.</li>
+			    <li>Tarefas ligadas ao repasse dos pacotes entre roteadores, <i>hosts</i>.</li>
+			</ul></li>
+		    </ul>
+		</div>
+
+		<div class="column" style="width: 53%;">
+		    <ul>
+			<li>Princípios e filosofias:
+			<ul>
+			    <li>Rede heterogênea.
+			    <ul>
+				<li>Necessita <span class="alert">conjunto de protocolos comuns</span>.</li>
+				<li><span class="alert">Não se deve assumir muito</span> sobre a rede.</li>
+			    </ul></li>
+			    <li>Argumento fim-a-fim.
+			    <ul>
+				<li>Funcionalidades fim-a-fim dependem das pontas.</li>
+				<li>Logo, tentar mantê-las nas pontas.</li>
+				<li>Corolário: <span class="alert">inteligência nas bordas, núcleo simples</span>.</li>
+			    </ul></li>
+			    <li>Princípio KISS.
+			    <ul>
+				<li>Evitar complexidades desnecessárias.</li>
+				<li>Sistemas mais simples são melhores que equivalentes complexos.</li>
+			    </ul></li>
+			</ul></li>
+		    </ul>
+		</div>
+	</div>
+	</section>
+
+	<!-- Content slides -->
+
+	<section class="secao">
+	<div class="slideContent">
+		Comutação de Pacotes
+	</div>
+	</section>
+
+	<section>
+	<h1>Comutação de Pacotes: Conceitos Básicos</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 55%;">
+			<br>
+			<br>
+			<ul>
+				<li><i>Hosts</i> quebram dados em <span class="alert">pacotes</span>.
+				<ul>
+					<li>Pacotes são a unidade fundamental de transferência.</li>
+				</ul></li>
+				<li>Pacotes são <span class="alert">encaminhados</span> por comutadores.
+				<ul>
+					<li>Passam por sequência de enlaces, formando um caminho ou <span class="alert">rota</span>.</li>
+				</ul></li>
+				<li>Sempre que pacote é transmitido por enlace, <span class="alert">transmissão utiliza toda a capacidade do enlace</span>.</li>
+			</ul>
+		</div>
+		<div class="column" style="width: 45%;">
+			<center>
+				<img src="imagens/Nucleo.svg" style="width: 70%;"/>
+			</center>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Comutação de Pacotes: <i>Store-and-Forward</i> (I)</h1>
+	<div class="slideContent">
+		<center>
+			<img src="imagens/StoreAndForward.svg" style="width: 70%;"/>
+		</center>
+
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li>São necessários <span class="math inline">\(\frac{L}{R}\)</span> segundos para transmitir (&ldquo;colocar no enlace&rdquo;) pacote de <span class="math inline">\(L\)</span> bits em enlace de capacidade <span class="math inline">\(R\)</span>.</li>
+				<li><span class="alert">Store-and-Forward:</span> pacote precisa ser recebido por <span class="alert">completo</span> antes transmissão começar no próximo enlace.
+				<ul>
+					<li>Comutador recebe pacote <span class="alert">inteiro</span>, armazena em memória, processa, ...</li>
+				</ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li><span class="alert">Consequência:</span> tempo total até o destinatário é <span class="math inline">\(\frac{2L}{R}\)</span>.
+				<ul>
+					<li>Ignorando tempo de propagação.</li>
+				</ul></li>
+				<li>Exemplo numérico:
+				<ul>
+					<li><span class="math inline">\(L = 4~MB\)</span>.</li>
+					<li><span class="math inline">\(R = 2~Mb/s\)</span>.</li>
+					<li>Tempo de transmissão por um enlace: 16&nbsp;s.</li>
+					<li>Para transmissão <span class="alert">fim-a-fim</span>: 32&nbsp;s.</li>
+				</ul></li>
+			</ul>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Comutação de Pacotes: <i>Store-and-Forward</i> (II)</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Contra-exemplo:</li>
+		</ul>
+		<center>
+			<img src="imagens/NotStoreAndForward.svg" style="width: 70%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Comutação de Pacotes: <i>Store-and-Forward</i> (III)</h1>
+	<div class="slideContent">
+
+		<ul>
+			<li>Por que comutador não pode transmitir logo que recebe primeiros bits?</li>
+			<li>Por que esperar que o pacote chegue completamente?</li>
+			<li>Alguns motivos:
+			<ul>
+				<li>Processamentos são necessários.
+				<ul>
+					<li>Encaminhamento, verificação de integridade, ...</li>
+				</ul></li>
+				<li>Enlace de saída pode estar ocupado com outro pacote.
+				<ul>
+					<li>Pacote que chega pode ter que <span class="alert">esperar</span>.</li>
+				</ul></li>
+			</ul></li>
+		</ul>
+		<center>
+			<img src="imagens/EnlaceOcupado.svg" style="width: 40%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Comutação de Pacotes: Enfileiramento e Descartes</h1>
+	<div class="slideContent">
+		<center>
+			<img src="imagens/Enfileiramento.svg" style="width: 70%;"/>
+		</center>
+
+		<ul>
+			<li><span class="alert">Enfileiramento:</span> pacotes são armazenados em uma <span class="alert">fila</span>.</li>
+			<li>Aguardam oportunidade de transmissão.</li>
+			<li>Se a <span class="alert">taxa de chegada</span> é maior que a capacidade de escoamento, fila tende a crescer.</li>
+			<li>Mas o tamanho da fila é limitado (<span class="alert">Por que?</span>).
+			<ul>
+				<li>Quando a capacidade é excedida, pacotes são <span class="alert">descartados</span>.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Alternativa: Comutação de Circuitos (I)</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 60%;">
+			<ul>
+				<li>Recursos fim-a-fim são <span class="alert">alocados, reservados</span> para uma &ldquo;chamada&rdquo; entre origem e destino.
+				<ul>
+					<li>No exemplo, cada &ldquo;enlace&rdquo; contém 4 circuitos independentes.
+					<ul>
+						<li>Chamada usa segundo circuito do enlace de cima, primeiro circuito do enlace da direita.</li>
+					</ul></li>
+					<li>Recursos são dedicados: uma vez alocados, ninguém mais os utiliza.
+					<ul>
+						<li>Desempenho de circuito, garantido.</li>
+					</ul></li>
+					<li>Recursos ficam <span class="alert">ociosos</span> se não usados pela chamada.</li>
+					<li>Comumente utilizado em redes de telefonia.</li>
+				</ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 40%;">
+			<center>
+				<img src="imagens/ComutacaoCircuitos.svg" style="width: 95%;"/>
+			</center>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Alternativa: Comutação de Circuitos (II)</h1>
+	<div class="slideContent">
+		<center>
+			<img src="imagens/Switchboard.jpg" style="width: 70%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Comutação de Circuitos: Multiplexação</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Não necessariamente precisamos de circuitos fisicamente separados entre cada comutador.</li>
+			<li>Chamadas podem ser <span class="alert">multiplexadas</span> em um mesmo meio físico.</li>
+			<li>Dois exemplos comuns:
+			<ul>
+				<li>Multiplexação por Divisão no Tempo (TDM).</li>
+				<li>Multiplexação por Divisão na Frequência (FDM).</li>
+			</ul></li>
+		</ul>
+
+		<center>
+			<img src="imagens/FDMvsTDM.svg" style="width: 50%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Comutação de Pacotes: Multiplexação Estatística (I)</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Na comutação de pacotes, também há multiplexação.
+			<ul>
+				<li>Multiplexação ocorre &ldquo;naturalmente&rdquo;.
+				<li>Pacotes de usuários distintos são transmitidos de forma intercalada.</li>
+				<li>Ordem depende da chegada (geralmente aleatória) dos pacotes no comutador.</li>
+			</ul></li>
+		</ul>
+		<div class="column" style="width: 45%;">
+			<ul>
+				<li><span class="alert">Pergunta:</span> quantos usuários podem compartilhar um único enlace de saída?</li>
+				<li>Exemplo: enlace de saída de 1&nbsp;Mb/s.</li>
+				<li>&ldquo;Prometemos&rdquo; 100&nbsp;kb/s a cada usuário <span class="alert">quando ativos</span>.
+				<ul>
+					<li>Hipótese: cada usuário ativo apenas 10% do tempo.</li>
+				</ul></li>
+				<li><span class="alert">Comutação de circuitos:</span>
+				<ul>
+					<li>Alocações fixas, recursos reservados.</li>
+					<li>No máximo, 10 usuários.</li>
+				</ul></li>
+			</ul>
+		</div>
+
+		<div class="column" style="width: 55%;">
+			<center>
+				<img src="imagens/MultiplexacaoEstatisticaCenario.svg" style="width: 75%;"/>
+			</center>
+			<ul>
+				<li><span class="alert">Comutação de pacotes:</span>
+				<ul>
+					<li>Recursos ociosos podem ser utilizados por outros usuários.</li>
+					<li>Logo: espera-se poder colocar <span class="alert">mais de 10</span> usuários!</li>
+				</ul></li>
+				<li>Mas qual é o valor exato de N?</li>
+			</ul>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Comutação de Pacotes: Multiplexação Estatística (II)</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Enlace de 1&nbsp;Mb/s, 100&nbsp;kb/s para cada usuário = no máximo 10 usuários <span class="alert">simultâneos</span>.</li>
+			<li>Digamos que haja <span class="math inline">\(N = 35\)</span> usuários.
+			<ul>
+				<li>Qual a <span class="alert">probabilidade</span> de que mais de 10 estejam ativos simultaneamente?</li>
+				<li>Considerando certas simplificações implícitas.</li>
+			</ul></li>
+			<li>Um usuário <span class="alert">qualquer</span> fica ativo com probabilidade <span class="math inline">\(p = 10\%\)</span>.</li>
+		</ul>
+		<br>
+		<div class="column" style="width: 33%;">
+			<center>
+				<b>1 dado usuário ativo</b><br>
+				<b>(demais inativos)</b>
+				<br>
+				<br>
+				<br>
+				<span class="math inline">\(p\cdot(1-p)^{34}\)</span>
+			</center>
+		</div>
+		<div class="column" style="width: 33%;">
+			<center>
+				<b>2 dados usuários ativos</b><br>
+				<b>(demais inativos)</b>
+				<br>
+				<br>
+				<br>
+				<span class="math inline">\(p^2\cdot(1-p)^{33}\)</span>
+			</center>
+		</div>
+		<div class="column" style="width: 33%;">
+			<center>
+				<b>k dados usuários ativos</b><br>
+				<b>(demais inativos)</b>
+				<br>
+				<br>
+				<br>
+				<span class="math inline">\(p^k\cdot(1-p)^{(N-k)}\)</span>
+			</center>
+		</div>
+
+	</div>
+	</section>
+
+	<section>
+	<h1>Comutação de Pacotes: Multiplexação Estatística (III)</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Note que com 35 usuários, há múltiplas combinações de <span class="math inline">\(k\)</span> usuários que podem estar ativos simultaneamente.
+			<ul>
+				<li>P/ <span class="math inline">\(k = 1\)</span>, 35 combinações.</li>
+				<li>P/ <span class="math inline">\(k = 2\)</span>, <span class="math inline">\(\frac{35\cdot 34}{2} = 595\)</span> combinações.</li>
+				<li>...</li>
+				<li>P/ <span class="math inline">\(k\)</span> em geral, <span class="math inline">\({35}\choose{k}\)</span> combinações.</li>
+			</ul></li>
+		</ul>
+		<br>
+		<div class="column" style="width: 33%;">
+			<center>
+				<b>1 usuário ativo</b><br>
+				<b>(demais inativos)</b>
+				<br>
+				<br>
+				<br>
+				<span class="math inline">\(35\cdot p\cdot(1-p)^{34}\)</span>
+			</center>
+		</div>
+		<div class="column" style="width: 33%;">
+			<center>
+				<b>2 usuários ativos</b><br>
+				<b>(demais inativos)</b>
+				<br>
+				<br>
+				<br>
+				<span class="math inline">\(595\cdot p^2\cdot(1-p)^{33}\)</span>
+			</center>
+		</div>
+		<div class="column" style="width: 33%;">
+			<center>
+				<b>k usuários ativos</b><br>
+				<b>(demais inativos)</b>
+				<br>
+				<br>
+				<br>
+				<span class="math inline">\({{35}\choose{k}}\cdot p^k\cdot(1-p)^{(35-k)}\)</span>
+			</center>
+		</div>
+
+	</div>
+	</section>
+
+	<section>
+	<h1>Comutação de Pacotes: Multiplexação Estatística (IV)</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Voltando ao problema original: probabilidade de mais de 10 ativos.</li>
+		</ul>
+		<br>
+		<center>
+			<span class="math inline">\(Pr(k > 10) = \sum\limits^{35}_{i=11}{{{35}\choose{i}}\cdot p^i\cdot(1-p)^{(35-i)}} \approx 0{,}00042\)</span>
+		</center>
+		<br>
+		<ul>
+			<li>Resumindo:
+			<ul>
+				<li>Mesmo com 35 usuários, entregamos a banda prometida 99,958% do tempo.</li>
+				<li><span class="alert">Número muito maior de usuários</span> que na comutação de circuitos.</li>
+				<li>Percentual de falha &ldquo;aceitável&rdquo;.</li>
+			</ul></li>
+			<li>Mas o que acontece se mudarmos os parâmetros?
+			<ul>
+				<li><i>e.g.</i>, aumentarmos N, aumentarmos p, ou reduzirmos a capacidade do enlace?</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<!--
+	<section>
+	<h1>Comutação de Pacotes: Multiplexação Estatística (V)</h1>
+	<div class="slideContent">
+		<center>
+			<span class="math inline">\(Pr(k > x) = \sum\limits^{N}_{i=x}{{{N}\choose{i}}\cdot p^i\cdot(1-p)^{(N-i)}}\)</span>
+		</center>
+
+		<br>
+		<div class="column" style="width: 50%;">
+			<center>
+				<b>p = 0,1 e x = 10</b>
+				<img src="imagens/variaN.png" style="width: 80%;"/>
+			</center>
+		</div>
+		<div class="column" style="width: 50%;">
+			<center>
+				<b>N = 35 e x = 10</b>
+				<img src="imagens/variaP.png" style="width: 80%;"/>
+			</center>
+		</div>
+	</div>
+	</section>
+	-->
+    <section>
+    <h1>Comutação de Pacotes: Multiplexação Estatística (V)</h1>
+    <div class="slideContent">
+
+         <div class="column" style="width: 50%;">
+             <center>
+                 <br>
+		<center>
+			<span class="math inline">\(Pr(k > x) = \sum\limits^{N}_{i=x}{{{N}\choose{i}}\cdot p^i\cdot(1-p)^{(N-i)}}\)</span>
+		</center>
+                 <br>
+                 <span class="alert">Parâmetros</span>
+                 <div style="border: 2px solid #7B7; width: 60%;">
+                     <table class="align">
+                         <tr>
+                             <td>k:</td>
+                             <td><input id="MultiplexacaoEstatisticaInputk" value="10" style="height: 25px; font-size: 20px;"></input></td>
+                         </tr>
+                         <tr>
+                             <td>N:</td>
+                             <td><input id="MultiplexacaoEstatisticaInputN" value="35"  style="height: 25px; font-size: 20px;"></input></td>
+                         </tr>
+                         <tr>
+                             <td>p:</td>
+                             <td><input id="MultiplexacaoEstatisticaInputp" value="0.1" style="height: 25px; font-size: 20px;"></input></td>
+                         </tr>
+                     </table>
+                     <input type="button" onclick="MultiplexacaoEstatisticaplot();" value="Recalcular"  style="height: 25px; font-size: 20px;"></input>
+                 </div>
+             </center>
+             <ul>
+                 <li>Onde:
+                 <ul>
+                     <li>k: máximo de usuários simultâneos.
+                     <ul>
+                         <li>Depende da capacidade do enlace/rede e da banda para cada usuário.</li>
+                     </ul></li>
+                     <li>N: número total de usuários.</li>
+                     <li>p: probabilidade de um dado usuário estar ativo.</li>
+                 </ul></li>
+             </ul>
+         </div>
+         <div class="column" style="width: 50%;">
+             <center>
+                 <div id="MultiplexacaoEstatisticaGraph1" style="width: 550px; height: 225px;"></div>
+                 <div id="MultiplexacaoEstatisticaGraph2" style="width: 550px; height: 225px;"></div>
+                 <div id="MultiplexacaoEstatisticaGraph3" style="width: 550px; height: 225px;"></div>
+             </center>
+         </div>
+
+        <script type="text/javascript" charset="utf-8">
+
+            function MultiplexacaoEstatisticaCDF(n, k, p) {
+
+                var i;
+                var res = 0;
+                var comb = 1;
+                var probSel = 1;
+                var probNotSel = Math.pow(1-p, n);
+
+                for (i = 0; i <= k; i++) {
+
+                    res = res +  comb * probSel * probNotSel;
+                    comb = comb * (n-i) / (i + 1);
+                    probSel = probSel * p;
+                    probNotSel = probNotSel / (1-p);
+                }
+
+                return(res);
+            }
+
+             var MultiplexacaoEstatisticaLayout1 = {
+                font: {
+
+                    family: "helvetica, sans-serif",
+                    size: 14
+                },
+                yaxis: {
+                    title: "Prob. de Falha",
+                    showgrid: false,
+                    showline: true,
+                    ticks: "outside",
+                    range: [0, 1]
+                },
+                xaxis: {
+                    title: "N",
+                    showgrid: false,
+                    showline: true,
+                    showzeroline: false,
+                    nticks: 4,
+                    ticks: "outside",
+                },
+                margin: {                           // update the left, bottom, right, top margin
+                    l: 50, b: 65, r: 2, t: 5
+                },
+                height: 200,
+                width: 500
+            };
+
+             var MultiplexacaoEstatisticaLayout2 = {
+                font: {
+
+                    family: "helvetica, sans-serif",
+                    size: 14
+                },
+                yaxis: {
+                    title: "Prob. de Falha",
+                    showgrid: false,
+                    showline: true,
+                    ticks: "outside",
+                    range: [0, 1]
+                },
+                xaxis: {
+                    title: "p",
+                    showgrid: false,
+                    showline: true,
+                    showzeroline: false,
+                    nticks: 4,
+                    ticks: "outside",
+                },
+                margin: {                           // update the left, bottom, right, top margin
+                    l: 50, b: 65, r: 2, t: 5
+                },
+                height: 200,
+                width: 500
+            };
+
+             var MultiplexacaoEstatisticaLayout3 = {
+                font: {
+
+                    family: "helvetica, sans-serif",
+                    size: 14
+                },
+                yaxis: {
+                    title: "Prob. de Falha",
+                    showgrid: false,
+                    showline: true,
+                    ticks: "outside",
+                    range: [0, 1]
+                },
+                xaxis: {
+                    title: "k",
+                    showgrid: false,
+                    showline: true,
+                    showzeroline: false,
+                    nticks: 4,
+                    ticks: "outside",
+                },
+                margin: {                           // update the left, bottom, right, top margin
+                    l: 50, b: 65, r: 2, t: 5
+                },
+                height: 200,
+                width: 500
+            };
+
+	    var Nmax = 150;
+
+            function MultiplexacaoEstatisticareplot() {
+
+                var N = document.getElementById('MultiplexacaoEstatisticaInputN').value;
+                var k = document.getElementById('MultiplexacaoEstatisticaInputk').value;
+                var p = document.getElementById('MultiplexacaoEstatisticaInputp').value;
+                var x = [];
+                var y = [];
+                var i;
+
+                for (i = 1; i < Nmax; i++) {
+
+                    x[i] = i;
+                    y[i] = 1 - MultiplexacaoEstatisticaCDF(i, k, p);
+                }
+
+                var data = [{
+                    y: y,
+                    x: x,
+                    line: { width: 2, color: 'red' },
+                    uid: "00abaa"
+                }];
+
+                Plotly.newPlot(MultiplexacaoEstatisticaGraph1, data, MultiplexacaoEstatisticaLayout1);
+                Plotly.newPlot(MultiplexacaoEstatisticaGraph2, data, MultiplexacaoEstatisticaLayout2);
+                Plotly.newPlot(MultiplexacaoEstatisticaGraph3, data, MultiplexacaoEstatisticaLayout3);
+             }
+
+	     function MultiplexacaoEstatisticaplot() {
+
+                var N = document.getElementById('MultiplexacaoEstatisticaInputN').value;
+                var k = document.getElementById('MultiplexacaoEstatisticaInputk').value;
+                var p = document.getElementById('MultiplexacaoEstatisticaInputp').value;
+                var x = [];
+                var y = [];
+                var i;
+
+                for (i = 1; i < Nmax; i++) {
+
+                    x[i] = i;
+                    y[i] = 1 - MultiplexacaoEstatisticaCDF(i, k, p);
+                }
+
+                var data = [{
+                    y: y,
+                    x: x,
+                    line: { width: 2, color: 'red' },
+                    uid: "00abaa"
+                }];
+
+                Plotly.newPlot(MultiplexacaoEstatisticaGraph1, data, MultiplexacaoEstatisticaLayout1);
+
+		x = [];
+		y = [];
+                for (i = 0; i <= 100; i++) {
+
+                    x[i] = i / 100;
+                    y[i] = 1 - MultiplexacaoEstatisticaCDF(N, k, i / 100);
+                }
+
+                var data = [{
+                    y: y,
+                    x: x,
+                    line: { width: 2, color: 'red' },
+                    uid: "00abaa"
+                }];
+
+
+                Plotly.newPlot(MultiplexacaoEstatisticaGraph2, data, MultiplexacaoEstatisticaLayout2);
+
+		x = [];
+		y = [];
+                for (i = 1; i <= N; i++) {
+
+                    x[i] = i;
+                    y[i] = 1 - MultiplexacaoEstatisticaCDF(N, i, p);
+                }
+
+                var data = [{
+                    y: y,
+                    x: x,
+                    line: { width: 2, color: 'red' },
+                    uid: "00abaa"
+                }];
+
+                Plotly.newPlot(MultiplexacaoEstatisticaGraph3, data, MultiplexacaoEstatisticaLayout3);
+             }
+
+            MultiplexacaoEstatisticaplot();
+          </script>
+
+
+    </div>
+    </section>
+
+	<section>
+	<h1>Comutação de Pacotes: Enfileiramento e Atraso (I)</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Já sabemos que enfileiramento pode levar a descarte de pacotes.
+			<ul>
+				<li>Pacote chega ao comutador, não há mais espaço disponível no <i>buffer</i>.</li>
+			</ul></li>
+			<li>Mas o enfileiramento tem outra consequência: <span class="alert">o aumento no atraso</span>.</li>
+			<li>Pacote enfileirado precisa aguardar que todos os pacotes a sua frente sejam transmitidos.
+			<ul>
+				<li>Maiores filas &#x2192; maior tempo de espera.</li>
+			</ul></li>
+			<li><i>e.g.</i>, assumindo que cada pacote leve 10&nbsp;ms para ser transmitido.
+			<ul>
+				<li>Com 5 pacotes na fila, 50&nbsp;ms.</li>
+				<li>Com 100 pacotes na fila, 1&nbsp;s.</li>
+			</ul></li>
+		</ul>
+
+		<center>
+			<img src="imagens/PerdaAtraso.svg" style="width: 50%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Comutação de Pacotes: Enfileiramento e Atraso (II)</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li>Sejam:
+				<ul>
+					<li><span class="math inline">\(R\)</span>: capacidade do enlace (b/s).</li>
+					<li><span class="math inline">\(L\)</span>: tamanho dos pacotes (b).</li>
+					<li><span class="math inline">\(a\)</span>: taxa de chegada de pacotes (p/s).</li>
+				</ul></li>
+				<li>Logo, <span class="math inline">\(L\cdot a\)</span> é a taxa de chegada em b/s.</li>
+				<li>Se:
+				<ul>
+					<li><span class="math inline">\(\frac{L\cdot a}{R} \approx 0\)</span>, pacotes esperam pouco na fila.</li>
+					<li><span class="math inline">\(\frac{L\cdot a}{R} \rightarrow 1\)</span>, pacotes esperam muito na fila.</li>
+					<li><span class="math inline">\(\frac{L\cdot a}{R} > 1\)</span>, mais trabalho que o comutador consegue suportar &#x2192; tempo de espera &ldquo;infinito&rdquo;.
+					<ul>
+						<li><i>i.e.</i>, descarte de pacotes inevitável!</li>
+					</ul></li>
+				</ul></li>
+			</ul>
+		</div>
+
+		<div class="column" style="width: 50%;">
+			<center>
+				<img src="imagens/AtrasoEnfileiramento.png" style="width: 80%;"/>
+			</center>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Comutação de Pacotes: Reordenação</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 55%;">
+		<ul>
+			<li>Outra característica da comutação de pacotes.</li>
+			<li>Pacotes podem &ldquo;mudar de ordem&rdquo;.
+			<ul>
+				<li><i>i.e.</i>, pacote transmitido antes pode chegar depois.</li>
+			</ul></li>
+			<li>Razão mais comum: caminhos distintos.
+			<ul>
+				<li>Decisão de como encaminhar pacote é (normalmente) do comutador.</li>
+				<li>Guiada por um processo de <span class="alert">roteamento</span>.</li>
+				<li>Roteamento pode mudar escolhas <span class="alert">dinamicamente</span>.</li>
+			</ul></li>
+		</ul>
+		</div>
+		<div class="column" style="width: 45%;">
+		<center>
+			<img src="imagens/Reordenacao.svg" style="width: 90%;"/>
+		</center>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Comutação de Pacotes <i>vs.</i> Comutação de Circuitos</h1>
+	<div class="slideContent">
+		<ul>
+			<li><span class="alert">Pergunta:</span> Qual abordagem é melhor?</li>
+			<li><span class="alert">Resposta:</span> depende do cenário, objetivos.</li>
+			<li>Comutação de pacotes funciona bem para tráfego em <span class="alert">rajada</span>.
+			<ul>
+				<li>Permite compartilhamento melhor dos recursos.</li>
+				<li>Não necessita de estabelecimento de chamada.</li>
+			</ul></li>
+			<li>Mas pode resultar em <span class="alert">congestionamento excessivo</span>.
+			<ul>
+				<li>Filas longas, descartes de pacotes, atrasos.</li>
+				<li>Não podemos <span class="alert">prometer</span> muita coisa.</li>
+			</ul></li>
+			<li>Certas aplicações precisam de garantias.
+			<ul>
+				<li>Como prover garantias em uma rede de comutação de pacotes?</li>
+				<li>Problema ainda em aberto (Redes II).</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Comutação de Pacotes: Quem Lida com os Problemas?</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Usamos a Internet todos os dias para transmitir arquivos.</li>
+			<li>Obviamente, queremos que estes arquivos cheguem perfeitos, <span class="alert">íntegros</span> no destinatário.</li>
+			<li>Como isso é possível, se a rede pode descartar, reordenar pacotes?</li>
+			<li><span class="alert">Resposta:</span> os terminais precisam lidar com isso.
+			<ul>
+				<li><i>i.e.</i>, implantar mecanismos de recuperação.</li>
+				<li><span class="alert">Assumindo que isto seja desejável</span>.</li>
+				<li>Argumento fim-a-fim, inteligência nas bordas.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Resumo da Aula...</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li><span class="alert">Comutação de pacotes</span>.
+				<ul>
+					<li>Informação dividida em unidades chamadas pacotes.</li>
+					<li>Cada pacote tratado isoladamente.</li>
+					<li>Quando transmitido, pacote usa toda a capacidade do enlace.</li>
+				</ul></li>
+				<li><span class="alert"><i>Store-and-Forward</i></span>.
+				<ul>
+					<li>Armazenar e encaminhar.</li>
+					<li>Comutador só pode começar transmissão no próximo enlace, quando recepção estiver <span class="alert">completa</span>.</li>
+					<li>Transmissões do pacote são sequenciais pela rota.</li>
+				</ul></li>
+				<li><span class="alert">Comutação de circuitos</span>.
+				<ul>
+					<li>Estabelecimento prévio de chamada.</li>
+					<li>Recursos pré-alocados, não compartilhados.</li>
+					<li>Possibilidade de <span class="alert">ociosidade</span>.</li>
+				</ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li><span class="alert">Multiplexação</span>.
+				<ul>
+					<li>Dados de vários usuários &ldquo;combinados&rdquo; em um mesmo meio.</li>
+					<li>FDM, TDM.</li>
+				</ul></li>
+				<li>Multiplexação estatística.
+				<ul>
+					<li>Consequência da comutação de pacotes.</li>
+					<li>Ordem intercalada, aleatória de pacotes.</li>
+					<li><span class="alert">Pode melhorar utilização dos recursos</span>.</li>
+				</ul></li>
+				<li>Enfileiramento.
+				<ul>
+					<li>Consequência do <i>store-and-forward</i>.</li>
+					<li>Ocorre quando chegada supera a capacidade de saída.</li>
+					<li>Descarte de pacotes, atrasos.</li>
+				</ul></li>
+			</ul>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Próxima Aula...</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Conclusão do capítulo introdutório:
+			<ul>
+				<li>Métricas de desempenho: perda de pacotes, atraso, vazão.</li>
+				<li>Modelos em camadas: ISO/OSI, TCP/IP.</li>
+				<li>Encapsulamento.</li>
+				<li>Breves considerações sobre segurança.</li>
+				<li>Histórico da Internet.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<!-- {{{{ dzslides core
+	#
+	#
+	#     __  __  __       .  __   ___  __
+	#    |  \  / /__` |    | |  \ |__  /__`
+	#    |__/ /_ .__/ |___ | |__/ |___ .__/ core :€
+	#
+	#
+	# The following block of code is not supposed to be edited.
+	# But if you want to change the behavior of these slides,
+	# feel free to hack it!
+	#
+	-->
+
+    <!-- More CSS -->
+	<link href='../template/css/slides.css' id="slides" rel='stylesheet' type='text/css'>
+	<link href='../template/css/presentationSpecific2.css' id="presentationSpecific2" rel='stylesheet' type='text/css'>
+
+    <!-- More Javascript -->
+	<script type="text/javascript" src="../template/js/dz.js"></script>
+
+	<!-- More CSS -->
+	<link href='../template/css/notesSpecific.css' id="notesSpecific" rel='stylesheet' type='text/css'>
+	<link href='../template/css/printSpecific.css' id="printSpecific" rel='stylesheet' type='text/css'>
+</body>
+</html>

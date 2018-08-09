@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <!-- Meta info -->
+		<meta charset="utf-8">
+		<meta name="shortauthor" content="Diego Passos"/>
+		<meta name="shorttitle" content="Broadcast e Multicast"/>
+		<meta name="shortevent" content="Redes de Computadores I"/>
+		<title>Redes de Computadores I: Aula 21</title>
+
+		<!-- Math support -->
+		<script type="text/x-mathjax-config">
+		MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+			MathJax.InputJax.TeX.Definitions.number = /^(?:[0-9]+(?:\.[0-9]{3})*(?:\{,\}[0-9]*)*|\{,\}[0-9]+)/
+		});
+		</script>
+		<!--<script src="js/plotly-latest.min.js"></script>-->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+		<script src="../../../../../MathJax-2.6-latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+		<script type="text/javascript" src="../template/js/dz_pre.js"></script>
+
+		<!-- Fonts -->
+		<link href='https://fonts.googleapis.com/css?family=Lora:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
+		<link href='../../../../../Fonts/Lora/lora.css' rel='stylesheet' type='text/css'>
+
+		<!-- CSS -->
+		<link href='../template/css/template.css' id="template" rel='stylesheet' type='text/css'>
+		<link href='../template/css/presentationSpecific.css' id="presentationSpecific" rel='stylesheet' type='text/css'>
+
+
+		<!-- Javascript -->
+		<!--
+		<script type="text/javascript" src="../template/js/audio.js"></script>
+		<script src="js/term.js" charset="utf-8"></script>
+    <script src="js/termcast.js" charset="utf-8"></script>
+		<link rel="stylesheet" href="css/googlecode.css">
+		<script src="js/highlight.pack.js"></script>
+		<script>
+			hljs.initHighlightingOnLoad();
+			hljs.configure({
+				tabReplace: '  '
+			});
+		</script>
+		-->
+</head>
+
+<body>
+    <!-- Audio handlers -->
+	<!--<audio src="audio/La.wav" id="La.wav" preload="auto"></audio>-->
+
+    <!-- Title Slide -->
+	<section>
+
+        <div class="slideContent">
+            <h1 class="title">Aula 21 - Roteamento <i>Broadcast</i> e <i>Multicast</i></h1>
+            <h2 class="author">Diego Passos</h2>
+            <h4 class="institution">Universidade Federal Fluminense</h4>
+            <h3 class="date">Redes de Computadores I</h3>
+        </div>
+		<br>
+		<br>
+			<div style="width: 30%; float: right; padding-right: 2%;">
+			<p style="font-size: 18px; text-align: right;">Material adaptado a partir dos slides originais de J.F Kurose and K.W. Ross.</p>
+		</div>
+	</section>
+
+	<section>
+	<h1>Revisão da Última Aula...</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+		  <ul>
+		    <li><b>Roteamento Intra-AS</b>:
+		    <ul>
+		      <li>Critério: desempenho.</li>
+		      <li>Principais protocolos: OSPF, RIP, IGRP.</li>
+		      <li>Também conhecido como IGP.</li>
+		    </ul></li>
+		    <li><b>RIP:</b>
+		    <ul>
+		      <li>Vetor de Distâncias.</li>
+		      <li>Entradas para sub-redes.</li>
+		      <li>Métrica: número de saltos.</li>
+		      <li>Distância máxima: 16.</li>
+		      <li>Envenenamento reverso.</li>
+		      <li>Roda sobre UDP.</li>
+		    </ul></li>
+		    <li><b>OSPF:</b>
+		    <ul>
+		      <li>Estado de Enlace.</li>
+		      <li>Mais moderno que o RIP.</li>
+		      <li>Considera segurança, múltiplos caminhos, hierarquia, ...</li>
+		      <li>Roda diretamente sobre IP.</li>
+		    </ul></li>
+		  </ul>
+		</div>
+		<div class="column" style="width: 50%;">
+		  <ul>
+				<li><b>Roteamento Inter-AS</b>:
+		    <ul>
+		      <li>Orientado a políticas.</li>
+		      <li>Principal protocolo: BGP.</li>
+		    </ul></li>
+		    <li><b>BGP:</b>
+		    <ul>
+		      <li>&ldquo;Vetor de Caminhos&rdquo;.</li>
+		      <li>Sessões BGP: TCP.</li>
+		      <li>Anúncios: <span class="alert">compromisso de rotear</span>.</li>
+					<li><span class="alert">eBGP</span> <i>vs.</i> <span class="alert">iBGP</span>.</li>
+		    </ul></li>
+		    <li><b>BGP: rotas</b>.
+		    <ul>
+		      <li>Possuem atributos.</li>
+		      <li><i>e.g.</i>, AS-PATH.</li>
+		      <li><i>e.g.</i>, NEXT-HOP.</li>
+		    </ul></li>
+		    <li><b>BGP: seleção de rotas.</b>
+		    <ul>
+		      <li><span class="alert">Baseada em políticas</span>.</li>
+		      <li>AS-PATH mais curto.</li>
+		      <li>NEXT-HOP mais próximo: <span class="alert">roteamento batata-quente</span>.</li>
+		      <li>Outros critérios.</li>
+		    </ul></li>
+		  </ul>
+		</div>
+	</div>
+	</section>
+
+	<section class="secao">
+	<div class="slideContent">
+	  Roteamento <i>Broadcast</i>
+	</div>
+	</section>
+
+	<section>
+	<h1>Roteamento <i>Broadcast</i></h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>Entrega pacotes da origem a todos os outros nós.</li>
+	    <li>Replicação na origem é ineficiente:</li>
+	  </ul>
+		<br>
+		<center>
+		  <img src="imagens/ReplicacaoOrigem.svg" style="width: 70%;"/>
+		</center>
+		<br>
+		<ul>
+		  <li>Replicação na origem: como a origem determina o endereço dos destinatários?</li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Replicação na Rede</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li><b>Inundação:</b> quando nó recebe pacote em <i>broadcast</i>, envia cópias para todos os seus vizinhos.
+	    <ul>
+	      <li>Problemas: ciclos e <span class="alert">tempestade de <i>broadcast</i></span>.</li>
+	    </ul></li>
+	    <li><b>Inundação Controlada:</b> nó só envia cópias se esta é a primeira recepção deste pacote.
+	    <ul>
+	      <li>Nós mantêm lista dos IDs dos pacotes já replicados.</li>
+	      <li>Outra alternativa é o <i>Reverse Path Forwarding</i> (RPF): apenas replicar pacotes que chegaram pelo enlace de próximo salto do caminho entre o nó corrente e <span class="alert">a origem</span>.</li>
+	    </ul></li>
+	    <li><b>Árvore Geradora (<i>Spanning Tree</i>):</b>
+	    <ul>
+	      <li>Nós nunca recebem pacotes redundantes.</li>
+	    </ul></li>
+	  </ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Árvores Geradoras</h1>
+	<div class="slideContent">
+		<ul>
+		  <li>Primeiramente, construa uma árvore geradora.
+		  <ul>
+		    <li>Grafo acíclico conectando todos os nós.</li>
+		  </ul></li>
+		  <li>Os nós, então, encaminham/criam cópias dos pacotes apenas nos enlaces da árvore geradora.</li>
+		</ul>
+	  <center>
+	    <img src="imagens/ArvoresGeradoras.svg" style="width: 70%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Árvores Geradoras: Criação Distribuída</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>Elege-se um nó central.
+	    <ul>
+	      <li><i>e.g.</i>, origem do tráfego <i>broadcast</i>.</li>
+	    </ul></li>
+	    <li>Cada nó envia uma mensagem <i>join</i> em <i>unicast</i> para o nó central.
+	    <ul>
+	      <li>Mensagem encaminhada normalmente até que chega a um nó que já pertence à árvore geradora.</li>
+	    </ul></li>
+	  </ul>
+		<br>
+		<center>
+		  <img src="imagens/ArvoresGeradorasConstrucao.svg" style="width: 70%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section class="secao">
+	<div class="slideContent">
+	  Roteamento <i>Multicast</i>
+	</div>
+	</section>
+
+	<section>
+	<h1>Roteamento <i>Multicast</i>: Definição do Problema</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li><b>Objetivo:</b> encontrar uma árvore (ou árvores) conectando roteadores <span class="alert">membros de um grupo multicast</span>.</li>
+	  </ul>
+		<div class="column" style="width: 70%;">
+		  <ul>
+		    <li>Mais definições:
+		    <ul>
+		      <li><b>Árvore</b>: nem todos os enlaces da rede são usados.</li>
+		      <li><b>Árvore Compartilhada:</b> uma mesma árvore é usada por todos os membros do grupo.</li>
+		      <li><b>Enraizada na Fonte:</b> árvores diferentes para cada transmissor do grupo.</li>
+		    </ul></li>
+		  </ul>
+			<br>
+			<center>
+			  <img src="imagens/TiposMulticast.svg" style="width: 70%;"/>
+			</center>
+		</div>
+		<div class="column" style="width: 30%;">
+		  <center>
+		    <img src="imagens/TiposMulticastLegenda.svg" style="width: 70%;"/>
+		  </center>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Abordagens para Construção de Árvores Multicast</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li><b>Árvores enraizadas na fonte:</b> uma árvore por fonte.
+	    <ul>
+	      <li>Árvore de caminhos mais curtos.</li>
+	      <li>Encaminhamento baseado no caminho reverso.</li>
+	    </ul></li>
+	    <li><b>Árvores compartilhadas:</b> grupo todo usa árvore única.
+	    <ul>
+	      <li>Árvore de custo mínimo (<span class="alert">Árvore de Steiner</span>).</li>
+	      <li>Árvore baseadas em nó central.</li>
+	    </ul></li>
+			<li>Veremos cada uma destas abordagens.</li>
+	  </ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Árvore de Caminhos mais Curtos</h1>
+	<div class="slideContent">
+		<ul>
+		  <li>Árvore de encaminhamento <i>multicast</i>: árvore composta pelos caminhos mais curtos da origem até cada destinatário.
+		  <ul>
+		    <li>Sub-produto do Algoritmo de Dijkstra.</li>
+		  </ul></li>
+		</ul>
+		<br>
+	  <center>
+	    <img src="imagens/ArvoreCaminhosMaisCurtos.svg" style="width: 70%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Encaminhamento baseado no Caminho Reverso</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>Se baseia no conhecimento dos roteadores sobre os caminhos <i>unicast</i> mais curtos para a origem.</li>
+	    <li>Cada roteador aplica o seguinte algoritmo para realizar o encaminhamento:</li>
+	  </ul>
+		<br>
+		<center>
+		  <div style="border: 2px solid #a33; text-align: left; width: 70%; padding: 10px;">
+		    <b>Se</b> (datagrama <i>multicast</i> foi recebido no enlace de próximo salto no caminho mais curto de volta à origem)<br>
+				&nbsp;&nbsp;&nbsp; <b>Então</b> inunde datagrama para todos os enlaces de saída.<br>
+				&nbsp;&nbsp;&nbsp; <b>Senão</b> ignore datagrama.
+		  </div>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Encaminhamento baseado no Caminho Reverso: Exemplo</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/CaminhoReversoExemplo.svg" style="width: 70%;"/>
+	  </center>
+		<br>
+		<ul>
+		  <li>Resultado é uma árvore específica para nó de origem.
+		  <ul>
+		    <li>Árvore de caminhos mais curtos reversa.</li>
+		    <li>Pode não ser uma boa escolha se enlaces forem muito assimétricos.</li>
+		  </ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Encaminhamento baseado no Caminho Reverso: Poda</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>Árvore de encaminhamento contém sub-árvores sem membros do grupo <i>multicast</i>.
+	    <ul>
+	      <li>Não é necessário encaminhar datagramas por estas sub-árvores.</li>
+	      <li>Mensagens de &ldquo;poda&rdquo; enviadas em direção à origem por roteadores sem membros conectados.</li>
+	    </ul></li>
+	  </ul>
+		<br>
+		<center>
+		  <img src="imagens/CaminhoReversoPoda.svg" style="width: 70%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Árvore Compartilhada: Árvore de Steiner</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li><b>Árvore de Steiner:</b> árvore de custo mínimo conectando todos os roteadores que possuem membros do grupo.</li>
+	    <li>Problema é NP-Difícil.
+	    <ul>
+	      <li><i>i.e.</i>, hoje não conhecemos algoritmos ótimos eficientes.</li>
+				<li>E é possível que não existam.</li>
+	    </ul></li>
+	    <li>Mas há excelentes heurísticas disponíveis.</li>
+	    <li>Mesmo assim, não é utilizado na prática:
+	    <ul>
+	      <li>Complexidade computacional.</li>
+	      <li>Necessidade de informação sobre toda a rede.</li>
+	      <li>Monolítico: re-execução é necessária sempre que um novo roteador entra/sai do grupo.</li>
+	    </ul></li>
+	  </ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Árvores Baseadas em Nó Central</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>Uma única árvore de encaminhamento compartilhada por todos os nós.</li>
+	    <li>Um roteador se define como o <span class="alert">&ldquo;centro&rdquo;</span> da árvore.</li>
+	    <li>Para se juntar ao grupo:
+	    <ul>
+	      <li>Roteador de borda envia mensagem <i>unicast</i> do tipo <i>join</i> endereçada ao centro da árvore.</li>
+	      <li>Mensagem é &ldquo;processada&rdquo; pelos roteadores intermediários e encaminhada em direção ao centro.</li>
+	      <li>A mensagem de <i>join</i> ou chega ao centro ou chega a algum ramo já existente da árvore.</li>
+	      <li>Caminho usado pela mensagem <i>join</i> se torna, então, um novo ramo da árvore conectando o novo roteador.</li>
+	    </ul></li>
+	  </ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Árvores Baseadas em Nó Central: Exemplo</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>Suponha que R6 seja escolhido como centro.</li>
+	  </ul>
+		<br>
+		<center>
+		  <img src="imagens/ArvoreNoCentral.svg" style="width: 70%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Resumo da Aula...</h1>
+	<div class="slideContent">
+		<ul>
+		  <li><b>Modos de Comunicação:</b>
+		  <ul>
+				<li><i>Unicast</i>: com um nó de destino específico.</li>
+		    <li><i>Broadcast</i>: com todos os nós da rede.</li>
+		    <li><i>Multicast</i>: com um sub-conjunto (<b>grupo</b>) de nós da rede.</li>
+		  </ul></li>
+		  <li><b>Roteamento <i>Broadcast</i></b>:
+		  <ul>
+		    <li>Evitar: replicação na fonte, tempestade de <i>broadcast</i>.</li>
+		    <li>Métodos: inundação controlada, árvore geradora (<i>spanning tree</i>).</li>
+		  </ul></li>
+		  <li><b>Roteamento <i>Multicast</i>:</b>
+		  <ul>
+		    <li>Objetivo: encontrar árvore(s) conectando nós do grupo.</li>
+		    <li>Abordagens: uma árvore compartilhada <i>vs.</i> múltiplas árvores.</li>
+		    <li>Técnicas: árvore de caminhos mínimos, encaminhamento por caminho reverso, árvore de Steiner, árvores de nó central.</li>
+				<li>Mecanismo auxiliar: mensagens de poda.</li>
+		  </ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>(Breve) Revisão do Capítulo 4 (I)</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 53%;">
+		  <ul>
+		    <li><b>Camada de rede:</b>
+		    <ul>
+		      <li>Comunicação fim a fim <span class="alert">entre <i>hosts</i>.</span></li>
+		      <li>Encapsula segmentos em <span class="alert">datagramas</span>.</li>
+		      <li>Roda em todos os nós.</li>
+		    </ul></li>
+		    <li><b>Funções chave:</b>
+		    <ul>
+		      <li>Encaminhamento: mover datagrama da entrada para saída.</li>
+		      <li>Roteamento: encontrar <span class="alert">rota</span> fim-a-fim.</li>
+		    </ul></li>
+		    <li><b>Tabela de roteamento</b>:
+		    <ul>
+		      <li>Montada pelo roteamento.</li>
+		      <li>Usada pelo encaminhamento.</li>
+		    </ul></li>
+		    <li><b>Modelos de Serviço:</b>
+		    <ul>
+		      <li>O que a rede promete.</li>
+		      <li><i>e.g.</i>, banda mínima, atraso máximo, entrega ordenada.</li>
+					<li>Modelo da Internet: <span class="alert">melhor esforço</span>.</li>
+		    </ul></li>
+		  </ul>
+		</div>
+		<div class="column" style="width: 47%;">
+		  <ul>
+		    <li><b>Redes de Circuitos Virtuais:</b>
+		    <ul>
+		      <li>Serviço orientado a conexão.</li>
+		      <li>Pacotes corregam identificador do VC.
+		      <ul>
+		        <li>E não endereço de destino.</li>
+		      </ul></li>
+		      <li>Recursos muitas vezes reservados.</li>
+		      <li>Tabela de roteamento associa:
+		      <ul>
+		        <li>Interface, # do VC de entrada.</li>
+		        <li>Interface, # do VC de saída.</li>
+		      </ul></li>
+		    </ul></li>
+		    <li><b>Redes de datagramas:</b>
+		    <ul>
+		      <li>Paradigma usado na Internet.</li>
+		      <li>Encaminhamento baseado no <span class="alert">endereço de destino</span>.</li>
+		      <li><span class="alert">Agregação de endereço.</span></li>
+		      <li><span class="alert">Casamento por prefixo mais longo</span>.</li>
+		    </ul></li>
+		  </ul>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>(Breve) Revisão do Capítulo 4 (II)</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+		  <ul>
+		    <li><b>Roteadores: arquitetura</b>.
+		    <ul>
+		      <li>Plano de controle: protocolos de roteamento.</li>
+		      <li>Plano de encaminhamento: portas, malha de comutação.</li>
+		    </ul></li>
+		    <li><b>Portas de entrada:</b>
+		    <ul>
+		      <li>Terminação do enlace físico.</li>
+		      <li>Camada de enlace.</li>
+		      <li>Decisões de comutação, <span class="alert">fila</span>.</li>
+					<li><i>Head-of-line Blocking</i>.</li>
+		    </ul></li>
+		    <li><b>Malha de comutação:</b>
+		    <ul>
+		      <li>Transporta pacotes de entradas para saída.</li>
+		      <li><span class="alert">Memória, barramento, rede de interconexão</span>.</li>
+					<li>Taxa de comutação.</li>
+		    </ul></li>
+		    <li><b>Portas de saída:</b>
+		    <ul>
+		      <li><span class="alert">Fila</span>: atrasos, perdas.</li>
+		    </ul></li>
+		  </ul>
+		</div>
+		<div class="column" style="width: 50%;">
+		  <ul>
+		    <li><b><i>Buffers</i>: tamanho.</b>
+		    <ul>
+		      <li>Objetivo: absorver variações temporárias.</li>
+		      <li><i>Buffer</i> excessivo &rarr; atrasos altos, mascara congestionamento.</li>
+		    </ul></li>
+		    <li><b>Políticas de enfileiramento:</b>
+		    <ul>
+		      <li>Descarte e escalonamento.</li>
+		      <li>Impacto em QoS, desempenho do TCP.</li>
+		    </ul></li>
+		    <li><b>Políticas de Escalonamento:</b>
+		    <ul>
+		      <li>FIFO, <i>Priority Scheduling</i>, RR.</li>
+		      <li>Esfomeação <i>vs.</i> Justiça <i>vs.</i> Simplicidade.</li>
+		    </ul></li>
+		    <li><b>Políticas de Descarte:</b>
+		    <ul>
+		      <li><i>Drop-tail, Drop-head</i>, RED.</li>
+		      <li>Sincronização.</li>
+		      <li>Detecção avançada de congestionamento.</li>
+		    </ul></li>
+		  </ul>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>(Breve) Revisão do Capítulo 4 (III)</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+		  <ul>
+		    <li><b>Protocolos da Camada de Rede:</b>
+		    <ul>
+		      <li>Vários contribuem.</li>
+		      <li>Protocolos de roteamento.</li>
+		      <li>IP.</li>
+		      <li>ICMP.</li>
+		    </ul></li>
+		    <li><b>Protocolo IP:</b>
+		    <ul>
+		      <li>Define convenções.</li>
+		      <li>Formato de datagrama.</li>
+		      <li>Endereçamento.</li>
+		    </ul></li>
+		    <li><b>Datagrama IP:</b>
+		    <ul>
+		      <li>Checksum apenas do cabeçalho.</li>
+		      <li>Campo de opções, tamanho variável.</li>
+		      <li>TTL (<i>time-to-live</i>).</li>
+		    </ul></li>
+				<li><b>Fragmentação:</b>
+				<ul>
+				  <li>Quebrar datagramas grandes.</li>
+				  <li>Adequa a limitações de cada enlace.</li>
+				  <li><span class="alert">Remontados apenas no destinatário</span>.</li>
+				</ul></li>
+		  </ul>
+		</div>
+		<div class="column" style="width: 50%;">
+		  <ul>
+		    <li><b>Endereçamento IP:</b>
+		    <ul>
+		      <li>32 bits.</li>
+		      <li><span class="alert">Associados a interfaces</span>.</li>
+		      <li><span class="alert">Prefixo identifica a sub-rede</span>.</li>
+		      <li>CIDR, máscara de sub-rede.</li>
+		    </ul></li>
+		    <li><b>DHCP:</b>
+		    <ul>
+		      <li>Protocolo de auto-configuração.</li>
+		      <li>Atribuição dinâmica de endereços IP.</li>
+					<li><span class="alert">Roteador de primeiro salto.</span></li>
+		      <li>E mais configurações.</li>
+		      <li>Cliente-servidor.</li>
+		      <li>Roda sobre UDP.</li>
+		      <li>Mensagens em <span class="alert"><i>broadcast</i></span>.</li>
+		    </ul></li>
+		    <li><b>Endereçamento hierárquico:</b>
+		    <ul>
+		      <li>Sub-redes são divididas.</li>
+		      <li>Novas sub-redes menores.</li>
+		      <li>Simplifica anúncio de rotas.</li>
+		    </ul></li>
+		  </ul>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>(Breve) Revisão do Capítulo 4 (IV)</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 55%;">
+			<ul>
+			  <li><b>NAT</b>:
+			  <ul>
+			    <li>Tradução de endereços.</li>
+			    <li>Rede local <i>vs.</i> rede externa.</li>
+					<li>Endereços privados <i>vs.</i> públicos, roteáveis.</li>
+			    <li>Pacote sai: IP e porta de origem alterados.</li>
+			    <li>Pacote entra: IP e porta de destino são alterados.</li>
+					<li>Tabela NAT: armazana mapeamentos.</li>
+			  </ul></li>
+			  <li>NAT: Motivação.
+			  <ul>
+			    <li><span class="alert">Escassez de IPs</span>.</li>
+			    <li>Independência dos endereços do ISP.</li>
+			    <li>Segurança.</li>
+			  </ul></li>
+			  <li>NAT <i>Traversal</i>:
+			  <ul>
+			    <li>Conexão de fora para dentro do NAT.</li>
+			    <li>Entradas estáticas na tabela.</li>
+			    <li>Protocolo IGD.</li>
+			    <li><i>Relaying</i> (aplicação).</li>
+			  </ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 45%;">
+		  <ul>
+		    <li><b>ICMP:</b>
+		    <ul>
+		      <li>Gerência do IP.</li>
+		      <li>Informações, condições de erro.</li>
+		      <li>Diversas tipos de mensagens.</li>
+					<li>Suporte a algumas ferramentas usuais.</li>
+		    </ul></li>
+		    <li><b>IPv6: Motivações.</b>
+		    <ul>
+		      <li>Mais endereços.</li>
+		      <li>Menor <i>overhead</i> de processamento.</li>
+		    </ul></li>
+		    <li><b>IPv6: diferenças</b>.
+		    <ul>
+		      <li>Cabeçalho fixo.</li>
+		      <li>Fragmentação não permitida.</li>
+		      <li>Melhor suporte a QoS.</li>
+		      <li>ICMPv6.</li>
+		    </ul></b></li>
+		    <li><b>IPv6: Transição.</b>
+		    <ul>
+		      <li>Gradual, coexistência com IPv4.</li>
+		      <li>Solução: tunelamento.</li>
+		    </ul></li>
+		  </ul>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>(Breve) Revisão do Capítulo 4 (V)</h1>
+	<div class="slideContent">
+		<ul>
+		  <li><b>Roteamento:</b>
+		  <ul>
+		    <li>Encontrar caminhos fim-a-fim.</li>
+		    <li><span class="alert">Construir tabela de roteamento</span>.
+		    <ul>
+		      <li>Consultada no encaminhamento.</li>
+		    </ul></li>
+		  </ul></li>
+		  <li><b>Grafos</b>: usados como abstração para representar a rede.
+		  <ul>
+		    <li>Roteadores são nós.</li>
+		    <li>Enlaces são arestas.</li>
+		    <li>Podem ter pesos: <span class="alert">medida de qualidade do enlace</span>.
+		    <ul>
+		      <li>Relacionado a banda, atraso, congestionamento, ...</li>
+		    </ul></li>
+		  </ul></li>
+		  <li><b>Classificações:</b>
+		  <ul>
+		    <li>Estado de Enlace <i>vs.</i> Vetor de Distâncias.</li>
+		    <li>Dinâmico <i>vs.</i> Estático.</li>
+		  </ul></li>
+		  <li><b>Roteamento baseado em Estado de Enlaces:</b>
+		  <ul>
+		    <li>Algoritmo de Dijkstra.</li>
+		  </ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>(Breve) Revisão do Capítulo 4 (VI)</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 55%;">
+			<ul>
+			  <li><b>Roteamento baseado em Vetor de Distâncias</b>:
+			  <ul>
+			    <li>Ideia: melhor caminho até destino composto por enlace até vizinho e melhor caminho do vizinho até destino.</li>
+			    <li>Nós anunciam suas <span class="alert">estimativas</span> de custo até cada destino.</li>
+			    <li>Ao <span class="alert">receber</span> novas estimativas, nó <span class="alert">atualiza</span> suas próprias.</li>
+			    <li>Processo iterativo, <span class="alert">converge para melhores rotas</span>.</li>
+			    <li>Algoritmo <span class="alert">distribuído</span>: nós precisam conhecer apenas vizinhança.</li>
+			  </ul></li>
+			  <li><b>Contagem ao infinito:</b>
+			  <ul>
+			    <li>Potencial problema, ocorre em caso de grandes pioras nos custos dos enlaces.</li>
+			    <li>Solução (parcial): <span class="alert">envenenamento reverso</span>.</li>
+			  </ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 45%;">
+			<ul>
+			  <li><b>Roteamento Hierárquico:</b>
+			  <ul>
+			    <li>Dois níveis: dentro e fora de <span class="alert">Sistemas Autônomos</span>.
+			    <ul>
+			      <li>Intra-AS e Inter-AS.</li>
+			    </ul></li>
+					<li>Tabela de roteamento construída por <span class="alert">colaboração dos dois processos</span>.</li>
+			    <li>Reduz escopo, complexidade do roteamento.</li>
+					<li><span class="alert">Nem sempre é globalmente ótimo!</span></li>
+			  </ul></li>
+			  <li><b>Roteamento batata-quente:</b>
+			  <ul>
+			    <li>Tirar datagrama do AS o mais rápido possível.</li>
+			  </ul></li>
+			</ul>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>(Breve) Revisão do Capítulo 4 (VII)</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+		  <ul>
+		    <li><b>Roteamento Intra-AS</b>:
+		    <ul>
+		      <li>Critério: desempenho.</li>
+		      <li>Principais protocolos: OSPF, RIP, IGRP.</li>
+		      <li>Também conhecido como IGP.</li>
+		    </ul></li>
+		    <li><b>RIP:</b>
+		    <ul>
+		      <li>Vetor de Distâncias.</li>
+		      <li>Entradas para sub-redes.</li>
+		      <li>Métrica: número de saltos.</li>
+		      <li>Distância máxima: 16.</li>
+		      <li>Envenenamento reverso.</li>
+		      <li>Roda sobre UDP.</li>
+		    </ul></li>
+		    <li><b>OSPF:</b>
+		    <ul>
+		      <li>Estado de Enlace.</li>
+		      <li>Mais moderno que o RIP.</li>
+		      <li>Considera segurança, múltiplos caminhos, hierarquia, ...</li>
+		      <li>Roda diretamente sobre IP.</li>
+		    </ul></li>
+		  </ul>
+		</div>
+		<div class="column" style="width: 50%;">
+		  <ul>
+				<li><b>Roteamento Inter-AS</b>:
+		    <ul>
+		      <li>Orientado a políticas.</li>
+		      <li>Principal protocolo: BGP.</li>
+		    </ul></li>
+		    <li><b>BGP:</b>
+		    <ul>
+		      <li>&ldquo;Vetor de Caminhos&rdquo;.</li>
+		      <li>Sessões BGP: TCP.</li>
+		      <li>Anúncios: <span class="alert">compromisso de rotear</span>.</li>
+					<li><span class="alert">eBGP</span> <i>vs.</i> <span class="alert">iBGP</span>.</li>
+		    </ul></li>
+		    <li><b>BGP: rotas</b>.
+		    <ul>
+		      <li>Possuem atributos.</li>
+		      <li><i>e.g.</i>, AS-PATH.</li>
+		      <li><i>e.g.</i>, NEXT-HOP.</li>
+		    </ul></li>
+		    <li><b>BGP: seleção de rotas.</b>
+		    <ul>
+		      <li><span class="alert">Baseada em políticas</span>.</li>
+		      <li>AS-PATH mais curto.</li>
+		      <li>NEXT-HOP mais próximo: <span class="alert">roteamento batata-quente</span>.</li>
+		      <li>Outros critérios.</li>
+		    </ul></li>
+		  </ul>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>(Breve) Revisão do Capítulo 4 (VIII)</h1>
+	<div class="slideContent">
+		<ul>
+			<li><b>Modos de Comunicação:</b>
+			<ul>
+				<li><i>Unicast</i>: com um nó de destino específico.</li>
+				<li><i>Broadcast</i>: com todos os nós da rede.</li>
+				<li><i>Multicast</i>: com um sub-conjunto (<b>grupo</b>) de nós da rede.</li>
+			</ul></li>
+			<li><b>Roteamento <i>Broadcast</i></b>:
+			<ul>
+				<li>Evitar: replicação na fonte, tempestade de <i>broadcast</i>.</li>
+				<li>Métodos: inundação controlada, árvore geradora (<i>spanning tree</i>).</li>
+			</ul></li>
+			<li><b>Roteamento <i>Multicast</i>:</b>
+			<ul>
+				<li>Objetivo: encontrar árvore(s) conectando nós do grupo.</li>
+				<li>Abordagens: uma árvore por fonte <i>vs.</i> múltiplas árvores.</li>
+				<li>Técnicas: árvore de caminhos mínimos, encaminhamento por caminho reverso, árvore de Steiner, árvores de nó central.</li>
+				<li>Mecanismo auxiliar: mensagens de poda.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Próxima Aula...</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Aulas de conteúdo acabaram!
+			<li>Daqui até o fim do período, haverá apenas avaliações, vistas e entregas de notas.
+		</ul>
+	</div>
+	</section>
+
+	<!-- {{{{ dzslides core
+	#
+	#
+	#     __  __  __       .  __   ___  __
+	#    |  \  / /__` |    | |  \ |__  /__`
+	#    |__/ /_ .__/ |___ | |__/ |___ .__/ core :€
+	#
+	#
+	# The following block of code is not supposed to be edited.
+	# But if you want to change the behavior of these slides,
+	# feel free to hack it!
+	#
+	-->
+
+    <!-- More CSS -->
+	<link href='../template/css/slides.css' id="slides" rel='stylesheet' type='text/css'>
+	<link href='../template/css/presentationSpecific2.css' id="presentationSpecific2" rel='stylesheet' type='text/css'>
+
+    <!-- More Javascript -->
+	<script type="text/javascript" src="../template/js/dz.js"></script>
+
+	<!-- More CSS -->
+	<link href='../template/css/notesSpecific.css' id="notesSpecific" rel='stylesheet' type='text/css'>
+	<link href='../template/css/printSpecific.css' id="printSpecific" rel='stylesheet' type='text/css'>
+</body>
+</html>
