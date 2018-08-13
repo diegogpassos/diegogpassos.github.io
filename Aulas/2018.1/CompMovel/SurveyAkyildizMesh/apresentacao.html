@@ -1,0 +1,1383 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Wireless Mesh Networks: A Survey</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" type="text/css" href="../template/css/roboto.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/general.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/code.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/cover.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/section.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/elements.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/table.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/block.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/dagre.css">
+  </head>
+  <body>
+
+    <textarea id="source">
+
+class: cover-slide
+
+![:cover](
+Computação Móvel
+Apresentação do artigo<br><i>Wireless mesh networks: a survey</i>
+Diego Passos
+../template/img/logo.svg
+)
+
+---
+
+class: middle
+layout: true
+name: conteudo
+
+.title[
+{{slideTitle}}
+<hr>]
+
+---
+
+slideTitle: Dados sobre o artigo
+
+### Autores
+* Ian F. Akyildiz
+* Xudong Wang
+* Weilin Wang
+
+### Detalhes da publicação
+| | |
+|-|-|
+| Periódico | <i>Computer Networks</i> |
+| Ano | 2005 |
+| Páginas | 445 - 487 |
+
+---
+
+layout: false
+class: section-slide
+
+# Introdução
+
+---
+
+class: middle
+layout: true
+name: conteudo
+
+.title[
+{{slideTitle}}
+<hr>]
+
+---
+
+slideTitle: Definição
+
+.col-2[
+### *Wireless Mesh Networks*
+* WMN.
+* Ou *Redes em Malha Sem Fio*.
+]
+
+.col-2[
+### Dois elementos
+* Roteadores *mesh*.
+* Clientes *mesh*.
+]
+
+| Características | |
+| :-------------- | :- |
+| Auto-organização/configuração | Arquitetura *ad hoc* |
+| Baixo custo | Facilidade de manutenção
+| Robustez | Confiabilidade |
+
+---
+
+slideTitle: Clientes *mesh*
+
+### Sem fio
+* Dispositivos com NICs sem fio.
+    * *Desktops*.
+    * *Laptops*.
+    * *PDAs*.
+    * Celulares.
+    * ...
+
+### Cabeados
+* Dispositivos sem NICs sem fio.
+* Conectividade via Ethernet, por exemplo.
+
+---
+
+slideTitle: Roteadores *mesh*
+
+### Dispositivos dedicados
+* (Possivelmente) planejados.
+* Majoritariamente estáticos.
+* NICs sem fio e cabeada.
+
+### Potencial integração
+* Internet.
+* Outras tecnologias.
+    * Celular.
+    * WiMAX.
+    * ...
+
+---
+
+slideTitle: Motivações
+
+### Usos
+* Internet banda larga
+    * Pequenos provedores.
+    * Redes comunitárias.
+* Automação de edifícios
+* Redes Institucionais.
+* ...
+
+### Benefícios
+* Baixo investimento.
+* Crescimento incremental, orgânico.
+* Tolerância a falhas.
+
+---
+
+slideTitle: Facilidade de Implantação
+
+![:column 60%, margin-left: 40%;](
+<i>Implementar uma WMN **não é muito difícil**, porque todos os **componentes necessários já estão disponíveis** na forma de protocolos de roteamento **para redes ad hoc**, o protocolo MAC do IEEE 802.11, ...</i>
+)
+
+.col-2[
+### Consequência
+* Empresas já ofereciam produtos.
+* Universidades já possuiam *testbeds*.
+* Esforços de padronização.
+]
+
+.col-2[
+### Mas...
+* Problemas de escalabilidade.
+* Desempenho *vs.* número de saltos.
+]
+
+---
+
+slideTitle: Objetivo do Artigo
+
+### Survey
+* Arquiteturas para WMN.
+* Levantamento de características.
+    * Comparação com MANETs.
+* Cenários de aplicação.
+* Fatores importantes.
+* Estado da arte em termos de protocolos.
+
+---
+
+layout: false
+class: section-slide
+
+# Arquiteturas
+
+---
+
+class: middle
+layout: true
+name: conteudo
+
+.title[
+{{slideTitle}}
+<hr>]
+
+---
+
+slideTitle: Roteador *Mesh*: Características
+
+### Capacidades/funcionalidades
+* *Gateway*.
+* Roteador/repetidor.
+* Potencialmente, múltiplas interfaces sem fio.
+
+### Roteador *mesh* *vs.* roteador tradicional
+* Mesmo alcance, menor potência de transmissão.
+    * Múltiplos saltos.
+
+---
+
+slideTitle: Roteador *Mesh*: Plataformas
+
+### *Hardware*
+* Similar a roteadores sem fio tradicionais.
+* Várias opções:
+    * Dispositivos embarcados.
+    * Computadores de propósito geral.
+
+.center[
+![:imageS width: 60%](RoteadorMeshPropositoGeral.jpg)
+]
+
+---
+
+slideTitle: Cliente *Mesh*: Características
+
+### Funções para rede em malha
+* Também necessárias.
+* Podem funcionar como roteadores.
+    * .alert[Sempre verdade?]
+
+### Porém
+* Sem funções de *gateway* ou *bridge*.
+* Tipicamente, uma única NIC sem fio.
+
+---
+
+slideTitle: Cliente *Mesh*: Exemplos
+
+.center[
+![:imageS width: 60%](ClientesMesh.jpg)
+]
+
+---
+
+slideTitle: Tipos de Arquitetura *Mesh* (I)
+
+### *Mesh* com infraestrutura/*backbone*.
+* Roteadores *mesh* formam infraestrutura.
+* *Gateways* para Internet, outras redes.
+* Clientes sem fio ou cabeados.
+* Clientes podem se comunicar diretamente ou através de estações base.
+
+.center[
+![:imageS width: 67%](MeshInfra.png)
+]
+
+---
+
+slideTitle: Tipos de Arquitetura *Mesh* (II)
+
+.col-2[
+### *Mesh* de clientes.
+* Sem roteadores *mesh*.
+    * Clientes atuam como roteadores.
+* Apenas um tipo de rádio.
+* .alert[Diferente de ad hoc?]
+]
+
+.col-2[
+.center[
+![:imageS width: 95%](MeshClient.png)
+]
+]
+
+---
+
+slideTitle: Tipos de Arquitetura *Mesh* (III)
+
+### *Mesh* híbrida.
+* Mistura das duas outras arquiteturas.
+    * *Backbone* de roteadores *mesh*.
+    * Clientes podem se comunicar entre si.
+        * Funcionalidades de roteamento.
+
+.center[
+![:imageS width: 67%](MeshHybrid.png)
+]
+
+---
+
+layout: false
+class: section-slide
+
+# Características das WMN
+
+---
+
+class: middle
+layout: true
+name: conteudo
+
+.title[
+{{slideTitle}}
+<hr>]
+
+---
+
+slideTitle: Comunicação em Múltiplos Saltos
+
+### Objetivos
+* Grande cobertura.
+* Boa capacidade.
+* Comunicação sem visada direta.
+
+### Benefícios
+* Menos interferência entre nós.
+* Reuso espacial.
+
+---
+
+slideTitle: Auto-organização e Auto-recuperação
+
+### Objetivos
+* Flexibilidade arquitetural.
+* Facilidade de implantação.
+* Tolerância a falhas.
+
+---
+
+slideTitle: Mobilidade Dependente de Tipo de Nó
+
+### Roteadores *mesh*
+* Estacionários.
+    * Ou pouco móveis.
+
+### Clientes *mesh*
+* Estacionários ou móveis.
+
+### Benefícios
+* Previsibilidade.
+
+---
+
+slideTitle: Múltiplos Tipos de Ree de Acesso
+
+### WMN permitem
+* Comunicação P2P.
+* Acesso à Internet.
+* Integração de várias tecnologias sem fio.
+
+### Benefícios
+* Aplicações flexíveis.
+* Suporte a clientes heterogêneos.
+
+---
+
+slideTitle: Restrições de Energia Dependentes do Tipo de Nó
+
+### Roteadores *mesh*
+* Geralmente, sem restrições.
+* Alimentados por fontes ininterruptas.
+
+### Clientes *mesh*
+* Podem ter restrições.
+* Protocolos de uso eficiente de energia.
+
+---
+
+slideTitle: Compatibilidade com Tecnologias Existentes
+
+### Construção da rede
+* Pode ser realizada sobre tecnoligias sem fio já existentes.
+    * *e.g.*, IEEE 802.11, Zigbee.
+
+### Interoperabilidade
+* Podem integrar equipamentos de tecnologias distintas.
+
+---
+
+slideTitle: *Mesh* *vs.* * Ad Hoc* (I)
+
+### *Mesh* como uma rede *ad hoc*
+* Não necessita estações base, APs.
+* Faz uso de técnicas desenvolvidas paras as redes *ad hoc*.
+
+### *Ad hoc* como uma rede *mesh*.
+* Diversifica as capacidades das redes *ad hoc*.
+
+---
+
+slideTitle: *Mesh* *vs.* * Ad Hoc* (II)
+
+
+|    | *Mesh* | *Ad Hoc* |
+| :--| ------ | -------- |
+| *Backbone* | Robsuto, conectado, confiável | Não confiável |
+| Integração | Permite várias tecnologias | Rede homogênea |
+| Roteamento | Concentrado nos roteadores | Exclusivo dos clientes |
+| Configurações | Concentrado nos roteadores | Exclusivo dos clientes |
+| Múltiplos rádios | Suportados | Geralmente, não suportados |
+| Mobilidade | Mais previsível | Menos previsível |
+
+---
+
+layout: false
+class: section-slide
+
+# Aplicações
+
+---
+
+class: middle
+layout: true
+name: conteudo
+
+.title[
+{{slideTitle}}
+<hr>]
+
+---
+
+slideTitle: Redes Domésticas de Banda Larga
+
+### À época, baseado em IEEE 802.11
+* Exige planejamento.
+    * *e.g.*, onde instalar AP?
+* Múltiplos APs?
+    * Potencialmente vantajoso, mas caro.
+* Comunicação entre clientes sempre passa pelo AP.
+    * Ineficiente.
+
+.col-2[
+### Alternativa: *Mesh*
+* Múltiplos roteadores *mesh*.
+* Sem cabeamento entre eles.
+* Comunicação direta de clientes.
+]
+
+.col-2[
+.center[
+![:imageS width: 85%](HomeMesh.png)
+]
+]
+
+
+---
+
+slideTitle: Redes Comunitárias (I)
+
+### Arquitetura comum
+* Em cada casa:
+    * Modem DSL.
+    * Roteador sem fio (infraestruturado).
+
+### Desvantagens
+* Comunicação sempre via Internet.
+* Pontos sem cobertura.
+* Custo de vários enlaces de acesso.
+* Único caminho entre cada par de casas.
+
+---
+
+slideTitle: Redes Comunitárias (II)
+
+.center[
+![:imageS width: 85%](MeshComunitaria.png)
+]
+
+---
+
+slideTitle: Redes Institucionais
+
+### Arquitetura comum
+* Múltiplos APs Wi-Fi.
+* Sistema de distribuição Ethernet.
+
+### Alternativa *mesh*
+
+.center[
+![:imageS width: 55%](MeshInstitucional.png)
+]
+
+---
+
+slideTitle: Redes Metropolitanas
+
+.center[
+![:imageS width: 55%](MeshMetropolitana.png)
+]
+
+### Potenciais vantagens
+* Taxas de transmissão mais altas.
+* Mais barata.
+    * Sem necessidade de cabeamento.
+    * Regiões em desenvolvimento.
+
+---
+
+slideTitle: Sistema de Transporte
+
+.center[
+![:imageS width: 80%](MeshTransporte.png)
+]
+
+### Objetivo
+* Prover acesso aos passageiros.
+    * Internet.
+    * Informações da viagem.
+    * ...
+
+---
+
+slideTitle: Automação de Edifícios
+
+.col-2[
+### Objetivo
+* Controlar luzes.
+* Controlar temperatura.
+* Controlar elevadores.
+]
+
+.col-2[
+.center[
+![:imageS width: 95%](MeshAutomacao.png)
+]
+]
+
+
+---
+
+slideTitle: Ouras Aplicações
+
+#### Saúde e sistemas médicos
+* Transmissão de dados de monitoramento, exames.
+    * Muitas vezes, grandes volumes.
+* Integração de dispositivos móveis dos médicos, enfermeiros.
+
+#### Sistemas de monitoramento e segurança
+* Conectar câmeras, sensores.
+* Transmitir dados para servidores.
+
+#### Situações de recuperação de desastres
+* Distribuição de roteadores mesh.
+* Acesso a dispositivos móveis.
+
+---
+
+layout: false
+class: section-slide
+
+# Fatores Críticos para o Desempenho
+
+---
+
+class: middle
+layout: true
+name: conteudo
+
+.title[
+{{slideTitle}}
+<hr>]
+
+---
+
+slideTitle: Técnicas de Rádio
+
+### Aumento de flexibilidade e capacidade
+* Antenas direcionais e inteligentes.
+* MIMO.
+* Múltiplos rádios.
+* Rádios definidos por *software*.
+* Rádios cognitivos.
+
+### Efeitos em outras camadas
+* Roteamento ciente da direcionalidade da antena.
+* Acesso ao meio preparado para MIMO.
+
+
+---
+
+slideTitle: Escalabilidade
+
+### Desempenho *vs.* tamanho da rede
+* Vários protocolos têm queda no desempenho.
+    * Falha em estabelecer rotas.
+    * Falha em estabelecer conexão.
+    * Redução da vazão.
+    * ...
+
+### Exemplo prático
+* IEEE 802.11 e número de saltos.
+* Baixa vazão com 4 ou mais saltos.
+
+---
+
+slideTitle: Conectividade em Malha
+
+### Malha de Enlaces
+* Causa de muitos dos benefícios das WMN.
+* Afeta projeto de protocos.
+    * MAC.
+    * Roteamento.
+
+### Protocolos cientes de topologia
+* Podem melhorar desempenho da rede.
+
+---
+
+slideTitle: Banda Larga e QoS
+
+### Diferente das redes *ad hoc*
+* Aplicações são geralmente de banda larga.
+* Requisitos de QoS são comuns.
+
+### Outras métricas a serem consideradas
+* Jitter.
+* Vazão.
+* ...
+
+---
+
+slideTitle: Compatibilidade e Interoperabilidade
+
+### Característica desejada
+* Suporte a clientes convencionais e *mesh*.
+* Múltiplas tecnologias.
+
+### Importância
+* Motivações para WMN.
+
+---
+
+slideTitle: Segurança
+
+### Condição fundamental para sucesso.
+* Do contrário, não interesse dos usuários finais.
+
+### Segurança em *mesh vs. wireless*
+* Não há autoridade central.
+    * *e.g.*, distribuição de chaves.
+* Alternativa: segurança em redes *ad hoc*.
+    * Ainda precisariam amadurecer.
+    * Precisariam de adaptações arquiteturais.
+
+---
+
+slideTitle: Facilidade de Uso
+
+### Protocolos autônomos
+* Gerenciamento de energia.
+* Auto-organização.
+* Controle dinâmico de topologia.
+* Robustez a falhas em enlaces.
+* Rápida autenticação.
+
+### Ferramentas de gerência
+* Operação.
+* Monitoramento.
+* Configuração.
+
+---
+
+layout: false
+class: section-slide
+
+# Capacidade das WMNs
+
+---
+
+class: middle
+layout: true
+name: conteudo
+
+.title[
+{{slideTitle}}
+<hr>]
+
+---
+
+slideTitle: Fatores Importantes
+
+### Entender
+* Arquitetura da rede.
+* Topologia.
+* Padrão de tráfego.
+* Densidade de nós.
+* Número de canais usados por nó.
+* Potência de transmissão.
+* Mobilidade.
+
+### Para
+* Guiar desenvolvimento de protocolos.
+
+---
+
+slideTitle: Análise de Capacidade
+
+### Tópico bastante estudado em redes *ad hoc*
+* Redes estacionárias:
+    * Potência de transmissão ótima &rArr; 6 vizinhos.
+        * *Tradeoff*: distância *vs.* reuso espacial.
+* Redes móveis:
+    * Sem resultados teóricos.
+
+### Outros resultados
+* Capacidade cai com aumento de densidade.
+* Evitar muitos saltos:
+    * Alternativas: *clusters*, *relays*.
+    * Explorar mobilidade.
+        * Pacotes só transmitidos quando nós estão perto.
+---
+
+slideTitle: Problemas em Aberto
+
+.col-2[
+#### Modelos mais abrangentes
+* Potência de transmissão.
+* Padrões de tráfego.
+* Roteamento.
+
+#### Modelos específicos para WMN
+* Nós móveis e estacionários.
+]
+
+.col-2[
+#### Técnicas específicas para WMN
+* Múltiplos canais ou múltiplos rádios.
+* Antenas direcionais.
+* MIMO.
+]
+
+---
+
+layout: false
+class: section-slide
+
+# Aspectos de Camada Física
+
+---
+
+class: middle
+layout: true
+name: conteudo
+
+.title[
+{{slideTitle}}
+<hr>]
+
+---
+
+slideTitle: Técnicas Avançadas (I)
+
+### Robustez a erros adaptativa
+* Já disponível.
+    * Múltiplas taxas de transmissão.
+    * Algoritmos de adaptação de taxa.
+
+### Aumento da eficiência espectral/taxas
+* OFDM
+* UWB.
+
+---
+
+slideTitle: Técnicas Avançadas (II)
+
+### Múltiplas antenas
+* Maior capacidade.
+* Menor interferência.
+* Diversidade ou múltiplas transmissões.
+
+### Múltiplos canais ou rádios
+* Maior capacidade.
+* Transmissões simultâneas em canais diferentes.
+
+---
+
+slideTitle: Técnicas Avançadas (III)
+
+### Rádios cognitivos
+* 70% do espectro alocado, mas não utilizado.
+    * Não todo tempo.
+    * ms a horas.
+* Ideia:
+    * Dinâmicamente avaliar e usar espectro.
+* Plataforma: SDR.
+
+---
+
+slideTitle: Problemas em Aberto
+
+#### Melhoria das taxas de transmissão
+* Novos esquemas.
+    * Sucessores do OFDM e do UWB.
+* Sistemas de múltiplas antenas?
+    * Problema: custo.
+
+#### Novos protocolos de camadas mais altas
+* Especialmente, MAC.
+* Melhor uso da camada física.
+    * *e.g.*, múltiplas antenas.
+
+#### Outros
+* Tornar rádios cognitivos práticos.
+
+---
+
+layout: false
+class: section-slide
+
+# Aspectos de Camada de Enlace
+
+---
+
+class: middle
+layout: true
+name: conteudo
+
+.title[
+{{slideTitle}}
+<hr>]
+
+---
+
+slideTitle: Diferenças entre *Mesh* e Sem Fio
+
+.col-2[
+#### Múltiplos saltos
+* Protocolos clássicos limitados a um salto.
+    * Múltiplos saltos via roteamento.
+* Problemas:
+    * Terminais escondidos.
+    * Interferências.
+
+#### Mobilidade
+* Altera configuração da rede.
+]
+
+.col-2[
+#### Natureza distribuída
+* Não há coordenador central em WMN.
+* Rede cooperativa.
+
+#### Auto-organização
+* MAC ciente de topologia.
+* Controle de potência.
+]
+
+---
+
+slideTitle: MAC com um Canal
+
+.col-2[
+#### Melhorar protocolos existentes
+* Ajustar parâmetros do CSMA/CA.
+    * Melhora vazão em um salto.
+    * Sem ganhos significativos em múltiplos saltos.
+
+#### Novos protocolos
+* CSMA/CA não é eficiente para múltiplos saltos.
+* Alternativas: CDMA, TDMA.
+    * Versões distribuídas?
+]
+
+.col-2[
+#### Abordagens *cross-layer*
+* MAC baseado em antenas direcionais.
+* MAC com controle de potência.
+* Ambos:
+    * Eliminam terminais expostos.
+    * Podem gerar terminais escondidos.
+]
+
+---
+
+slideTitle: MAC com Múltiplos Canais
+
+### Múltiplos canais, um rádio
+* Um canal usado por vez.
+* Nós diferentes em canais distintos.
+    * Maior capacidade.
+
+### Múltiplos canais, múltiplos rádios
+* MAC único ou vários MACs?
+* Alocação de canais?
+* Coordenação entre nós?
+* Descoberta de vizinhos?
+
+---
+
+slideTitle: Problemas em Aberto
+
+### Escalabilidade
+* Como lidar com muitos nós, saltos?
+* TDMA sobre CSMA/CA?
+
+### Melhores protocolos para múltiplos canais
+* Ainda não muito explorado.
+* Custo?
+
+### Melhor suporte a multimídia
+* QoS?
+
+---
+
+layout: false
+class: section-slide
+
+# Aspectos de Camada de Rede
+
+---
+
+class: middle
+layout: true
+name: conteudo
+
+.title[
+{{slideTitle}}
+<hr>]
+
+---
+
+slideTitle: Visão Geral
+
+### Forte integração com a Internet
+* IP.
+    * Roteamento tradicional inadequado.
+
+### Similaridade com redes ad hoc
+* Protocolos podem ser aplicados.
+    AODV, DSR, ...
+* Mas protocolos específicos podem ser importantes.
+    * Novas métrocas de desempenho.
+    * Maior escalabilidade.
+    * Integração com MAC.
+    * Menor foco em energia, mobilidade.
+
+---
+
+slideTitle: Roteamento em WMN: Fatores Importantes
+
+.col-2[
+#### Métricas
+* Número de saltos não funciona bem.
+    * Baixa correção com vazão.
+* Métricas cientes de qualidade.
+    * RTT?
+
+#### Tolerância a falhas
+* Rápida recuperação em caso de erros.
+]
+
+.col-2[
+
+#### Balanceamento de carga
+* Dividir fluxos por caminhos disjuntos.
+
+#### Escalabilidade
+* Reduzir tempo de descoberta de rotas.
+
+#### Protocolos adaptativos
+* Roteadores *mesh*, clientes *mesh*.
+]
+
+---
+
+slideTitle: Métricas de Roteamento
+
+### Métricas cientes de qualidade
+* ETX: bom desempenho em cenário estático.
+
+### Mas com mobilidade
+* ETX não acompanha mudanças rapidamente.
+* Hop count ainda é melhor.
+
+---
+
+slideTitle: Roteamento com Múltiplos Rádios
+
+### Diversidade de canais
+* Alternar canais ao longo do caminho.
+
+### Métricas de qualidade
+* Mais alternância, melhores custos.
+* WCETT.
+
+
+---
+
+slideTitle: Roteamento com Múltiplos Caminhos
+
+### Determinar múltiplas rotas
+* Tolerância a falhas.
+    * Rápida recuperação.
+* Aumento de capacidade.
+    * Balanceamento de carga.
+
+
+---
+
+slideTitle: Roteamento Hierárquico
+
+### Auto-organização dos nós
+* *Clusters*.
+
+### Dois tipos de roteamento
+* Interno ao *cluster*.
+* Entre *clusters*.
+
+### Possível benefício
+* Escalabilidade.
+
+
+---
+
+slideTitle: Roteamento Geográfico
+
+### Ideia básica
+* Encaminhamento baseado na posição do nó.
+    * *e.g.*, próximo salto &rArr; vizinho mais próximo do destino.
+
+### Potencial benefício
+* Menos afetado por mudanças topológicas.
+
+---
+
+slideTitle: Problemas em Aberto
+
+* Escalabilidade.
+* Novas métricas de desempenho.
+* Roteamento *multicast*.
+* Projeto *cross-layer* entre roteamento e MAC.
+* Melhores protocolos para múltiplos rádios.
+* Levar em conta diferenças entre nós.
+
+---
+
+layout: false
+class: section-slide
+
+# Aspectos de Camada de Transporte
+
+---
+
+class: middle
+layout: true
+name: conteudo
+
+.title[
+{{slideTitle}}
+<hr>]
+
+---
+
+slideTitle: Protocolos para Transmissão Confiável
+
+### Variantes do TCP
+* Discernir perdas por congestionamento.
+    * Evita reduzir taxa de transmissão.
+* Recuperação mais rápida.
+* Lidar com assimetria dos caminhos.
+* Lidar com alta variação do RTT.
+
+### Novos protocolos
+* *e.g.*, ATP.
+* Problemas de compatibilidade?
+
+---
+
+slideTitle: Problemas em Aberto
+
+* Abordagem *cross-layer* entre transporte e roteamento.
+    * Lidar com assimetria.
+* Retro-compatibilidade com TCP tradicional.
+* TCP adaptativo:
+    * Lidar com heterogeneidade de tecnologias.
+
+---
+
+layout: false
+class: section-slide
+
+# Aspectos de Camada de Aplicação
+
+---
+
+class: middle
+layout: true
+name: conteudo
+
+.title[
+{{slideTitle}}
+<hr>]
+
+---
+
+slideTitle: Aplicações Suportadas
+
+* Acesso à Internet.
+* Armazenamento distribuído de dados.
+    * E compartilhamento.
+* Troca de informações entre redes.
+    * *e.g.*, telefone celular &rArr; telefone Wi-Fi.
+
+---
+
+slideTitle: Problemas em Aberto
+
+### Três direções de pesquisa
+* Adaptar aplicações da Internet para WMN.
+    * *e.g.*, jitter representativo, perdas representativas, ...
+* Criar aplicações de compartilhamento distribuído de dados
+    * *e.g.*, transferência de dados P2P, jogos, ...
+* Novas aplicações voltadas para WMN.
+    * Tirem proveito das características particulares.
+
+---
+
+layout: false
+class: section-slide
+
+# Protocolos para Gerência
+
+---
+
+class: middle
+layout: true
+name: conteudo
+
+.title[
+{{slideTitle}}
+<hr>]
+
+---
+
+slideTitle: Gerência de Mobilidade
+
+### Duas tarefas importantes
+* Localização.
+* *Handoff*.
+
+### Problema
+* Esquemas centralizados não funcionam bem.
+
+---
+
+slideTitle: Gerência de Energia/Potência
+
+### Roteadores *mesh*
+* Geralmente, sem restrições energéticas.
+* Preocupação: gerência de potência.
+    * Otimizar topologia.
+    * Minimizar interferência.
+
+### Clientes *mesh*
+* Eficiência energética dos protocolos.
+* Reduzir uso de energia.
+
+---
+
+slideTitle: Monitoramento da Rede
+
+### Funcionalidade fundamental
+* Monitoramento contínuo.
+* Alarmes.
+* Armazenamento de histórico.
+
+### Algumas particularidades
+* *e.g.*, monitorar topologia.
+
+---
+
+layout: false
+class: section-slide
+
+# Segurança
+
+---
+
+class: middle
+layout: true
+name: conteudo
+
+.title[
+{{slideTitle}}
+<hr>]
+
+---
+
+slideTitle: Diversos Aspectos
+
+### Autenticação
+* Disponível em certos padrões de comunicação.
+* Muitas vezes centralizada: *e.g.* RADIUS.
+    * Não adequado às WMN.
+
+### Ataques ao roteamento
+* Anúncio de rotas falsas.
+    * *e.g.*, buraco negro.
+
+### Ataques ao MAC
+* Prejudicar acesso ao meio, causar congestionamento.
+
+### Gerenciamento de chaves
+* Distribuição de chaves sem autoridade centralizada.
+
+---
+
+layout: false
+class: section-slide
+
+# Outras Questões
+
+---
+
+class: middle
+layout: true
+name: conteudo
+
+.title[
+{{slideTitle}}
+<hr>]
+
+---
+
+slideTitle: Sincronização
+
+### Importante para diversos mecanismos
+* Controle de topologia.
+* Acesso ao meio.
+* ...
+
+### Problema ainda em aberto
+* Método efetivo.
+* Acurácia satisfatória.
+
+---
+
+slideTitle: Projeto *Cross-Layer*
+
+### Podem colaborar em diversas camadas.
+* *e.g.*, MAC e física.
+* *e.g.*, roteamento e MAC.
+* *e.g.*, transporte e roteamento.
+
+### Riscos
+* Perda de abstração de camadas.
+* Perda de compatibilidade de protocolos.
+* Impactos imprevisíveis em redes futuras.
+
+---
+
+slideTitle: Testbeds e Implementações
+
+.col-2[
+#### Acadêmicos
+* Carnegie-Mellon: DSR.
+* MIT: Roofnet.
+* University of Illinois at Urbana-Champaign.
+* Cal-(IT)<sup>2</sup>
+* Georgia Tech.
+]
+
+.col-2[
+#### Industriais
+* Microsoft Research Lab.
+* Intel Research-Berkeley Lab.
+* Nortel.
+* Tropos.
+* ...
+]
+
+---
+
+slideTitle: Esforços de Padronização
+
+.col-2[
+#### IEEE 802.11
+* TGs: MAC e PHY para *mesh*.
+
+#### Duas vertentes
+* Wi-Fi *mesh* infraestruturado:
+    * ESS com vários BSSs conectados via WDS.
+* Wi-Fi *mesh* ad hoc.
+]
+
+.col-2[
+#### Outros
+* IEEE 802.15.3a: UWB.
+    * Curto alcance, estendido via *mesh*.
+* IEEE 802.15.4
+* IEEE 802.16.
+]
+
+---
+
+layout: false
+class: section-slide
+
+# Conclusões
+
+---
+
+class: middle
+layout: true
+name: conteudo
+
+.title[
+{{slideTitle}}
+<hr>]
+
+---
+
+slideTitle: Vantagens das WMN
+
+#### Auto-organização.
+* Menor complexidade.
+* Menor custo.
+#### *Backbone*.
+* Solução para acesso à Internet.
+* Maior confiabilidade.
+#### Compatibilidade com tecnoligias existentes.
+* Rápido acesso ao mercado.
+* Proliferação de aplicações.
+
+---
+
+slideTitle: Desvantagens e Problemas em Aberto
+
+#### Desempenho
+* Ainda abaixo do esperado.
+
+#### Escalabilidade
+* Desempenho *vs.* número de saltos.
+* Questões em todas as camadas.
+
+#### Auto-organização e configuração
+* Demandam protocolos distribuídos, colaborativos.
+
+#### Segurança
+* Muitas vulnerabilidades, diversas camadas.
+
+#### Integração
+* Potêncial muito interessante das WMN.
+* Mas ainda mal explorado.
+
+---
+
+slideTitle: Outras Conclusões
+
+#### Abordagens *cross-layer*
+* Fundamentais para melhoria dos protocolos.
+
+#### Tecnologia promissora
+* Muitos cenários de aplicação.
+* Mas ainda muitos problemas em aberto.
+
+</template>
+    </textarea>
+
+    <script src="../template/js/remark-latest.min.js" type="text/javascript"></script>
+    <script src="../template/js/d3.v4.js"></script>
+    <script src="../template/js/graphlib-dot.js"></script>
+    <script src="../template/js/dagre-d3.min.js"></script>
+    <script src="../template/js/dagre-d3-extra.js"></script>
+    <script src="../template/js/macros.js" type="text/javascript"></script>
+    <script src="../template/js/callbacks.js" type="text/javascript"></script>
+    <script src="../template/js/katex.min.js"></script>
+    <script src="../template/js/auto-render.min.js"></script>
+    <link rel="stylesheet" href="../template/css/katex.min.css">
+
+    <script type="text/javascript">
+      var renderMath = function() {
+        renderMathInElement(document.body, {delimiters: [
+           {left: "$$", right: "$$", display: true},
+           {left: "$", right: "$", display: false},
+        ]});
+      }
+
+      var slideshow = remark.create({highlightStyle: "github", highlightLines: "true", highlightSpans: "true", slideNumberFormat: onSlideCallback}, renderMath);
+
+      dagreRenderAllSlides();
+
+    </script>
+</body>
+</html>

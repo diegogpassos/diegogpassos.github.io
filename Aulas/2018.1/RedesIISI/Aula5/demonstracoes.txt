@@ -1,25 +1,101 @@
-0) Conectividade:
-  * Mostrar switch (ping entre dispositivos).
+                                     Samsung (USB) (192.168.2.1)
+                                                   |
+                                                   | (porta 1)
+(10.0.0.2/192.168.0.2) Lenovo (onboard) (porta 4) ---- switch/hub ---- (porta 2) Samsung (onboard) (10.0.0.1)
+                                                   | (porta 3)
+                                                   |
+                                     Lenovo (USB) (192.168.2.2)
+
+!!!
+! Lembrar de desabilitar NetworkManager!
+!!!
+
+0) Conectividade com hub:
   * Mostrar hub (ping entre dispositivos).
-  * Comparar desempenho com iperf: duas conexoes simultaneas.
-1) Mostrar tabela de encaminhamento de um switch gerenciavel ativo.
-  * Switch dell: 192.168.2.3
+  * Comparar desempenho com iperf: duas conexoes (primeiro independentes e depois simultaneas).
+    # [Samsung] iperf -s -p 5001
+    # [Samsung] iperf -s -p 5002
+    # [Lenovo] iperf -c 10.0.0.1 -t 20 -i 2 -p 5001
+    # [Lenovo] iperf -c 192.168.2.1 -t 20 -i 2 -p 5002
+      + Destacar que comunicação envolvendo portas USB é mais lenta.
+      + Mas destacar também que comunicação envolvendo portas onboard não alcança os 10 Mb/s teóricos.
+  * Mostrar como tráfego, mesmo unicast, é replicado para todas as portas.
+    # [Lenovo] wireshark &
+      + Iniciar captura na interface usb.
+    # [Lenovo] ping 10.0.0.1
+      + Mostrar tráfego unicast sendo recebido na porta USB.
+
+1) Conectividade com switch:
+  * Conectar todos os equipamentos às portas correspondentes do switch.
+  * Mostrar que interfaces USB resultam em leds acesos de cores  diferentes (fast ethernet vs. GbEthernet).
+  * Mostrar ping.
+  * Comparar desempenho com iperf: duas conexoes (primeiro independentes e depois simultaneas).
+    # [Samsung] iperf -s -p 5001
+    # [Samsung] iperf -s -p 5002
+    # [Lenovo] iperf -c 10.0.0.1 -t 20 -i 2 -p 5001
+    # [Lenovo] iperf -c 192.168.2.1 -t 20 -i 2 -p 5002
+      + Destacar que comunicação envolvendo portas USB é mais lenta.
+      + Mas destacar não há qualquer efeito de uma conexão na outra.
+  * Mostrar como tráfego unicast é replicado de forma seletiva.
+    # [Lenovo] wireshark &
+      + Iniciar captura na interface usb.
+    # [Lenovo] ping 10.0.0.1
+      + Mostrar tráfego unicast sendo recebido na porta USB.
+  * Contrastar com o que acontece com tráfego broadcast:
+    # [Lenovo] ping -b 10.0.0.255
+
 2) Mostrar auto-aprendizado:
-  * Switch gerenciavel, tabela inicialmente sem entrada para host.
-  * Host eh conectado ao switch e envia quadro (ping broadcast?)
-  * Mostrar novamente tabela, exibindo associacao (mesmo sem resposta).
-3) Mostrar encaminhamento seletivo:
-  * Dois hosts se comunicam, sniffer em terceira porta.
-  * Sniffer captura (talvez) tráfego de ARP e um ou outro pacote unicast.
-  * Mas logo quadros deixam de ser enviados para a porta do sniffer.
-  * Contrapor com funcionamento de um hub?
-4) Mostrar possibilidade de uso de enlaces heterogeneos:
-  * Conectar interfaces de taxas distintas.
-  * Mostrar conectividade entre elas.
-  * Mostrar que vazao eh limitada a taxa do enlace garagalo.
-5) Mostrar ganhos de desempenho:
-  * Mostrar que de uma interface mais rápida pode-se saturar duas interfaces mais lentas.
-    + e.g., origem com interface giga transmitindo fluxo TCP para dois destinos fast.
-    + Destacar vazao agregada próxima de 200 Mb/s
-6) Mostrar tempestade de broadcast.
-  * Captura de tráfego do eduroam?
+  * Iniciar ping entre interfaces onboard:
+    # [Lenovo] ping 10.0.0.1
+  * Iniciar captura na interface usb:
+    # [Lenovo] wireshark &
+  * Destacar novamente que quadros unicast não são recebidos pelo sniffer.
+  * Desligar e ligar switch para limpar tabela de encaminhameto.
+  * Mostrar janela do wireshark enquanto switch dá boot. Destacar que pacote ping unicast é recebido.
+   + Indagar pq pacote de resposta não é recebido.
+   + Indagar pq apenas um ping é recebido.
+
+3) Mostrar ARP em funcionamento:
+  * Indagar pq na última demonstração não foi capturado um ARP query.
+  * Mostrar tabela ARP do laptop.
+    # [Lenovo] arp -n
+  * Remover entrada da tabela, forçando resoluçao ARP:
+    # [Lenovo] wireshark & (capturar interface USB)
+    # [Lenovo] ping 10.0.0.1
+    # [Lenovo] sudo arp -d 10.0.0.1
+     + Destacar ARP query sendo capturado.
+     + Destacar que ARP reply não é capturado.
+
+4) Mostrar tempestade de broadcast.
+  # [Lenovo] iperf -c 10.0.0.1 -t 20 -i 2 -p 5001
+    + Destacar bom desempenho em termos de vazão.
+  # [Lenovo] ping -b 10.0.0.255
+    + Destacar que não há queda perceptível de desempenho.
+ * Criar loop em duas portas do switch e mostrar o que ocorre com o iperf.
+
+ 5) Switches gerenciáveis.
+  # Mostrar interface de configuração web do switch tp-link.
+   + http://192.168.0.1/
+  # Mostrar algumas opções simples, monitamento, QoS.
+  # Destacar configuração de VLAN.
+
+ 6) VLAN baseada em porta.
+  * Criar VLANs separadas para portas 1-4 e 5-8.
+  * Ilustrar separação lógica com tráfego de broadcast:
+   # [Lenovo] wireshark & (capturar na interface usb).
+   # [Lenovo] ping -b 10.0.0.255
+  * Destacar que sniffer ainda captura pacotes.
+  * Mudar sniffer para porta 8 e ver o que ocorre com a captura.
+  * Gerar loop físico aparente entre portas 3 e 5.Descatar que não há
+ tempestade de broadcast pq são dois switches lógicos distintos.
+
+7) VLAN baseada em tags.
+  * Mostrar configuração, explicar semântica das opções.
+  * Criar duas VLANs (além da padrão):
+    + VLAN 2: apenas portas 4 (lenovo onboard) e 8 (lenovo usb), ambas com tag.
+    + VLAN 3: portas 1-7 sem tag.
+  * Explicar associação entre IP no lenovo onboard e tags VLAN (wireshark, talvez?)
+  * Mostrar como quadros chegam (ou não) na porta 8 (sniffer).
+    # [Lenovo] ping -b 10.0.0.255 // VLAN padrão, tráfego recebido sem tag na porta 8.
+    # [Lenovo] ping -b 10.0.2.255 // VLAN 2, tráfego recebido com tag na porta 8.
+    # [Lenovo] ping -b 10.0.3.255 // VLAN 3, tráfego não recebido na porta 8,recebido sem tag nas demais portas.

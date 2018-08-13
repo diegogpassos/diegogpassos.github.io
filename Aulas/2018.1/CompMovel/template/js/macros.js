@@ -148,3 +148,8 @@ remark.macros.position = function(posSpec) {
 
     return '<div style="' + posSpec + '; display: inline-block; position: absolute;">' + window.remark.convert(this) + '</div>';
 }
+
+remark.macros.latex = function() {
+console.log('<katex>' + this + '</katex>')    ;
+        return '<katex>' + this + '</katex>';
+}

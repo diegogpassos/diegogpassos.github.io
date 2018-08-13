@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Apresentação de Artigo: Routing in Multi-Radio, Multi-Hop Wireless Mesh Networks</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" type="text/css" href="../template/css/roboto.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/general.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/code.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/cover.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/section.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/elements.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/table.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/block.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/dagre.css">
+    <style>
+      span.katex {
+        font-size: 0.95em;
+      }
+    </style>
+  </head>
+  <body>
+
+    <textarea id="source">
+
+class: cover-slide
+
+![:cover](
+Computação Móvel
+Apresentação do Artigo<br><i>Routing in Multi-Radio, Multi-Hop Wireless Mesh Networks</i>
+Diego Passos
+../template/img/logo.svg
+)
+
+---
+
+class: middle
+layout: true
+name: conteudo
+
+.title[
+{{slideTitle}}
+<hr>]
+
+---
+
+slideTitle: Dados Bibliográficos
+
+### Autores
+* Richard Draves, Jitendra Padhye e Brian Zill.
+  * Microsoft Research.
+
+### Evento
+* MobiCom'04
+---
+
+layout: false
+class: section-slide
+
+# Introdução
+
+---
+
+class: middle
+layout: true
+name: conteudo
+
+.title[
+{{slideTitle}}
+<hr>]
+
+---
+
+slideTitle: Contexto
+
+### Roteamento em MANETs
+* Área de pesquisa ativa.
+* Foco:
+  * Roteamento escalável.
+  * Nós móveis.
+
+### Redes Sem Fio Comunitárias
+* **Aplicação** recente.
+* Serviço de Internet banda larga.
+* .alert[Nós estacionários ou pouco móveis].
+  * Novo objetivo: **aumentar capacidade da rede**.
+
+---
+
+slideTitle: Motivação (I)
+
+### Auto-interferência
+* Limita transmissões simultâneas.
+* Limita capacidade.
+  * *Relay* tem capacidade dividida por 2.
+
+### Múltiplos rádios
+* Transmissão, recepção simultânea.
+* Múltiplas transmissões simultâneas.
+* Múltiplas bandas: *e.g.*, 2,4 GHz e 5 GHz.
+* Maior robustez.
+* IEEE 802.11 é barato.
+
+---
+
+slideTitle: Motivação (II)
+
+## Soluções Complementares
+* Múltiplas antenas.
+* Salto de canais.
+* Melhorias no MAC.
+* ...
+
+---
+
+slideTitle: Roteamento e Múltiplos Rádios
+
+### Algoritmos tradicionais
+* Inecifientes.
+* Exemplos:
+
+.col-2[
+#### Rede heterogênea IEEE 802.11a/b
+* IEEE 802.11b: taxas mais baixas, alcance maior.
+  * Enlaces IEEE 802.11b concentram caminhos.
+]
+
+.col-2[
+#### Rede de dois rádios IEEE 802.11b
+* Cada rádio, um canal.
+* Rota de dois saltos:
+  * Um único canal: auto-interferência.
+  * Canais alternados: melhor desempenho.
+]
+
+---
+
+slideTitle: Objetivo do Artigo
+
+### Nova(s) métrica(s) de roteamento
+* Foco: redes de múltiplos rádios, heterogêneos.
+* *Clean-slate*.
+
+### Além disso...
+* Novo protocolo de roteamento.
+* *Multi-Radio Link-Quality Source Routing*.
+  * MR-LQSR.
+
+---
+
+layout: false
+class: section-slide
+
+# Por que uma nova métrica?
+
+---
+
+class: middle
+layout: true
+name: conteudo
+
+.title[
+{{slideTitle}}
+<hr>]
+
+---
+
+slideTitle: *Hop Count*
+
+### Popular
+* Base de vários protocolos.
+
+### Ineficiente
+* Vasta literatura.
+* Enlaces sem fio muito heterogêneos.
+* Susceptíveis a perdas.
+  * Retransmissões &rarr; queda de desempenho.
+
+---
+
+slideTitle: Expected Transmission Count
+
+### Ideia básica
+* Monitoramento contínuo da qualidade dos enlaces.
+  * *Probes* periódicos em *broadcast*.
+  * Janela dos últimos $w$ *probes*
+* Modela número de transmissões em nível 2 até sucesso:
+$$ ETX_{a\rightarrow b} = \frac{1}{d_f\times d_r} $$
+
+### Problemas/simplificações
+* Independente de tamanho de pacote.
+* Qualidade simétrica.
+* Ignora taxa de transmissão.
+
+
+---
+
+layout: false
+class: section-slide
+
+# O protocolo MR-LQSR
+
+---
+
+class: middle
+layout: true
+name: conteudo
+
+.title[
+{{slideTitle}}
+<hr>]
+
+---
+
+slideTitle: Visão Geral
+
+### LQSR
+* *Link Quality Source Routing*.
+  * Baseado em estado de enlaces.
+  * *Source routing*.
+
+### Quatro componentes
+* Descoberta de vizinhos (&cong; DSR).
+* Atribuição de pesos aos enlaces (WCETT).
+* Difusão de informação (&cong; DSR).
+* Cálculo das rotas (WCETT).
+
+---
+
+slideTitle: Hipóteses e Objetivos
+
+| Hipóteses |
+| :-------- |
+| Nós estacionários |
+| Cada nó com um ou mais rádios IEEE 802.11a/b/g |
+| Rádios de um mesmo nó em canais diferentes |
+
+<br>
+
+| Objetivos |
+| :-------- |
+| Levar em conta perdas e taxa de transmissão |
+| Métrica deve ser crescente |
+| Levar em conta auto-interferência |
+
+---
+
+slideTitle: Computação da Métrica (I)
+
+### Pesos dos enlaces
+* **Tempo** necessário para transmitir pacote com sucesso.
+  * Depende de # de retransmissões **e taxa**.
+* ETT: *Expected Transmission Time*.
+
+### WCETT
+* *Weighted Cumulative ETT*.
+* Custo total do caminho:
+
+$$\text{WCETT} = (1 - \beta)\cdot\sum^n\_{i=1}{\text{ETT}\_i} + \beta\cdot \max\_{1\le j\le k}{X\_j}, 0 \le \beta \le 1$$
+
+---
+
+slideTitle: Computação da Métrica (II)
+
+$$\text{WCETT} = (1 - \beta)\cdot\sum^n\_{i=1}{\text{ETT}\_i} + \beta\cdot \max\_{1\le j\le k}{X\_j}, 0 \le \beta \le 1$$
+
+### Duas componentes
+
+.col-2[
+$$\sum^n\_{i=1}{\text{ETT}\_i}$$
+
+* Soma do ETT dos enlaces.
+* Atraso total fim-a-fim.
+]
+
+.col-2[
+$$\max\_{1\le j\le k}{X\_j}$$
+* $X\_j$: somatório do ETT dos enlaces no canal $j$.
+* Maior diversidade, menor $X\_j$.
+]
+
+---
+
+slideTitle: Exemplo
+
+.center[
+![:image 60%](WCETTExemplo.png)
+]
+
+---
+
+slideTitle: Computando o ETT
+
+#### *Bandwidth-adjusted ETX*
+
+$$ETT = ETX\times\frac{S}{B}$$
+
+* Onde:
+  * $S$: tamanho do pacote.
+  * $B$: taxa de transmissão.
+* Note que *backoff* não é considerado!
+
+#### Problema: como estimar B
+* Fixar taxa (.alert[diferente do ETX?]).
+* Consultar *driver*.
+  * Nem sempre reportam (.alert[ainda verdade?]).
+* *Packet-pair probing*.
+
+---
+
+slideTitle: Packet-Pair Probing
+
+### Procedimento
+* Envio de dois pacotes subsequentes.
+  * Pequeno (maior prob. de sucesso).
+  * Grande (maior amostra).
+* Receptor mede atraso entre recepções.
+  * Aproximadamente atraso do segundo pacote.
+
+### Backoffs? Acesso ao meio?
+* Solução:
+  * 10 tentativas.
+  * Menor atraso medido.
+
+---
+
+slideTitle: Taxa *unicast* *vs.* *broadcast* no IEEE 802.11
+
+### *Broadcast*
+* Enviado na taxa básica.
+* Tipicamente, mais baixa disponível.
+
+### *Unicast*
+* Taxa selecionada automaticamente.
+* Geralmente, relativamente alta.
+
+### Possível descasamento
+* Autores não propõem solução.
+
+---
+
+slideTitle: Discussão (I)
+
+#### ETT e contenção
+* Não considera.
+* Dois efeitos: colisões e redução da capacidade.
+  * Se refletem nos *probes*.
+
+#### Capacidade disponível *vs.* nominal
+* Modelos assumem enlaces ponto-a-ponto.
+* Estimativa da capacidade disponível: trabalhos futuros.
+
+#### ETT *vs.* medida direta de atraso
+* Medir RTT não funcionaria bem por auto-interferência (.alert[?]).
+* Envio de *probes* por vizinho: $O(n^2)$.
+* *Driver* não reporta *ack* (.alert[?]).
+
+---
+
+slideTitle: Discussão (II)
+
+### Falta de isotonia
+* *Dijkstra* nem sempre acha rota ótima.
+
+.center[
+![:image 60%](NaoIsotonia.svg)
+]
+
+---
+
+layout: false
+class: section-slide
+
+# Implementação
+
+---
+
+class: middle
+layout: true
+name: conteudo
+
+.title[
+{{slideTitle}}
+<hr>]
+
+---
+
+slideTitle: Detalhes (I)
+
+.col-2[
+### MCL
+* *Mesh Connectivity Layer*.
+  * *Framework*.
+  * *Driver* para Windows.
+  * Entre camadas 2 e 3.
+  * Para sistema, é uma interface lógica.
+* Usa protocolo LQSR.
+
+![:image 90%](MCL.png)
+]
+
+.col-2[
+<br>
+### Métricas implementadas
+* WCETT.
+* ETX.
+* Hop Count.
+
+]
+
+---
+
+slideTitle: Detalhes (II)
+
+### LQSR
+* Para cabeçalhos, MTU de 1280 bytes.
+* Derivado do DSR.
+  * RREQ, RREP.
+  * Manutenção de rotas.
+  * ...
+* Cache do estado dos enlaces.
+  * E não de rotas.
+* Roteamento sob endereços MAC.
+  * Endereço único para cada nó.
+  * Aumentado de índice de interface (8 bits).
+* Descritor de métrica para cada link
+  * ETT, canal, ...
+
+---
+
+layout: false
+class: section-slide
+
+# Ambiente de testes
+
+---
+
+class: middle
+layout: true
+name: conteudo
+
+.title[
+{{slideTitle}}
+<hr>]
+
+---
+
+slideTitle: Visão Geral
+
+.col-2[
+![:image 80%](testbed.png)
+]
+
+.col-2[
+#### Descrição
+* Andar de prédio de escritórios.
+  * Paredes, portas de madeira.
+* 23 nós.
+  * Pentium 4 @ 2,66 GHz, 512 MB de RAM.
+  * Windows XP, SACK TCP.
+  * Duas interfaces IEEE 802.11.
+* Adaptação automática de taxa.
+* RTS/CTS desabilitado.
+* Sem outras redes IEEE 802.11.
+]
+
+---
+
+slideTitle: Atribuição de Canais
+
+### Testes preliminares
+* Interfaces IEEE 802.11a e IEEE 802.11g simultâneas:
+  * Pouca influência.
+* Interfaces da mesma banda em canais diferentes.
+  * Interferência representativa.
+  * Proximidade?
+
+### Conclusão
+* Cada interface em uma banda diferente.
+
+---
+
+layout: false
+class: section-slide
+
+# Resultados
+
+---
+
+class: middle
+layout: true
+name: conteudo
+
+.title[
+{{slideTitle}}
+<hr>]
+
+---
+
+slideTitle: Packet-Pair Probing
+
+![:column 60%](
+### Metodologia
+* Dois nós da topologia.
+* 50 *packet-pairs*
+  * 1 a cada 2 segundos.
+* Repetido para cada taxa 5 vezes.
+
+![:image 100%](PacketPairProbing.png\)
+)
+
+![:column 40%](
+### Conclusões
+* Boa acurácia para taxas baixas.
+* Subestima taxas altas.
+  * *Overheads* fixos no IEEE 802.11.
+* Suficiente para diferenciar taxas.
+)
+
+---
+
+slideTitle: *Baseline*: Cenário de um Rádio (I)
+
+.col-2[
+### Experimento
+* Segundo rádio desativado.
+* 100 pares de nós selecionados aleatoriamente.
+* Transmissão TCP de dois minutos.
+  * O máximo possível de dados.
+  * Apenas uma por vez.
+  * Um minuto de silêncio.
+* ETX *vs.* Hop Count *vs.* WCETT (.alert[ou ETT?]).
+]
+
+.col-2[
+![:image 95%](SingleRadio.png)
+#### Conclusões
+* ETT 16% melhor que ETX, 38,6% melhor que Hop Count.
+* ETT e ETX: 3 saltos.
+* Hop Count: 2 saltos.
+]
+
+---
+
+slideTitle: *Baseline*: Cenário de um Rádio (II)
+
+.col-2[
+### Experimento
+* Segundo rádio desativado.
+* 100 pares de nós selecionados aleatoriamente.
+* Transmissão TCP de dois minutos.
+  * O máximo possível de dados.
+  * Apenas uma por vez.
+  * Um minuto de silêncio.
+* ETX *vs.* Hop Count *vs.* WCETT (.alert[ou ETT?]).
+]
+
+.col-2[
+![:image 95%](SingleRadio.png)
+#### Conclusões
+* ETT melhor para caminhos mais longos.
+  * 55% para caminhos com > 4 saltos
+]
+
+---
+
+slideTitle: Cenário de dois Rádios (I)
+
+.col-2[
+### Experimento
+* Segundo rádio ativado.
+* $\beta = 0,5$.
+* Demais parâmetros idênticos.
+]
+
+.col-2[
+![:image 95%](SingleRadio.png)
+
+]
+
+#### Conclusões
+* WCETT novamente melhor.
+  * 89% em relação a ETX.
+  * 254% em relação a Hop Count.
+  * 86% em relação ao ETT.
+
+---
+
+slideTitle: Cenário de dois Rádios (II)
+
+.col-2[
+### Experimento
+* Segundo rádio ativado.
+* $\beta = 0,5$.
+* Demais parâmetros idênticos.
+]
+
+.col-2[
+![:image 95%](SingleRadio.png)
+
+]
+
+#### Conclusões
+* Média dos saltos dos caminhos:
+  * 3 para WCETT.
+  * 2,4 para ETX.
+    * IEEE 802.11g &rarr; enlaces mais longos.
+
+---
+
+slideTitle: Comprimento do Caminho *vs.* Vazão
+
+![:image 90%](PathLengthVsThroughput.png)
+
+* Caminhos de um salto com dois rádios:
+  * ETX seleciona IEEE 802.11g, WCETT seleciona 2x IEEE 802.11a.
+
+---
+
+slideTitle: Índice de Diversidade de Canal
+
+.col-2[
+### CDI
+* *Channel Diversity Index*.
+
+$$\text{CDI} = \frac{\min(N\_a, N\_g)}{2\cdot\lfloor N/2\rfloor}$$
+
+* Onde:
+  * $N$: enlaces no caminho.
+  * $N\_a$: enlaces IEEE 802.11a.
+  * $N\_g$: enlaces IEEE 802.11g.
+]
+
+.col-2[
+#### ETX *vs.* WCETT
+* Mediana do WCETT: 0,47.
+* Mediana do ETX: 0,34.
+]
+
+---
+
+slideTitle: WCETT: Ganho *vs.* Saltos
+
+* Ganho com dois rádios *vs.* um rádio.
+.center[
+
+![:image 50%](WCETTMelhoraVsHops.png)
+]
+
+#### Observações
+* Sem ganho para um salto.
+* Ganhos caem com aumento no número de saltos.
+  * TCP e perdas?
+
+---
+
+slideTitle: Impacto do Parâmetro (I)
+
+* Mesmos experimentos, variando $\beta$.
+  * Lembre-se:
+
+$$\text{WCETT} = (1 - \beta)\cdot\sum^n\_{i=1}{\text{ETT}\_i} + \beta\cdot \max\_{1\le j\le k}{X\_j}$$
+
+<br>
+
+.center[
+![:image 60%](ImpactoBeta.png)
+]
+
+---
+
+slideTitle: Impacto do Parâmetro (II)
+
+* Mesmos experimentos, variando $\beta$.
+  * Lembre-se:
+
+$$\text{WCETT} = (1 - \beta)\cdot\sum^n\_{i=1}{\text{ETT}\_i} + \beta\cdot \max\_{1\le j\le k}{X\_j}$$
+
+![:column 60%](
+![:image 98%](ImpactoBeta2.png\)
+)
+
+![:column 40%](
+#### Conclusões
+* Diversidade tem grande impacto para poucos saltos.
+* Para mais saltos, TCP prejudica avaliação.
+)
+
+---
+
+slideTitle: Duas Conexões Simultâneas
+
+.col-2[
+### Experimento
+* Similar ao anterior.
+* Conexões de dois minutos.
+* Mas nova conexão a cada minuto.
+  * &rarr; 2 conexões simultâneas.
+
+![:image 98%](ConexoesSimultaneas.png)
+]
+
+.col-2[
+### Conclusões
+* WCETT novamente supera ETX.
+* Vazão agregada similar à vazão de um fluxo.
+  * &rarr; fluxos se interferem.
+* Desempenho do WCETT depende de $\beta$.
+]
+
+---
+
+layout: false
+class: section-slide
+
+# Trabalhos relacionados
+
+---
+
+class: middle
+layout: true
+name: conteudo
+
+.title[
+{{slideTitle}}
+<hr>]
+
+---
+
+slideTitle: Trabalhos Relacionados (I)
+
+#### Capacidade das Redes IEEE 802.11
+* Cai com número de saltos.
+  * Falta de justiça da camada MAC?
+  * Único rádio.
+
+#### Aumentando a capacidade
+* MAC com múltiplos rádios.
+* *Traffic stripping*.
+  * Dividir tráfego por múltiplas interfaces.
+* Antenas direcionais.
+  * Reuso espacial.
+* Salto de canais.
+  * Lento em interfaces IEEE 802.11.
+
+---
+
+slideTitle: Trabalhos Relacionados (II)
+
+#### Métricas de Roteamento
+* Minimizar atraso, sem levar perda de pacotes em conta.
+* ETX com *probes* passivos.
+* Métricas baseadas em SNR.
+
+---
+
+layout: false
+class: section-slide
+
+# Conclusão
+
+---
+
+class: middle
+layout: true
+name: conteudo
+
+.title[
+{{slideTitle}}
+<hr>]
+
+---
+
+slideTitle: Conclusão
+
+.col-2[
+#### Em redes com múltiplos rádios heterogêneos
+* Diversidade de canais é importante.
+* Taxa de transmissão também.
+
+#### Proposta
+* Métrica WCETT.
+* Protocolo MR-LQSR.
+]
+
+.col-2[
+#### Parâmetro $\beta$
+* *Tradeoff*: comprimento do caminho *vs.* diversidade.
+
+#### Caminhos longos
+* Benefícios limitados da diversidade.
+]
+
+---
+
+slideTitle: Trabalhos Futuros
+
+* *Testbed* com mais nós.
+  * Avaliar WCETT com mais fluxos simultâneos.
+* Dois rádios IEEE 802.11a ou IEEE 802.11g.
+* Desempenho em cenários com mobilidade.
+
+---
+
+slideTitle: Apêndice: Modelagem do *Backoff*
+
+.center[
+![:image 70%](backoff.png)]
+
+</template>
+    </textarea>
+
+    <script src="../template/js/remark-latest.min.js" type="text/javascript"></script>
+    <script src="../template/js/d3.v4.js"></script>
+    <script src="../template/js/graphlib-dot.js"></script>
+    <script src="../template/js/dagre-d3.min.js"></script>
+    <script src="../template/js/dagre-d3-extra.js"></script>
+    <script src="../template/js/macros.js" type="text/javascript"></script>
+    <script src="../template/js/callbacks.js" type="text/javascript"></script>
+    <script src="../template/js/katex.min.js"></script>
+    <script src="../template/js/auto-render.min.js"></script>
+    <link rel="stylesheet" href="../template/css/katex.min.css">
+    <script type="text/javascript">
+
+      var renderMath = function() {
+        renderMathInElement(document.body, {delimiters: [
+           {left: "$$", right: "$$", display: true},
+           {left: "$", right: "$", display: false},
+        ]});
+      }
+
+      var slideshow = remark.create({highlightStyle: "github", highlightLines: "true", highlightSpans: "true", slideNumberFormat: onSlideCallback}, renderMath);
+
+      dagreRenderAllSlides();
+
+    </script>
+</body>
+</html>
