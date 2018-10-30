@@ -491,17 +491,6 @@
 			<center>
 			  <img src="imagens/cwnd.svg" style="width: 70%;"/>
 			</center>
-			<ul>
-			  <li>Transmissor limita taxa de transmissão:</li>
-				<center>
-					<br>
-					<div style="width: 90%; border: 2px solid #c33;">
-					  <span class="math inline">\(UltimoByteEnviado - \\UltimoByteConfirmado \le cwnd\)</span>
-					</div>
-					<br>
-				</center>
-				<li><b>cwnd</b> é dinâmica, função do congestionamento percebido da rede.</li>
-			</ul>
 	  </div>
 	  <div class="column" style="width: 50%;">
 			<ul>
@@ -515,6 +504,19 @@
 				  <span class="math inline">\(taxa = \frac{cwnd}{RTT}\;B/s\)</span>
 				</div>
 			</center>
+	  </div>
+	  <div class="column" style="width: 90%;">
+		  <ul>
+			<li>Transmissor limita taxa de transmissão:</li>
+			  <center>
+				  <br>
+				  <div style="width: 100%; border: 2px solid #c33;">
+					<span class="math inline">\(UltimoByteEnviado - UltimoByteConfirmado \le cwnd\)</span>
+				  </div>
+				  <br>
+			  </center>
+			  <li><b>cwnd</b> é dinâmica, função do congestionamento percebido da rede.</li>
+		  </ul>
 	  </div>
 	</div>
 	</section>

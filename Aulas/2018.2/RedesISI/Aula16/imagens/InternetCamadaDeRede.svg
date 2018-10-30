@@ -14,7 +14,7 @@
    viewBox="0 0 768.05372 409.53124"
    id="svg2"
    version="1.1"
-   inkscape:version="0.91 r13725"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)"
    sodipodi:docname="InternetCamadaDeRede.svg">
   <sodipodi:namedview
      id="base"
@@ -23,9 +23,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.68841549"
-     inkscape:cx="445.98985"
-     inkscape:cy="188.07933"
+     inkscape:zoom="1.0717024"
+     inkscape:cx="411.49484"
+     inkscape:cy="214.68429"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -33,7 +33,7 @@
      fit-margin-left="0"
      fit-margin-right="0"
      fit-margin-bottom="0"
-     inkscape:window-width="1360"
+     inkscape:window-width="1366"
      inkscape:window-height="719"
      inkscape:window-x="0"
      inkscape:window-y="25"
@@ -124,7 +124,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -163,28 +163,6 @@
        style="fill:none;stroke:#000000;stroke-width:1.875;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
        id="path20243"
        inkscape:connector-curvature="0" />
-    <text
-       y="521.61108"
-       x="19.524914"
-       style="font-variant:normal;font-weight:normal;font-size:22.5px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
-       id="text20245">
-      <tspan
-         x="19.524914 26.004925 38.514904 46.007427 61.757427 74.267403 81.759895 94.269897 99.2649 111.77491"
-         y="521.61108"
-         sodipodi:role="line"
-         id="tspan20247">forwarding</tspan>
-    </text>
-    <text
-       y="548.59857"
-       x="47.524914"
-       style="font-variant:normal;font-weight:normal;font-size:22.5px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
-       id="text20249">
-      <tspan
-         x="47.524914 53.774914 66.279915 78.78492 83.77491"
-         y="548.59857"
-         sodipodi:role="line"
-         id="tspan20251">table</tspan>
-    </text>
     <path
        d="m 25.124914,482.92357 87.924996,0"
        style="fill:none;stroke:#000000;stroke-width:1.875;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
@@ -226,8 +204,8 @@
        id="path20271"
        inkscape:connector-curvature="0" />
     <path
-       d="m -171.66259,466.19857 178.1250038,0 0,-80.625 -178.1250038,0 0,80.625 z"
-       style="fill:#000099;fill-opacity:1;fill-rule:evenodd;stroke:none"
+       d="M -171.66259,471.42065 H 6.4624138 V 385.57357 H -171.66259 Z"
+       style="fill:#000099;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1.03187692"
        id="path20273"
        inkscape:connector-curvature="0" />
     <path
@@ -236,62 +214,29 @@
        id="path20275"
        inkscape:connector-curvature="0" />
     <path
-       d="m -178.22509,472.76107 178.12500383,0 0,-80.625 -178.12500383,0 0,80.625 z"
-       style="fill:none;stroke:#000000;stroke-width:1.875;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:8;stroke-dasharray:none;stroke-opacity:1"
+       d="M -178.19249,478.53077 H -0.13269062 v -86.3621 H -178.19249 Z"
+       style="fill:none;stroke:#000000;stroke-width:1.94020891;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:8;stroke-dasharray:none;stroke-opacity:1"
        id="path20277"
        inkscape:connector-curvature="0" />
     <text
-       y="416.63608"
+       y="448.88608"
        x="-170.25008"
-       style="font-style:italic;font-variant:normal;font-weight:normal;font-size:22.53125px;font-family:'Gill Sans MT';-inkscape-font-specification:'Gill Sans MT Italic';writing-mode:lr-tb;fill:#cc0000;fill-opacity:1;fill-rule:nonzero;stroke:none"
-       id="text20279">
-      <tspan
-         x="-170.25008 -163.76108 -153.7572 -143.19005 -137.01649 -132.78061 -122.21346 -112.77288 -106.3064 -95.26609 -88.799614 -78.795753 -72.554588 -62.550709 -53.831104 -43.827229 -39.591358"
-         y="416.63608"
-         sodipodi:role="line"
-         id="tspan20281">routing protocols</tspan>
-    </text>
-    <text
-       y="441.38608"
-       x="-170.25008"
-       style="font-variant:normal;font-weight:normal;font-size:20px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       style="font-variant:normal;font-weight:normal;font-size:20px;line-height:0%;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
        id="text20283">
       <tspan
          x="-170.25008"
-         y="441.38608"
+         y="448.88608"
          id="tspan20285">•</tspan>
     </text>
     <text
-       y="441.38608"
-       x="-157.75008"
-       style="font-variant:normal;font-weight:normal;font-size:20px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
-       id="text20287">
-      <tspan
-         x="-157.75008 -146.75008 -135.75008 -130.19008 -119.25008 -113.27009 -103.27009 -92.270088 -87.830086 -76.770088 -66.770088 -61.270084 -56.830097 -45.7701"
-         y="441.38608"
-         sodipodi:role="line"
-         id="tspan20289">path selection</tspan>
-    </text>
-    <text
-       y="465.38608"
+       y="472.88608"
        x="-170.25008"
-       style="font-variant:normal;font-weight:normal;font-size:20px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       style="font-variant:normal;font-weight:normal;font-size:20px;line-height:0%;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
        id="text20291">
       <tspan
          x="-170.25008"
-         y="465.38608"
+         y="472.88608"
          id="tspan20293">•</tspan>
-    </text>
-    <text
-       y="465.38608"
-       x="-157.75008"
-       style="font-variant:normal;font-weight:normal;font-size:20px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
-       id="text20295">
-      <tspan
-         x="-157.75008 -143.27008 -137.71008 -127.01009 -121.4501 -116.01009 -100.51009 -87.250084 -73.990089 -63.990086 -58.430073 -52.51009 -39.25008 -23.750078"
-         y="465.38608"
-         sodipodi:role="line"
-         id="tspan20297">RIP, OSPF, BGP</tspan>
     </text>
     <path
        d="m -44.200086,490.08607 1.1125,1.8625 1.1625,2.2 1.2375,2.15 1.3875,2.175 1.5625,2.1875 0.8375,1.0375 0.9125,1.075 0.975,1.05 1.0375,1.0375 1.0875,1.025 1.15,0.975 1.2375,0.9875 1.3,0.9125 1.4,0.9 1.4625,0.8625 1.5,0.7875 1.4875,0.7125 1.4625,0.6375 1.4375,0.55 1.425,0.475 1.4,0.4125 1.375,0.35 1.3625,0.2875 1.325,0.225 1.3125,0.1875 2.5999998,0.225 2.4875,0.05 2.3875,-0.0625 2.3,-0.1625 2.22500003,-0.225 1.89999997,-0.1625 0.3125,3.7375 -1.83749997,0.15 -2.33750003,0.2375 -2.475,0.175 -2.575,0.0625 -2.7125,-0.075 -2.7749998,-0.2375 -1.45,-0.2 -1.4875,-0.2625 -1.4875,-0.325 -1.5125,-0.375 -1.5375,-0.4625 -1.5625,-0.525 -1.5875,-0.6125 -1.6,-0.7 -1.6125,-0.775 -1.65,-0.875 -1.6125,-0.9375 -1.5125,-0.9875 -1.45,-1.0375 -1.35,-1.0625 -1.2875,-1.1 -1.2,-1.125 -1.1125,-1.125 -1.075,-1.175 -0.9875,-1.15 -0.9625,-1.2125 -1.675,-2.35 -1.475,-2.325 -1.3,-2.2625 -1.0625,-2.025 -1.1125,-1.85 3.2125,-1.9375 z m -5.4125,5.5125 -1.1125,-12.525 10.6875,6.625 -9.575,5.9 z m 49.07499983,15.625 11.68750017,4.6625 -10.73750017,6.55 -0.95,-11.2125 z"
@@ -299,93 +244,49 @@
        id="path20299"
        inkscape:connector-curvature="0" />
     <path
-       d="m 147.71241,484.48607 288.75,0 0,-107.8125 -288.75,0 0,107.8125 z"
-       style="fill:#000099;fill-opacity:1;fill-rule:evenodd;stroke:none"
+       d="M 147.71241,484.48607 H 442.33873 V 376.67357 H 147.71241 Z"
+       style="fill:#000099;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1.01012421"
        id="path20301"
        inkscape:connector-curvature="0" />
     <path
-       d="m 141.14991,492.92357 288.75,0 0,-109.6875 -288.75,0 0,109.6875 z"
-       style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:none"
+       d="M 141.14991,492.92357 H 439.17832 V 383.23607 H 141.14991 Z"
+       style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1.01593947"
        id="path20303"
        inkscape:connector-curvature="0" />
     <path
-       d="m 141.14991,492.92357 288.75,0 0,-109.6875 -288.75,0 0,109.6875 z"
-       style="fill:none;stroke:#000000;stroke-width:1.875;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:8;stroke-dasharray:none;stroke-opacity:1"
+       d="M 141.14991,492.92357 H 439.17832 V 383.23607 H 141.14991 Z"
+       style="fill:none;stroke:#000000;stroke-width:1.90488648;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:8;stroke-dasharray:none;stroke-opacity:1"
        id="path20305"
        inkscape:connector-curvature="0" />
     <text
-       y="407.59857"
-       x="152.49992"
-       style="font-style:italic;font-variant:normal;font-weight:normal;font-size:25px;font-family:'Gill Sans MT';-inkscape-font-specification:'Gill Sans MT Italic';writing-mode:lr-tb;fill:#cc0000;fill-opacity:1;fill-rule:nonzero;stroke:none"
-       id="text20307">
-      <tspan
-         x="152.49992 158.49992 169.69991 176.24992 188.49992 195.74989 206.94991 213.97493 225.17494 234.79994 245.99988"
-         y="407.59857"
-         sodipodi:role="line"
-         id="tspan20309">IP protocol</tspan>
-    </text>
-    <text
-       y="433.13608"
-       x="152.49992"
-       style="font-variant:normal;font-weight:normal;font-size:20px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       y="423.76108"
+       x="150.62492"
+       style="font-variant:normal;font-weight:normal;font-size:20px;line-height:0%;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
        id="text20311">
       <tspan
-         x="152.49992"
-         y="433.13608"
+         x="150.62492"
+         y="423.76108"
          id="tspan20313">•</tspan>
     </text>
     <text
-       y="433.13608"
-       x="164.99992"
-       style="font-variant:normal;font-weight:normal;font-size:20px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
-       id="text20315">
-      <tspan
-         x="164.99992 175.99992 186.99992 197.99989 204.73994 215.73994 225.73994 235.73994 240.21992 251.21991 262.21991 268.19989 278.19989 289.19989 300.19989 310.41992 321.41992 332.41992 337.97992 342.41992 353.41992 364.41992"
-         y="433.13608"
-         sodipodi:role="line"
-         id="tspan20317">addressing conventions</tspan>
-    </text>
-    <text
-       y="457.13608"
-       x="152.49992"
-       style="font-variant:normal;font-weight:normal;font-size:20px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       y="447.76108"
+       x="150.62492"
+       style="font-variant:normal;font-weight:normal;font-size:20px;line-height:0%;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
        id="text20319">
       <tspan
-         x="152.49992"
-         y="457.13608"
+         x="150.62492"
+         y="447.76108"
          id="tspan20321">•</tspan>
     </text>
     <text
-       y="457.13608"
-       x="164.99992"
-       style="font-variant:normal;font-weight:normal;font-size:20px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
-       id="text20323">
-      <tspan
-         x="164.99992 175.99992 186.99992 192.55992 203.49989 214.49989 221.23994 232.23994 248.9599 254.93988 260.65991 271.65991 278.3999 295.11987 306.11993"
-         y="457.13608"
-         sodipodi:role="line"
-         id="tspan20325">datagram format</tspan>
-    </text>
-    <text
-       y="481.13608"
-       x="152.49992"
-       style="font-variant:normal;font-weight:normal;font-size:20px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       y="469.88608"
+       x="150.62492"
+       style="font-variant:normal;font-weight:normal;font-size:20px;line-height:0%;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
        id="text20327">
       <tspan
-         x="152.49992"
-         y="481.13608"
+         x="150.62492"
+         y="469.88608"
          id="tspan20329">•</tspan>
-    </text>
-    <text
-       y="481.13608"
-       x="164.99992"
-       style="font-variant:normal;font-weight:normal;font-size:20px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
-       id="text20331">
-      <tspan
-         x="164.99992 175.99992 186.99992 196.99989 206.99989 217.99989 223.55989 229.47993 240.47993 251.47992 262.47992 273.47992 277.91992 282.4599 293.4599 304.4599 310.17987 320.17987 331.17993 342.17993 352.3999 363.3999 374.3999 379.9599 384.3999 395.3999 406.3999"
-         y="481.13608"
-         sodipodi:role="line"
-         id="tspan20333">packet handling conventions</tspan>
     </text>
     <path
        d="m 153.33741,588.22357 190.3125,0 0,-83.4375 -190.3125,0 0,83.4375 z"
@@ -403,20 +304,9 @@
        id="path20339"
        inkscape:connector-curvature="0" />
     <text
-       y="536.72357"
-       x="157.18742"
-       style="font-style:italic;font-variant:normal;font-weight:normal;font-size:25px;font-family:'Gill Sans MT';-inkscape-font-specification:'Gill Sans MT Italic';writing-mode:lr-tb;fill:#cc0000;fill-opacity:1;fill-rule:nonzero;stroke:none"
-       id="text20341">
-      <tspan
-         x="157.18742 163.18742 176.98741 197.18739 208.38741 215.18739 227.43739 234.68739 245.88739 252.91241 264.11243 273.73743 284.93738"
-         y="536.72357"
-         sodipodi:role="line"
-         id="tspan20343">ICMP protocol</tspan>
-    </text>
-    <text
        y="562.23608"
        x="157.18742"
-       style="font-variant:normal;font-weight:normal;font-size:20px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       style="font-variant:normal;font-weight:normal;font-size:20px;line-height:0%;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
        id="text20345">
       <tspan
          x="157.18742"
@@ -424,128 +314,20 @@
          id="tspan20347">•</tspan>
     </text>
     <text
-       y="562.23608"
-       x="169.68742"
-       style="font-variant:normal;font-weight:normal;font-size:20px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
-       id="text20349">
-      <tspan
-         x="169.68742 180.68742 187.42741 194.1674 205.16743 211.90742 217.46742 224.1274 235.14742 246.1474 257.1474 263.88739 269.44739 273.88739 284.88739"
-         y="562.23608"
-         sodipodi:role="line"
-         id="tspan20351">error reporting</tspan>
-    </text>
-    <text
        y="586.26105"
        x="157.18742"
-       style="font-variant:normal;font-weight:normal;font-size:20.03125px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       style="font-variant:normal;font-weight:normal;font-size:20.03125px;line-height:0%;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
        id="text20353">
       <tspan
          x="157.18742"
          y="586.26105"
          id="tspan20355">•</tspan>
     </text>
-    <text
-       y="586.26105"
-       x="169.68742"
-       style="font-variant:normal;font-weight:normal;font-size:20.03125px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
-       id="text20357">
-      <tspan
-         x="169.68742 176.41792 187.41508 198.41225 203.92085 214.91798 221.64845"
-         y="586.26105"
-         sodipodi:role="line"
-         id="tspan20359">router</tspan>
-    </text>
-    <text
-       y="610.51105"
-       x="157.18742"
-       style="font-variant:normal;font-weight:normal;font-size:20px;font-family:'MS PGothic';-inkscape-font-specification:'MS PGothic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
-       id="text20361">
-      <tspan
-         x="157.18742"
-         y="610.51105"
-         id="tspan20363">“</tspan>
-    </text>
-    <text
-       y="610.51105"
-       x="167.18742"
-       style="font-variant:normal;font-weight:normal;font-size:20px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
-       id="text20365">
-      <tspan
-         x="167.18742 177.18742 181.6674 192.6674 203.66743 214.66743 219.10744 223.64742 234.64742"
-         y="610.51105"
-         sodipodi:role="line"
-         id="tspan20367">signaling</tspan>
-    </text>
-    <text
-       y="610.51105"
-       x="245.68738"
-       style="font-variant:normal;font-weight:normal;font-size:20px;font-family:'MS PGothic';-inkscape-font-specification:'MS PGothic';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
-       id="text20369">
-      <tspan
-         x="245.68738"
-         y="610.51105"
-         id="tspan20371">”</tspan>
-    </text>
     <path
        d="m -196.97509,366.82357 642.1875,-0.9375"
        style="fill:none;stroke:#000000;stroke-width:1.875;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:8;stroke-dasharray:none;stroke-opacity:1"
        id="path20373"
        inkscape:connector-curvature="0" />
-    <text
-       y="345.44858"
-       x="-46.012592"
-       style="font-variant:normal;font-weight:normal;font-size:22.53125px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#808080;fill-opacity:1;fill-rule:nonzero;stroke:none"
-       id="text20375">
-      <tspan
-         x="-46.012592 -39.74889 -32.245991 -19.718615 -7.2588377 4.0067873 16.534163 28.993938 36.496868 42.76054 48.753857 53.755779 66.28315 77.008034 89.535408 97.038307 103.30201 109.56568 123.26469 139.53227 151.51888 157.78258 164.24904 180.51659 196.78413"
-         y="345.44858"
-         sodipodi:role="line"
-         id="tspan20377">transport layer: TCP, UDP</tspan>
-    </text>
-    <text
-       y="650.04858"
-       x="63.712414"
-       style="font-variant:normal;font-weight:normal;font-size:22.5px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#808080;fill-opacity:1;fill-rule:nonzero;stroke:none"
-       id="text20379">
-      <tspan
-         x="63.712414 68.707405 73.7024 86.21241 97.687424 103.44739 108.44242 120.95241 131.70741 144.21742"
-         y="650.04858"
-         sodipodi:role="line"
-         id="tspan20381">link layer</tspan>
-    </text>
-    <text
-       y="693.63605"
-       x="48.712414"
-       style="font-variant:normal;font-weight:normal;font-size:22.5px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#808080;fill-opacity:1;fill-rule:nonzero;stroke:none"
-       id="text20383">
-      <tspan
-         x="48.712414 61.222424 73.732399 84.464912 95.714912 100.70991 111.95991 124.46992 129.46492 135.94493 140.93993 153.44991 164.20491 176.71492"
-         y="693.63605"
-         sodipodi:role="line"
-         id="tspan20385">physical layer</tspan>
-    </text>
-    <text
-       y="477.73608"
-       x="-319.19385"
-       style="font-variant:normal;font-weight:normal;font-size:30px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#cc0000;fill-opacity:1;fill-rule:nonzero;stroke:none"
-       id="text20387">
-      <tspan
-         x="-319.19385 -302.45383 -285.71384 -277.37384 -256.19382 -239.45384 -229.46384"
-         y="477.73608"
-         sodipodi:role="line"
-         id="tspan20389">network</tspan>
-    </text>
-    <text
-       y="513.76105"
-       x="-278.9126"
-       style="font-variant:normal;font-weight:normal;font-size:30.03125px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#cc0000;fill-opacity:1;fill-rule:nonzero;stroke:none"
-       id="text20391">
-      <tspan
-         x="-278.9126 -272.24564 -255.39812 -241.10324 -224.40587"
-         y="513.76105"
-         sodipodi:role="line"
-         id="tspan20393">layer</tspan>
-    </text>
     <path
        d="m -225.57509,440.88607 0,-66.1 2.8125,0 0,66.1 -2.8125,0 z m -2.8125,-64.6875 4.225,-8.4375 4.2125,8.4375 -8.4375,0 z"
        style="fill:#cc0000;fill-opacity:1;fill-rule:nonzero;stroke:none"
@@ -556,5 +338,190 @@
        style="fill:#cc0000;fill-opacity:1;fill-rule:nonzero;stroke:none"
        id="path20397"
        inkscape:connector-curvature="0" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:9.375px;line-height:125%;font-family:'Abyssinica SIL';-inkscape-font-specification:'Abyssinica SIL';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.9375px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="-48.569756"
+       y="342.94876"
+       id="text100"><tspan
+         sodipodi:role="line"
+         id="tspan98"
+         x="-48.569756"
+         y="342.94876"
+         style="font-size:22.5px;fill:#808080;stroke-width:0.9375px;-inkscape-font-specification:Roboto;font-family:Roboto;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal">Camada de Transporte: UDP, TCP</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:9.375px;line-height:125%;font-family:'Abyssinica SIL';-inkscape-font-specification:'Abyssinica SIL';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.9375px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="27.691658"
+       y="649.84204"
+       id="text108"><tspan
+         sodipodi:role="line"
+         id="tspan106"
+         x="27.691658"
+         y="649.84204"
+         style="font-size:22.5px;fill:#808080;stroke-width:0.9375px;-inkscape-font-specification:Roboto;font-family:Roboto;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal">Camada de Enlace</tspan></text>
+    <text
+       id="text112"
+       y="693.33228"
+       x="48.862312"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:9.375px;line-height:125%;font-family:'Abyssinica SIL';-inkscape-font-specification:'Abyssinica SIL';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.9375px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       xml:space="preserve"><tspan
+         style="font-size:22.5px;fill:#808080;stroke-width:0.9375px;-inkscape-font-specification:Roboto;font-family:Roboto;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal"
+         y="693.33228"
+         x="48.862312"
+         id="tspan110"
+         sodipodi:role="line">Camada Física</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:9.375px;line-height:125%;font-family:'Abyssinica SIL';-inkscape-font-specification:'Abyssinica SIL';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#cc0000;fill-opacity:1;stroke:none;stroke-width:0.9375px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="-309.83118"
+       y="476.51651"
+       id="text116"><tspan
+         sodipodi:role="line"
+         id="tspan114"
+         x="-309.83118"
+         y="476.51651"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:27.5px;line-height:125.99999905%;font-family:Roboto;-inkscape-font-specification:Roboto;fill:#cc0000;fill-opacity:1;stroke-width:0.9375px">Camada </tspan><tspan
+         sodipodi:role="line"
+         x="-309.83118"
+         y="511.1665"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:27.5px;line-height:125.99999905%;font-family:Roboto;-inkscape-font-specification:Roboto;fill:#cc0000;fill-opacity:1;stroke-width:0.9375px"
+         id="tspan953">de Rede</tspan></text>
+    <text
+       id="text959"
+       y="411.69147"
+       x="-174.43709"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22.5px;line-height:75.40000081%;font-family:'Abyssinica SIL';-inkscape-font-specification:'Abyssinica SIL';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#cc0000;fill-opacity:1;stroke:none;stroke-width:0.9375px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       xml:space="preserve"><tspan
+         id="tspan957"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22.5px;line-height:75.40000081%;font-family:Roboto;-inkscape-font-specification:Roboto;fill:#cc0000;fill-opacity:1;stroke-width:0.9375px"
+         y="411.69147"
+         x="-174.43709"
+         sodipodi:role="line">Protocolos de</tspan><tspan
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22.5px;line-height:75.40000081%;font-family:Roboto;-inkscape-font-specification:Roboto;fill:#cc0000;fill-opacity:1;stroke-width:0.9375px"
+         y="429.77512"
+         x="-174.43709"
+         sodipodi:role="line"
+         id="tspan963">Roteamento</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22.5px;line-height:75.40000081%;font-family:'Abyssinica SIL';-inkscape-font-specification:'Abyssinica SIL';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#cc0000;fill-opacity:1;stroke:none;stroke-width:0.9375px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="-158.02568"
+       y="449.90543"
+       id="text969"><tspan
+         id="tspan967"
+         sodipodi:role="line"
+         x="-158.02568"
+         y="449.90543"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:20px;line-height:75.40000081%;font-family:Roboto;-inkscape-font-specification:Roboto;fill:#000000;fill-opacity:1;stroke-width:0.9375px">Seleção de rotas</tspan></text>
+    <text
+       id="text975"
+       y="470.41968"
+       x="-158.02568"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22.5px;line-height:75.40000081%;font-family:'Abyssinica SIL';-inkscape-font-specification:'Abyssinica SIL';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#cc0000;fill-opacity:1;stroke:none;stroke-width:0.9375px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       xml:space="preserve"><tspan
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:20px;line-height:75.40000081%;font-family:Roboto;-inkscape-font-specification:Roboto;fill:#000000;fill-opacity:1;stroke-width:0.9375px"
+         y="470.41968"
+         x="-158.02568"
+         sodipodi:role="line"
+         id="tspan973">RIP, OSPF, BGP</tspan></text>
+    <text
+       id="text979"
+       y="526.78162"
+       x="16.330881"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22.5px;line-height:75.40000081%;font-family:'Abyssinica SIL';-inkscape-font-specification:'Abyssinica SIL';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#cc0000;fill-opacity:1;stroke:none;stroke-width:0.9375px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       xml:space="preserve"><tspan
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:20px;line-height:75.40000081%;font-family:Roboto;-inkscape-font-specification:Roboto;text-align:start;text-anchor:start;fill:#000000;fill-opacity:1;stroke-width:0.9375px"
+         y="526.78162"
+         x="16.330881"
+         sodipodi:role="line"
+         id="tspan977">Tabela de </tspan><tspan
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:20px;line-height:75.40000081%;font-family:Roboto;-inkscape-font-specification:Roboto;text-align:start;text-anchor:start;fill:#000000;fill-opacity:1;stroke-width:0.9375px"
+         y="544.65906"
+         x="16.330881"
+         sodipodi:role="line"
+         id="tspan981">Roteamento</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22.5px;line-height:75.40000081%;font-family:'Abyssinica SIL';-inkscape-font-specification:'Abyssinica SIL';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#cc0000;fill-opacity:1;stroke:none;stroke-width:0.9375px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="150.50871"
+       y="534.77698"
+       id="text987"><tspan
+         id="tspan985"
+         sodipodi:role="line"
+         x="150.50871"
+         y="534.77698"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22.5px;line-height:75.40000081%;font-family:Roboto;-inkscape-font-specification:Roboto;fill:#cc0000;fill-opacity:1;stroke-width:0.9375px">Protocolo ICMP</tspan></text>
+    <text
+       id="text993"
+       y="406.76807"
+       x="143.94415"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22.5px;line-height:75.40000081%;font-family:'Abyssinica SIL';-inkscape-font-specification:'Abyssinica SIL';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#cc0000;fill-opacity:1;stroke:none;stroke-width:0.9375px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       xml:space="preserve"><tspan
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22.5px;line-height:75.40000081%;font-family:Roboto;-inkscape-font-specification:Roboto;fill:#cc0000;fill-opacity:1;stroke-width:0.9375px"
+         y="406.76807"
+         x="143.94415"
+         sodipodi:role="line"
+         id="tspan991">Protocolo IP</tspan></text>
+    <text
+       id="text997"
+       y="423.29846"
+       x="158.2467"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22.5px;line-height:75.40000081%;font-family:'Abyssinica SIL';-inkscape-font-specification:'Abyssinica SIL';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#cc0000;fill-opacity:1;stroke:none;stroke-width:0.9375px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       xml:space="preserve"><tspan
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:20px;line-height:75.40000081%;font-family:Roboto;-inkscape-font-specification:Roboto;fill:#000000;fill-opacity:1;stroke-width:0.9375px"
+         y="423.29846"
+         x="158.2467"
+         sodipodi:role="line"
+         id="tspan995">Convenções de endereçamento</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22.5px;line-height:75.40000081%;font-family:'Abyssinica SIL';-inkscape-font-specification:'Abyssinica SIL';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#cc0000;fill-opacity:1;stroke:none;stroke-width:0.9375px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="158.2467"
+       y="446.27444"
+       id="text1001"><tspan
+         id="tspan999"
+         sodipodi:role="line"
+         x="158.2467"
+         y="446.27444"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:20px;line-height:75.40000081%;font-family:Roboto;-inkscape-font-specification:Roboto;fill:#000000;fill-opacity:1;stroke-width:0.9375px">Formato de Datagrama</tspan></text>
+    <text
+       id="text1005"
+       y="469.8371"
+       x="157.42613"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22.5px;line-height:75.40000081%;font-family:'Abyssinica SIL';-inkscape-font-specification:'Abyssinica SIL';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#cc0000;fill-opacity:1;stroke:none;stroke-width:0.9375px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       xml:space="preserve"><tspan
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:20px;line-height:75.40000081%;font-family:Roboto;-inkscape-font-specification:Roboto;fill:#000000;fill-opacity:1;stroke-width:0.9375px"
+         y="469.8371"
+         x="157.42613"
+         sodipodi:role="line"
+         id="tspan1003">Convenções de manipulação </tspan><tspan
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:20px;line-height:75.40000081%;font-family:Roboto;-inkscape-font-specification:Roboto;fill:#000000;fill-opacity:1;stroke-width:0.9375px"
+         y="487.71454"
+         x="157.42613"
+         sodipodi:role="line"
+         id="tspan1015">de pacotes</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22.5px;line-height:75.40000081%;font-family:'Abyssinica SIL';-inkscape-font-specification:'Abyssinica SIL';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#cc0000;fill-opacity:1;stroke:none;stroke-width:0.9375px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="166.436"
+       y="562.59644"
+       id="text1009"><tspan
+         id="tspan1007"
+         sodipodi:role="line"
+         x="166.436"
+         y="562.59644"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:20px;line-height:75.40000081%;font-family:Roboto;-inkscape-font-specification:Roboto;fill:#000000;fill-opacity:1;stroke-width:0.9375px">Aviso de erros</tspan></text>
+    <text
+       id="text1013"
+       y="585.40979"
+       x="165.77805"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22.5px;line-height:75.40000081%;font-family:'Abyssinica SIL';-inkscape-font-specification:'Abyssinica SIL';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#cc0000;fill-opacity:1;stroke:none;stroke-width:0.9375px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       xml:space="preserve"><tspan
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:20px;line-height:75.40000081%;font-family:Roboto;-inkscape-font-specification:Roboto;fill:#000000;fill-opacity:1;stroke-width:0.9375px"
+         y="585.40979"
+         x="165.77805"
+         sodipodi:role="line"
+         id="tspan1011">Sinalização</tspan></text>
   </g>
 </svg>
