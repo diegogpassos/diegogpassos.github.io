@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <!-- Meta info -->
+	<meta charset="utf-8">
+	<meta name="shortauthor" content="Diego Passos"/>
+	<meta name="shorttitle" content="Multimídia: Qos, DiffServ"/>
+	<meta name="shortevent" content="Redes de Computadores II"/>
+	<title>Redes de Computadores II: Aula 18</title>
+
+    <!-- Math support -->
+	<script type="text/x-mathjax-config">
+		MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+			MathJax.InputJax.TeX.Definitions.number = /^(?:[0-9]+(?:\.[0-9]{3})*(?:\{,\}[0-9]*)*|\{,\}[0-9]+)/
+		});
+	</script>
+	<!--<script src="../MathJax/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>-->
+	<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+	<!--<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>-->
+
+    <!-- Fonts -->
+	<link href='https://fonts.googleapis.com/css?family=Lora:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
+	<!--<link href='../../../../Fonts/Lora/lora.css' rel='stylesheet' type='text/css'>-->
+
+    <!-- CSS -->
+	<link href='../template/css/template.css' id="template" rel='stylesheet' type='text/css'>
+	<link href='../template/css/presentationSpecific.css' id="presentationSpecific" rel='stylesheet' type='text/css'>
+
+    <!-- Javascript -->
+	<script type="text/javascript" src="../template/js/audio.js"></script>
+</head>
+
+<body>
+    <!-- Audio handlers -->
+
+    <!-- Title Slide -->
+	<section>
+
+        <div class="slideContent">
+            <h1 class="title">Aula 18 - Multimídia: QoS, DiffServ</h1>
+            <h2 class="author">Diego Passos</h2>
+            <h4 class="institution">Universidade Federal Fluminense</h4>
+            <h3 class="date">Redes de Computadores II</h3>
+        </div>
+
+	</section>
+
+    <!-- Content slides -->
+
+	<section>
+	<h1>Na Última Aula...</h1>
+	<div class="slideContent">
+        <div class="column" style="width: 50%;">
+            <ul>
+                <li>RTP: <i>Real-Time Protocol</i>.
+                <ul>
+                    <li>Define <b>estrutura</b> de pacote de áudio, vídeo.
+                    <ul>
+                        <li><i>Timestamp</i>, # de sequência, codificação, ...</li>
+                    </ul></li>
+                    <li>Roda <b>sobre UDP</b>.</li>
+                    <li>Padrão, permite <b>interoperabilidade</b>.</li>
+                    <li><b>Não provê garantias de entrega</b>.</li>
+                </ul></li>
+                <li>RTCP: <i>Real-Time Control Protocol</i>.
+                <ul>
+                    <li>Trabalha <b>em conjunto</b> com o RTP.</li>
+                    <li>Pacotes de controle são enviados <b>periodicamente</b>.
+                    <ul>
+                        <li>Transmissores e receptores.</li>
+                    </ul></li>
+                    <li>Estatísticas, informações ajudam em <b>sincronização, adaptação</b>.</li>
+                </ul></li>
+            </ul>
+        </div>
+        <div class="column" style="width: 50%;">
+            <ul>
+                <li>SIP: <i>Session Initiation Protocol</i>.
+                <ul>
+                    <li><b>Configuração</b> de chamadas.
+                    <ul>
+                        <li><b>Localização</b> do destinatário.</li>
+                        <li>Acordo sobre <b>codificações</b>.</li>
+                    </ul></li>
+                    <li><b>Gerenciamento</b> de chamadas.
+                    <ul>
+                        <li>Adição de <b>novos fluxos</b>.</li>
+                        <li>Alteração de <b>codificação</b>.</li>
+                        <li>Convide a <b>novos</b> usuários.</li>
+                        <li><b>Transferência</b> de chamadas.</li>
+                        <li><b>Chamada em espera</b>.</li>
+                    </ul></li>
+                    <li>Utiliza servidores para:
+                    <ul>
+                        <li>Proxy.</li>
+                        <li>Registro de localização de usuários.</li>
+                    </ul></li>
+                    <li>Simples, mensagens de texto, filosofias da web.</li>
+                </ul></li>
+            </ul>
+        </div>
+	</div>
+	</section>
+
+
+    <section class="secao">
+    <div class="slideContent">
+		  Suporte da Rede às Aplicações Multimídia
+    </div>
+    </section>
+
+    <section>
+    <h1>Suporte da Rede às Aplicações Multimídia</h1>
+    <div class="slideContent">
+        <table>
+            <tr>
+                <th>Abordagem</th>
+                <th>Granularidade</th>
+                <th>Garantias</th>
+                <th>Mecanismos</th>
+                <th>Complexidade</th>
+                <th>Implantação?</th>
+            </tr>
+            <tr>
+                <td>Melhor esforço</td>
+                <td>Todo tráfego tratado igualmente</td>
+                <td>Nenhuma ou <i>soft</i></td>
+                <td>Nenhum suporte da rede (tudo feito pelas aplicações)</td>
+                <td>Baixa</td>
+                <td>Ubíqua</td>
+            </tr>
+            <tr>
+                <td><i>Differentiated services</i></td>
+                <td>&ldquo;Classes&rdquo; de tráfego</td>
+                <td>Nenhuma ou <i>soft</i></td>
+                <td>Marcação de pacotes, escalonamento, políticas</td>
+                <td>Média</td>
+                <td>Alguma</td>
+            </tr>
+            <tr>
+                <td>QoS por conexão</td>
+                <td>Fluxos por conexão</td>
+                <td><i>Hard</i> ou <i>soft</i> após admissão do fluxo</td>
+                <td>Marcação de pacotes, escalonamento, políticas, admissão de fluxos</td>
+                <td>Alta</td>
+                <td>Pouca ou nenhuma</td>
+            </tr>
+        </table>
+    </div>
+    </section>
+
+    <section>
+    <h1>Dimensionamento de Redes de Melhor Esforço</h1>
+    <div class="slideContent">
+        <ul>
+            <li><span class="alert">Abordagem:</span> implantar capacidade suficiente para os enlaces de forma que congestionamentos não ocorram; tráfego multimídia percorre a rede sem atrasos ou perdas.
+            <ul>
+                <li>Baixa complexidade de mecanismos de rede (utiliza modelo atual de melhor esforço).</li>
+                <li>Altos custos em termos de banda necessária.</li>
+            </ul></li>
+            <li>Desafios:
+            <ul>
+                <li><b>Dimensionamento da rede</b>: quanta banda é &ldquo;suficiente&rdquo;?</li>
+                <li><b>Estimativa da demanda de tráfego:</b> necessária para se determinar o quanto de banda é &ldquo;suficiente&rdquo; (para aquele tráfego).</li>
+            </ul></li>
+        </ul>
+    </div>
+    </section>
+
+    <section>
+    <h1>Provendo Múltiplas Classes de Serviço</h1>
+    <div class="slideContent">
+        <ul>
+            <li>Até aqui: tiramos o máximo do serviço de melhor esforço.
+            <ul>
+                <li>Modelo de serviço do tipo &ldquo;tamanho único&rdquo;.</li>
+            </ul></li>
+            <li>Alternativa: múltiplas classes de serviço.
+            <ul>
+                <li>Particionamento do tráfego em classes.</li>
+                <li>Rede trata classes de tráfego diferentes de formas diferentes (analogia: serviço VIP <i>vs.</i> serviço normal).</li>
+            </ul></li>
+        </ul>
+        <div>
+        <div class="column" style="width: 50%;">
+        <ul>
+            <li>Granularidade:
+            <ul>
+                <li>Serviços diferenciados entre classes, <b>mas não entre conexões individuais</b>.</li>
+            </ul></li>
+            <li>História: bits ToS.</li>
+        </ul>
+        </div>
+        <div class="column" style="width: 50%;">
+            <center>
+                <img src="imagens/Classes.svg" style="width: 90%;"/>
+            </center>
+        </div>
+        </div>
+    </div>
+    </section>
+
+    <section>
+    <h1>Múltiplas Classes de Serviço: Cenários</h1>
+    <div class="slideContent">
+        <center>
+            <img src="imagens/MultipleClasses.svg" style="width: 70%;"/>
+        </center>
+    </div>
+    </section>
+
+    <!-- Possível demonstração: reproduzir cenário, com fluxo HTTP prejudicando qualidade do áudio. -->
+    <section>
+    <h1>Cenário 1: Misturando HTTP e VoIP</h1>
+    <div class="slideContent">
+        <ul>
+            <li>Exemplo: VoIP a 1 Mb/s e HTTP compartilham enlace de 1,5 Mb/s.
+            <ul>
+                <li>Rajadas do HTTP podem congestionar roteador, causando perda do áudio.</li>
+                <li>Queremos priorizar o áudio sobre o HTTP.</li>
+            </ul></li>
+        </ul>
+        <center>
+            <img src="imagens/MultipleClasses2.svg" style="width: 70%;"/>
+        </center>
+        <ul>
+            <li>Primeiro princípio:</li>
+        </ul>
+        <center>
+            <div style="border: solid 2px #c00; width: 80%; text-align:left; padding-left: 5px;">
+                Marcação de pacotes é necessária para que roteador diferencie pacotes de classes diferentes. Políticas diferentes também são necessárias para tratar pacotes de acordo.
+            </div>
+        </center>
+    </div>
+    </section>
+
+    <section>
+    <h1>Mais Princípios para Garantia de QoS (I)</h1>
+    <div class="slideContent">
+        <ul>
+            <li>O que acontece se aplicações se comportam de forma inesperada (<i>e.g.</i>, VoIP gera taxa maior que a declarada)?
+            <ul>
+                <li>Regulação: forçar fonte a aderir às alocações de banda.</li>
+            </ul></li>
+            <li><b>Marcação</b> e <b>regulação</b> nas bordas da rede.</li>
+        </ul>
+        <center>
+            <img src="imagens/MultipleClasses3.svg" style="width: 70%;"/>
+        </center>
+        <ul>
+            <li>Segundo princípio:</li>
+        </ul>
+        <center>
+            <div style="border: solid 2px #c00; width: 80%; text-align:left; padding-left: 5px;">
+            Prover proteção (isolamento) de uma classe em relação às demais.
+            </div>
+        </center>
+
+    </div>
+    </section>
+
+    <section>
+    <h1>Mais Princípios para Garantia de QoS (II)</h1>
+    <div class="slideContent">
+        <ul>
+	   	<li>Alocação fixa (não compartilhável) de banda para fluxos: ineficiente, se fluxos não utilizam suas alocações.</li>
+        </ul>
+        <center>
+            <img src="imagens/MultipleClasses4.svg" style="width: 70%;"/>
+        </center>
+        <ul>
+            <li>Terceiro princípio:</li>
+        </ul>
+        <center>
+            <div style="border: solid 2px #c00; width: 80%; text-align:left; padding-left: 5px;">
+		  Ao mesmo tempo em que se provê isolamento, é desejável utilizar os recursos da forma mais eficiente possível.
+            </div>
+        </center>
+
+    </div>
+    </section>
+
+    <section>
+    <h1>Mecanismos de Escalonamento e Regulação</h1>
+    <div class="slideContent">
+		<ul>
+			<li><span class="alert">Escalonamento:</span> escolha do próximo pacote a enviar pelo enlace.</li>
+			<li><span class="alert">FIFO (<i>First In First Out</i>):</span> envia na ordem de chegada à fila.
+			<ul>
+				<li>Exemplo desta política no mundo real?</li>
+				<li><b>Política de descarte:</b> se pacote chega a uma fila cheia, quem é descartado?
+				<ul>
+					<li><b>Tail Drop:</b> descarta pacote que acaba de chegar.</li>
+					<li><b>Prioridade:</b> descarta com base em prioridades.</li>
+					<li><b>Aleatório:</b> descarta aleatoriamente.</li>
+				</ul></li>
+			</ul></li>
+		</ul>
+		<center>
+			<img src="imagens/Queueing.svg" style="width: 50%;"/>
+		</center>
+    </div>
+    </section>
+
+    <!-- Possível demonstração: mostrar sistema com PS em que determinado fluxo consome
+    todos os recursos, levando outro a starvation. -->
+    <section>
+    <h1>Políticas de Escalonamento (I)</h1>
+    <div class="slideContent">
+    		<div class="column" style="width: 50%;">
+		<br>
+		<br>
+		<br>
+		<ul>
+			<li><span class="alert"><i>Priority Scheduling</i>:</span> envia pacote enfileirado de mais alta prioridade.
+			<ul>
+				<li>Múltiplas <b>classes</b> com diferentes prioridades.
+				<ul>
+					<li>Classe pode depender de uma marcação ou outra informação de cabeçalho, <i>e.g.</i>, IP de origem/destino, número de porta, etc.</li>
+					<li>Exemplo do mundo real?</li>
+				</ul></li>
+			</ul></li>
+		</ul>
+    		</div>
+		<div class="column" style="width: 50%;">
+			<center>
+				<img src="imagens/PriorityScheduling.svg" style="width: 90%;"/>
+			</center>
+		</div>
+    </div>
+    </section>
+
+    <section>
+    <!-- Possível demonstração: idem, mas concluindo que ambos os fluxos acabam dividindo igualmente a banda. -->
+    <h1>Políticas de Escalonamento (II)</h1>
+    <div class="slideContent">
+    		<ul>
+    			<li><span class="alert">Escalonamento Round Robin (RR):</span>
+    			<ul>
+    				<li>Múltiplas classes.</li>
+				<li>Varre as filas das classes ciclicamente, enviando um pacote completo de cada classe (se disponível).</li>
+				<li>Exemplo do mundo real?</li>
+    			</ul></li>
+    		</ul>
+		<center>
+			<img src="imagens/RRScheduling.svg" style="width: 50%;"/>
+		</center>
+    </div>
+    </section>
+
+    <!-- Possível demonstração: idem, mas mostrando que agora há reserva de recursos. -->
+    <section>
+    <h1>Políticas de Escalonamento (III)</h1>
+    <div class="slideContent">
+    		<ul>
+    			<li><span class="alert"><i>Weighted Fair Queuing</i> (WFQ):</span>
+    			<ul>
+    				<li>Round Robin generalizado.</li>
+				<li>Cada classe recebe uma fração ponderada de serviço em cada ciclo.</li>
+				<li>Exemplo do mundo real?</li>
+    			</ul></li>
+    		</ul>
+		<center>
+			<img src="imagens/WFQScheduling.png" style="width: 50%;"/>
+		</center>
+    </div>
+    </section>
+
+    <section>
+    <h1>Mecanismos de Regulação</h1>
+    <div class="slideContent">
+    		<ul>
+    			<li><span class="alert">Objetivo:</span> limitar tráfego para que este não exceda parâmetros declarados.</li>
+			<li>Três critérios comumente utilizados:
+			<ul>
+				<li><b>Taxa média (de longo prazo):</b> quantos pacotes podem ser enviados por unidade de tempo (a longo prazo).
+				<ul>
+					<li>Questão fundamental: qual é o comprimento do intervalo considerado? 100 pacotes/s ou 6000 pacotes/min resultam na mesma média!</li>
+				</ul></li>
+				<li><b>Taxa máxima:</b> <i>e.g.</i>, 6000 pacotes/min em média; 1500 pacotes/s de taxa máxima.</li>
+				<li><b>Tamanho (máximo) da rajada:</b> número máximo de pacotes enviados em sequência (sem períodos intermediários de inatividade).</li>
+			</ul></li>
+    		</ul>
+    </div>
+    </section>
+
+    <section>
+    <h1>Mecanismos de Regulação: Implementação</h1>
+    <div class="slideContent">
+    		<ul>
+    			<li><span class="alert"><i>Token Bucket</i>:</span> limita chegada a um <b>tamanho de rajada</b> e uma <b>taxa média</b>.</li>
+    		</ul>
+		<center>
+			<img src="imagens/tokenBucket.png" style="width: 50%;"/>
+		</center>
+		<ul>
+			<li>&ldquo;Balde&rdquo; pode armazenar <tt>b</tt> <i>tokens</i>.</li>
+			<li><i>Tokens</i> são gerados a taxa de <tt>r</tt> tokens/s (a menos que o balde esteja cheio).</li>
+			<li><span class="alert">Durante um intervalo de comprimento <tt>t</tt>: número de pacotes admitidos é menor ou igual a <span class="math inline">\((r\cdot t + b)\)</span></span>.</li>
+		</ul>
+    </div>
+    </section>
+
+    <section>
+    <h1>Regulação e Garantias de QoS</h1>
+    <div class="slideContent">
+    		<ul>
+    			<li><i>Token Bucket</i> e WFQ combinados proveem garantia de um limite superior no atraso.
+    			<ul>
+    				<li><i>i.e.</i>, <span class="alert">garantia de QoS!</span></li>
+    			</ul></li>
+    		</ul>
+		<center>
+			<img src="imagens/TokenBucketWFQ.svg" style="width: 80%;"/>
+		</center>
+    </div>
+    </section>
+
+    <!-- Possíveis demonstrações: implementações ("animações") em js mostrando como estes conceitos se comportam.
+    Por exemplo, mostrar gráfico da taxa de saída de um enlace para múltiplas taxas de fluxo no tempo, mostrando
+    comportamento do token bucket. Animação pode ser parametrizada. -->
+
+    <!-- Falar de leaky bucket? -->
+
+    <section>
+    <h1>Differentiated Services</h1>
+    <div class="slideContent">
+    		<ul>
+    			<li>Desejamos classes de serviço &ldquo;qualitativas&rdquo;.
+    			<ul>
+    				<li>&ldquo;Se comporta como um cabo&rdquo;.</li>
+				<li>Diferenciação relativa de serviços: Platinum, Gold, Silver.</li>
+    			</ul></li>
+			<li><span class="alert">Escalabilidade:</span> funções simples no núcleo da rede, funções complexas nas bordas (ou <i>hosts</i>).
+			<ul>
+				<li>Sinalização, manutenção de estado do roteador por fluxo são difíceis com muitos fluxos.</li>
+			</ul></li>
+			<li>Não define classes de serviço, mas provê componentes funcionais para construí-las.</li>
+    		</ul>
+    </div>
+    </section>
+
+    <section>
+    <h1>Arquitetura Diffserv</h1>
+    <div class="slideContent">
+    		<div class="column" style="width: 50%;">
+    		<ul>
+    			<li>Roteador de borda: <img src="imagens/EdgeRouter.svg" style="width: 8%;"/>
+    			<ul>
+    				<li>Gerenciamento de tráfego <b>por fluxo</b>.</li>
+				<li>Marca pacotes como <i>in-profile</i> ou <i>out-of-profile</i>.</li>
+    			</ul></li>
+			<li>Roteador de núcleo: <img src="imagens/CoreRouter.svg" style="width: 8%;"/>
+			<ul>
+				<li>Gerenciamento de tráfego por <b>classe</b>.</li>
+				<li>Bufferização e escalonamento baseados nas marcações feitas na borda da rede.</li>
+				<li>Preferência dada a pacotes <i>in-profile</i>, em relação aos <i>out-of-profile</i>.</li>
+			</ul></li>
+    		</ul>
+    		</div>
+		<div class="column" style="width: 50%;">
+			<center>
+				<img src="imagens/Diffserv.svg" style="width: 90%;"/>
+			</center>
+		</div>
+    </div>
+    </section>
+
+	<!-- TODO: rever nomenclatura -->
+    <section>
+    <h1>Marcação de Pacotes no Roteador de Borda</h1>
+    <div class="slideContent">
+    		<ul>
+    			<li><b>Perfil:</b> taxa pré-negociada <tt>r</tt>, tamanho do <i>bucket</i> <tt>b</tt>.</li>
+			<li>Marcação de pacote na borda baseada em perfil <b>por fluxo</b>.</li>
+    		</ul>
+		<center>
+			<img src="imagens/PacketMarking.svg" style="width: 40%;"/>
+		</center>
+		<ul>
+			<li><b>Possíveis usos da marcação:</b>
+			<ul>
+				<li>Marcação baseada em classe: pacotes de diferentes classes recebem diferentes marcações.</li>
+				<li>Marcação intra-classe: porção do fluxo em conformidade com as garantias recebe marcação diferente da porção que não está em conformidade.</li>
+			</ul></li>
+		</ul>
+    </div>
+    </section>
+
+    <section>
+    <h1>Marcação de Pacotes no Diffserv: Detalhes</h1>
+    <div class="slideContent">
+    		<ul>
+    			<li>Pacote é marcado no campo <i>Type of Service</i> (TOS) do IPv4 e <i>Traffic Class</i> no IPv6.</li>
+			<li>6 bits são usados para o <i>Differentiated Service Code Point</i> (DSCP).
+			<ul>
+				<li>Determina PHB que o pacote receberá.</li>
+				<li>Atualmente, 2 bits não são usados.</li>
+			</ul></li>
+    		</ul>
+
+		<center>
+			<img src="imagens/DiffservTOS.svg" style="width: 35%;"/>
+		</center>
+    </div>
+    </section>
+
+    <!-- Possível demonstração: mostrar entrada e saída de um traffic shaping. -->
+    <section>
+    <h1>Classificação, Condicionamento</h1>
+    <div class="slideContent">
+    		<ul>
+    			<li>Pode ser desejável limitar a taxa de injeção de tráfego de alguma classe:
+    			<ul>
+    				<li>Usuário declara perfil do tráfego (<i>e.g.</i>, taxa, tamanho da rajada).</li>
+				<li>Tráfego é medido e formatado se não está em conformidade com o perfil.</li>
+    			</ul></li>
+    		</ul>
+
+		<center>
+			<img src="imagens/TrafficShaper.png" style="width: 50%;"/>
+		</center>
+    </div>
+    </section>
+
+    <section>
+    <h1>Per-Hop Behavior (PHB)</h1>
+    <div class="slideContent">
+    		<ul>
+    			<li>Resulta em diferenças no comportamento observável do desempenho do encaminhamento.</li>
+			<li>PHB <b>não</b> especifica quais mecanismos devem ser usados para garantir o desempenho.</li>
+			<li>Exemplos:
+			<ul>
+				<li>A classe A ganha x% da banda do enlace de saída durante intervalos de comprimento especificado.</li>
+				<li>Pacotes da classe A devem ser transmitidos antes dos pacotes da classe B.</li>
+			</ul></li>
+    		</ul>
+    </div>
+    </section>
+
+    <section>
+    <h1>Encaminhamento PHB</h1>
+    <div class="slideContent">
+    		<ul>
+    			<li><span class="alert">PHBs propostas:</span>
+    			<ul>
+    				<li><b>Expedited Forwarding:</b> taxa de envio de pacotes de uma classe é igual ou maior que determinada taxa.
+    				<ul>
+    					<li>Enlaces lógicos com uma taxa mínima garantida.</li>
+    				</ul></li>
+				<li><b>Assured Forwarding:</b> 4 classes de tráfego.
+				<ul>
+					<li>Cada uma garante uma banda mínima.</li>
+					<li>Cada uma com três partições de preferências de descarte.</li>
+				</ul></li>
+    			</ul></li>
+    		</ul>
+    </div>
+    </section>
+
+    <section>
+    <h1>Garantias de QoS por Fluxo</h1>
+    <div class="slideContent">
+    		<ul>
+    			<li><span class="alert">Fato básico da vida:</span> não é possível suportar demanda de tráfego superior à capacidade dos enlaces.</li>
+    		</ul>
+		<center>
+			<img src="imagens/CallAdmission.svg" style="width: 60%;"/>
+		</center>
+        <ul>
+            <li>Quarto princípio:</li>
+        </ul>
+        <center>
+            <div style="border: solid 1px #c00; width: 80%; text-align:left;">
+		  <b>Controle de Admissão:</b> fluxo declara suas necessidades, rede pode bloquear a chamada (<i>e.g.</i>, sinal de ocupado) se não é capaz de atender à demanda.
+            </div>
+        </center>
+    </div>
+    </section>
+
+    <section>
+    <h1>Cenário de Garantia de QoS</h1>
+    		<div style="position: absolute; top: 15%; right: 5%; width: 50%;">
+			<ul>
+				<li><span class="alert">Reserva de recursos:</span>
+				<ul>
+					<li>Configuração de chamada, sinalização (RSVP).</li>
+					<li>Declaração de tráfego, QoS.</li>
+					<li>Controle de admissão por elemento de rede.</li>
+				</ul></li>
+			</ul>
+		</div>
+    		<div style="position: absolute; bottom: 15%; left: 10%; width: 70%">
+				<img src="imagens/QoS.svg" style="width: 100%;"/>
+		</div>
+    </section>
+
+   	<section>
+	<h1>Resumo da Aula (I)...</h1>
+	<div class="slideContent">
+        <div class="column" style="width: 50%;">
+            <ul>
+                <li>Dimensionamento:
+                <ul>
+                    <li>Criar <b>capacidade</b> compatível com a <b>demanda</b>.</li>
+                    <li>Mas quanto é <b>suficiente</b>?</li>
+                </ul></li>
+                <li>Classes de Serviço:
+                <ul>
+                    <li>Tráfego é dividido em <b>classes</b>.</li>
+                    <li>Classes recebem <b>tratamentos diferentes</b>.</li>
+                    <li><b>Escalabilidade</b>.</li>
+                </ul></li>
+                <li>Marcação de pacotes:
+                <ul>
+                    <li>Pacotes recebem marcas.</li>
+                    <li>Identificação de classe.</li>
+                </ul></li>
+            </ul>
+        </div>
+        <div class="column" style="width: 50%;">
+            <ul>
+                <li>Isolamento:
+                <ul>
+                    <li>Classes não devem se interferir.</li>
+                    <li>Mas <b>recursos não usados devem ser aproveitados</b>.</li>
+                </ul></li>
+                <li>Escalonamento:
+                <ul>
+                    <li>Política de escolha de pacotes para uso do enlace.
+                    <ul>
+                        <li>FIFO, <i>Priority Scheduling</i>, <i>Round Robin</i>, WFQ, ...</li>
+                    </ul></li>
+                </ul></li>
+                <li>Mecanismos de regulação:
+                <ul>
+                    <li>Garantem que tráfego atende parâmetros declarados.</li>
+                    <li><i>e.g.</i>, <i>Token Bucket</i>.</li>
+                </ul></li>
+            </ul>
+        </div>
+	</div>
+	</section>
+
+    <section>
+    <h1>Resumo da Aula (II)...</h1>
+    <div class="slideContent">
+        <ul>
+            <li>Diffserv: arquitetura para diferenciação de serviços.
+            <ul>
+                <li><b>Escalabilidade:</b> maior esforço nas bordas.
+                <ul>
+                    <li>Marcação de pacotes, condicionamento.</li>
+                </ul></li>
+                <li>Roteadores de núcleo: obedecem ao PHB.
+                <ul>
+                    <li>Aplicam políticas de compartilhamento de banda, <i>buffer</i>.</li>
+                    <li>Políticas diferentes para classes diferentes.</li>
+                </ul></li>
+            </ul></li>
+            <li>Garantias de QoS por fluxo: necessita de <b>controle de admissão</b>.
+            <ul>
+                <li>Garantir que rede/enlace possui <b>capacidade suficiente</b> para atender a <b>todos os fluxos</b>.</li>
+                <li>Configuração de chamada.</li>
+                <li>Cada elemento da rede deve prover garantias.</li>
+            </ul></li>
+        </ul>
+    </div>
+    </section>
+
+	<section>
+	<h1>Leitura e Exercícios Sugeridos</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Classes de serviço, escalonamento e regulação:
+			<ul>
+				<li>Páginas 464 a 474 do Kurose (Seção 7.5 até Subseção 7.5.2, inclusive).</li>
+				<li>Exercícios de fixação 13 e 15 do capítulo 7 do Kurose.</li>
+				<li>Problemas 20 a 27 do capítulo 7 do Kurose.</li>
+			</ul></li>
+			<li>Diffserv, QoS por fluxo:
+			<ul>
+				<li>Páginas 474 a 483 do Kurose (Final da Seção 7.5 e Seção  7.6).</li>
+				<li>Exercício de fixação 16 do capítulo 7 do Kurose.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Próxima Aula...</h1>
+	<div class="slideContent">
+        <ul>
+            <li>Iniciamos o último capítulo da disciplina: gerência.</li>
+            <li>Na próxima aula:
+            <ul>
+                <li>Conceitos básicos.</li>
+                <li>O protocolo SNMP.</li>
+                <li>MIBs.</li>
+            </ul></li>
+        </ul>
+	</div>
+	</section>
+
+	<!-- {{{{ dzslides core
+	#
+	#
+	#     __  __  __       .  __   ___  __
+	#    |  \  / /__` |    | |  \ |__  /__`
+	#    |__/ /_ .__/ |___ | |__/ |___ .__/ core :€
+	#
+	#
+	# The following block of code is not supposed to be edited.
+	# But if you want to change the behavior of these slides,
+	# feel free to hack it!
+	#
+	-->
+
+    <!-- More CSS -->
+	<link href='../template/css/slides.css' id="slides" rel='stylesheet' type='text/css'>
+	<link href='../template/css/presentationSpecific2.css' id="presentationSpecific2" rel='stylesheet' type='text/css'>
+
+    <!-- More Javascript -->
+	<script type="text/javascript" src="../template/js/dz.js"></script>
+
+	<!-- More CSS -->
+	<link href='../template/css/notesSpecific.css' id="notesSpecific" rel='stylesheet' type='text/css'>
+	<link href='../template/css/printSpecific.css' id="printSpecific" rel='stylesheet' type='text/css'>
+</body>
+</html>

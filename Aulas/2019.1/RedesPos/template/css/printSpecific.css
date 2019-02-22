@@ -1,0 +1,11 @@
+body {
+    position: absolute;
+}
+@page {
+    size: 24cm 15cm;
+}
+section {
+    position: relative;
+    width: 1200px;
+    height: 750px;
+}

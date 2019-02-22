@@ -1,0 +1,2504 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <!-- Meta info -->
+	<meta charset="utf-8">
+	<meta name="shortauthor" content="Diego Passos"/>
+	<meta name="shorttitle" content="Modelos em Camadas, Aplicações (I)"/>
+	<meta name="shortevent" content="Redes de Computadores"/>
+	<title>Redes de Computadores: Aula 2</title>
+
+    <!-- Math support -->
+	<script type="text/x-mathjax-config">
+		MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+			MathJax.InputJax.TeX.Definitions.number = /^(?:[0-9]+(?:\.[0-9]{3})*(?:\{,\}[0-9]*)*|\{,\}[0-9]+)/
+		});
+	</script>
+	<script src="js/plotly-latest.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+  <script src="../../../../../MathJax-2.6-latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+	<script type="text/javascript" src="../template/js/dz_pre.js"></script>
+
+  <!-- Fonts -->
+  <link href='https://fonts.googleapis.com/css?family=Lora:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
+  <link href='../../../../../Fonts/Lora/lora.css' rel='stylesheet' type='text/css'>
+
+  <!-- CSS -->
+	<link href='../template/css/template.css' id="template" rel='stylesheet' type='text/css'>
+	<link href='../template/css/presentationSpecific.css' id="presentationSpecific" rel='stylesheet' type='text/css'>
+
+
+	<!-- Javascript -->
+	<script type="text/javascript" src="../template/js/audio.js"></script>
+	<script src="js/snap.svg-min.js" charset="utf-8"></script>
+	<script src="js/term.js" charset="utf-8"></script>
+	<script src="js/termcast.js" charset="utf-8"></script>
+</head>
+
+<body>
+    <!-- Audio handlers -->
+	<!--<audio src="audio/La.wav" id="La.wav" preload="auto"></audio>-->
+
+    <!-- Title Slide -->
+	<section>
+
+        <div class="slideContent">
+            <h1 class="title">Aula 2 - Modelos em Camadas, Histórico, Camada de Aplicação, HTTP, FTP, E-mail</h1>
+            <h2 class="author">Diego Passos</h2>
+            <h4 class="institution">Universidade Federal Fluminense</h4>
+            <h3 class="date">Redes de Computadores</h3>
+        </div>
+
+	<br>
+	<div style="width: 30%; float: right; padding-right: 2%;">
+	<p style="font-size: 18px; text-align: right;">Material adaptado a partir dos slides originais de J.F Kurose and K.W. Ross.</p>
+	</div>
+	</section>
+
+	<!-- Content slides -->
+
+    <section class="secao">
+    <div class="slideContent">
+        Modelos em Camadas
+    </div>
+    </section>
+
+    <section>
+    <h1>&ldquo;Camadas&rdquo; de Protocolos</h1>
+    <div class="slideContent">
+    		<div class="column" style="width: 50%;">
+    			<ul>
+    				<li><span class="alert">Redes são sistemas complexos, com várias &ldquo;partes&rdquo;</span>.
+    				<ul>
+    					<li><i>Hosts</i>.</li>
+					<li>Roteadores.</li>
+					<li>Enlaces (de vários tipos).</li>
+					<li>Aplicações.</li>
+					<li>Protocolos.</li>
+					<li><i>Hardware</i>, <i>software</i>.</li>
+    				</ul></li>
+    			</ul>
+    		</div>
+		<div class="column" style="width: 40%;">
+			<table class="align" style="border: none; text-align: center;">
+				<tr style="height: 100px;"><td><span class="alert">Pergunta</span></td></tr>
+				<tr style="height: 150px;"><td>Alguma chance de organizar a estrutura da rede?</td></tr>
+				<tr><td></td></tr>
+				<tr><td>... ou ao menos nossa discussão sobre redes?</td></tr>
+			</table>
+		</div>
+    </div>
+    </section>
+
+    <section>
+    <h1>Analogia: Organização de uma Viagem Aérea (I)</h1>
+    <div class="slideContent">
+    	<center>
+    		<img src="imagens/AnalogiaVoo.svg" style="width: 70%;"/>
+    	</center>
+
+	<ul>
+		<li>Uma série de passos envolvidos.</li>
+	</ul>
+    </div>
+    </section>
+
+    <section>
+    <h1>Organizando Funcionalidades da Cia. Aérea em Camadas </h1>
+    <div class="slideContent">
+    	<center>
+    		<img src="imagens/AnalogiaVooCamadas.svg" style="width: 75%;"/>
+    	</center>
+
+	<ul>
+		<li><span class="alert">Camadas:</span> cada camada implementa um serviço.
+		<ul>
+			<li>Através de ações internas da própria camada.</li>
+			<li>Dependendo de serviços providos pela camada abaixo.</li>
+		</ul></li>
+	</ul>
+    </div>
+    </section>
+
+    <section>
+    <h1>Por Que uma Organização em Camadas?</h1>
+    <div class="slideContent">
+    	<ul>
+    		<li>Lidar com sistemas complexos:
+    		<ul>
+    			<li>Estrutura explícita permite identificar relações entre os pedaços do sistema.
+    			<ul>
+    				<li><span class="alert">Modelo de referência</span> em camadas para discussão.</li>
+    			</ul></li>
+    			<li>Modularização facilita a manutenção, atualização do sistema.
+    			<ul>
+    				<li>Alterar a implementação de uma camada é transparente para o resto do sistema.</li>
+    				<li><i>e.g.</i>, mudança no processo de embarque não afeta o resto do sistema da cia. aérea.</li>
+    			</ul></li>
+    			<li>&ldquo;Layering considered harmful&rdquo;?</li>
+    		</ul></li>
+    	</ul>
+    </div>
+    </section>
+
+    <section>
+    <h1>Pilha de Protocolos da Internet (I)</h1>
+    <div class="slideContent">
+    	<ul>
+    		<li>Ou suíte de protocolos da Internet.</li>
+    		<li>Ou modelo TCP/IP.</li>
+    		<li>Define organização dos vários protocolos usados na Internet em camadas.</li>
+		<li>Define <span class="alert">responsabilidades, serviços</span> de cada camada.</li>
+		<li>Dividida em 4 ou 5 camadas, dependendo do autor.
+		<ul>
+			<li>Nomes das camadas também podem variar.</li>
+			<li>Nesta disciplina, <span class="alert">seguiremos o modelo do livro-texto</span>.</li>
+		</ul></li>
+    	</ul>
+    </div>
+    </section>
+
+    <section>
+    <h1>Pilha de Protocolos da Internet (II)</h1>
+    <div class="slideContent">
+    	<div class="column" style="width: 60%;">
+    		<ul>
+    			<li><span class="alert">Aplicação:</span> suporte a aplicações de rede.
+    			<ul>
+    				<li>Definem formato, ordem, semântica das mensagens trocadas pelas aplicações.</li>
+    				<li>Exemplo da web:
+    				<ul>
+    					<li>Cliente (<i>browser</i>) gera mensagem de requisição de conteúdo.</li>
+					<li>Servidor envia mensagem de resposta.</li>
+					<li>Cada mensagem tem seus campos específicos (próximo capítulo).</li>
+    				</ul></li>
+				<li>Exemplos de protocolos:
+				<ul>
+					<li>HTTP, FTP, SMTP, ...</li>
+				</ul></li>
+    			</ul></li>
+    		</ul>
+    	</div>
+	<div class="column" style="width: 40%;">
+		<center>
+			<img src="imagens/PilhaTCPIP.svg" style="width: 50%;"/>
+		</center>
+	</div>
+    </div>
+    </section>
+
+    <section>
+    <h1>Pilha de Protocolos da Internet (III)</h1>
+    <div class="slideContent">
+    	<div class="column" style="width: 60%;">
+    		<ul>
+    			<li><span class="alert">Transporte:</span> comunicação entre processos em computadores (potencialmente) diferentes.
+    			<ul>
+    				<li>Transfere dados de um processo para o outro.
+    				<ul>
+    					<li>Potencialmente, em computadores diferentes.</li>
+    				</ul></li>
+    				<li>Dois exemplos clássicos de protocolos:
+    				<ul>
+					<li>UDP e TCP.</li>
+    				</ul></li>
+				<li>Protocolos diferentes proveem <span class="alert">modelos de serviço diferentes</span>.
+				<ul>
+					<li>TCP provê garantias mais fortes.</li>
+				</ul></li>
+				<li><span class="alert">Responde a pergunta: para qual processo devemos enviar o conteúdo de um pacote que chegou a este <i>host</i>?</span></li>
+    			</ul></li>
+    		</ul>
+    	</div>
+	<div class="column" style="width: 40%;">
+		<center>
+			<img src="imagens/PilhaTCPIP.svg" style="width: 50%;"/>
+		</center>
+	</div>
+    </div>
+    </section>
+
+    <section>
+    <h1>Pilha de Protocolos da Internet (IV)</h1>
+    <div class="slideContent">
+    	<div class="column" style="width: 60%;">
+    		<ul>
+    			<li><span class="alert">Rede:</span> comunicação entre <i>hosts</i>.
+    			<ul>
+				<li>Transfere dados de um <i>host</i> para outro.</li>
+				<li>Diferença (aparentemente) sutil em relação à camada de transporte.
+				<ul>
+					<li>Aquela comunicava processos específicos, diferenciando-os.</li>
+					<li>Esta comunica <i>hosts</i> indiscriminadamente.</li>
+				</ul></li>
+				<li>Provê o serviço de roteamento dos pacotes.
+				<ul>
+					<li>Entre outros.</li>
+				</ul></li>
+				<li><span class="alert">Responde a pergunta: por qual caminho devemos enviar este pacote para que chegue ao <i>host</i> de destino?</span></li>
+    			</ul></li>
+
+    		</ul>
+    	</div>
+	<div class="column" style="width: 40%;">
+		<center>
+			<img src="imagens/PilhaTCPIP.svg" style="width: 50%;"/>
+		</center>
+	</div>
+    </div>
+    </section>
+
+
+    <section>
+    <h1>Pilha de Protocolos da Internet (V)</h1>
+    <div class="slideContent">
+    	<div class="column" style="width: 60%;">
+    		<ul>
+    			<li><span class="alert">Enlace:</span> comunicação nós (<i>hosts</i>, comutadores) diretamente conectados por um enlace.
+    			<ul>
+				<li><i>i.e.</i>, nós &ldquo;vizinhos&rdquo;.</li>
+				<li>Diferente da camada de rede, preocupação apenas com <span class="alert">próximo salto</span>.
+				<ul>
+					<li>Aspectos relacionados à transmissão do pacote pelo enlace.</li>
+				</ul></li>
+				<li>Exemplo de serviço: integridade.
+				<ul>
+					<li>Em enlaces susceptíveis a falhas, verifica se houve bits errados na recepção pelo enlace.</li>
+				</ul></li>
+				<li><span class="alert">Responde a pergunta: como envio o pacote para o próximo dispositivo no caminho?</li>
+    			</ul></li>
+
+    		</ul>
+    	</div>
+	<div class="column" style="width: 40%;">
+		<center>
+			<img src="imagens/PilhaTCPIP.svg" style="width: 50%;"/>
+		</center>
+	</div>
+    </div>
+    </section>
+
+    <section>
+    <h1>Pilha de Protocolos da Internet (VI)</h1>
+    <div class="slideContent">
+    	<div class="column" style="width: 60%;">
+    		<ul>
+    			<li><span class="alert">Física:</span> representação do pacote no meio físico de transmissão.
+    			<ul>
+				<li>Traduz bits para sinais.
+				<ul>
+					<li>Pulsos elétricos, ondas acústicas, pulsos de luz, ...</li>
+				</ul></li>
+				<li>Se preocupa com a forma mais eficiente de representação.
+				<ul>
+					<li><i>e.g.</i>, como transmitir mais bits em menos tempo no canal?</li>
+					<li><i>e.g.</i>, como minimizar os erros na transmissão?</li>
+				</ul></li>
+    			</ul></li>
+    		</ul>
+    	</div>
+	<div class="column" style="width: 40%;">
+		<center>
+			<img src="imagens/PilhaTCPIP.svg" style="width: 50%;"/>
+		</center>
+	</div>
+    </div>
+    </section>
+
+    <section>
+    <h1>Pilha de Protocolos: Uma Visão <i>Bottom-Up</i></h1>
+    <div class="slideContent">
+	    <ul>
+	    	<li>Cada camada assume que camadas inferiores resolvem &ldquo;uma parte do problema&rdquo;.
+	    	<ul>
+	    		<li>Sobre a solução existente, são adicionadas novas funcionalidades.</li>
+	    	</ul></li>
+	    	<li>Exemplo (simplificado):
+	    	<ul>
+	    		<li>Camada de enlace assume que sabemos enviar bits por um enlace.
+	    		<ul>
+	    			<li>Preocupa-se em verificar se bits chegaram corretos.</li>
+	    		</ul></li>
+			<li>Camada de rede assume que sabemos enviar pacote entre nós diretamente conectados.
+			<ul>
+				<li>Preocupa-se em encontrar e usar caminhos de múltiplos saltos entre origem e destino.</li>
+			</ul></li>
+			<li>Camada de transporte assume que sabemos enviar pacote entre origem e destino.
+			<ul>
+				<li>Preocupa-se em separar pacotes que chegam entre os vários processos do <i>host</i>. </li>
+			</ul></li>
+			<li>Camada de aplicação assume que sabemos enviar pacotes entre processos em computadores diferentes.
+			<ul>
+				<li>Preocupa-se em gerar mensagens que permitam o funcionamento da <span class="alert">aplicação distribuída</span>.</li>
+			</ul></li>
+	    	</ul></li>
+	    </ul>
+    </div>
+    </section>
+
+    <section>
+    <h1>Pilha de Protocolos: Uma Visão <i>Top-Down</i> (I)</h1>
+    <!--    <div class="slideContent">-->
+    	<br>
+    	<br>
+    	<br>
+    	<ul>
+    		<li>Estratégia utilizada pelo livro-texto.</li>
+    		<li>Estudar as redes de computadores (Internet, em particular) percorrendo camadas de cima para baixo.
+    		<ul>
+    			<li>Aplicação &mdash; Capítulo 2.</li>
+    			<li>Transporte &mdash; Capítulo 3.</li>
+    			<li>Rede &mdash; Capítulo 4.</li>
+    			<li>Enlace &mdash; Capítulo 5.</li>
+    		</ul></li>
+		<li>No restante desta disciplina, estudaremos as várias camadas da pilha TCP/IP.</li>
+    	</ul>
+	<!--    </div>	-->
+    </section>
+
+    <section>
+    <h1>O Modelo de Referência ISO/OSI</h1>
+    <div class="slideContent">
+    	<div class="column" style="width: 60%;">
+    		<ul>
+    			<li>Modelo TCP/IP não é o único, absoluto.</li>
+    			<li>Uma alternativa: modelo OSI.
+    			<ul>
+    				<li>Sete camadas, ao invés de 5/4.</li>
+    				<li><span class="alert">Apresentação:</span> &ldquo;traduz&rdquo; formato dos dados entre a aplicação e a rede.
+    				<ul>
+    					<li><i>e.g.</i>, criptografia, compressão, <i>endianess</i>.</li>
+    				</ul></li>
+    				<li><span class="alert">Sessão:</span> provê funcionalidades como sincronização, <i>checkpoints</i>, recuperação de dados.</li>
+    			</ul></li>
+			<li>Como a Internet lida com a ausência destas camadas?
+			<ul>
+				<li>Funcionalidades implementadas na aplicação, <span class="alert">se necessárias</span>.</li>
+				<li>São necessárias?</li>
+			</ul></li>
+    		</ul>
+    	</div>
+	<div class="column" style="width: 40%;">
+		<center>
+			<img src="imagens/ModeloOSI.svg" style="width: 50%;"/>
+		</center>
+	</div>
+    </div>
+    </section>
+
+    <section>
+    <h1>Inteligência nas Bordas e Camadas</h1>
+    <div class="slideContent">
+	    <div class="column" style="width: 50%;">
+	    	<ul>
+			<li>Lembrando: na Internet, procura-se manter a inteligência nas bordas.
+			<ul>
+				<li><i>i.e.</i>, na medida do possível, funcionalidades são mantidas nas bordas, e não no núcleo.</li>
+				<li>Argumento fim-a-fim.</li>
+			</ul></li>
+			<li>Isto se manifesta (idealmente) na organização em camadas.
+			<ul>
+				<li><i>Hosts</i> implementam todas as camadas.</li>
+				<li>Comutadores implementam apenas as 2 ou 3 mais baixas.
+				<ul>
+					<li><i>Switches</i> até a camada 2.</li>
+					<li>Roteadores até a camada 3.</li>
+				</ul></li>
+			</ul></li>
+		</ul>
+	    </div>
+	    <div class="column" style="width: 50%;">
+	    	<center>
+	    		<img src="imagens/InteligenciaNasBordas.svg" style="width: 95%;"/>
+	    	</center>
+	    </div>
+    </div>
+    </section>
+
+    <section>
+    <h1>Encapsulamento e Cabeçalhos (I)</h1>
+    <div class="slideContent">
+    	<ul>
+    		<li>Pacotes são gerados (normalmente) na aplicação e descem pelas demais camadas.</li>
+    		<li>Cada nova camada pode precisar adicionar informações ao pacote para cumprir suas responsabilidades.
+    		<ul>
+    			<li><i>e.g.</i>, camada de transporte adiciona um identificador ao pacote para que receptor saiba para qual processo este é destinado.</li>
+    		</ul></li>
+    		<li>Informações adicionais são colocadas em posições bem definidas do pacote.
+    		<ul>
+    			<li>Em <span class="alert">cabeçalhos</span>.</li>
+    		</ul></li>
+    		<li>Cada camada pode adicionar (e geralmente adiciona) seu cabeçalho à mensagem.
+    		<ul>
+    			<li>Com suas informações relevantes.</li>
+    		</ul></li>
+    	</ul>
+    </div>
+    </section>
+
+    <section>
+    <h1>Encapsulamento e Cabeçalhos (II)</h1>
+    <div class="slideContent">
+    	<center>
+    		<img src="imagens/Encapsulamento.svg" style="width: 75%;"/>
+    	</center>
+    </div>
+    </section>
+
+
+    <section class="secao">
+    <div class="slideContent">
+        Segurança
+    </div>
+    </section>
+
+    <section>
+    <h1>Segurança em Redes</h1>
+    <div class="slideContent">
+    	<ul>
+		<li><span class="alert">Campo que estuda</span>:
+    		<ul>
+    			<li>Como atacantes podem gerar problemas para a rede/computadores.</li>
+    			<li>Como podemos nos defender destes ataques.</li>
+    			<li>Como projetar a arquiteturas de redes imunes a ataques.</li>
+    		</ul></li>
+    		<li>Internet <span class="alert">não foi</span> originalmente pensada com (muita) segurança em mente.
+    		<ul>
+    			<li>Visão original: &ldquo;grupo de usuários que confiam uns nos outros conectados a uma rede transparente&rdquo;.</li>
+    			<li>Projetistas de protocolos da Internet estão sempre &ldquo;correndo atrás&rdquo;.</li>
+    			<li>Considerações de segurança aparecem em todas as camadas!</li>
+    		</ul></li>
+    	</ul>
+    </div>
+    </section>
+
+    <section>
+    <h1>Atacantes: Inserção de <i>malware</i> nos <i>hosts</i> via Internet</h1>
+    <div class="slideContent">
+    	<ul>
+    		<li><i>Malware</i> pode infectar um <i>host</i> de algumas formas.
+    		<ul>
+    			<li><span class="alert">Vírus:</span> <i>software</i> que se auto-replica através da recepção/execução de objetos pela rede (<i>e.g.</i>, anexo em e-mail).</li>
+			<li><span class="alert">Worm:</span> <i>software</i> que se auto-replica através do recebimento/execução <span class="alert">passivos</span> (<i>e.g.</i>, automáticos) de um objeto.</li>
+    		</ul></li>
+    		<li>Um <i>malware</i> do tipo <span class="alert">spyware</span> pode gravar ações do usuário (<i>e.g.</i>, teclas pressionadas, páginas visitadas) e enviar para servidor do atacante.</li>
+    		<li><i>Host</i> infectado pode ser controlado como parte de uma <span class="alert"><i>botnet</i></span>.</li>
+    	</ul>
+    </div>
+    </section>
+
+    <section>
+    <h1>Ataques a Servidores, Infraestrutura de Rede</h1>
+    <div class="slideContent">
+    	<ul>
+    		<li><span class="alert">Ataque de Negação de Serviço:</span>
+    		<ul>
+    			<li><i>Denial of Service</i> (DoS).</li>
+    			<li>Atacante faz com que recurso (servidor, banda) fique indisponível para os usuários legítimos.</li>
+    			<li>Normalmente, se basea na geração de tráfego artificial em grandes volumes, ocupando os recursos.</li>
+    		</ul></li>
+    	</ul>
+	<div class="column" style="width: 55%;">
+		<ol>
+			<li>Selecionar o alvo.</li>
+			<li>Comprometer <i>hosts</i> pela rede (<i>i.e.</i>, criar uma <i>botnet</i>).</li>
+			<li>Enviar pacotes para o alvo a partir dos <i>hosts</i> comprometidos.
+			<ul>
+				<li>Mais de um <i>host</i> &#x2192; DDoS.</li>
+			</ul></li>
+		</ol>
+	</div>
+	<div class="column" style="width: 45%;">
+		<center>
+			<img src="imagens/DDoS.svg" style="width: 70%;"/>
+		</center>
+	</div>
+    </div>
+    </section>
+
+    <section>
+    <h1><i>Sniffing</i> de Pacotes</h1>
+    <div class="slideContent">
+    	<ul>
+    		<li>Normalmente, interfaces só passam para as camadas superiores quadros destinados ao próprio dispositivo.</li>
+    		<li>Mas, fisicamente, interface muitas vezes recebe quadros para outros nós.
+    		<ul>
+    			<li><i>e.g.</i>, enlaces compartilhados.</li>
+    		</ul></li>
+    		<li><i>Softwares</i> especiais podem capturar e exibir estes pacotes.
+    		<ul>
+			<li><i>Sniffers</i> de pacotes, como o Wireshark.</li>
+    		</ul></li>
+    	</ul>
+	<center>
+		<img src="imagens/Sniffer.svg" style="width: 60%;"/>
+	</center>
+	<ul>
+		<li>Também utilizados para fins legítimos!</li>
+	</ul>
+    </div>
+    </section>
+
+
+    <section class="secao">
+    <div class="slideContent">
+        Histórico
+    </div>
+    </section>
+
+    <section>
+    <h1>História da Internet (I)</h1>
+    <div class="slideContent">
+    	<center>
+    		<div class="block" style="width:1100px;">
+    			<div class="blockTitle" style="width: 100%;">
+    				<p>1961 a 1972</p>
+    			</div>
+    			<div class="blockBody">
+    				Estabelecimento dos princípios da comutação de pacotes
+    			</div>
+    		</div>
+    	</center>
+
+	<div class="column" style="width: 45%;">
+		<ul>
+			<li><span class="alert">1961:</span> Kleinrock mostra através de teoria das filas a efetividade da comutação de pacotes.</li>
+			<li><span class="alert">1964:</span> Comutação de pacotes é aplicada a redes militares.</li>
+			<li><span class="alert">1967:</span> Concepção da ARPAnet pela ARPA.</li>
+			<li><span class="alert">1969:</span> primeiro nó operacional da ARPAnet.</li>
+		</ul>
+	</div>
+
+	<div class="column" style="width: 55%;">
+		<ul>
+			<li><span class="alert">1972:</span>
+			<ul>
+				<li>Primeira demonstração pública da ARPAnet.</li>
+				<li>NCP (<i>Network Control Protocol</i>).</li>
+				<li>Primeiro programa de e-mail.</li>
+				<li>ARPAnet chega a 15 nós.</li>
+			</ul></li>
+		</ul>
+		<center>
+			<img src="imagens/ARPAnet.svg" style="width: 38%;"/>
+		</center>
+	</div>
+
+
+    </div>
+    </section>
+
+    <section>
+    <h1>História da Internet (II)</h1>
+    <div class="slideContent">
+    	<center>
+    		<div class="block" style="width:1100px;">
+    			<div class="blockTitle" style="width: 100%;">
+    				<p>1972 a 1980</p>
+    			</div>
+    			<div class="blockBody">
+				Intercomunicação entre redes, redes novas e proprietárias
+    			</div>
+    		</div>
+    	</center>
+
+	<div class="column" style="width: 45%;">
+		<ul>
+			<li><span class="alert">1970:</span> ALOHAnet no Havaii.</li>
+			<li><span class="alert">1974:</span> Cerf e Kahn definem arquitetura para intercomunicação de redes.</li>
+			<li><span class="alert">1976:</span> Ethernet é criado na Xerox PARC.</li>
+			<li><span class="alert">Final de 1970:</span> Arquiteturas proprietárias (DECnet, SNA, XNA).</li>
+			<li><span class="alert">Final de 1970:</span> Comutação de pacotes de comprimento fixo (precursor do ATM).</li>
+			<li><span class="alert">1979:</span> ARPAnet com 200 nós.</li>
+		</ul>
+	</div>
+
+	<div class="column" style="width: 55%;">
+		<br>
+		<br>
+		<div style="width: 90%; border: 2px solid #A00;">
+			<span class="alert">Princípios de intercomunicação de redes segundo Cerf e Kahn:</span><br>
+			<ul>
+				<li>Minimalismo, autonomia: evitar mudanças nas redes interconectadas.</li>
+				<li>Modelo de serviço de <span class="alert">melhor esforço</span>.</li>
+				<li>Roteadores <span class="alert"><i>stateless</i></span>.</li>
+				<li>Controle descentralizado.</li>
+			</ul>
+			<br>
+			<span class="alert">Definem a arquitetura da Internet atual</span>
+		</div>
+	</div>
+
+    </div>
+    </section>
+
+    <section>
+    <h1>História da Internet (III)</h1>
+    <div class="slideContent">
+    	<center>
+    		<div class="block" style="width:1100px;">
+    			<div class="blockTitle" style="width: 100%;">
+    				<p>1980 a 1990</p>
+    			</div>
+    			<div class="blockBody">
+    				Novos protocolos, proliferação de redes
+    			</div>
+    		</div>
+    	</center>
+
+	<div class="column" style="width: 45%;">
+		<ul>
+			<li><span class="alert">1983:</span> Implantação do TCP/IP.</li>
+			<li><span class="alert">1982:</span> Protocolo de e-mail SMTP definido.</li>
+			<li><span class="alert">1983:</span> Protocolo DNS é definido para tradução de nomes.</li>
+			<li><span class="alert">1985:</span> Protocolo FTP é definido.</li>
+		</ul>
+	</div>
+
+	<div class="column" style="width: 55%;">
+		<ul>
+			<li>Novas redes nacionais surgem nos EUA: Csnet, BITnet, NSFnet, Minitel.</li>
+			<li>100000 <i>hosts</i> conectados a confederação de redes.</li>
+		</ul>
+	</div>
+    </div>
+    </section>
+
+    <section>
+    <h1>História da Internet (IV)</h1>
+    <div class="slideContent">
+     	<center>
+    		<div class="block" style="width:1100px;">
+    			<div class="blockTitle" style="width: 100%;">
+    				<p>1990 a 2005</p>
+    			</div>
+    			<div class="blockBody">
+    				Comercialização, a web, novas aplicações
+    			</div>
+    		</div>
+    	</center>
+
+	<div class="column" style="width: 45%;">
+		<ul>
+			<li><span class="alert">Início de 1990:</span> ARPAnet é desativada.</li>
+			<li><span class="alert">1991:</span> NSF retira restrições de uso comercial da NSFnet.</li>
+			<li><span class="alert">Início de 1990:</span> Surgimento da Web.
+			<ul>
+				<li>Hipertexto.</li>
+				<li>HTML e HTTP: Berners-Lee.</li>
+				<li>1994: Mosaic, mais tarde Netscape.</li>
+				<li>Fim da década 1990: comercialização da web.</li>
+			</ul></li>
+		</ul>
+	</div>
+
+	<div class="column" style="width: 55%;">
+		<ul>
+			<li><span class="alert">Fim de 1990 a meados de 2000:</span>
+			<ul>
+				<li>Mais aplicações populares: mensagens instantâneas, transferência de arquivos via P2P.</li>
+				<li>Foco maior em segurança.</li>
+				<li>Estimativas de 50 milhões de <i>hosts</i>, mais de 100 milhões de usuários.</li>
+				<li><i>Links</i> de <i>backbone</i> a Gb/s.</li>
+			</ul></li>
+		</ul>
+	</div>
+
+    </div>
+    </section>
+
+    <section>
+    <h1>História da Internet (V)</h1>
+    <div class="slideContent">
+    	<center>
+    		<div class="block" style="width:1100px;">
+    			<div class="blockTitle" style="width: 100%;">
+    				<p>2005 &mdash; presente</p>
+    			</div>
+    			<div class="blockBody">
+    				Expansão, aumento de escala, multimídia, dispositivos móveis.
+    			</div>
+    		</div>
+    	</center>
+
+	<ul>
+		<li>Aproximadamente 900 milhões de <i>hosts</i> (2012).
+		<ul>
+			<li><i>Tablets</i>, <i>smartphones</i>, ...</li>
+			<li>Implantação agressiva de acesso banda larga.</li>
+			<li>Acesso à Internet sem fio se tornando ubíquo.</li>
+			<li>Surgimento das redes sociais.
+			<ul>
+				<li>Facebook: 1,65 bilhões de usuários (2016).</li>
+			</ul></li>
+			<li>Servidores de conteúdo criam suas próprias redes.
+			<ul>
+				<li>&ldquo;Evitam&rdquo; Internet pública, entregam conteúdo de forma &ldquo;instantânea&rdquo;: buscas, e-mail, vídeos.</li>
+			</ul></li>
+			<li>Empresas, universidades, comércio eletrônico rodando seus serviços na &ldquo;nuvem&rdquo; (<i>e.g.</i>, EC2 da Amazon).</li>
+		</ul></li>
+	</ul>
+    </div>
+    </section>
+
+	<section class="secao">
+	<div class="slideContent">
+		Princípios de Aplicações de Redes
+	</div>
+	</section>
+
+	<section>
+	<h1>Algumas Aplicações de Redes</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li>E-mail.</li>
+				<li>Web.</li>
+				<li>Mensagem de texto.</li>
+				<li>Login remoto.</li>
+				<li>Troca de arquivos via P2P.</li>
+				<li>Jogos multi-usuários.</li>
+				<li><i>Streaming de vídeo armazenado.
+				<ul>
+					<li>Youtube, Hulu, Netflix, ...</li>
+				</ul></i></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li>Voz sobre IP (<i>e.g., Skype).</i></li>
+				<li>Vídeo conferência em tempo real.</li>
+				<li>Redes sociais.</li>
+				<li>Busca.</li>
+				<li>...</li>
+				<li>...</li>
+			</ul>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Criação de uma Aplicação de Rede</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 55%;">
+			<ul>
+				<li><span class="alert">Escrever programas que:</span>
+				<ul>
+					<li>Rodem em (diferentes) sistemas finais.</li>
+					<li>Se comuniquem via rede.</li>
+					<li><i>e.g.</i>, <i>software</i> de um servidor web que se comunica com o <i>software</i> de um <i>browser</i>.</li>
+				</ul></li>
+				<li><span class="alert">Não é necessário se preocupar com a escrita de <i>software</i> para dispositivos do núcleo.</span>
+				<ul>
+					<li>Dispositivos do núcleo não rodam aplicações.
+					<ul>
+						<li><span class="alert">Idealmente</span>.</li>
+					</ul></li>
+					<li>Implantação apenas nos <i>hosts</i> permite <span class="alert">rápido desenvolvimento, popularização das aplicações</span>.</li>
+				</ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 45%;">
+			<center>
+				<img src="imagens/CriandoApps.svg" style="width: 80%;"/>
+			</center>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Arquiteturas de Aplicações de Rede</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Aplicações podem ser estruturadas em duas arquiteturas básicas:
+			<ul>
+				<li>Cliente-servidor.</li>
+				<li>Par-a-par (P2P, do inglês <i>peer-to-peer</i>).</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Arquitetura Cliente-Servidor</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 45%;">
+			<center>
+				<img src="imagens/ArquiteturaClienteServidor.svg" style="width: 70%;"/>
+			</center>
+		</div>
+
+		<div class="column" style="width: 55%;">
+			<ul>
+				<li><span class="alert">Servidor:</span>
+				<ul>
+					<li><i>Host</i> sempre ligado.</li>
+					<li>Endereço IP permanente.</li>
+					<li><i>Data Centers</i> podem ser usados para escalabilidade.</li>
+				</ul></li>
+				<li><span class="alert">Cliente:</span>
+				<ul>
+					<li>Se comunica com o servidor.
+					<ul>
+						<li>Geralmente, inicia comunicação.</li>
+					</ul></li>
+					<li>Pode estar conectado de forma intermitente.</li>
+					<li>Pode utilizar endereços dinâmicos.</li>
+					<li><span class="alert">Dois ou mais clientes não se comunicam diretamente</span>.
+					<ul>
+						<li>Servidor atua como <span class="alert">refletor</span>.</li>
+					</ul></li>
+				</ul></li>
+			</ul>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Arquitetura P2P</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 55%;">
+			<ul>
+				<li>Não há servidor sempre ligado.</li>
+				<li>Comunicação direta entre sistemas finais quaisquer.</li>
+				<li><span class="alert">Pares</span> requisitam serviços de outros pares, proveem serviços em retorno.</li>
+				<li>Pares se conectam de forma intermitente, podem mudar seu endereço IP.
+				<ul>
+					<li>Gerenciamento <span class="alert">mais complexo</span>.</li>
+				</ul></li>
+				<li>Por outro lado...
+				<ul>
+					<li><span class="alert">Auto-escalabilidade:</span> mais pares trazem mais demanda, mas também agregam capacidade ao serviço.</li>
+				</ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 45%;">
+			<center>
+				<img src="imagens/ArquiteturaP2P.svg" style="width: 75%;"/>
+			</center>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Comunicação entre Processos</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li>Aplicações são compostas por <span class="alert">processos</span>.
+				<ul>
+					<li>Executados dentro de um <i>host</i>.</li>
+				</ul></li>
+				<li>Dentre de um mesmo <i>host</i>, processos de comunicam utilizando mecanismos de <span class="alert">comunicação inter-processos</span>.
+				<ul>
+					<li>Definidos pelo SO.</li>
+					<li><i>e.g.</i>, leitura/escrita de arquivos.</li>
+					<li><i>e.g.</i>, memória compartilhada.</li>
+				</ul></li>
+				<li>Em <i>hosts</i> diferentes, processos se comunicam através de <span class="alert">troca de mensagens</span>.</li>
+			</ul>
+		</div>
+
+		<div class="column" style="width: 50%;">
+			<center>
+				<div class="block" style="width:550px;">
+					<div class="blockTitle" style="width: 100%;">
+						<p>Clientes, Servidores</p>
+					</div>
+					<div class="blockBody">
+						<ul>
+							<li><span class="alert">Processo cliente:</span> inicia a comunicação.</li>
+							<li><span class="alert">Processo servidor:</span> aguarda pedidos de comunicação.</li>
+						</ul>
+					</div>
+				</div>
+			</center>
+			<br>
+			<br>
+			<ul>
+				<li>Nota: aplicações P2P possuem tanto processos servidores, quanto processos clientes.</li>
+			</ul>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Sockets</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Processos enviam/recebem mensagens utilizando um <span class="alert">socket</span>.</li>
+			<li>Socket é análogo a uma janela.
+			<ul>
+				<li>Processo transmissor passa dados pela janela.</li>
+				<li>Do outro lado, implementação da camada de transporte se encarrega em entregar mensagem.</li>
+				<li>Na recepção, procedimento é análogo: processo espera que transporte entregue dados pelo <i>socket</i>.</li>
+			</ul></li>
+		</ul>
+		<br>
+		<center>
+			<img src="imagens/SocketAbstracao.svg" style="width: 70%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Endereçando Processos</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li>Para receber mensagens, processos devem ser <span class="alert">endereçados</span>.
+				<ul>
+					<li><i>i.e.</i>, devem possuir algum <span class="alert">identificador</span>.</li>
+				</ul></li>
+				<li><i>Hosts</i> possuem endereços únicos.
+				<ul>
+					<li>Endereço IP (mais detalhes no Cap. 4).</li>
+				</ul></li>
+				<li><span class="alert">Pergunta:</span> endereço IP do <i>host</i> é suficiente para identificar o processo?
+				<ul>
+					<li><span class="alert">Resposta: </span> não, vários processos de rede podem ser executados simultaneamente no mesmo <i>host</i>.</li>
+				</ul></li>
+			</ul>
+		</div>
+
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li>Solução: identificação de um processo usa tanto IP do <i>host</i>, quanto <span class="alert">números de porta</span>.</li>
+				<li>Exemplos de números de porta:
+				<ul>
+					<li>Servidor HTTP: 80.</li>
+					<li>Servidor de e-mail (SMTP): 25.</li>
+				</ul></li>
+				<li>Para enviar mensagem HTTP para servidor web do IC:
+				<ul>
+					<li>Endereço IP: 200.20.15.48.</li>
+					<li>Porta: 80.</li>
+				</ul></li>
+				<li>Mais sobre isso em breve...</li>
+			</ul>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>O que um Protocolo de Camada de Aplicação Define?</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li><span class="alert">Tipos de mensagens trocadas.</span>
+				<ul>
+					<li><i>e.g.</i>, requisição, resposta.</li>
+				</ul></li>
+				<li><span class="alert">Sintaxe das mensagens.</span>
+				<ul>
+					<li>Quais os <span class="alert">campos</span> da mensagem, como dados são representados nestes campos.</li>
+				</ul></li>
+				<li><span class="alert">Semântica das mensagens.</span>
+				<ul>
+					<li>Significado dos valores nos campos.</li>
+				</ul></li>
+				<li><span class="alert">Regras</span> para como e quando gerar e responder a mensagens.</li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li><span class="alert">Protocolos abertos:</span>
+				<ul>
+					<li>Definidos em RFCs.</li>
+					<li>Permitem interoperabilidade.</li>
+					<li><i>e.g.</i>, HTTP, SMTP.</li>
+				</ul></li>
+				<li><span class="alert">Protocolos proprietários:</span>
+				<ul>
+					<li><i>e.g.</i>, Skype.</li>
+				</ul></li>
+			</ul>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>De que Serviço de Transporte a Aplicação Precisa?</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li><span class="alert">Integridade de dados:</span>
+				<ul>
+					<li>Algumas aplicações precisam de 100% de confiança na transmissão de dados.
+					<ul>
+						<li><i>e.g.</i>, transferência de arquivos.</li>
+						<li>Dados precisam chegar <span class="alert">completos e corretos</span>.</li>
+					</ul></li>
+					<li>Outras toleram algumas perdas, corrupções.
+					<ul>
+						<li><i>e.g.</i>, áudio.</li>
+					</ul></li>
+				</ul></li>
+				<li><span class="alert">Temporização:</span>
+				<ul>
+					<li>Algumas aplicações precisam de baixo atraso para serem &ldquo;efetivas&rdquo;.
+					<ul>
+						<li><i>e.g.</i>, telefonia, jogos interativos.</li>
+					</ul></li>
+				</ul></li>
+			</ul>
+		</div>
+
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li><span class="alert">Vazão:</span>
+				<ul>
+					<li>Algumas aplicações requerem uma vazão mínima para funcionar.
+					<ul>
+						<li><i>e.g.</i>, multimídia.</li>
+					</ul></li>
+					<li>Outras se adaptam a qualquer vazão disponível.
+					<ul>
+						<li>São <span class="alert">&ldquo;elásticas&rdquo;</span>.</li>
+						<li><i>e.g.</i>, transmissão de arquivos.</li>
+					</ul></li>
+				</ul></li>
+				<li><span class="alert">Segurança:</span>
+				<ul>
+					<li>Criptografia, autenticidade, ...</li>
+				</ul></li>
+			</ul>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Requisitos de Serviço de Transporte: Algumas Aplicações Comuns</h1>
+	<div class="slideContent">
+		<center>
+			<table border="0">
+				<tr>
+					<th>Aplicação</td>
+					<th>Perda de Pacotes</td>
+					<th>Vazão</td>
+					<th>Requisitos Temporais</td>
+				</tr>
+				<tr>
+					<td>Transferência de Arquivos</td>
+					<td>Não Tolera</td>
+					<td>Elástica</td>
+					<td>Não</td>
+				</tr>
+				<tr>
+					<td>E-mail</td>
+					<td>Não Tolera</td>
+					<td>Elástica</td>
+					<td>Não</td>
+				</tr>
+				<tr>
+					<td>Navegação Web</td>
+					<td>Não Tolera</td>
+					<td>Elástica</td>
+					<td>Não</td>
+				</tr>
+				<tr>
+					<td>Vídeo/Áudio Ao-Vivo</td>
+					<td>Tolera</td>
+					<td>Áudio: 5 kb/s &mdash; 1 Mb/s<br>Vídeo: 10 kb/s &mdash; 5 Mb/s</td>
+					<td>Centenas de ms</td>
+				</tr>
+				<tr>
+					<td>Vídeo/Áudio Armazenado</td>
+					<td>Tolera</td>
+					<td>Áudio: 5 kb/s &mdash; 1 Mb/s<br>Vídeo: 10 kb/s &mdash; 5 Mb/s</td>
+					<td>Alguns Segundos</td>
+				</tr>
+				<tr>
+					<td>Jogos Interativos</td>
+					<td>Tolera</td>
+					<td>Alguns kb/s</td>
+					<td>Centenas de ms</td>
+				</tr>
+				<tr>
+					<td>Mensagens de Texto</td>
+					<td>Não Tolera</td>
+					<td>Elástica</td>
+					<td>Alguns Segundos</td>
+				</tr>
+			</table>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Serviços dos Protocolos de Transporte da Internet</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li><span class="alert">Serviço do TCP:</span>
+				<ul>
+					<li>Transporte confiável de dados.</li>
+					<li>Controle de fluxo: transmissor não sobrecarregará receptor.</li>
+					<li>Controle de congestionamento: reduzir taxa de transmissão quando a rede está congestionada.</li>
+					<li><span class="alert">Mas não provê:</span> garantias temporais, vazão mínima garantida, segurança.</li>
+					<li>Serviço orientado a conexão: <i>setup</i> inicial é necessário entre cliente e servidor. </li>
+				</ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li><span class="alert">Serviço do UDP:</span>
+				<ul>
+					<li>Transmissão <b>não confiável</b> de dados.</li>
+					<li>Não provê: confiabilidade, controle de fluxo, controle de congestionamento, garantias temporais, vazão mínima, segurança, <i>setup</i> de conexão.</li>
+					<li><span class="alert">Pergunta: </span> para que existe um UDP?</li>
+				</ul></li>
+			</ul>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Aplicações na Internet: Protocolos de Transporte Utilizados</h1>
+	<div class="slideContent">
+		<center>
+		<table>
+			<tr>
+				<th>Aplicação</th>
+				<th>Protocolo de Aplicação</th>
+				<th>Protocolo de Transporte</th>
+			</tr>
+			<tr>
+				<td>E-mail</td>
+				<td>SMTP [RFC 2821]</td>
+				<td>TCP</td>
+			</tr>
+			<tr>
+				<td>Login Remoto</td>
+				<td>Telnet [RFC 854]</td>
+				<td>TCP</td>
+			</tr>
+			<tr>
+				<td>Web</td>
+				<td>HTTP [RFC 2616]</td>
+				<td>TCP</td>
+			</tr>
+			<tr>
+				<td>Transferência de Arquivos</td>
+				<td>FTP [RFC 959]</td>
+				<td>TCP</td>
+			</tr>
+			<tr>
+				<td><i>Streaming</i> Multimídia</td>
+				<td>HTTP (<i>e.g.</i>, Youtube), RTP [RFC 1889]</td>
+				<td>TCP ou UDP</td>
+			</tr>
+			<tr>
+				<td>Telefonia via Internet</td>
+				<td>SIP, RTP, proprietários (<i>e.g.</i>, Skype)</td>
+				<td>TCP ou UDP</td>
+			</tr>
+		</table>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Adicionando Segurança ao TCP</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li><b>TCP e UDP.</b>
+				<ul>
+					<li>Não inclem criptografia.</li>
+					<li>Senhas em texto plano enviadas pelo socket atravessam a Internet em texto plano.</li>
+				</ul></li>
+				<li><b>SSL.</b>
+				<ul>
+					<li>Provê conexão TCP criptografada.</li>
+					<li>Integridade de dados.</li>
+					<li>Autenticação das pontas.</li>
+				</ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li><b>SSL está na camada de aplicação.</b>
+				<ul>
+					<li>Aplicações usam bibliotecas SSL para &ldquo;conversar&rdquo; com o TCP.</li>
+				</ul></li>
+				<li><b>API de sockets com SSL.</b>
+				<ul>
+					<li>Senhas em texto plano enviadas pelo socket atravessam a Internet criptografadas.</li>
+					<li>Mais detalhes em outras disciplinas (Cap. 7).</li>
+				</ul></li>
+			</ul>
+		</div>
+	</div>
+	</section>
+
+	<section class="secao">
+	<div class="slideContent">
+		Web e HTTP
+	</div>
+	</section>
+
+	<section>
+	<h1>Web e HTTP</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Uma <span class="alert">página web</span> é formada por <span class="alert">objetos</span>.
+			<ul>
+				<li>Arquivos HTML, imagens <i>jpg</i>, <i>png</i>, vídeos, áudios, ...</li>
+			</ul></li>
+			<li>Arquivo HTML base da página faz <span class="alert">referência</span> a diversos objetos.</li>
+			<li>Cada objeto é <span class="alert">endereçável através de uma URL</span>. Exemplo:</li>
+		</ul>
+		<br>
+		<center>
+			<tt>http://www.someschool.edu/someDept/pic.gif</tt><br>
+			<!--<svg><text x="40" y="120" transform="rotate(90, 40, 120) scale(1,2)">}</text></svg>-->
+			<svg style="width: 800px;">
+				<text x="-50" y="-7.5" transform="rotate(90, 40, 120) scale(1.5,11)">}</text>
+				<text x="-50" y="-40" transform="rotate(90, 40, 120) scale(1.5,9.6)">}</text>
+				<text x="-50" y="28" transform="rotate(90, 40, 120) scale(1.5,2.9)">}</text>
+				<text x="40" y="50">Esquema</text>
+				<text x="230" y="50">Nome do Host</text>
+				<text x="560" y="50">Caminho</text>
+			</svg>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Visão Geral do HTTP (I)</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li><b>HTTP: <i>HyperText Transfer Protocol</i></b>.
+				<ul>
+					<li>Protocolo de camada de aplicação da Web.</li>
+					<li>Arquitetura cliente &mdash; servidor.
+					<ul>
+						<li><span class="alert">Cliente:</span> <i>browser</i> que requisita, recebe (usando protocolo HTTP) e &ldquo;exibe&rdquo; objetos Web.</li>
+						<li><span class="alert">Servidor:</span> servidor Web envia (usando protocolo HTTP) objetos em resposta a requisições.</li>
+					</ul></li>
+				</ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50%;">
+			<center>
+				<img src="imagens/HTTPVisaoGeral.svg" style="width: 70%;"/>
+			</center>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Visão Geral do HTTP (II)</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li><b>Usa TCP.</b>
+				<ul>
+					<li>Cliente inicia conexão TCP (cria socket) com o servidor, porta 80.</li>
+					<li>Servidor aceita conexão TCP do cliente.</li>
+					<li>Mensagens HTTP (mensagens do protocolo de aplicação) trocadas entre <i>browser</i> (cliente HTTP) e servidor Web (servidor HTTP).</li>
+					<li>Conexão TCP é fechada.</li>
+				</ul></li>
+			</ul>
+		</div>
+
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li><b>HTTP é &ldquo;stateless&rdquo;</b>.
+				<ul>
+					<li>Servidor não mantém informação sobre requisições passadas do cliente.</li>
+				</ul></li>
+			</ul>
+			<center>
+				<div class="block" style="width:550px;">
+					<div class="blockTitle" style="width: 100%;">
+						<p>Nota</p>
+					</div>
+					<div class="blockBody">
+						<ul>
+							<li><b>Protocolos que mantêm estado são complexos!</b>
+							<ul>
+								<li>Histórico do passado (estado) precisa ser armazenado.</li>
+								<li>Se servidor/cliente cai, suas visões do estado podem ser inconsistentes, devem ser sincronizadas.</li>
+							</ul></li>
+						</ul>
+					</div>
+				</div>
+			</center>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Conexões HTTP</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li><b>HTTP não-persistente</b>.
+				<ul>
+					<li>Um único objeto enviado pela conexão TCP.
+					<ul>
+						<li>Conexão é fechada em seguida.</li>
+					</ul></li>
+					<li>Baixar múltiplos objetos requer múltiplas conexões.</li>
+				</ul></li>
+			</ul>
+		</div>
+
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li><b>HTTP persistente</b>.
+				<ul>
+					<li>Múltiplos objetos podem ser enviados por uma única conexão TCP entre cliente e servidor.</li>
+				</ul></li>
+			</ul>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>HTTP Não-persistente: Exemplo</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Suponha que usuário digita a URL: <tt>www.someschool.edu/someDepartment/home.index</tt>.
+			<ul>
+				<li>Contém referências para 10 imagens <i>jpg</i>.</li>
+			</ul></li>
+		</ul>
+		<div class="column" style="width: 5%;">
+			<center>
+				<img src="imagens/SetaTempo.svg" style="width: 90%;"/>
+			</center>
+		</div>
+		<div class="column" style="width: 40%;">
+			<ul>
+				<li><span class="alert">1a.</span> Cliente HTTP inicia conexão TCP com servidor na porta 80.</li>
+				<li><span class="alert">2.</span> Cliente HTTP envia <span class="alert">requisição HTTP</span> pelo socket. Mensagem informa que cliente deseja objeto <tt>someDepartment/home.index</tt>.</li>
+				<li><span class="alert">5.</span> Cliente HTTP recebe resposta, interpreta arquivo HTML, encontra as 10 imagens referenciadas.</li>
+				<li><span class="alert">6.</span> Passos 1 a 5 são repetidos para cada um dos 10 objetos.</li>
+			</ul>
+		</div>
+
+		<div class="column" style="width: 15%;">
+			<center>
+				<br>
+				<img src="imagens/Setas.svg" style="width: 95%;"/><br>
+				<img src="imagens/Setas.svg" style="width: 95%;"/><br>
+			</center>
+		</div>
+
+		<div class="column" style="width: 40%;">
+			<ul>
+				<li><span class="alert">1b.</span> Servidor HTTP, aguardando por conexões, &ldquo;aceita&rdquo; conexão, notificando cliente.</li>
+				<li><span class="alert">3.</span> Servidor HTTP recebe requisição, formata <span class="alert">resposta</span> contendo objeto requisitado, envia mensagem pelo socket.</li>
+				<li><span class="alert">4.</span> Servidor HTTP fecha conexão TCP.</li>
+			</ul>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>HTTP Não-persistente: Tempo de Resposta</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<center>
+				<div class="block" style="width:550px;">
+					<div class="blockTitle" style="width: 100%;">
+						<p>RTT</p>
+					</div>
+					<div class="blockBody">
+						<ul>
+							<li><i>Round-Trip-Time</i>, ou tempo de ida e volta.</li>
+							<li>Tempo para que um pequeno pacote chegue até o servidor e volte para o cliente.</li>
+						</ul>
+					</div>
+				</div>
+			</center>
+			<ul>
+				<li><b>Tempo de resposta do HTTP</b>.
+				<ul>
+					<li>Um RTT para iniciar a conexão TCP.</li>
+					<li>Um RTT para requisição HTTP e volta dos primeiros bytes da resposta.</li>
+					<li>Tempo de transmissão do arquivo.</li>
+					<li>Em suma: 2RTT + transmissão do arquivo.</li>
+				</ul></li>
+			</ul>
+		</div>
+
+		<div class="column" style="width: 50%;">
+			<center>
+				<img src="imagens/HTTPNaoPersistente.svg" style="width: 90%;"/>
+			</center>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>HTTP Persistente</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li><b>Problemas do HTTP não persistente:</b>
+				<ul>
+					<li>Requer 2 RTTs por objeto.</li>
+					<li><span class="alert"><i>Overhead</i></span> do SO para cada conexão TCP.</li>
+					<li><i>Browser</i> geralmente abre múltiplas conexões parelalas para obter objetos.</li>
+				</ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li><b>HTTP Persistente:</b>
+				<ul>
+					<li>Servidor deixa conexão aberta após enviar resposta.</li>
+					<li>Mensagens HTTP subsequentes entre mesmos cliente e servidor utilizam conexão aberta.</li>
+					<li>Cliente requisita objeto tão logo encontre referência a ele.</li>
+					<li>Um único RTT pode ser necessário para todos os objetos referenciados.</li>
+				</ul></li>
+			</ul>
+		</div>
+	</div>
+	</section>
+
+		<section>
+		<h1>HTTP Persistente <i>vs. Pipelining</i></h1>
+		<div class="slideContent">
+			<ul>
+			<li><b>HTTP Persistente:</b> servidor não fecha conexão imediatamente após término do objeto.
+			<ul>
+				<li>Dá oportunidade ao cliente de enviar novas requisições, reaproveitar conexão aberta.</li>
+					<li>Evita atraso inicial de abertura da conexão TCP.</li>
+			</ul></li>
+			<li><b><i>Pipelining</i>:</b> cliente pode enviar várias requisições em sequência, sem esperar respostas chegarem.
+			<ul>
+				<li>Enquanto primeira resposta começa a voltar, novas requisições chegam ao servidor.</li>
+				<li>Cria paralelismo entre requisições e respostas.</li>
+				<li>Tende a melhorar o desempenho.</li>
+			</ul></li>
+			<li>Em suma: dois mecanismos distintos, embora <span class="alert">comumente utilizados em conjunto</span>.</li>
+			</ul>
+		</div>
+		</section>
+
+	<section>
+	<h1>Mensagem de Requisição HTTP</h1>
+	<div class="slideContent">
+		<ul>
+			<li>HTTP tem dois tipos de mensagem: <span class="alert">requisição e resposta</span>.</li>
+			<li>Requisição HTTP: codificada em ASCII (<i>i.e.</i>, formato legível por humanos).
+			<ul>
+				<li><span class="alert"><i>human-readable</i></span>.</li>
+			</ul></li>
+		</ul>
+		<br>
+		<center>
+			<img src="imagens/RequisicaoHTTP.svg" style="width: 70%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Mensagem de Requisição HTTP: Formato Geral</h1>
+	<div class="slideContent">
+		<center>
+			<img src="imagens/RequisicaoHTTPFormato.svg" style="width: 70%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1><i>Upload</i> de Informações de Formulário</h1>
+	<div class="slideContent">
+		<ul>
+			<li><b>Método POST</b>.
+			<ul>
+				<li>Páginas web comumente incluem formulários.</li>
+				<li>Valores dos campos são enviados no corpo da requisição HTTP.</li>
+			</ul></li>
+			<li><b><i>Upload</i> através da URL</b>.
+			<ul>
+				<li>Utiliza o método HTTP <tt>GET</tt>.</li>
+				<li>Valores dos campos são preenchidos na própria URL requisitada:</li>
+			</ul></li>
+		</ul>
+		<br>
+		<center>
+			<tt>www.somesite.com/animalsearch?monkeys&amp;banana</tt>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Tipos de Métodos HTTP</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li><b>HTTP/1.0:</b>
+				<ul>
+					<li><tt>GET</tt>.</li>
+					<li><tt>POST</tt>.</li>
+					<li><tt>HEAD</tt>.
+					<ul>
+						<li>Pede que servidor não envia objeto na resposta.</li>
+					</ul></li>
+				</ul></li>
+			</ul>
+		</div>
+
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li><b>HTTP/1.1:</b>
+				<ul>
+					<li><tt>GET, POST, HEAD</tt>.</li>
+					<li><tt>PUT</tt>.
+					<ul>
+						<li>Faz upload de objeto para a URL especificada.</li>
+					</ul></li>
+					<li><tt>DELETE</tt>.
+					<ul>
+						<li>Apaga objeto da URL especificada.</li>
+					</ul></li>
+				</ul></li>
+			</ul>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Mensagem de Resposta do HTTP</h1>
+	<div class="slideContent">
+		<center>
+			<img src="imagens/RespostaHTTP.svg" style="width: 70%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Mensagem de Resposta do HTTP: Códigos de Status</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Aparece na primeira linha da resposta enviada pelo servidor.</li>
+			<li>Alguns exemplos de códigos:
+			<ul>
+				<li><span class="alert"><tt>200 OK</tt></span>
+				<ul>
+					<li>Requisição bem sucedida, objeto se encontra no corpo da mensagem.</li>
+				</ul></li>
+				<li><span class="alert"><tt>301 Moved Permanently</tt></span>
+				<ul>
+					<li>Objeto requistado foi movido, nova localização se encontra no corpo da mensagem.</li>
+				</ul></li>
+				<li><span class="alert"><tt>400 Bad Request</tt></span>
+				<ul>
+					<li>Servidor não entendeu a requisição.</li>
+				</ul></li>
+				<li><span class="alert"><tt>404 Not Found</tt></span>
+				<ul>
+					<li>Objeto requisitado não foi encontrado no servidor.</li>
+				</ul></li>
+				<li><span class="alert"><tt>505 HTTP Version Not Supported</tt></span></li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Experimente o HTTP Você Mesmo</h1>
+	<div class="slideContent">
+		<ol>
+			<li>Faça um Telnet para o seu servidor web favorito:</li>
+			<br>
+			<table style="border: none;" cellspacing="5" cellpadding="5">
+				<tr style="border: none; width: 45%;">
+					<td style="border: none; width: 45%;"><tt><span class="alert">telnet www.midiacom.uff.br 80</span></tt></td>
+					<td>Abre uma conexão TCP para a porta 80 (porta padrão para servidores HTTP) no servidor <tt>www.midiacom.uff.br</tt>. Tudo que é digitado no terminal é enviado pela conexão.</td>
+				</tr>
+			</table>
+			<br>
+			<li>Digite uma requisição HTTP do tipo <tt>GET</tt>:</li>
+			<br>
+			<table style="border: none;" cellspacing="5" cellpadding="5">
+				<tr style="border: none; width: 45%;">
+					<td style="border: none; width: 45%;"><tt><span class="alert">GET /~diego/ HTTP/1.1<br>Host: www.midiacom.uff.br</span></tt></td>
+					<td>Ao digitar isso (e duas vezes <tt>enter</tt> ao final), você envia esta requisição <tt>GET</tt> mínima (mas completa) para o servidor.</td>
+				</tr>
+			</table>
+			<br>
+			<li>Veja a resposta enviada pelo servidor.
+			<ul>
+				<li>Ou use o Wireshark para olhar requisições/respostas HTTP capturadas.</li>
+			</ul></li>
+		</ol>
+	</div>
+	</section>
+
+	<section>
+	<h1>Alguns Experimentos com HTTP (I)</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 55%;">
+			<div id="termcastHTTT1_0" style="margin-left: 3px;">
+			</div>
+		</div>
+		<div class="column" style="width: 45%;">
+			<ul>
+				<li>HTTP 1.0: conexão não-persistente.</li>
+				<li>Conexão fechada assim que objeto é enviado.</li>
+			</ul>
+		</div>
+	</div>
+	</section>
+
+
+	<script type="text/javascript">
+		var TermCast1;
+		DzAddPostInitFunction(function() {
+
+			TermCast1 = new TermCast(document.getElementById('termcastHTTT1_0'), 'terminalSessions/getBasicoHTTP1.1.json');
+		});
+	</script>
+
+	<section>
+	<h1>Alguns Experimentos com HTTP (II)</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 55%;">
+			<div id="termcastHTTT1_1" style="margin-left: 3px;">
+			</div>
+		</div>
+		<div class="column" style="width: 45%;">
+			<ul>
+				<li>HTTP 1.1: por padrão, conexão persistente.</li>
+				<li>Servidor mantém conexão aberta .
+				<ul>
+					<li>Durante algum tempo.</li>
+				</ul></li>
+			</ul>
+		</div>
+	</div>
+	</section>
+
+	<script type="text/javascript">
+		var TermCast2;
+		DzAddPostInitFunction(function() {
+
+			TermCast2 = new TermCast(document.getElementById('termcastHTTT1_1'), 'terminalSessions/getBasico.json');
+		});
+	</script>
+
+	<section>
+	<h1>Alguns Experimentos com HTTP (III)</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 55%;">
+			<div id="termcastHTTT1_1NP" style="margin-left: 3px;">
+			</div>
+		</div>
+		<div class="column" style="width: 45%;">
+			<ul>
+				<li>HTTP 1.1: <span class="alert">pode</span> operar em modo não-persistente.</li>
+				<li>Exige configuração explícita no cabeçalho:</li>
+			</ul>
+			<br>
+			<center>
+				<tt>Connection: close</tt>
+			</center>
+		</div>
+	</div>
+	</section>
+
+	<script type="text/javascript">
+		var TermCast3;
+		DzAddPostInitFunction(function() {
+
+			TermCast3 = new TermCast(document.getElementById('termcastHTTT1_1NP'), 'terminalSessions/getBasicoHTTP1.1ConnectionClose.json');
+		});
+	</script>
+	
+
+<section class="secao">
+<div class="slideContent">
+	Cookies
+</div>
+</section>
+
+<section>
+<h1>Estado do Usuário no Servidor: Cookies</h1>
+<div class="slideContent">
+	<div class="column" style="width: 50%;">
+		<ul>
+			<li>Muitos <i>sites</i> utilizam cookies.</li>
+			<li><b>Quatro componentes:</b>
+			<ol>
+				<li>Entrada de cabeçalho relativa aos cookies na mensagem de resposta HTTP.</li>
+				<li>Entrada de cabeçalho relativa aos cookies na mensagem de requisição HTTP.</li>
+				<li>Arquivo de cookies mantido no <i>host</i> do usuário e gerenciado pelo <i>browser</i>.</li>
+				<li>Base de dados no <i>backend</i> do <i>site</i>.</li>
+			</ol></li>
+		</ul>
+	</div>
+	<div class="column" style="width: 50%;">
+		<ul>
+			<li><b>Exemplo:</b>
+			<ul>
+				<li>Susan sempre acessa a Internet de seu PC.</li>
+				<li>Visita site específico de comércio eletrônico pela primeira vez.</li>
+				<li>Quando requisição HTTP inicial chega ao servidor, <i>site</i> cria:
+				<ul>
+					<li>ID único.</li>
+					<li>Entrada na base de dados associada ao ID.</li>
+				</ul></li>
+			</ul></li>
+		</ul>
+	</div>
+</div>
+</section>
+
+<section>
+<h1>Cookies: Mantendo Estado</h1>
+<div class="slideContent">
+	<center>
+		<img src="imagens/Cookies.svg" style="width: 70%;"/>
+	</center>
+</div>
+</section>
+
+<section>
+<h1>Cookies (Mais)</h1>
+<div class="slideContent">
+	<div style="height: 250px;">
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li><b>Para que cookies podem ser utilizados:</b>
+				<ul>
+					<li>Autorização.</li>
+					<li>&ldquo;Carrinhos de compra&rdquo;.</li>
+					<li>Recomendações.</li>
+					<li>Estado da sessão do usuário (<i>e.g.</i>, webmail).</li>
+				</ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50%;">
+			<center>
+				<div class="block" style="width:550px;">
+					<div class="blockTitle" style="width: 100%;">
+						<p>Nota: cookies e privacidade</p>
+					</div>
+					<div class="blockBody">
+						<ul>
+							<li>Cookies permitem que <i>sites</i> aprendam muito sobre você.</li>
+							<li>Você pode fornecer nome e e-mail para <i>sites</i>.</li>
+						</ul>
+					</div>
+				</div>
+			</center>
+		</div>
+	</div>
+	<br>
+	<div>
+	<ul>
+		<li><b>Como manter &ldquo;estado&rdquo;:</b>
+		<ul>
+			<li>Sistemas finais mantém estado no transmissor, receptor ao longo de várias transações.</li>
+			<li>Cookies: mensagens HTTP carregam estado.</li>
+		</ul></li>
+	</ul>
+	</div>
+</div>
+</section>
+
+<section class="secao">
+<div class="slideContent">
+	Web Caches
+</div>
+</section>
+
+<section>
+<h1>Web Caches (Servidores Proxy)</h1>
+<div class="slideContent">
+	<ul>
+		<li><b>Objetivo:</b> satisfazer requisição do cliente sem envolver servidor original do conteúdo.</li>
+	</ul>
+
+	<div class="column" style="width: 45%;">
+		<ul>
+			<li>Usuário configura <i>browser</i>: acessos web via cache.</li>
+			<li><i>Browser</i> envia todas as requisições HTTP ao cache.
+			<ul>
+				<li>Objetos em cache: retornados imediatamente.</li>
+				<li>Caso contrário, cache requisita objeto do servidor, retorna objeto ao cliente.</li>
+			</ul></li>
+		</ul>
+	</div>
+
+	<div class="column" style="width: 55%;">
+		<center>
+			<img src="imagens/WebCacheProxy.svg" style="width: 90%;"/>
+		</center>
+	</div>
+</div>
+</section>
+
+<section>
+<h1>Mais sobre Web Caches</h1>
+<div class="slideContent">
+	<div class="column" style="width: 45%;">
+		<ul>
+			<li>Cache age tanto como servidor, quanto como cliente.
+			<ul>
+				<li>Servidor para a requisição original.</li>
+				<li>Cliente para o servidor original do conteúdo.</li>
+			</ul></li>
+			<li>Tipicamente, cache é instalado na rede de acesso ou pelo ISP.</li>
+		</ul>
+	</div>
+
+	<div class="column" style="width: 55%;">
+		<ul>
+			<li><b>Por que usar um web cache?</b>
+			<ul>
+				<li>Reduzir o <span class="alert">tempo de resposta</span> para o cliente.</li>
+				<li>Reduzir o <span class="alert">tráfego no enlace de acesso</span> da instituição.</li>
+				<li>Internet densamente populada por cache: permite que provedores de conteúdo &ldquo;pobres&rdquo; entregue conteúdo de forma efetiva.
+				<ul>
+					<li>P2P também.</li>
+				</ul></li>
+			</ul></li>
+		</ul>
+	</div>
+</div>
+</section>
+
+<section>
+<h1>Web Cache: Exemplo</h1>
+<div class="slideContent">
+	<div class="column" style="width: 58%;">
+		<ul>
+			<li><b>Hipóteses:</b>
+			<ul>
+				<li>Tamanho médio dos objetos: 100 kb.</li>
+				<li>Taxa média de requisição do <i>browsers</i>: 15/s.
+				<ul>
+					<li>Taxa média para os <i>browsers</i>: 1,5 Mb/s.</li>
+				</ul></li>
+				<li>RTT do roteador de borda para qualquer servidor: 2s.</li>
+				<li>Capacidade do enlace de acesso: 1,54 Mb/s.</li>
+			</ul></li>
+			<li><b>Consequências:</b>
+			<ul>
+				<li>Utilização da LAN: 0,15%.</li>
+				<li>Utilização do enlace de acesso: <span class="alert">99%</span>!</li>
+				<li>Atraso total = Atraso da Internet + atraso do roteador de borda + atraso da LAN.
+				<ul>
+					<li>= 2s + minutos + <span class="math inline">\(\mu s\)</span></li>
+				</ul></li>
+			</ul></li>
+		</ul>
+	</div>
+	<div class="column" style="width: 42%;">
+		<center>
+			<img src="imagens/WebCacheExemplo.svg" style="width: 80%;"/>
+		</center>
+	</div>
+</div>
+</section>
+
+<section>
+<h1>Web Cache: Exemplo (Enlace de Maior Capacidade)</h1>
+<div class="slideContent">
+	<div style="height: 530px;">
+	<div class="column" style="width: 58%;">
+		<ul>
+			<li><b>Hipóteses:</b>
+			<ul>
+				<li>Tamanho médio dos objetos: 100 kb.</li>
+				<li>Taxa média de requisição do <i>browsers</i>: 15/s.
+				<ul>
+					<li>Taxa média para os <i>browsers</i>: 1,5 Mb/s.</li>
+				</ul></li>
+				<li>RTT do roteador de borda para qualquer servidor: 2s.</li>
+				<li>Capacidade do enlace de acesso: <strike> 1,54 </strike> 154 Mb/s.</li>
+			</ul></li>
+			<li><b>Consequências:</b>
+			<ul>
+				<li>Utilização da LAN: 0,15%.</li>
+				<li>Utilização do enlace de acesso: <span class="alert"><strike> 99% </strike></span> 0,99%.</li>
+				<li>Atraso total = Atraso da Internet + atraso do roteador de borda + atraso da LAN.
+				<ul>
+					<li>= 2s + <strike>minutos</strike> ms + <span class="math inline">\(\mu s\)</span></li>
+				</ul></li>
+			</ul></li>
+		</ul>
+	</div>
+	<div class="column" style="width: 42%;">
+		<center>
+			<img src="imagens/WebCacheExemplo2.svg" style="width: 80%;"/>
+		</center>
+	</div>
+	</div>
+	<div>
+		<ul>
+			<li>a<b>Custo:</b> aumento na capacidade do enlace de acesso (não é barato!).</li>
+		</ul>
+	</div>
+</div>
+</section>
+
+<section>
+<h1>Web Cache: Exemplo (Solução com Web Cache, I)</h1>
+<div class="slideContent">
+	<div style="height: 490px;">
+	<div class="column" style="width: 58%;">
+		<ul>
+			<li><b>Hipóteses:</b>
+			<ul>
+				<li>Tamanho médio dos objetos: 100 kb.</li>
+				<li>Taxa média de requisição do <i>browsers</i>: 15/s.
+				<ul>
+					<li>Taxa média para os <i>browsers</i>: 1,5 Mb/s.</li>
+				</ul></li>
+				<li>RTT do roteador de borda para qualquer servidor: 2s.</li>
+				<li>Capacidade do enlace de acesso: 1,54 Mb/s.</li>
+			</ul></li>
+			<li><b>Consequências:</b>
+			<ul>
+				<li>Utilização da LAN: 0,15%.</li>
+				<li>Utilização do enlace de acesso: <span class="alert">?</span></li>
+				<li>Atraso total = <span class="alert">?</span></li>
+			</ul></li>
+		</ul>
+		<center>
+			<div style="width: 60%;">
+			<span class="alert">Como calcular utilização do enlace de acesso, atraso?</span>
+			</div>
+		</center>
+	</div>
+	<div class="column" style="width: 42%;">
+		<center>
+			<img src="imagens/WebCacheExemplo3.svg" style="width: 80%;"/>
+		</center>
+	</div>
+	</div>
+	<ul>
+		<li><b>Custo:</b> web cache (barato!).</li>
+	</ul>
+</div>
+</section>
+
+<section>
+<h1>Web Cache: Exemplo (Solução com Web Cache, II)</h1>
+<div class="slideContent">
+	<div class="column" style="width: 58%;">
+		<ul>
+			<li><b>Calculando a utilização do enlace de acesso e atraso com cache.</b>
+			<ul>
+				<li>Assuma que a taxa de acerto (<i>hit rate</i>) é 0,4.
+				<ul>
+					<li>40% das requisições satisfeitas no cache, 60% precisam ir à origem.</li>
+				</ul></li>
+				<li>Utilização do enlace de acesso:
+				<ul>
+					<li>60% das requisições usam o enlace.</li>
+					<li><span class="math inline">\(0{,}6\times 1{,}5 = 0,9\)</span>&nbsp;Mb/s de tráfego.</li>
+					<li>Utilização: <span class="math inline">\(\frac{0{,}9}{1{,}54} = 0{,}58\)</span>.</li>
+				</ul></li>
+				<li>Atraso total:
+				<ul>
+					<li><span class="math inline">\(0{,}6\times\)</span> (atraso da origem) + <span class="math inline">\(0{,}4\times\)</span> (atraso do cache).</li>
+					<li><span class="math inline">\(0{,}6\times 2{,}01 + 0{,}4\times (ms) \approx 1{,}2\)</span> s.</li>
+					<li>Menos que com enlace de 154 Mb/s (e mais barato!)</li>
+				</ul></li>
+			</ul></li>
+		</ul>
+	</div>
+	<div class="column" style="width: 42%;">
+		<center>
+			<img src="imagens/WebCacheExemplo3.svg" style="width: 80%;"/>
+		</center>
+	</div>
+</div>
+</section>
+
+<section>
+<h1>GET Condicional</h1>
+<div class="slideContent">
+	<div class="column" style="width: 50%;">
+		<ul>
+			<li><b>Objetivo:</b> não enviar objeto se cache tem versão atualizada.
+			<ul>
+				<li>Não há atraso de envio do objeto.</li>
+				<li>Reduz utilização do enlace de acesso.</li>
+			</ul></li>
+			<li>Cache: especifica data da cópia local na requisição HTTP.</li>
+			<br>
+			<center>
+				<tt>If-modified-since: &lt;data&gt;</tt>
+			</center>
+			<br>
+			<li>Servidor: resposta não contém objeto se cópia está atualizada.</li>
+			<br>
+			<center>
+				<tt>HTTP/1.0 304 Not Modified</tt>
+			</center>
+			<br>
+		</ul>
+	</div>
+	<div class="column" style="width: 50%;">
+		<center>
+			<img src="imagens/ConditionalGET.svg" style="width: 80%;"/>
+		</center>
+	</div>
+</div>
+</section>
+
+	<section>
+	<h1>GET Condicional: Exemplo</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<div id="termcastGETCondicional" style="margin-left: 3px;"></div>
+		</div>
+		<div class="column" style="width: 50%;">
+			<ul>
+			<li>Primeira requisição:
+			<ul>
+				<li>Data especificada posterior à última modificação do objeto.</li>
+				<li>Servidor envia cabeçalhos, mas não conteúdo.</li>
+				<li>Código 304 (<tt>Not Modified</tt>).</li>
+			</ul></li>
+			<li>Segunda requisição:
+			<ul>
+				<li>Data de um dia antes.</li>
+				<li>Servidor envia objeto, como em um <tt>GET</tt> &ldquo;normal&rdquo;.</li>
+			</ul></li>
+			<li><b>Detalhe:</b> versão 1.1 do HTTP especificada nas requisições.
+			<ul>
+				<li>Resultado: conexão persistente utilizada por padrão.</li>
+					<li>Ambas as requisições feitas em uma única conexão.</li>
+			</ul></li>
+			</ul>
+		</div>
+	</div>
+	</section>
+
+	<script type="text/javascript">
+	var TermCast1;
+	DzAddPostInitFunction(function() {
+
+		TermCast1 = new TermCast(document.getElementById('termcastGETCondicional'), 'terminalSessions/GetCondicional.json');
+	});
+</script>
+
+<section class="secao">
+<div class="slideContent">
+	FTP
+</div>
+</section>
+
+<section>
+<h1>FTP: <i>File Transfer Protocol</i></h1>
+<div class="slideContent">
+	<center>
+		<img src="imagens/FTP.svg" style="width: 50%;"/>
+	</center>
+	<br>
+	<ul>
+		<li>Transfere arquivos de/para <i>host</i> remoto.</li>
+		<li>Arquitetura Cliente-Servidor.
+		<ul>
+			<li><span class="alert">Cliente:</span> lado que inicia transferência (seja de ou para <i>host</i> remoto).</li>
+			<li><span class="alert">Servidor:</span> <i>host</i> remoto.</li>
+		</ul></li>
+		<li>FTP: RFC 959.</li>
+		<li>Servidor FTP: escuta, por padrão, na porta 21.</li>
+	</ul>
+</div>
+</section>
+
+<section>
+<h1>FTP: Conexões de Controle e Dados Separadas</h1>
+<div class="slideContent">
+	<div class="column" style="width: 50%;">
+		<ul>
+			<li>Cliente FTP contacta servidor na porta 21, usando TCP.</li>
+			<li>Cliente autorizado através da conexão de controle.</li>
+			<li>Cliente navega diretórios remotos, envia comandos pela conexão de controle.</li>
+			<li>Quando servidor recebe comando de transferência da arquivo, <span class="alert">servidor</span> abre 2ª conexão TCP (para arquivo) para o cliente.</li>
+			<li>Depois de transferir arquivo, servidor fecha conexão de dados.</li>
+		</ul>
+	</div>
+	<div class="column" style="width: 50%;">
+		<center>
+			<img src="imagens/FTPOutOfBand.svg" style="width: 80%;"/>
+		</center>
+		<br>
+		<ul>
+			<li>Servidor abre nova conexão TCP para cada arquivo enviado.</li>
+			<li>Conexão dedicada para controle: comunicação <span class="alert">&ldquo;fora-de-banda&rdquo;</span>.</li>
+			<li>Servidor FTP precisa manter &ldquo;estado&rdquo;.
+			<ul>
+				<li>Diretório corrente, autenticação.</li>
+			</ul></li>
+		</ul>
+	</div>
+</div>
+</section>
+
+<section>
+<h1>FTP: Comandos e Respostas</h1>
+<div class="slideContent">
+	<div class="column" style="width: 50%;">
+		<ul>
+			<li><b>Exemplos de comandos:</b>
+			<ul>
+				<li>Enviados como texto ASCII pela conexão de controle.</li>
+				<li><tt>USER username</tt>.</li>
+				<li><tt>PASS password</tt>.</li>
+				<li><tt>LIST</tt>.
+				<ul>
+					<li>Retorna lista dos arquivos no diretório corrente.</li>
+				</ul></li>
+				<li><tt>RETR filename</tt>.
+				<ul>
+					<li><i>Download</i> do arquivo.</li>
+				</ul></li>
+				<li><tt>STOR filename</tt>.
+				<ul>
+					<li><i>Upload</i> do arquivo.</li>
+				</ul></li>
+			</ul></li>
+		</ul>
+	</div>
+	<div class="column" style="width: 50%;">
+		<ul>
+			<li><b>Exemplos de códigos de retorno:</b>
+			<ul>
+				<li>Código de <i>status</i> e descrição (como no HTTP).</li>
+				<li><tt>331 Username OK, password required</tt>.</li>
+				<li><tt>125 data connection already open; transfer starting</tt>.</li>
+				<li><tt>425 Can't open data connection</tt>.</li>
+				<li><tt>452 Error writing file</tt>.</li>
+			</ul></li>
+		</ul>
+	</div>
+</div>
+</section>
+
+<section class="secao">
+<div class="slideContent">
+	E-mail
+</div>
+</section>
+
+<section>
+<h1>E-mail</h1>
+<div class="slideContent">
+	<div class="column" style="width: 50%;">
+		<ul>
+			<li><b>Três grandes componentes:</b>
+			<ul>
+				<li><i>User agents</i>.</li>
+				<li>Servidores de e-mail.</li>
+				<li>SMTP: <i>Simple Mail Transfer Protocol</i>.</li>
+			</ul></li>
+			<li><b>User agent</b>:
+			<ul>
+				<li>Também conhecido como &ldquo;leitor de e-mail&rdquo;.</li>
+				<li>Criação, edição, leitura de mensagens de e-mail.</li>
+				<li><i>e.g.</i>, Outlook, Thunderbird, cliente de e-mail do iPhone.</li>
+				<li>Mensagens enviadas, recebidas armazenadas no servidor.</li>
+			</ul></li>
+		</ul>
+	</div>
+	<div class="column" style="width: 50%;">
+		<center>
+			<img src="imagens/ServicoDeEmail.svg" style="width: 70%;"/>
+		</center>
+	</div>
+</div>
+</section>
+
+<section>
+<h1>E-mail: Servidores de E-mail</h1>
+<div class="slideContent">
+	<div class="column" style="width: 50%;">
+		<br>
+		<br>
+		<ul>
+			<li><b>Servidores de e-mail:</b>
+			<ul>
+				<li><span class="alert">Caixa de e-mail:</span> contém mensagens que chegam para o usuário.</li>
+				<li><span class="alert">Fila de mensagens:</span> contém mensagens a serem enviadas.</li>
+				<li><span class="alert">Protocolo SMTP:</span> comunicação entre servidores de e-mail para envio de mensagens.
+				<ul>
+					<li>Cliente: servidor que envia mensagem.</li>
+					<li>Servidor: servidor que recebe mensagem.</li>
+				</ul></li>
+			</ul></li>
+		</ul>
+	</div>
+	<div class="column" style="width: 50%;">
+		<center>
+			<img src="imagens/ServicoDeEmail.svg" style="width: 70%;"/>
+		</center>
+</div>
+</section>
+
+<section>
+<h1>E-mail: SMTP [RFC 2821]</h1>
+<div class="slideContent">
+	<ul>
+		<li>Utiliza TCP para transferir mensagens de forma confiável entre cliente e servidor, porta 25.</li>
+		<li>Transferência direta: do servidor do destinatário diretamente para o servidor do remetente.</li>
+		<li>Protocolo em três fases:
+		<ul>
+			<li><i>Handshaking</i> (apresentação).</li>
+			<li>Transferência da mensagens.</li>
+			<li>Encerramento.</li>
+		</ul></li>
+		<li>Interação do tipo comando/resposta (similar ao FTP, HTTP).
+		<ul>
+			<li><span class="alert">Comandos:</span> texto ASCII.</li>
+			<li><span class="alert">Resposta:</span> código de <i>status</i> e descrição.</li>
+		</ul></li>
+		<li>Mensagens necessariamente em ASCII de 7 bits.</li>
+	</ul>
+</div>
+</section>
+
+<section>
+<h1>Cenário: Alice Envia Mensagem para Bob</h1>
+<div class="slideContent">
+	<div style="height: 280px;">
+		<div class="column" style="width: 50%;">
+			<ol>
+				<li>Alice usa <i>user agent</i> para criar mensagem para <tt>bob@someschool.edu</tt>.</li>
+				<li>O <i>user agent</i> de Alice envia mensagem ao seu servidor de e-mail (de Alice); mensagem é enfileirada.</li>
+				<li>No servidor de Alice, lado cliente do SMTP abre conexão TCP para o servidor de Bob.</li>
+			</ol>
+		</div>
+		<div class="column" style="width: 50%;">
+			<ol start="4">
+				<li>Mensagem de Alice é enviada pela conexão TCP.</li>
+				<li>Servidor de e-mail de Bob coloca mensagem na caixa de entrada de Bob.</li>
+				<li>Bob usa seu <i>user agent</i> para ler a mensagem.</li>
+			</ol>
+		</div>
+	</div>
+	<br>
+	<center>
+		<img src="imagens/EnvioDeEmail.svg" style="width: 70%;"/>
+	</center>
+</div>
+</section>
+
+<section>
+<h1>Exemplo de Interação SMTP</h1>
+<div class="slideContent">
+	<center>
+		<div style="text-align: left; width: 80%;" >
+		<tt style="text-align: left;">
+			S: 220 hamburger.edu<br>
+			C: HELO crepes.fr<br>
+			S: 250 Hello crepes.fr, pleased to meet you<br>
+			C: MAIL FROM: &lt;alice@crepes.fr&gt;<br>
+			S: 250 alice@crepes.fr... Sender ok<br>
+			C: RCPT TO: &lt;bob@hamburger.edu&gt;<br>
+			S: 250 bob@hamburger.edu ... Recipient ok<br>
+			C: DATA<br>
+			S: 354 Enter mail, end with &ldquo;.&rdquo;. on a line by itself<br>
+			C: Do you like ketchup?<br>
+			C: How about pickles?<br>
+			C: .<br>
+			S: 250 Message accepted for delivery<br>
+			C: QUIT<br>
+			S: 221 hamburger.edu closing connection<br>
+		</tt>
+		</div>
+	</center>
+</div>
+</section>
+
+<section>
+<h1>Experimente uma Interação SMTP Você Mesmo</h1>
+<div class="slideContent">
+	<ul>
+		<li><tt>telnet servername 25</tt></li>
+		<li>Espere uma resposta 220 do servidor.</li>
+		<li>Digite comandos <tt>HELO, MAIL FROM, RCPT TO, DATA, QUIT</tt>.</li>
+	</ul>
+	<br>
+	<br>
+	<center>
+		<span class="alert">Permite que você envie e-mail sem usar um cliente.</span>
+	</center>
+</div>
+</section>
+
+<section>
+<h1>SMTP: Útimos Comentários</h1>
+<div class="slideContent">
+	<div class="column" style="width: 50%;">
+		<ul>
+			<li>SMTP utiliza conexões persistentes.</li>
+			<li>SMTP requer que mensagem seja composta apenas de caracteres ASCII de 7 bits.</li>
+			<li>Servidor utiliza <tt>CRLF.CRLF</tt> para determinar o fim da mensagem.</li>
+		</ul>
+	</div>
+	<div class="column" style="width: 50%;">
+		<ul>
+			<li><b>Comparação com o HTTP:</b>
+			<ul>
+				<li>HTTP: <i>pull</i>.</li>
+				<li>SMTP: <i>push</i>.</li>
+				<li>Ambos têm mensagens em ASCII, códigos de <i>status</i>.</li>
+				<li>HTTP: cada objeto encapsulado em sua própria mensagem de resposta.</li>
+				<li>SMTP: múltiplos objetos enviados em mensagem de múltiplas partes.</li>
+			</ul></li>
+		</ul>
+	</div>
+</div>
+</section>
+
+<section>
+<h1>Formato da Mensagem de E-mail</h1>
+<div class="slideContent">
+	<div class="column" style="width: 50%;">
+		<ul>
+			<li>SMTP: protocolo para troca de mensagens de e-mail.</li>
+			<li>RFC 822: padrão para formato das mensagens.
+			<ul>
+				<li>Linhas de cabeçalho, <i>e.g.</i>:
+				<ul>
+					<li><tt>To:</tt></li>
+					<li><tt>From:</tt></li>
+					<li><tt>Subject:</tt></li>
+					<li><span class="alert">Diferentes dos comandos <tt>MAIL FROM, RCPT TO</tt> do SMTP!</span></li>
+				</ul></li>
+				<li>Corpo: a &ldquo;mensagem em si&rdquo;.
+				<ul>
+					<li>Apenas caracteres ASCII.</li>
+				</ul></li>
+			</ul></li>
+		</ul>
+	</div>
+	<div class="column" style="width: 50%;">
+		<br>
+		<br>
+		<center>
+			<img src="imagens/EmailFormato.svg" style="width: 70%;"/>
+		</center>
+	</div>
+</div>
+</section>
+
+<section>
+<h1>Protocolos de Acesso a E-mails</h1>
+<div class="slideContent">
+	<center>
+		<img src="imagens/EmailAcesso.svg" style="width: 75%;"/>
+	</center>
+	<br>
+	<ul>
+		<li><span class="alert">SMTP:</span> entrega mensagem ao servidor do destinatário.</li>
+		<li>Protocolo de acesso de e-mail: destinatário obtém suas mensagens do seu servidor.
+		<ul>
+			<li><span class="alert">POP:</span> <i>Post Office Protocol</i> [RFC 1939]: autorização, <i>download</i>.</li>
+			<li><span class="alert">IMAP:</span> <i>Internet Mail Access Protocol</i> [RFC 1730]: mais funcionalidades, incluindo manipulação de mensagens armazenadas no servidor.</li>
+			<li><span class="alert">HTTP:</span> gmail, hotmail, Yahoo! Mail, etc.</li>
+		</ul></li>
+	</ul>
+</div>
+</section>
+
+<section>
+<h1>O Protocolo POP3</h1>
+<div class="slideContent">
+	<div class="column" style="width: 50%;">
+		<ul>
+			<li><b>Fase de autorização:</b>
+			<ul>
+				<li>Comandos do cliente:
+				<ul>
+					<li><b>user:</b> declara o nome do usuário.</li>
+					<li><b>pass:</b> senha.</li>
+				</ul>Servidor responde:
+				<ul>
+					<li><b>+OK</b></li>
+					<li><b>-ERR</b></li>
+				</ul></li>
+			</ul></li>
+			<li><b>Fase de transações:</b>
+			<ul>
+				<li>Cliente:
+				<ul>
+					<li><b>list:</b> lista números das mensagens.</li>
+					<li><b>retr:</b> obtém mensagem por número.</li>
+					<li><b>dele:</b> apaga mensagem.</li>
+					<li><b>quit:</b> encerra comunicação.</li>
+				</ul></li>
+			</ul></li>
+		</ul>
+	</div>
+			<div class="column" style="width: 50%;">
+				<img src="imagens/POP3.svg" style="width: 95%;"/>
+			</div>
+</div>
+</section>
+
+	</section>
+<section>
+<h1>POP3 (Mais) e IMAP</h1>
+<div class="slideContent">
+	<div class="column" style="width: 50%;">
+					<ul>
+						<li><b>Mais sobre o POP3:</b>
+						<ul>
+						<li>Exemplo anterior usa POP3 no modo &ldquo;download and delete&rdquo;.</li>
+						<li>Mensagens são baixadas para <i>host</i> do Bob e apagadas do servidor.</li>
+						<li>Há também o modo &ldquo;download and keep&rdquo;: cópias são deixadas no servidor.</li>
+						<li>POP3 é <i>stateless</i> entre sessões.</li>
+						</ul></li>
+					</ul>
+	</div>
+	<div class="column" style="width: 50%;">
+					<ul>
+						<li><b>IMAP:</b>
+						<ul>
+						<li>Mantém mensagens apenas no servidor.</li>
+						<li>Permite ao usuário organizar mensagens em pastas.</li>
+						<li>Mantém estado entre sessões do usuário.
+						<ul>
+							<li>Nomes de pastas e mapeamentos de mensagens para pastas.</li>
+						</ul></li>
+						</ul></li>
+					</ul>
+	</div>
+	</div>
+	</section>
+
+	<!-- {{{{ dzslides core
+	#
+	#
+	#     __  __  __       .  __   ___  __
+	#    |  \  / /__` |    | |  \ |__  /__`
+	#    |__/ /_ .__/ |___ | |__/ |___ .__/ core :€
+	#
+	#
+	# The following block of code is not supposed to be edited.
+	# But if you want to change the behavior of these slides,
+	# feel free to hack it!
+	#
+	-->
+
+    <!-- More CSS -->
+	<link href='../template/css/slides.css' id="slides" rel='stylesheet' type='text/css'>
+	<link href='../template/css/presentationSpecific2.css' id="presentationSpecific2" rel='stylesheet' type='text/css'>
+
+    <!-- More Javascript -->
+	<script type="text/javascript" src="../template/js/dz.js"></script>
+
+	<!-- More CSS -->
+	<link href='../template/css/notesSpecific.css' id="notesSpecific" rel='stylesheet' type='text/css'>
+	<link href='../template/css/printSpecific.css' id="printSpecific" rel='stylesheet' type='text/css'>
+</body>
+</html>

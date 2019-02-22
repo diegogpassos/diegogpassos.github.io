@@ -1,0 +1,1616 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <!-- Meta info -->
+		<meta charset="utf-8">
+		<meta name="shortauthor" content="Diego Passos"/>
+		<meta name="shorttitle" content="Confiabilidade (II), TCP"/>
+		<meta name="shortevent" content="Redes de Computadores"/>
+		<title>Redes de Computadores: Aula 4</title>
+
+		<!-- Math support -->
+		<script type="text/x-mathjax-config">
+		MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+			MathJax.InputJax.TeX.Definitions.number = /^(?:[0-9]+(?:\.[0-9]{3})*(?:\{,\}[0-9]*)*|\{,\}[0-9]+)/
+		});
+		</script>
+		<!--<script src="js/plotly-latest.min.js"></script>-->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+		<script src="../../../../../MathJax-2.6-latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+		<script type="text/javascript" src="../template/js/dz_pre.js"></script>
+
+		<!-- Fonts -->
+		<link href='https://fonts.googleapis.com/css?family=Lora:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
+		<link href='../../../../../Fonts/Lora/lora.css' rel='stylesheet' type='text/css'>
+
+		<!-- CSS -->
+		<link href='../template/css/template.css' id="template" rel='stylesheet' type='text/css'>
+		<link href='../template/css/presentationSpecific.css' id="presentationSpecific" rel='stylesheet' type='text/css'>
+
+
+		<!-- Javascript -->
+		<!--
+		<script type="text/javascript" src="../template/js/audio.js"></script>
+		<script src="js/term.js" charset="utf-8"></script>
+    <script src="js/termcast.js" charset="utf-8"></script>
+		<link rel="stylesheet" href="css/googlecode.css">
+		<script src="js/highlight.pack.js"></script>
+		<script>
+			hljs.initHighlightingOnLoad();
+			hljs.configure({
+				tabReplace: '  '
+			});
+		</script>
+		-->
+</head>
+
+<body>
+    <!-- Audio handlers -->
+	<!--<audio src="audio/La.wav" id="La.wav" preload="auto"></audio>-->
+
+    <!-- Title Slide -->
+	<section>
+
+        <div class="slideContent">
+            <h1 class="title">Aula 4 - Princípios de Confiabilidade (II), TCP</h1>
+            <h2 class="author">Diego Passos</h2>
+            <h4 class="institution">Universidade Federal Fluminense</h4>
+            <h3 class="date">Redes de Computadores</h3>
+        </div>
+		<br>
+		<br>
+			<div style="width: 30%; float: right; padding-right: 2%;">
+			<p style="font-size: 18px; text-align: right;">Material adaptado a partir dos slides originais de J.F Kurose and K.W. Ross.</p>
+		</div>
+	</section>
+
+	<section>
+	<h1>rdt3.0: Canal com Erros e Perdas</h1>
+	<div class="slideContent">
+	  <div class="column" style="width: 45%;">
+			<ul>
+			  <li><b>Nova hipótese:</b>
+			  <ul>
+			    <li>Canal (rede) pode também descartar pacotes (tanto dados, quanto ACKs).
+			    <ul>
+			      <li><i>Checksum</i>, # de sequência, ACKs, retransmissões ajudarão... mas não serão suficientes.</li>
+			    </ul></li>
+			  </ul></li>
+			</ul>
+	  </div>
+	  <div class="column" style="width: 55%;">
+			<ul>
+			  <li><b>Abordagem:</b> transmissor aguarda ACK por um tempo &ldquo;razoável&rdquo;.
+			  <ul>
+			    <li>Retransmite pacote se ACK não é recebido neste período.</li>
+			    <li>Se o pacote (ou seu ACK) estão simplesmente atrasados (e não perdidos):
+			    <ul>
+			      <li>Retransmissão será duplicada, mas # de sequência já lida com isso.</li>
+			      <li>Receptor deve especificar # de sequência do pacote sendo reconhecido pelo ACK.</li>
+			    </ul></li>
+			    <li>Requer um <span class="alert">temporizador</span> regressivo.</li>
+			  </ul></li>
+			</ul>
+	  </div>
+	</div>
+	</section>
+
+	<section>
+	<h1>rdt3.0: Transmissor</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/rdt3_0Transmissor.svg" style="width: 70%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>rdt3.0 em Ação (I)</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/rdt3_0a1.svg" style="width: 80%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>rdt3.0 em Ação (II)</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/rdt3_0a2.svg" style="width: 80%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Desempenho do rdt3.0</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>rdt3.0 funciona, mas desempenho é péssimo.</li>
+	    <li><i>e.g.</i>, enlace de 1 Gb/s, com 15 ms de atraso de propagação, pacote de 8000 bits:</li>
+	  </ul>
+		<center>
+			<span class="math inline">\(D_{trans} = \frac{L}{R} = \frac{8000}{10^9} = 8\;\mu s\)</span>
+		</center>
+		<ul>
+		  <li><span class="math inline">\(U_{sender}\)</span>: <span class="alert">utilização</span> &mdash; fração do tempo em que transmissor efetivamente usa o canal.</li>
+		</ul>
+		<center>
+			<span class="math inline">\(U_{sender} = \frac{L/R}{RTT + L/R} = \frac{0{,}008}{30{,}008} = 0{,}00027\)</span>
+		</center>
+		<ul>
+		  <li>Se RTT=30 ms, um pacote de 1 KB é enviado a cada 30 ms.
+		  <ul>
+		    <li>Vazão de 33 kB/s em enlace de 1 Gb/s</li>
+		  </ul></li>
+		  <li>Protocolo está limitando o uso dos recursos físicos!</li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>rdt3.0: Operação do Tipo <i>Stop-and-Wait</i></h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/StopAndWaitNovo.svg" style="width: 90%;"/>
+	  </center>
+		<br>
+	  <center>
+			<span class="math inline">\(U_{sender} = \frac{L/R}{RTT + L/R} = \frac{0{,}008}{30{,}008} = 0{,}00027\)</span>
+	  </center>
+	</div>
+	</section>
+
+	<section class="secao">
+	<div class="slideContent">
+	  Protocolos Baseados em Pipeline
+	</div>
+	</section>
+
+<!--
+	<section>
+	<h1>Operação do Tipo <i>Stop-and-Wait</i></h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/StopAndWait.svg" style="width: 70%;"/>
+	  </center>
+		<br>
+	  <center>
+			<span class="math inline">\(U_{sender} = \frac{L/R}{RTT + L/R} = \frac{0{,}008}{30{,}008} = 0{,}00027\)</span>
+	  </center>
+	</div>
+	</section>
+-->
+	<section>
+	<h1>Protocolos Baseados em Pipeline</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li><b>Pipeline:</b> permite que transmissor tenha múltiplos segmentos <span class="alert">em trânsito</span>.
+	    <ul>
+	      <li><i>i.e.</i>, segmentos enviados, mas com ACK ainda pendente.</li>
+	      <li>Faixa dos números de sequência precisa ser aumentada.</li>
+	      <li><i>Buffers</i> necessários no transmissor e/ou no receptor.</li>
+	    </ul></li>
+	  </ul>
+		<center>
+		  <img src="imagens/Pipeline.svg" style="width: 70%;"/>
+		</center>
+		<ul>
+		  <li>Duas formas genéricas de protocolos baseados em pipeline: <b>go-Back-N</b> e <b>repetição seletiva</b>.</li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Pipeline: Aumentando a Utilização</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/PipelineUtilizacao.svg" style="width: 85%;"/>
+			<br>
+		  <span class="math inline">\(U_{sender} = \frac{3L/R}{RTT + L/R} = \frac{0{,}0024}{30{,}008} = 0{,}00081\)</span>
+			<br>
+			<br>
+			<span class="alert">Três vezes mais que no <i>Stop-and-Wait</i>.</span>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Protocolos Baseados em Pipeline: Visão Geral</h1>
+	<div class="slideContent">
+	  <div class="column" style="width: 50%;">
+			<ul>
+			  <li><b>Go-back-N:</b>
+			  <ul>
+			    <li>Transmissor pode ter até N segmentos em trânsito no pipeline.</li>
+			    <li>Receptor envia apenas <span class="alert">ACKs cumulativos</span>.
+			    <ul>
+			      <li>Não reconhece pacote se há um &ldquo;buraco&rdquo;.</li>
+			    </ul></li>
+			    <li>Transmissor possui um temporizador para o pacote mais antigo em trânsito.
+			    <ul>
+			      <li>De menor número de sequência.</li>
+			      <li>Quando o temporizador expira, <b>todos</b> os pacotes em trânsito são retransmitidos.</li>
+			    </ul></li>
+			  </ul></li>
+			</ul>
+	  </div>
+	  <div class="column" style="width: 50%;">
+			<ul>
+			  <li><b>Repetição Seletiva:</b>
+			  <ul>
+			    <li>Transmissor pode ter até N segmentos em trânsito no pipeline.</li>
+			    <li>Receptor envia <span class="alert">ACKs seletivos</span>.
+			    <ul>
+			      <li><i>i.e.</i>, segmentos são reconhecidos individualmente.</li>
+			    </ul></li>
+			    <li>Transmissor mantém um timer para cada pacote em trânsito.
+			    <ul>
+			      <li>Quanto temporizador expira, <b>apenas</b> segmento correspondente é retransmitido.</li>
+			    </ul></li>
+			  </ul></li>
+			</ul>
+	  </div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Go-Back-N: Transmissor</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>Cabeçalho do segmento contém campo de k bits para o # de sequência.</li>
+	    <li>&ldquo;Janela de até N&rdquo; pacotes em trânsito consecutivos.</li>
+	  </ul>
+		<center>
+		  <img src="imagens/GoBackNJanelaTransmissor.svg" style="width: 80%;"/>
+		</center>
+		<ul>
+		  <li>ACK(n): reconhece todos os pacotes, incluindo o de # de sequência n.
+		  <ul>
+		    <li><span class="alert">ACK cumulativo</span>.</li>
+		    <li>ACKs repetidos podem ser recebidos (vide receptor).</li>
+		  </ul></li>
+		  <li>Temporizador para o segmento em trânsito mais antigo.
+		  <ul>
+		    <li>Quando expira, todos os pacotes em trânsito são retransmitidos.</li>
+		  </ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Go-Back-N: Máquina de Estados do Transmissor</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/GoBackNMaquinaDeEstadosTransmissor.svg" style="width: 65%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Go-Back-N: Máquina de Estados do Receptor</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/GoBackNMaquinaDeEstadosReceptor.svg" style="width: 70%;"/>
+	  </center>
+
+		<ul>
+		  <li>Apenas ACK: sempre envia ACK para segmentos corretos reconhecendo recebimento do <span class="alert">maior # de sequência em ordem</span>.
+		  <ul>
+		    <li>Pode gerar ACKs duplicados.</li>
+		    <li>Precisa se lembrar apenas do próximo número de sequência esperado.</li>
+		  </ul></li>
+		  <li>Pacote fora de ordem:
+		  <ul>
+		    <li>Descartado (não é armazenado em <i>buffer</i>): <span class="alert">sem <i>buffer</i> de recepção</span>.</li>
+				<li>Mesmo assim, receptor gera ACK para maior # de sequência já recebido em ordem.</li>
+		  </ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Go-Back-N em Ação</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/GBNAction.svg" style="width: 80%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Repetição Seletiva</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>Receptor reconhece segmentos recebidos corretamente de forma <b>individual</b>.
+	    <ul>
+	      <li>Segmentos recebidos fora de ordem são colocados em <i>buffer</i> para posterior entrega à aplicação.</li>
+	    </ul></li>
+	    <li>Transmissor reenvia apenas segmentos para os quais o ACK ainda não foi recebido.
+	    <ul>
+	      <li>Um temporizador para cada segmento em trânsito.</li>
+	    </ul></li>
+	    <li>Janela do transmissor:
+	    <ul>
+	      <li>N números de sequência consecutivos.</li>
+	      <li>Limita número de segmentos em trânsito.</li>
+	    </ul></li>
+	  </ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Repetição Seletiva: Janelas do Transmissor e do Receptor</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/SRJanela.svg" style="width: 80%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Repetição Seletiva: Eventos</h1>
+	<div class="slideContent">
+	  <div class="column" style="width: 50%;">
+			<center>
+			  <span class="alert">Transmissor</span>
+			</center>
+			<br>
+			<ul>
+			  <li><b>Dado da aplicação:</b>
+			  <ul>
+			    <li>Se há # de sequência disponível na janela, transmita segmento.</li>
+			  </ul></li>
+			  <li><b>timeout(n):</b>
+			  <ul>
+			    <li>Retransmita pacote n, reinicie temporizador.</li>
+			  </ul></li>
+			  <li><b>ACK(n):</b>
+			  <ul>
+			    <li>Marque pacote n como recebido.</li>
+			    <li>Se n é o menor # de sequência na janela, avance base da janela para o próximo # de sequência não reconhecido/disponível.</li>
+			  </ul></li>
+			</ul>
+	  </div>
+	  <div class="column" style="width: 50%;">
+			<center>
+			  <span class="alert">Receptor</span>
+			</center>
+			<br>
+			<ul>
+			  <li>Segmento n recebido (<span class="math inline">\(rcvbase \le n < rcvbase + N\)</span>).
+			  <ul>
+			    <li>Transmita ACK(n).</li>
+			    <li>Se fora de ordem: armazene em <i>buffer</i>.</li>
+			    <li>Se em ordem, entregue todos os dados contíguos, avance janela para próxima lacuna.</li>
+			  </ul></li>
+			  <li>Segmento n recebido (<span class="math inline">\(rcvbase - N \le n < rcvbase\)</span>).
+			  <ul>
+			    <li>ACK(n).</li>
+			  </ul></li>
+			  <li>Outros:
+			  <ul>
+			    <li>Ignore.</li>
+			  </ul></li>
+			</ul>
+	  </div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Repetição Seletiva em Ação</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/SRAction.svg" style="width: 80%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Repetição Seletiva: Dilema</h1>
+	<div class="slideContent">
+	  <div class="column" style="width: 50%;">
+			<br>
+			<br>
+			<br>
+			<ul>
+			  <li>Exemplo:
+			  <ul>
+			    <li># de sequência disponíveis: 0, 1, 2, 3.</li>
+			    <li>Tamanho da janela: 3.</li>
+			    <li>Receptor não vê diferença nos dois cenários!</li>
+			    <li>No segundo, dados entregues à aplicação duplicados.</li>
+			    <li><b>Pergunta:</b> qual a relação entre o # de sequência e o tamanho da janela para evitar o problema?</li>
+			  </ul></li>
+			</ul>
+	  </div>
+	  <div class="column" style="width: 50%;">
+			<center>
+			  <img src="imagens/SRDilema.svg" style="width: 70%;"/>
+			</center>
+
+	  </div>
+	</div>
+	</section>
+
+	<section class="secao">
+	<div class="slideContent">
+	  Introdução ao TCP
+	</div>
+	</section>
+
+	<section>
+	<h1>TCP: Visão Geral [RFCs: 793, 1122, 1323, 2018, 2581]</h1>
+	<div class="slideContent">
+	  <div class="column" style="width: 50%;">
+	    <ul>
+	      <li><b>Ponto-a-ponto:</b>
+	      <ul>
+	        <li>Um transmissor, um receptor.</li>
+	      </ul></li>
+	      <li><b>Fluxo de bytes confiável, ordenado:</b>
+	      <ul>
+	        <li>Sem &ldquo;fronteiras entre mensagens&rdquo;.</li>
+	      </ul></li>
+	      <li><b>Baseado em Pipeline:</b>
+	      <ul>
+	        <li>Controle de fluxo e controle de congestionamento configuram tamanho da janela.</li>
+	      </ul></li>
+	    </ul>
+	  </div>
+		<div class="column" style="width: 50%;">
+		  <ul>
+		    <li><b>Comunicação <i>full-duplex</i></b>:
+		    <ul>
+		      <li>Dados podem fluir nas duas direções em uma mesma conexão.</li>
+		      <li>MSS: <i>Maximum Segment Size</i>.</li>
+		    </ul></li>
+		    <li><b>Orientado a conexão</b>:
+		    <ul>
+		      <li>Um <i>handshake</i> (troca de mensagens de controle) inicia os estados no transmissor, receptor <span class="alert">antes da troca de dados</span>.</li>
+		    </ul></li>
+		    <li><b>Controle de fluxo:</b>
+		    <ul>
+		      <li>Transmissor não afogará o receptor.</li>
+		    </ul></li>
+		  </ul>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Estrutura de um Segmento TCP</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/TCPFormato.svg" style="width: 70%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>TCP: # de Sequência, ACKs (I)</h1>
+	<div class="slideContent">
+	  <div class="column" style="width: 50%;">
+			<ul>
+			  <li><b>Números de sequência:</b>
+			  <ul>
+			    <li>&ldquo;Índice&rdquo; do primeiro byte do segmento no fluxo de bytes.</li>
+			  </ul></li>
+			  <li><b>ACKs:</b>
+			  <ul>
+			    <li>Número de sequência do próximo byte esperado pelo receptor.</li>
+			    <li>ACKs cumulativos.</li>
+			  </ul></li>
+			  <li><span class="alert">Pergunta:</span> como o receptor lida com segmentos fora de ordem?
+			  <ul>
+			    <li>Resposta: especificação do TCP não diz &mdash; decisão do implementador.</li>
+			  </ul></li>
+			</ul>
+	  </div>
+	  <div class="column" style="width: 50%;">
+			<center>
+			  <img src="imagens/TCPSeqNum.svg" style="width: 70%;"/>
+			</center>
+
+	  </div>
+	</div>
+	</section>
+
+	<section>
+	<h1>TCP: # de Sequência, ACKs (II)</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/TCPAcks.svg" style="width: 50%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section class="secao">
+	<div class="slideContent">
+		<i>Timeout</i> do TCP
+	</div>
+	</section>
+
+	<section>
+	<h1>TCP: RTT, Timeout (I)</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li><span class="alert">Pergunta:</span> como o <i>timeout</i> do temporizador do TCP é configurado?
+				<ul>
+					<li>Precisa ser mais longo que o RTT.
+					<ul>
+						<li>Mas RTT varia.</li>
+					</ul></li>
+					<li><b>Curto demais:</b> <i>timeout</i> prematuro, retransmissões desnecessárias.</li>
+					<li><b>Longo demais:</b> reação lenta às perdas de segmentos.</li>
+				</ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li><span class="alert">Pergunta:</span> como estimar o RTT?
+				<ul>
+					<li><span class="alert"><tt>SampleRTT</tt>:</span> tempo medido desde a transmissão do segmento até recepção do ACK.
+					<ul>
+						<li>Ignora retransmissões.</li>
+					</ul></li>
+					<li><tt>SampleRTT</tt> varia muito, é melhor ter uma estimativa mais &ldquo;suave&rdquo;.
+					<ul>
+						<li>Calcular média sobre várias amostras recentes, não usar apenas a última.</li>
+					</ul></li>
+				</ul></li>
+			</ul>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>TCP: RTT, Timeout (II)</h1>
+	<div class="slideContent">
+		<center>
+			<span class="math inline">\(\text{EstimatedRTT} = (1-\alpha)\times\text{EstimatedRTT} + \alpha\times\text{SampleRTT}\)</span>
+		</center>
+		<ul>
+			<li>Média Movente Exponencialmente Ponderada.</li>
+			<li>Influência das amostras passadas decai exponencialmente.</li>
+			<li>Valor típico de <span class="math inline">\(\alpha\)</span>: 0,125.</li>
+		</ul>
+		<center>
+			<img src="imagens/EstimativaRTT.svg" style="width: 50%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>TCP: RTT, Timeout (III)</h1>
+	<div class="slideContent">
+		<ul>
+			<li><b>Timeout do temporizador:</b> <tt>EstimatedRTT</tt> mais &ldquo;margem de segurança&rdquo;.
+			<ul>
+				<li>Quanto maior o <tt>EstimatedRTT</tt>, maior a margem.</li>
+			</ul></li>
+			<li>Estima-se o <span class="alert">desvio</span> do <tt>SampleRTT</tt> em relação ao <tt>EstimatedRTT</tt>:</li>
+		</ul>
+		<br>
+		<center>
+			<span class="math inline">\(\text{DevRTT} = (1-\beta)\times\text{DevRTT} + \beta\times\|\text{SampleRTT}-\text{EstimatedRTT}\|\)</span>
+		</center>
+		<br>
+		<ul>
+			<li>Tipicamente, <span class="math inline">\(\beta = 0{,}25\)</span>.</li>
+		</ul>
+		<br>
+		<center>
+			<img src="imagens/timeout.svg" style="width: 70%;"/>
+		</center>
+
+	</div>
+	</section>
+
+	<section class="secao">
+	<div class="slideContent">
+		TCP: Transmissão Confiável de Dados
+	</div>
+	</section>
+
+	<section>
+	<h1>TCP: Transmissão Confiável de Dados</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li>TCP cria serviço de transmissão confiável sobre serviço não confiável do IP.
+				<ul>
+					<li>Utiliza pipeline.</li>
+					<li>ACKs cumulativos.</li>
+					<li>Único temporizador de retransmissão.</li>
+				</ul></li>
+				<li>Retransmissões disparadas por:
+				<ul>
+					<li>Eventos de <i>timeout</i>.</li>
+					<li>ACKs duplicados.</li>
+				</ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li>Vamos considerar inicialmente um transmissor TCP simplificado.
+				<ul>
+					<li>Ignorando ACKs duplicados.</li>
+					<li>Ignorando controle de fluxo, controle de congestionamento.</li>
+				</ul></li>
+			</ul>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Eventos do Transmissor TCP</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li><b>Dados recebidos da aplicação:</b>
+				<ul>
+					<li>Cria segmento com # de sequência.</li>
+					<li># de sequência é <span class="alert">índice da posição do primeiro byte no fluxo de dados da aplicação</span>.</li>
+					<li>Inicia o temporizador, se ele já não estiver rodando.
+					<ul>
+						<li>Pense no temporizador como para o segmento mais antigo com ACK pendente.</li>
+						<li>Intervalo de expiração: <tt>TimeOutInterval</tt>.</li>
+					</ul></li>
+				</ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li><b>Estouro de temporizador:</b>
+				<ul>
+					<li>Retransmita segmento que causou o estouro.</li>
+					<li>Reinicie o temporizador.</li>
+				</ul></li>
+				<li><b>Recepção de ACK:</b>
+				<ul>
+					<li>Se ACK reconhece segmentos ainda pendentes:
+					<ul>
+						<li>Atualize os números de sequência já reconhecidos.</li>
+						<li><span class="alert">Reinicie o temporizador se ainda há segmentos não reconhecidos</span>.</li>
+					</ul></li>
+				</ul></li>
+			</ul>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Transmissor TCP (Simplificado)</h1>
+	<div class="slideContent">
+		<center>
+			<img src="imagens/TCPSender.svg" style="width: 70%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>TCP: Cenários de Retransmissão (I)</h1>
+	<div class="slideContent">
+		<center>
+			<img src="imagens/TCPCenarios.svg" style="width: 70%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>TCP: Cenários de Retransmissão (II)</h1>
+	<div class="slideContent">
+		<center>
+			<img src="imagens/TCPCenarios2.svg" style="width: 35%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Geração de ACKs pelo TCP [RFC 1122, RFC 2581]</h1>
+	<div class="slideContent">
+		<center>
+			<table>
+				<tr>
+					<th>
+						Evento no Receptor
+					</td>
+					<th>
+						Ação Realizada
+					</td>
+				</th>
+			</tr>
+				<tr>
+					<td>
+						Chegada de segmento em ordem com # de seq. esperado. Já foram enviados ACKs para todos os números de sequência menores que o recebido.
+					</td>
+					<td>
+						ACK atrasado. Esperar até 500 ms pelo próximo segmento. Se nenhum novo segmento chegar, enviar o ACK.
+					</td>
+				</tr>
+				<tr>
+					<td>
+						Chegada de segmento em ordem com # de seq. esperado. Segmento anterior teve seu ACK atrasado (envio pendente).
+					</td>
+					<td>
+						Imediatamente enviar ACK cumulativo reconhecendo ambos os segmentos.
+					</td>
+				</tr>
+				<tr>
+					<td>
+						Chegada de segmento fora de ordem, com # de seq. maior que o esperado. Lacuna detectada.
+					</td>
+					<td>
+						Imediatamente enviar um <span class="alert">ACK duplicado</span>, indicando o # de seq. do próximo byte esperado.
+					</td>
+				</tr>
+				<tr>
+					<td>
+						Chegada de segmento que parcialmente ou completamente preenche uma lacuna.
+					</td>
+					<td>
+						Imediatamente enviar um ACK, desde que o segmento comece no início da lacuna.
+					</td>
+				</tr>
+			</table>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1><i>Fast Retransmit</i></h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li>Tempo de expiração do temporizador normalmente é relativamente longo.
+				<ul>
+					<li>Atraso longo antes do reenvio do pacote perdido.</li>
+				</ul></li>
+				<li>Detecção de segmentos perdidos através de ACKs duplicados.
+				<ul>
+					<li>Transmissor geralmente envia vários segmentos em sequência.</li>
+					<li>Se um segmento é perdido, provavelmente haverá múltiplos ACKs duplicados.</li>
+				</ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50%;">
+			<center>
+			<div class="block" style="width:550px;">
+					<div class="blockTitle" style="width: 100%;">
+							<p>TCP Fast Retransmist</p>
+					</div>
+					<div class="blockBody">
+							Se transmissor recebe 3 ACKs repetidos para um mesmo número de sequência (&ldquo;ACK duplicado triplo&rdquo;), reenvie segmento com menor # de seq.
+							<ul>
+								<li>Provavelmente, segmento foi perdido. Então, não esperamos pelo <i>timeout</i>.</li>
+							</ul>
+					</div>
+			</div>
+			</center>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1><i>Fast Retransmit</i>: Exemplo</h1>
+	<div class="slideContent">
+		<center>
+			<img src="imagens/FastRetransmit.svg" style="width: 30%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section class="secao">
+	<div class="slideContent">
+		TCP: Controle de Fluxo
+	</div>
+	</section>
+
+	<section>
+	<h1>TCP: Controle de Fluxo (I)</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<br>
+			<ul>
+				<li>Aplicação pode ler dados do <i>buffer</i> do socket TCP mais devagar que estes chegam ao <i>host</i> de destino.</li>
+			</ul>
+			<br>
+			<br>
+			<center>
+			<div class="block" style="width:550px;">
+					<div class="blockTitle" style="width: 100%;">
+							<p>Controle de Fluxo</p>
+					</div>
+					<div class="blockBody">
+							Receptor controla transmissor, de forma que transmissor não sobrecarregue o <i>buffer</i> do receptor transmitindo muitos dados, rápido demais.
+					</div>
+			</div>
+			</center>
+		</div>
+		<div class="column" style="width: 50%;">
+			<center>
+				<img src="imagens/TCPFlowControl.svg" style="width: 70%;"/>
+			</center>
+
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>TCP: Controle de Fluxo (II)</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li>Receptor &ldquo;anuncia&rdquo; espaço livre no seu <i>buffer</i>, incluindo este valor no campo <tt>rwnd</tt> do cabeçalho TCP dos segmentos enviados do receptor para o transmissor.
+				<ul>
+					<li>Tamanho do <i>buffer</i> de recepção do TCP pode ser alterado via API de sockets (valor padrão típico é 4096 bytes).</li>
+					<li>Muitos sistemas operacionais ajustam o valor automaticamente.</li>
+				</ul></li>
+				<li>Transmissor limita quantidade de segmentos pendentes (&ldquo;em trânsito&rdquo;) ao <tt>rwnd</tt> do receptor.</li>
+				<li>Garante que não haverá <i>overflow</i> no <i>buffer</i> do receptor.</li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50%;">
+			<br>
+			<br>
+			<br>
+			<center>
+				<img src="imagens/TCPFlowControlBuffer.svg" style="width: 70%;"/>
+			</center>
+		</div>
+	</div>
+	</section>
+
+	<section class="secao">
+	<div class="slideContent">
+		TCP: Gerenciamento da Conexão
+	</div>
+	</section>
+
+	<section>
+	<h1>Gerenciamento da Conexão</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Antes de trocar dados, transmissor e receptor fazem um &ldquo;handshake&rdquo;.
+			<ul>
+				<li>Concordam em estabelecer conexão.</li>
+				<li>Acordam parâmetros da conexão.</li>
+			</ul></li>
+		</ul>
+		<br>
+		<center>
+			<img src="imagens/Gerenciamento.svg" style="width: 80%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Concordando em Estabelecer uma Conexão (I)</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<center>
+				<b>Handshake de duas fases:</b>
+				<br>
+				<img src="imagens/2wayhandshake.svg" style="width: 70%;"/>
+			</center>
+		</div>
+		<div class="column" style="width: 50%;">
+			<br>
+			<br>
+			<br>
+			<br>
+			<ul>
+				<li><span class="alert">Pergunta:</span> um <i>handshake</i> de duas fases sempre irá funcionar em uma rede?
+				<ul>
+					<li>Atrasos variáveis.</li>
+					<li>Mensagens retransmitidas.
+					<ul>
+						<li><i>e.g.</i>, <tt>req_conn(x)</tt>, devido a perda de mensagem.</li>
+					</ul></li>
+					<li>Reordenação de mensagem.</li>
+					<li>É impossível &ldquo;ver&rdquo; o outro lado.</li>
+				</ul></li>
+			</ul>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Concordando em Estabelecer uma Conexão (II)</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Cenários de falha do 2-way handshake:</li>
+		</ul>
+		<br>
+		<div class="column" style="width: 50%;">
+			<center>
+				<img src="imagens/2wayhandshakeFalha1.svg" style="width: 70%;"/>
+			</center>
+		</div>
+		<div class="column" style="width: 50%;">
+			<center>
+				<img src="imagens/2wayhandshakeFalha2.svg" style="width: 70%;"/>
+			</center>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>TCP: <i>3-way handshake</i></h1>
+	<div class="slideContent">
+		<center>
+			<img src="imagens/3wayhandshake.svg" style="width: 80%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>TCP: Máquina de Estados do <i>3-way handshake</i></h1>
+	<div class="slideContent">
+		<center>
+			<img src="imagens/3wayhandshakeFSM.svg" style="width: 70%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>TCP: Fechando uma Conexão (I)</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Cliente, servidor fecham cada um seu lado da conexão.
+			<ul>
+				<li>Enviam segmento TCP com bit FIN = 1.</li>
+			</ul></li>
+			<li>Sempre respondem segmento com FIN = 1 com um ACK.
+			<ul>
+				<li>Ao receber um FIN, ACK pode ser combinado também com um FIN.</li>
+			</ul></li>
+			<li>Protocolo também lida com troca simultânea de FINs.</li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>TCP: Fechando uma Conexão (II)</h1>
+	<div class="slideContent">
+		<center>
+			<img src="imagens/TCPFIN.svg" style="width: 70%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section class="secao">
+	<div class="slideContent">
+		Controle de Congestionamento em Redes
+	</div>
+	</section>
+
+	<section>
+	<h1>Princípios de Controle de Congestionamento</h1>
+	<div class="slideContent">
+		<ul>
+			<li><b>Congestionamento:</b>
+			<ul>
+				<li>Informalmente: &ldquo;fontes demais gerando tráfego demais para a <span class="alert">rede</span>&rdquo;.</li>
+				<li><span class="alert">Diferente do controle de fluxo</span>.</li>
+				<li>Manifestações:
+				<ul>
+					<li>Pacotes perdidos (<i>overflow</i> de <i>buffers</i> nos roteadores).</li>
+					<li>Longos atrasos (enfileiramento nos <i>buffers</i> dos roteadores).</li>
+				</ul></li>
+				<li>Um dos 10 problemas mais importantes em redes!</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Causas/Custos do Congestionamento: Cenário 1</h1>
+	<div class="slideContent">
+		<div style="height: 300px;">
+			<div class="column" style="width: 40%;">
+				<ul>
+					<li>Dois transmissores, dois receptores.</li>
+					<li>Um roteador, <i>buffers</i> <span class="alert">infinitos</span>.</li>
+					<li>Capacidade do enlace de saída: R.</li>
+					<li>Sem retransmissões.</li>
+				</ul>
+			</div>
+			<div class="column" style="width: 60%;">
+				<center>
+					<img src="imagens/CongestionamentoCenario1.svg" style="width: 95%;"/>
+				</center>
+			</div>
+		</div>
+		<div class="column" style="width: 50%;">
+			<center>
+				<img src="imagens/CongestionamentoCenario1Vazao.svg" style="width: 50%;"/>
+				<br>
+				<b>Vazão máxima por conexão: R/2.</b>
+			</center>
+		</div>
+		<div class="column" style="width: 50%;">
+			<center>
+				<img src="imagens/CongestionamentoCenario1Atraso.svg" style="width: 35%;"/>
+				<br>
+				<b>Atrasos altos à medida que taxa de chegada <span class="math inline">\(\lambda_{in}\)</span>, se aproxima da capacidade.</b>
+			</center>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Causas/Custos do Congestionamento: Cenário 2 (I)</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Um roteador, <i>buffer</i> <span class="alert">finito</span>.</li>
+			<li>Transmissor retransmite pacotes após <i>timeout</i>.
+			<ul>
+				<li>Entrada da camada de aplicação do transmissor = saída da camada de aplicação do receptor: <span class="math inline">\(\lambda_{in} = \lambda_{out}\)</span>.</li>
+				<li>Mas a camada de transporte inclui retransmissões: <span class="math inline">\(\lambda_{in}^{'} \ge \lambda_{in}\)</span>.</li>
+			</ul></li>
+		</ul>
+		<center>
+			<img src="imagens/CongestionamentoCenario2.svg" style="width: 80%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Causas/Custos do Congestionamento: Cenário 2 (II)</h1>
+	<div class="slideContent">
+		<div style="height: 180px;">
+			<div class="column" style="width: 50%;">
+				<ul>
+					<li><b>Idealização: conhecimento perfeito</b>.
+					<ul>
+						<li>Transmissor só transmite quando <span class="alert">sabe que há espaço disponível no <i>buffer</i> do roteador</span>.</li>
+					</ul></li>
+				</ul>
+			</div>
+			<div class="column" style="width: 50%;">
+				<center>
+					<img src="imagens/CongestionamentoCenario2IdealVazao.svg" style="width: 35%;"/>
+				</center>
+			</div>
+		</div>
+		<br>
+		<center>
+			<img src="imagens/CongestionamentoCenario2Ideal.svg" style="width: 80%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Causas/Custos do Congestionamento: Cenário 2 (III)</h1>
+	<div class="slideContent">
+		<div style="height: 180px;">
+			<div class="column" style="width: 50%;">
+				<ul>
+					<li><b>Idealização: perdas conhecidas</b>.
+					<ul>
+						<li>Pacotes podem ser perdidos, descartados devido a <i>buffers</i> cheios.</li>
+						<li>Transmissor só retransmite quando <span class="alert">sabe que pacote foi perdido</span>.</li>
+					</ul></li>
+				</ul>
+			</div>
+			<div class="column" style="width: 50%;">
+				<!--
+				<center>
+					<img src="imagens/CongestionamentoCenario2PerdaConhecidaVazao.svg" style="width: 35%;"/>
+				</center>-->
+			</div>
+		</div>
+		<br>
+		<center>
+			<img src="imagens/CongestionamentoCenario2PerdaConhecida.svg" style="width: 80%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Causas/Custos do Congestionamento: Cenário 2 (IV)</h1>
+	<div class="slideContent">
+		<div style="height: 180px;">
+			<div class="column" style="width: 50%;">
+				<ul>
+					<li><b>Idealização: perdas conhecidas</b>.
+					<ul>
+						<li>Pacotes podem ser perdidos, descartados devido a <i>buffers</i> cheios.</li>
+						<li>Transmissor só retransmite quando <span class="alert">sabe que pacote foi perdido</span>.</li>
+					</ul></li>
+				</ul>
+			</div>
+			<div class="column" style="width: 50%;">
+				<center>
+					<img src="imagens/CongestionamentoCenario2PerdaConhecidaVazao.svg" style="width: 70%;"/>
+				</center>
+			</div>
+		</div>
+		<br>
+		<center>
+			<img src="imagens/CongestionamentoCenario2PerdaConhecida2.svg" style="width: 80%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Causas/Custos do Congestionamento: Cenário 2 (V)</h1>
+	<div class="slideContent">
+		<div style="height: 180px;">
+			<div class="column" style="width: 50%;">
+				<ul>
+					<li><b>Realistico: duplicatas</b>.
+					<ul>
+						<li>Pacotes podem ser perdidos, descartados devido a <i>buffers</i> cheios.</li>
+						<li>Temporizador pode expirar prematuramente, enviando <span class="alert">várias</span> cópias que são entregues.</li>
+					</ul></li>
+				</ul>
+			</div>
+			<div class="column" style="width: 50%;">
+				<center>
+					<img src="imagens/CongestionamentoCenario2RealisticoVazao.svg" style="width: 70%;"/>
+				</center>
+			</div>
+		</div>
+		<br>
+		<center>
+			<img src="imagens/CongestionamentoCenario2Realistico.svg" style="width: 80%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Causas/Custos do Congestionamento: Cenário 2 (VI)</h1>
+	<div class="slideContent">
+		<div style="height: 200px;">
+			<div class="column" style="width: 50%;">
+				<ul>
+					<li><b>Realistico: duplicatas</b>.
+					<ul>
+						<li>Pacotes podem ser perdidos, descartados devido a <i>buffers</i> cheios.</li>
+						<li>Temporizador pode expirar prematuramente, enviando <span class="alert">várias</span> cópias que são entregues.</li>
+					</ul></li>
+				</ul>
+			</div>
+			<div class="column" style="width: 50%;">
+				<center>
+					<img src="imagens/CongestionamentoCenario2RealisticoVazao.svg" style="width: 70%;"/>
+				</center>
+			</div>
+		</div>
+		<br>
+		<ul>
+			<li><b>&ldquo;Custos&rdquo; do congestionamento:</b>
+			<ul>
+				<li>Mais trabalho (retransmissões) para um dado &ldquo;goodput&rdquo;.</li>
+				<li>Retransmissões desnecessárias: enlace carrega múltiplas cópias do mesmo pacote.
+				<ul>
+					<li>Reduz goodput.</li>
+				</ul></li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Causas/Custos do Congestionamento: Cenário 3</h1>
+	<div class="slideContent">
+		<div style="height=200px;">
+			<div class="column" style="width: 40%;">
+				<ul>
+					<li>Quatro transmissores.</li>
+					<li>Caminhos de múltiplos saltos.</li>
+					<li>Temporizadores/retransmissões.</li>
+				</ul>
+			</div>
+			<div class="column" style="width: 60%;">
+				<ul>
+					<li><span class="alert">Pergunta:</span> o que acontece quando <b><span class="math inline">\(\lambda_{in},\lambda_{in}^{'}\)</span></b> aumentam?</li>
+					<li><span class="alert">Resposta:</span> todos os pacotes azuis são descartados, vazão do fluxo azul cai a zero.</li>
+				</ul>
+			</div>
+		</div>
+		<center>
+			<img src="imagens/CongestionamentoCenario3.svg" style="width: 60%;"/>
+		</center>
+
+	</div>
+	</section>
+
+	<section>
+	<h1>Causas/Custos do Congestionamento: Cenário 3 (II)</h1>
+	<div class="slideContent">
+		<center>
+			<img src="imagens/CongestionamentoCenario3II.svg" style="width: 70%;"/>
+		</center>
+		<ul>
+			<li><span class="alert">Outro &ldquo;custo&rdquo; do congestionamento:</span>
+			<ul>
+				<li>Quando pacote é descartado, qualquer capacidade de transmissão já utilizada é desperdiçada!</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Abordagens para Controle de Congestionamento</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Duas linhas gerais:</li>
+		</ul>
+		<div class="column" style="width: 50%;">
+			<center>
+			<div class="block" style="width:550px;">
+					<div class="blockTitle" style="width: 100%;">
+							<p>Fim-a-fim</p>
+					</div>
+					<div class="blockBody">
+							<ul>
+								<li>Sem <i>feedback</i> explícito da rede.</li>
+								<li>Congestionamento <b>inferido</b> a partir de atrasos, perdas observados pelos sistemas finais.</li>
+								<li>Abordagem usada pelo TCP.</li>
+							</ul>
+					</div>
+			</div>
+			</center>
+		</div>
+		<div class="column" style="width: 50%;">
+			<center>
+			<div class="block" style="width:550px;">
+					<div class="blockTitle" style="width: 100%;">
+							<p>Asistido pela rede</p>
+					</div>
+					<div class="blockBody">
+							<ul>
+								<li>Roteadores proveem <i>feedback</i>.
+								<ul>
+									<li>Um único bit indicando congestionamento (SNA, DECbit, ECN do TCP/IP, ATM).</li>
+									<li>Informação explícita da taxa a ser utilizada.</li>
+								</ul></li>
+							</ul>
+					</div>
+			</div>
+			</center>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Estudo de Caso: Controle de Congestionamento do ABR no ATM (I)</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li><b>ABR: <i>Available Bit Rate</i>:</b>
+				<ul>
+					<li>&ldquo;Serviço elástico&rdquo;.</li>
+					<li>Se o caminho está &ldquo;desocupado&rdquo;:
+					<ul>
+						<li>Transmissor deve usar capacidade disponível.</li>
+					</ul></li>
+					<li>Se caminho está congestionado:
+					<ul>
+						<li>Transmissor reduz taxa para o mínimo garantido.</li>
+					</ul></li>
+				</ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li><b>Células RM (<i>Resource Management</i>)</b>:
+				<ul>
+					<li>Enviadas pelo transmissor entrelaçadas com as de dados.</li>
+					<li>Dois bits na célula RM são marcados pelos comutadores (&ldquo;assistido pela rede&rdquo;):
+					<ul>
+						<li><span class="alert">Bit NI:</span> não aumente a taxa (congestionamento moderado).</li>
+						<li><span class="alert">Bit CI:</span> indicador de congestionamento.</li>
+					</ul></li>
+					<li>Células RM são devolvidas ao transmissor pelo receptor, mantendo-se os bits intactos.</li>
+				</ul></li>
+			</ul>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Estudo de Caso: Controle de Congestionamento do ABR no ATM (II)</h1>
+	<div class="slideContent">
+		<center>
+			<img src="imagens/ATM.svg" style="width: 70%;"/>
+		</center>
+		<ul>
+			<li>Campo ER (<i>Explicit Rate</i>) de dois bytes na célula RM.
+			<ul>
+				<li>Comutador congestionado pode reduzir valor do ER.</li>
+				<li>Taxa de transmissão do transmissor será taxa suportada no gargalo.</li>
+			</ul></li>
+			<li>Bit EFCI nas células de dados: colocado em 1 por comutadores congestionados.
+			<ul>
+				<li>Se célula de dados precedendo RM tem bit EFCI igual a 1, receptor marca o bit CI na célula RM enviada de volta.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section class="secao">
+	<div class="slideContent">
+		Controle de Congestionamento do TCP
+	</div>
+	</section>
+
+	<section>
+	<h1>Controle de Congestionamento do TCP</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 60%;">
+			<center>
+				<img src="imagens/cwnd.svg" style="width: 70%;"/>
+			</center>
+			<ul>
+				<li>Transmissor limita taxa de transmissão:</li>
+				<center>
+					<br>
+					<div style="width: 97%; border: 2px solid #c33;">
+						<span class="math inline">\(UltimoByteEnviado - \\UltimoByteConfirmado \le cwnd\)</span>
+					</div>
+					<br>
+				</center>
+				<li><b>cwnd</b> é dinâmica, função do congestionamento percebido da rede.</li>
+			</ul>
+		</div>
+		<div class="column" style="width: 40%;">
+			<ul>
+				<li>Taxa de transmissão do TCP:
+				<ul>
+					<li>Aproximadamente, envia cwnd bytes e espera RTT pelos ACKs, e então envia mais dados.</li>
+				</ul></li>
+			</ul>
+			<center>
+				<div style="width: 50%; border: 2px solid #c33; padding: 5px;">
+					<span class="math inline">\(taxa = \frac{cwnd}{RTT}\;B/s\)</span>
+				</div>
+			</center>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1><i>Slow Start</i></h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<br>
+			<br>
+			<br>
+			<br>
+			<ul>
+				<li>Quando a conexão começa, aumente a taxa exponencialmente até que <b>cwnd &ge; ssthresh</b>.
+				<ul>
+					<li>Inicialmente, <b>cwnd = 1 MSS</b>.</li>
+					<li>Dobra a cada RTT.</li>
+					<li>Equivalente a aumentar em 1 MSS a cada ACK recebido.</li>
+				</ul></li>
+				<li><b>Resumo:</b> taxa inicial é baixa, <span class="alert">mas aumenta rapidamente</span>.</li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50%;">
+			<center>
+				<img src="imagens/SlowStart.svg" style="width: 70%;"/>
+			</center>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Controle de Congestionamento do TCP: <i>Congestion Avoidance</i></h1>
+	<div class="slideContent">
+		<ul>
+			<li>Ocorre quando <b>cwnd &ge; sstresh</b>.</li>
+			<li><b>Abordagem:</b> transmissor aumenta taxa de transmissão (tamanho da janela), prospectando capacidade utilizável até que perda ocorra.
+			<ul>
+				<li><b>Incremento aditivo:</b> aumenta a <b>cwnd</b> em 1 MSS a cada RTT até que perda seja detectada.</li>
+				<li><b>Decremento multiplicativo:</b> corta <b>cwnd</b> pela metade após evento de perda.</li>
+			</ul></li>
+			<li>Fase <span class="alert">mais conservadora que o <i>slow start</i></span>.</li>
+		</ul>
+		<center>
+			<img src="imagens/AIMD.svg" style="width: 70%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>TCP: Detectando e Reagindo a Perdas</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Perda indicada por estouro de temporizador:
+			<ul>
+				<li><b>cwnd</b> volta para 1 MSS.</li>
+				<li>Janela cresce exponencialmente (<i>slow start</i>) até limiar, depois cresce linearmente (AIMD).</li>
+			</ul></li>
+			<li>Perda indicada por 3 ACKs duplicados (<span class="alert">TCP Reno</span>):
+			<ul>
+				<li>ACKs duplicados indicam que a rede ainda é capaz de entregar alguns segmentos.</li>
+				<li><b>cwnd</b> é cortada pela metade e depois cresce linearmente.</li>
+				<li>Mecanismo de <b><i>Fast Recovery</i></b>.</li>
+			</ul></li>
+			<li><span class="alert">TCP Tahoe</span> sempre volta janela a 1 MSS (tanto em estouro de temporizador, quanto para 3 ACKs duplicados).
+			<ul>
+				<li><i>i.e.</i>, não existe <i>fast recovery</i>.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>TCP: Alternando entre <i>Slow Start</i> e <i>Congestion Avoidance</i></h1>
+	<div class="slideContent">
+		<div style="height: 400px;">
+			<div class="column" style="width: 35%;">
+				<br>
+				<br>
+				<br>
+				<ul>
+					<li><span class="alert">Pergunta: </span>quando o crescimento exponencial deve alternar para linear?</li>
+					<li><span class="alert">Resposta: </span>quando a <b>cwnd</b> chega à metade do seu valor antes do <i>timeout</i>.</li>
+				</ul>
+			</div>
+			<div class="column" style="width: 65%;">
+				<center>
+					<img src="imagens/SSToCA.svg" style="width: 90%;"/>
+				</center>
+			</div>
+		</div>
+		<br>
+		<ul>
+			<li><span class="alert">Implementação:</span>
+			<ul>
+				<li>Variável <b>ssthresh</b>.</li>
+				<li>Em um evento de perda, <b>ssthresh</b> recebe metade da <b>cwnd</b> imediatamente antes da perda.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Controle de Congestionamento do TCP Reno: Sumário</h1>
+	<div class="slideContent">
+		<center>
+			<img src="imagens/TCPCCSumario.svg" style="width: 70%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Vazão do TCP</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Calcular a vazão média como função do tamanho da janela, RTT?
+			<ul>
+				<li>Ignorar <i>slow start</i>, assumir que sempre há dados a enviar.</li>
+			</ul></li>
+			<li>W: tamanho da janela (medida em bytes) quando a perda ocorre.
+			<ul>
+				<li>Tamanho médio da janela (bytes em trânsito) é <span class="math inline">\(\frac{3W}{4}\)</span.></li>
+				<li>Vazão média é <span class="math inline">\(\frac{3}{4}\times\frac{W}{RTT}\)</span>.</li>
+			</ul></li>
+		</ul>
+		<center>
+			<img src="imagens/TCPVazao.svg" style="width: 50%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Futuro do TCP: Canais &ldquo;Longos&rdquo; e de Alta Capacidade</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Exemplo: segmentos de 1500 bytes, RTT de 100 ms, deseja-se vazão de 10 Gb/s.</li>
+			<li>Requer W = 83333 segmentos em trânsito.</li>
+			<li>Vazão TCP em termos da probabilidade de perda de segmentos L [Mathis 1997]:</li>
+			<center>
+				<br>
+				<span class="math inline">\(T_{TCP} = \frac{1{,}22\cdot MSS}{RTT\cdot\sqrt{L}}\)</span>
+				<br>
+			</center>
+			<li>Para alcançar uma vazão de 10 Gb/s é necessária uma perda L = 2x10<sup>-10</sup>.
+			<ul>
+				<li><span class="alert">Extremamente baixa!</span></li>
+			</ul></li>
+			<li>Novas versões do TCP para canais/redes de alta velocidade.</li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>TCP: Justiça</h1>
+	<div class="slideContent">
+		<ul>
+			<li><b>Objetivo:</b> se k conexões TCP dividem o mesmo enlace de gargalo de capacidade R, cada conexão deveria obter uma taxa média de <span class="math inline">\(\frac{R}{K}\)</span>.</li>
+		</ul>
+		<br>
+		<center>
+			<img src="imagens/FairnessGoal.svg" style="width: 50%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Por que o TCP é Justo?</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Duas conexões competindo:
+			<ul>
+				<li>Crescimento aditivo sempre aumenta janela em 1 MSS.</li>
+				<li>Decremento multiplicativo reduz pela metade.</li>
+			</ul></li>
+		</ul>
+		<br>
+		<center>
+			<img src="imagens/TCPFairness.svg" style="width: 60%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Justiça: Mais</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li><b>Justiça e UDP:</b>
+				<ul>
+					<li>Aplicações multimidia muitas vezes não usam TCP.
+					<ul>
+						<li>Não querem que taxa seja reduzida pelo controle de congestionamento.</li>
+					</ul></li>
+					<li>Ao invés disso, usam UDP.
+					<ul>
+						<li>Transmitem a uma taxa constante, toleram perdas.</li>
+					</ul></li>
+				</ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li><b>Justiça, conexões TCP paralelas:</b>
+				<ul>
+					<li>Aplicação pode abrir múltiplas conexões simultâneas entre par de <i>hosts</i>.</li>
+					<li><i>Browsers</i> fazem isso muitas vezes.</li>
+					<li><i>e.g.</i>, enlace com capacidade R e 9 conexões TCP existentes.
+					<ul>
+						<li>Nova aplicação abre 1 conexão TCP, recebe vazão de <span class="math inline">\(\frac{R}{10}\)</span>.</li>
+						<li>Nova aplicação abre 11 conexões TCP, recebe vazão de <span class="math inline">\(\frac{11R}{20} \gt \frac{R}{2}\)</span>.</li>
+					</ul></li>
+				</ul></li>
+			</ul>
+		</div>
+	</div>
+	</section>
+				
+	<!-- {{{{ dzslides core
+	#
+	#
+	#     __  __  __       .  __   ___  __
+	#    |  \  / /__` |    | |  \ |__  /__`
+	#    |__/ /_ .__/ |___ | |__/ |___ .__/ core :€
+	#
+	#
+	# The following block of code is not supposed to be edited.
+	# But if you want to change the behavior of these slides,
+	# feel free to hack it!
+	#
+	-->
+
+    <!-- More CSS -->
+	<link href='../template/css/slides.css' id="slides" rel='stylesheet' type='text/css'>
+	<link href='../template/css/presentationSpecific2.css' id="presentationSpecific2" rel='stylesheet' type='text/css'>
+
+    <!-- More Javascript -->
+	<script type="text/javascript" src="../template/js/dz.js"></script>
+
+	<!-- More CSS -->
+	<link href='../template/css/notesSpecific.css' id="notesSpecific" rel='stylesheet' type='text/css'>
+	<link href='../template/css/printSpecific.css' id="printSpecific" rel='stylesheet' type='text/css'>
+</body>
+</html>

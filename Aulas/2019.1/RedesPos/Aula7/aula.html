@@ -1,0 +1,2620 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <!-- Meta info -->
+		<meta charset="utf-8">
+		<meta name="shortauthor" content="Diego Passos"/>
+		<meta name="shorttitle" content="Roteamento (II), Camada de Enlace"/>
+		<meta name="shortevent" content="Redes de Computadores"/>
+		<title>Redes de Computadores: Aula 7</title>
+
+		<!-- Math support -->
+		<script type="text/x-mathjax-config">
+		MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+			MathJax.InputJax.TeX.Definitions.number = /^(?:[0-9]+(?:\.[0-9]{3})*(?:\{,\}[0-9]*)*|\{,\}[0-9]+)/
+		});
+		</script>
+		<!--<script src="js/plotly-latest.min.js"></script>-->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+		<script src="../../../../../MathJax-2.6-latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+		<script type="text/javascript" src="../template/js/dz_pre.js"></script>
+
+		<!-- Fonts -->
+		<link href='https://fonts.googleapis.com/css?family=Lora:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
+		<link href='../../../../../Fonts/Lora/lora.css' rel='stylesheet' type='text/css'>
+
+		<!-- CSS -->
+		<link href='../template/css/template.css' id="template" rel='stylesheet' type='text/css'>
+		<link href='../template/css/presentationSpecific.css' id="presentationSpecific" rel='stylesheet' type='text/css'>
+
+
+		<!-- Javascript -->
+		<!--
+		<script type="text/javascript" src="../template/js/audio.js"></script>
+		<script src="js/term.js" charset="utf-8"></script>
+    <script src="js/termcast.js" charset="utf-8"></script>
+		<link rel="stylesheet" href="css/googlecode.css">
+		<script src="js/highlight.pack.js"></script>
+		<script>
+			hljs.initHighlightingOnLoad();
+			hljs.configure({
+				tabReplace: '  '
+			});
+		</script>
+		-->
+</head>
+
+<body>
+    <!-- Audio handlers -->
+	<!--<audio src="audio/La.wav" id="La.wav" preload="auto"></audio>-->
+
+    <!-- Title Slide -->
+	<section>
+
+		<div class="slideContent">
+				<h1 class="title">Aula 7 - Roteamento (II), RIP, OSPF, BGP, Multicast, Camada de Enlace, Correção de Erros</h1>
+				<h2 class="author">Diego Passos</h2>
+				<h4 class="institution">Universidade Federal Fluminense</h4>
+				<h3 class="date">Redes de Computadores</h3>
+		</div>
+		<br>
+			<div style="width: 30%; float: right; padding-right: 2%;">
+			<p style="font-size: 18px; text-align: right;">Material adaptado a partir dos slides originais de J.F Kurose and K.W. Ross.</p>
+		</div>
+	</section>
+
+	<section class="secao">
+	<div class="slideContent">
+	  Algoritmos Baseados em Vetor de Distâncias
+	</div>
+	</section>
+
+	<section>
+	<h1>Algoritmo de Vetor de Distâncias</h1>
+	<div class="slideContent">
+		<ul>
+		  <li><b>Equação de Bellman-Ford</b>.
+		  <ul>
+		    <li>Programação dinâmica.</li>
+		  </ul></li>
+		  <li>Seja <span class="math inline">\(d_a(b)\)</span> o custo do caminho de menor custo de <span class="math inline">\(a\)</span> para <span class="math inline">\(b\)</span>.</li>
+		  <li>Digamos que queremos calcular o custo do melhor caminho entre <span class="math inline">\(x\)</span> e <span class="math inline">\(y\)</span>.</li>
+			<li>Suponha que, <span class="alert">de alguma forma</span>, conhecemos o custo dos melhores caminhos de todos os vizinhos <span class="math inline">\(v\)</span> de <span class="math inline">\(x\)</span> até <span class="math inline">\(y\)</span>.</li>
+			<li>Então:</li>
+		</ul>
+		<center>
+			<span class="math inline">\(d_x(y) = min_v\left\{c(x,y) + d_v(y)\right\}\)</span>
+		</center>
+		<ul>
+		  <li>Em outras palavras, o melhor caminho de <span class="math inline">\(x\)</span> para <span class="math inline">\(y\)</span> <b>necessariamente</b>:
+		  <ul>
+		    <li>Tem como próximo salto um vizinho de <span class="math inline">\(x\)</span>.</li>
+		    <li>Utiliza o melhor caminho deste vizinho até <span class="math inline">\(y\)</span>.</li>
+		  </ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Equação de Bellman-Ford: Exemplo</h1>
+	<div class="slideContent">
+	  <div style="height: 400px;">
+	  	<div class="column" style="width: 50%;">
+	  	  <center>
+	  	    <img src="imagens/BellfordExemplo.svg" style="width: 70%;"/>
+	  	  </center>
+	  	</div>
+			<div class="column" style="width: 50%;">
+			  <ul>
+			    <li>Claramente:</li>
+						<center>
+							<span class="math inline">\(d_v(z) = 5, d_x(z) = 3, d_w(z) = 3\)</span>
+						</center>
+			    <li>Equação de Bellman-Ford diz que:</li>
+			  </ul>
+				<center>
+				  <span class="math inline">\(
+						\begin{eqnarray}
+							d_u(z) & = min\{ & c(u,v) + d_v(z),\\
+								& & c(u,x) + d_x(z),\\
+								& & c(u,w) + d_w(z)\}\\
+								& = min\{& 2 + 5,\\
+									& & 1 + 3\\
+									& & 5 + 3\} = 4
+						\end{eqnarray}
+					\)</span>
+				</center>
+			</div>
+	  </div>
+		<ul>
+		  <li>Vizinho que resulta no custo mínimo é o próximo salto do caminho mais curto.</li>
+		  <li>Informação armazenada na tabela de roteamento.</li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Algoritmo de Vetor de Distâncias (I)</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li><span class="alert"><span class="math inline">\(D_x(y)\)</span></span>: estimativa do custo mínimo de <span class="math inline">\(x\)</span> para <span class="math inline">\(y\)</span>.
+	    <ul>
+	      <li>Cada nó <span class="math inline">\(x\)</span> mantém <span class="alert">vetor de distâncias</span> <span class="math inline">\(D_x = \left[D_x(y), \forall y \in N\right]\)</span>.</li>
+	    </ul></li>
+	    <li>Nó <span class="math inline">\(x\)</span>:
+	    <ul>
+	      <li>Conhece custo para cada vizinho <span class="math inline">\(v\)</span>: <span class="math inline">\(c(x,v)\)</span>.</li>
+	      <li>Recebe os vetores de distância de seus vizinhos: <span class="math inline">\(D_x = \left[D_x(y), \forall y \in N\right]\)</span></li>
+	    </ul></li>
+	  </ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Algoritmo de Vetor de Distâncias (II)</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li><b>Ideia chave:</b>
+	    <ul>
+	      <li>De tempos em tempos, cada nó envia seu próprio vetor de distância com suas estimativas para cada vizinho.</li>
+	      <li>Quando <span class="math inline">\(x\)</span> recebe novo vetor de distância de um vizinho, ele atualiza seu próprio vetor, aplicando a equação de Bellman-Ford:</li>
+				<center>
+					<br>
+					<span class="math inline">\(D_x(y) = min_v\left\{c(x,y) + d_v(y)\right\}\)</span>
+				</center>
+				<br>
+	      <li>Sob hipóteses razoáveis na prática, as estimativas <span class="math inline">\(D_x(y)\)</span> convergem para os menores custos reais <span class="math inline">\(d_x(y)\)</span>.</li>
+	    </ul></li>
+	  </ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Algoritmo de Vetor de Distâncias (III)</h1>
+	<div class="slideContent">
+	  <div class="column" style="width: 50%;">
+			<ul>
+			  <li><b>Iterativo, assíncrono.</b>
+			  <ul>
+			    <li>Cada iteração local causada por:
+			    <ul>
+			      <li>Alteração no custo de um enlace local.</li>
+			      <li>Ou pelo recebimento de um vetor de distâncias atualizado.</li>
+			    </ul></li>
+			  </ul></li>
+			  <li><b>Distribuído:</b>
+			  <ul>
+			    <li>Cada nó notifica vizinhos apenas quando seu vetor de distâncias muda.</li>
+			    <li>Vizinhos repassam informação da mudança para seus vizinhos, se necessário.</li>
+			  </ul></li>
+			</ul>
+	  </div>
+	  <div class="column" style="width: 50%;">
+			<ul>
+			  <li><b>Operação em cada nó:</b></li>
+			</ul>
+			<center>
+			  <img src="imagens/VetorDeDistancias.svg" style="width: 70%;"/>
+			</center>
+	  </div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Vetor de Distâncias: Exemplo (I)</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/DVExemplo1.svg" style="width: 70%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Vetor de Distâncias: Exemplo (II)</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/DVExemplo2.svg" style="width: 70%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Vetor de Distâncias: Mudanças nos Custos dos Enlaces (I)</h1>
+	<div class="slideContent">
+		<div style="height: 250px;">
+			<div class="column" style="width: 60%;">
+				<ul>
+			    <li><b>Mudanças nos custos dos enlaces:</b>
+			    <ul>
+			      <li>Nó detecta alteração em custo de enlace local.</li>
+			      <li>Atualiza informação de roteamento, recalcula vetor de distâncias.</li>
+			      <li>Se vetor muda, notifica vizinhos.</li>
+			    </ul></li>
+			  </ul>
+			</div>
+			<div class="column" style="width: 40%;">
+			  <center>
+			    <img src="imagens/DVMudancaCusto1.svg" style="width: 70%;"/>
+			  </center>
+			</div>
+		</div>
+		<center>
+		<div class="block" style="width:1100px;">
+		    <div class="blockTitle" style="width: 100%;">
+		      <p>&ldquo;Noticias boas viajam rápido&rdquo;</p>
+		    </div>
+		    <div class="blockBody">
+		      <ul>
+		        <li><span class="math inline">\(t_0\)</span>: <span class="math inline">\(y\)</span> detecta mudança no custo do enlace, atualiza vetor, informa seus vizinhos.</li>
+		        <li><span class="math inline">\(t_1\)</span>: <span class="math inline">\(z\)</span> recebe atualização de <span class="math inline">\(y\)</span>, atualiza sua tabela, computa novo custo mínimo para <span class="math inline">\(x\)</span>, envia seu vetor para seus vizinhos.</li>
+		        <li><span class="math inline">\(t_2\)</span>: <span class="math inline">\(y\)</span> recebe atualização de <span class="math inline">\(z\)</span>, atualiza sua tabela. Menor custo para <span class="math inline">\(x\)</span> não muda, logo <span class="math inline">\(y\)</span> não envia nova mensagem para <span class="math inline">\(z\)</span>.</li>
+		      </ul>
+		    </div>
+		</div>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Vetor de Distâncias: Mudanças nos Custos dos Enlaces (II)</h1>
+	<div class="slideContent">
+		<div style="height: 250px;">
+			<div class="column" style="width: 60%;">
+				<ul>
+			    <li><b>Mudanças nos custos dos enlaces:</b>
+			    <ul>
+			      <li>Nó detecta alteração em custo de enlace local.</li>
+			      <li><span class="alert">&ldquo;Notícias ruins demoram&rdquo;</span>: problema de <span class="alert">contagem ao infinito</span>!</li>
+			      <li>44 iterações até que algoritmo se estabilize.</li>
+			    </ul></li>
+			  </ul>
+			</div>
+			<div class="column" style="width: 40%;">
+			  <center>
+			    <img src="imagens/DVMudancaCusto2.svg" style="width: 70%;"/>
+			  </center>
+			</div>
+		</div>
+		<center>
+		<div class="block" style="width:1100px;">
+		    <div class="blockTitle" style="width: 100%;">
+		      <p>Envenenamento Reverso</p>
+		    </div>
+		    <div class="blockBody">
+		      <ul>
+						<li>Se <span class="math inline">\(z\)</span> usa <span class="math inline">\(y\)</span> como próximo salto para <span class="math inline">\(x\)</span>:
+						<ul>
+						  <li><span class="math inline">\(z\)</span> anuncia para <span class="math inline">\(y\)</span> que sua distância para <span class="math inline">\(x\)</span> é infinita.</li>
+						  <li>Assim <span class="math inline">\(y\)</span> não escolherá <span class="math inline">\(z\)</span> como próximo salto para <span class="math inline">\(x\)</span>.</li>
+						</ul></li>
+						<li><span class="alert">Resolve completamente o problema?</span></li>
+		      </ul>
+		    </div>
+		</div>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Estado de Enlace <i>vs.</i> Vetor de Distância</h1>
+	<div class="slideContent">
+	  <div class="column" style="width: 55%;">
+			<ul>
+			  <li><b>Complexidade de mensagens:</b>
+			  <ul>
+			    <li><b>LS:</b> com <span class="math inline">\(n\)</span> nós, <span class="math inline">\(E\)</span> enlaces, <span class="math inline">\(O(nE)\)</span> mensagens enviadas.</li>
+			    <li><b>DV:</b> mensagens trocadas apenas com vizinhos.
+			    <ul>
+			      <li>O <b>tempo de convergência</b> varia.</li>
+			    </ul></li>
+			  </ul></li>
+			  <li><b>Velocidade de convergência:</b>
+			  <ul>
+			    <li><b>LS:</b> complexidade de processamento de <span class="math inline">\(O(n^2)\)</span>, mais <span class="math inline">\(O(nE)\)</span> mensagens trocadas.
+			    <ul>
+			      <li>Pode apresentar oscilações.</li>
+						<li>Pode haver <i>loops</i> no roteamento.</li>
+			    </ul></li>
+			    <li><b>DV:</b> tempo de convergência depende.
+			    <ul>
+			      <li>Pode haver <i>loops</i> nas rotas.</li>
+			      <li>Pode haver contagem ao infinito.</li>
+			    </ul></li>
+			  </ul></li>
+			</ul>
+	  </div>
+	  <div class="column" style="width: 45%;">
+			<ul>
+			  <li><b>Robustez:</b> o que acontece se o roteador funciona incorretamente?
+			  <ul>
+			    <li><b>LS:</b>
+			    <ul>
+			      <li>Roteador defeituoso pode anunciar <span class="alert">custos de enlaces</span> errados.</li>
+			      <li>Cada nó computa apenas a sua tabela.</li>
+			    </ul></li>
+			    <li><b>DV:</b>
+			    <ul>
+			      <li>Roteador pode anunciar <span class="alert">custo de um caminho</span> errado.</li>
+			      <li>A tabela de roteamento de um nó é usada pelos demais.
+			      <ul>
+			        <li>Erro se propaga pela rede.</li>
+			      </ul></li>
+			    </ul></li>
+			  </ul></li>
+			</ul>
+	  </div>
+	</div>
+	</section>
+
+	<section class="secao">
+	<div class="slideContent">
+	  Roteamento Hierárquico
+	</div>
+	</section>
+
+	<section>
+	<h1>Roteamento Hierárquico (I)</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Nosso estudo sobre roteamento tem sido idealizado até aqui.
+			<ul>
+				<li>Roteadores são idênticos.</li>
+				<li>Rede é &ldquo;plana&rdquo;.</li>
+				<li>... nada disso é verdade na prática na Internet.</li>
+			</ul></li>
+		</ul>
+	  <div class="column" style="width: 50%;">
+			<ul>
+			  <li><b>Escala:</b> com 600 milhões de destinos:
+			  <ul>
+			    <li>Não é possível armazenar todos os destinatários em tabelas de roteamento.</li>
+			    <li>Trocas de tabelas de roteamento iria afogar os enlaces!</li>
+			  </ul></li>
+			</ul>
+	  </div>
+	  <div class="column" style="width: 50%;">
+	    <ul>
+	      <li><b>Autonomia administrativa:</b>
+	      <ul>
+	        <li>Internet = Rede de redes.</li>
+	        <li>Cada administrador de rede pode querer controlar o roteamento na sua própria rede.</li>
+	      </ul></li>
+	    </ul>
+	  </div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Roteamento Hierárquico (II)</h1>
+	<div class="slideContent">
+	  <div class="column" style="width: 50%;">
+	  	<ul>
+	  	  <li>Agregar roteadores em regiões, <span class="alert">&ldquo;sistemas autônomos&rdquo;</span>.
+	  	  <ul>
+	  	    <li>Ou <span class="alert">AS</span>, da sigla em inglês.</li>
+	  	  </ul></li>
+	  	  <li>Roteadores no mesmo AS rodam o mesmo protocolo de roteamento.
+	  	  <ul>
+	  	    <li>Protocolo de roteamento <span class="alert">intra-AS</span>.</li>
+	  	    <li>Roteadores em ASs diferentes podem rodar diferentes protocolos intra-AS.</li>
+	  	  </ul></li>
+	  	</ul>
+	  </div>
+	  <div class="column" style="width: 50%;">
+			<ul>
+			  <li><b>Roteador <i>gateway</i>:</b>
+			  <ul>
+			    <li>Nas &ldquo;bordas&rdquo; do seu AS.</li>
+			    <li>Possui enlace para roteador(es) de outros ASs.</li>
+			  </ul></li>
+			</ul>
+	  </div>
+	</div>
+	</section>
+
+	<section>
+	<h1>ASs Interconectados</h1>
+	<div class="slideContent">
+    <img src="imagens/RoteamentoHierarquico.svg" style="width: 70%;"/>
+		<div style="position: absolute; bottom: 10px; right: 10px; width: 544px; height: 314px;">
+			<ul>
+			  <li>Tabela de roteamento configurada por ambos os roteamentos intra- e inter-AS.
+			  <ul>
+			    <li>Roteamento intra-AS configura entradas para destinatários internos.</li>
+			    <li>Roteamento inter-AS configura entradas para destinatários externos.</li>
+			  </ul></li>
+			</ul>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Tarefas do Roteamento Inter-AS</h1>
+	<div class="slideContent">
+	  <div class="column" style="width: 50%;">
+	    <ul>
+	      <li>Suponha que um roteador no AS1 recebe datagrama destinado para fora do AS1:
+	      <ul>
+	        <li>Roteador deve encaminhar pacote para um roteador <i>gateway</i>, mas qual?</li>
+	      </ul></li>
+	    </ul>
+	  </div>
+	  <div class="column" style="width: 50%;">
+	    <ul>
+	      <li><b>AS1 deve:</b>
+	      <ul>
+	        <li>Aprender quais destinatártios são alcançáveis através do AS2 e quais através do AS3.</li>
+	        <li>Propagar esta informação para todos os roteadores no AS1.</li>
+	      </ul></li>
+	      <li><span class="alert">Trabalho do roteamento inter-AS!</span></li>
+	    </ul>
+	  </div>
+		<center>
+		  <img src="imagens/IntraAS.svg" style="width: 70%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Exemplo: Configurando a Tabela de Roteamento do Roteador 1d</h1>
+	<div class="slideContent">
+		<ul>
+		  <li>Suponha que o AS1 aprenda (através do roteamento inter-AS) que a sub-rede <span class="alert"><i>x</i></span> é alcançável pelo AS3 (<i>gateway</i> 1c), mas não via AS2.
+		  <ul>
+		    <li>Protocolo de roteamento inter-AS propaga esta informação para todos os roteadores internos.</li>
+		  </ul></li>
+		  <li>Roteador 1d determina, usando o roteamento intra-AS, que sua interface 1 está no caminho de menor custo para 1c.
+		  <ul>
+		    <li>Instala entrada <span class="alert"><tt>(x, 1)</tt></span> na tabela de roteamento.</li>
+		  </ul></li>
+		</ul>
+	  <center>
+	    <img src="imagens/IntraAS2.svg" style="width: 70%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Exemplo: Escolhendo entre Múltiplos ASs (I)</h1>
+	<div class="slideContent">
+		<ul>
+		  <li>Agora suponha que o AS1 aprenda a partir do protocolo inter-AS que a sub-rede <span class="alert">x</span> é alcançável por ambos os ASs 3 e 2.</li>
+		  <li>Para reconfigurar a tabela de roteamento, o roteador 1d precisa determinar para qual <i>gateway</i> deve encaminhar os pacotes destinados a <span class="alert">x</span>.
+		  <ul>
+		    <li>Isto também é uma tarefa do protocolo de roteamento inter-AS!</li>
+		  </ul></li>
+		</ul>
+	  <center>
+	    <img src="imagens/IntraAS3.svg" style="width: 70%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Exemplo: Escolhendo entre Múltiplos ASs (II)</h1>
+	<div class="slideContent">
+		<ul>
+		  <li>Agora suponha que o AS1 aprenda a partir do protocolo inter-AS que a sub-rede <span class="alert">x</span> é alcançável por ambos os ASs 3 e 2.</li>
+		  <li>Para reconfigurar a tabela de roteamento, o roteador 1d precisa determinar para qual <i>gateway</i> deve encaminhar os pacotes destinados a <span class="alert">x</span>.
+		  <ul>
+		    <li>Isto também é uma tarefa do protocolo de roteamento intra-AS!</li>
+		  </ul></li>
+			<li><span class="alert">Roteamento batata-quente: envie</span> pacote em direção ao <i>gateway</i> mais próximo.</li>
+		</ul>
+		<br>
+		<table class="align">
+		  <tr>
+		  	<td style="width: 20%; border: 2px solid #a33; font-size: 22px;">
+		  		  <center>
+		  		    Aprenda pelo protocolo inter-AS que a sub-rede <span class="alert">x</span> é alcançável por múltiplos <i>gateways</i>.
+		  		  </center>
+		  	</td>
+				<td>
+					<center>&xrarr;</center>
+				</td>
+				<td style="width: 20%; border: 2px solid #a33; font-size: 22px;">
+		  		  <center>
+		  		    Use informação de roteamento do protocolo intra-AS para determinar custo dos caminhos de menor custo para cada um dos <i>gateways</i>.
+		  		  </center>
+		  	</td>
+				<td>
+					<center>&xrarr;</center>
+				</td>
+				<td style="width: 20%; border: 2px solid #a33; font-size: 22px;">
+		  		  <center>
+		  		    Roteamento batata-quente: escolha o <i>gateway</i> que tem o menor custo.
+		  		  </center>
+		  	</td>
+				<td>
+					<center>&xrarr;</center>
+				</td>
+				<td style="width: 20%; border: 2px solid #a33; font-size: 22px;">
+		  		  <center>
+		  		    determine pela tabela de roteamento a interface <span class="alert">I</span> de próximo salto até o <i>gateway</i> de menor custo. Adicione uma entrada <span class="alert"><tt>(x, I)</tt></span> à tabela.
+		  		  </center>
+		  	</td>
+		  </tr>
+		</table>
+	</div>
+	</section>
+
+	<section class="secao">
+	<div class="slideContent">
+	  Roteamento Intra-AS
+	</div>
+	</section>
+
+	<section>
+	<h1>Roteamento Intra-AS</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>Também conhecido como <span class="alert">IGP (<i>Interior Gateway Protocols</i>)</span>.</li>
+	    <li>Protocolos mais conhecidos desta categoria:
+	    <ul>
+	      <li>RIP: <i>Routing Information Protocol</i>.</li>
+	      <li>OSPF: <i>Open Shortest Path First</i>.</li>
+	      <li>IGRP: <i>Interior Gateway Routing Protocol</i> (Proprietário da Cisco).</li>
+	    </ul></li>
+	  </ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>RIP (<i>Routing Information Protocol</i>)</h1>
+	<div class="slideContent">
+		<ul>
+		  <li>Incluído no BSD-UNIX em 1982.</li>
+		  <li>Baseado em Vetor de Distâncias.
+		  <ul>
+		    <li>Métrica de roteamento: # de saltos (máximo = 15), cada enlace tem custo 1.</li>
+		    <li>Vetores de distância anunciados a cada 30 segundos.</li>
+		    <li>Cada anúncio: lista de até 25 <span class="alert">sub-redes de destino</span>.</li>
+		  </ul></li>
+		</ul>
+		<br>
+	  <center>
+	    <img src="imagens/RIP1.svg" style="width: 70%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>RIP: Exemplo (I)</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/RIPExemplo.svg" style="width: 70%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>RIP: Exemplo (II)</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/RIPExemplo2.svg" style="width: 70%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>RIP: Falha de Enlaces, Recuperação</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>Se nenhum anúncio é ouvido após 180 segundos, vizinho/enlace declarado morto.
+	    <ul>
+	      <li>Rotas através daquele vizinho são invalidadas.</li>
+	      <li>Novos anúncios enviados aos demais vizinhos.</li>
+	      <li>Vizinhos, por sua vez, enviam outros anúnicios (se suas tabelas mudaram).</li>
+	      <li>Informação de falha de enlaces se propaga rapidamente (?) pela rede toda.</li>
+	      <li><span class="alert">Envenenamento reverso</span> usado para previnir <i>loops</i> em ping-pong (distância infinita = 16 saltos).</li>
+	    </ul></li>
+	  </ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>RIP: Processamento da Tabela de Roteamento</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>Tabela de roteamento no RIP é gerenciada por um processo <span class="alert">no nível da aplicação</span> chamado de <tt>route-d</tt> (<i>daemon</i>).</li>
+	    <li>Anúncios são enviados em <span class="alert">pacotes UDP</span>, periodicamente repetidos.</li>
+	  </ul>
+		<center>
+		  <img src="imagens/RIP_UDP.svg" style="width: 70%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>OSPF (<i>Open Shortest Path First</i>)</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>&ldquo;<i>open</i>&rdquo;: publicamente disponível.</li>
+	    <li>Utiliza roteamento baseado em Estado de Enlace.
+	    <ul>
+	      <li>Disseminação de mensagem de estado dos enlaces locais.</li>
+	      <li>Mapa da topologia mantido locamente em cada nó.</li>
+	      <li>Rotas computadas através do Algoritmo de Dijkstra.</li>
+	    </ul></li>
+	    <li>Anúnicios do OSPF carregam uma entrada para cada vizinho do nó.</li>
+	    <li>Anúncios inundados para o AS <span class="alert">inteiro</span>.
+	    <ul>
+	      <li>Transportados em mensagens OSPF diretamente sobre IP (ao invés de TCP ou UDP).</li>
+	    </ul></li>
+	    <li>Protocolo <span class="alert">IS-IS</span>: praticamente idêntico ao OSPF.</li>
+	  </ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Funcionalidades &ldquo;Avançadas&rdquo; do OSPF (Não Encontradas no RIP)</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li><b>Segurança:</b> todas as mensagens são autenticadas (para previnir ataques).</li>
+	    <li><b>multipath:</b> múltiplos caminhos de mesmo custo são permitidos (RIP seleciona um único).</li>
+	    <li>Para cada enlace, múltiplas métricas para diferentes valores de <span class="alert">ToS</span>.
+	    <ul>
+	      <li><i>e.g.</i>, enlaces de satélite tem custo &ldquo;baixo&rdquo; para tráfego de melhor esforço, mas alto para tráfego de tempo real.</li>
+	    </ul></li>
+	    <li>Suporte integrado para roteamento <span class="alert"><i>multicast</i></span>:
+	    <ul>
+	      <li>OSPF Multicast (MOSPF) usa as mesmas informações de topologia usadas pelo OSPF.</li>
+	    </ul></li>
+	    <li><b>OSPF Hierárquico:</b> para execução em grandes domínios.</li>
+	  </ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>OSPF Hierárquico (I)</h1>
+	<div class="slideContent">
+	  <center>
+	    <img src="imagens/OSPFHierarquico.svg" style="width: 70%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>OSPF Hierárquico (II)</h1>
+	<div class="slideContent">
+  	<ul>
+  	  <li><b>Hierarquia em dois níveis:</b> área local e <i>backbone</i>.
+  	  <ul>
+  	    <li>Anúncios de estado de enlace apenas dentro da área.</li>
+  	    <li>Cada nó conhece detalhadamente a topologia da sua área, mas conhece apenas a direção (caminho mais curto) para redes em outras áreas.</li>
+  	  </ul></li>
+  	  <li><b>Roteadores de borda de área:</b> &ldquo;resume&rdquo; distâncias para redes na própria área, anunciam para outros Roteadores de Borda de Área.</li>
+  	  <li><b>Roteadores de <i>backbone</i>:</b> executam o OSPF limitado ao <i>backbone</i>.</li>
+  	</ul>
+	</div>
+	</section>
+
+	<section class="secao">
+	<div class="slideContent">
+		Roteamento Inter-AS
+	</div>
+	</section>
+
+	<section>
+	<h1>Roteamento Inter-AS na Internet: BGP</h1>
+	<div class="slideContent">
+		<ul>
+			<li><b>BGP (<i>Border Gateway Protocol</i>):</b> o padrão <i>de facto</i> para roteamento inter-domínios.
+			<ul>
+				<li>&ldquo;A cola que mantém a Internet junta&rdquo;.</li>
+			</ul></li>
+			<li>BGP provê a cada AS uma maneira de:
+			<ul>
+				<li><b>eBGP:</b> obter informações sobre sub-redes alcançáveis de ASs vizinhos.</li>
+				<li><b>iBGP:</b> propagar informações de sub-redes externas alcançáveis para todos os roteadores do AS.</li>
+				<li>Determinar &ldquo;boas&rdquo; rotas para outras redes com base nas informações das sub-redes alcançáveis e políticas diversas.</li>
+			</ul></li>
+			<li>Permite a uma sub-rede anunciar sua existência para o resto da Internet: <span class="alert">&ldquo;estou aqui!&rdquo;</span></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>BGP: Conceitos Básicos</h1>
+	<div class="slideContent">
+		<ul>
+			<li><span class="alert">Sessão BGP:</span> dois roteadores BGP (&ldquo;<i>peers</i>&rdquo;) trocam mensagens BGP.
+			<ul>
+				<li>Anunciam <span class="alert">caminhos</span> para vários prefixos de sub-redes diferentes (protocolo baseado em &ldquo;vetor de caminhos&rdquo;).</li>
+				<li>Trocadas sobre conexões TCP semi-permanentes.</li>
+			</ul></li>
+			<li>Quando o AS3 anuncia um prefixo para o AS1:
+			<ul>
+				<li>AS3 <span class="alert">se compromete</span> a encaminhar datagramas em direção àquele prefixo.</li>
+				<li>AS3 pode agregar prefixos nos seus anúnicios.</li>
+			</ul></li>
+		</ul>
+		<br>
+		<center>
+			<img src="imagens/BGP1.svg" style="width: 70%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>BGP: Distribuindo Informação de Caminhos</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Usando a sessão eBGP entre 3a e 1c, AS3 envia prefixos alcançáveis para o AS1.
+			<ul>
+				<li>1c pode, então, usar o iBGP para distribuir novas informações de prefixos conhecidos para todos os roteadores no AS1.</li>
+				<li>1b pode, então, re-anunciar a informação de prefixos alcançáveis para o AS2 através da sessão eBGP entre 1b e 2a.</li>
+			</ul></li>
+			<li>Quanto roteador aprende um novo prefixo, ele cria uma entrada para o prefixo na sua tabela de roteamento.</li>
+		</ul>
+		<br>
+		<center>
+			<img src="imagens/BGP2.svg" style="width: 70%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Atributos de Caminhos e Rotas BGP</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Prefixos anunciados incluem atributos BGP.
+			<ul>
+				<li>prefixo + atributos = &ldquo;rota&rdquo;.</li>
+			</ul></li>
+			<li>Dois atributos importantes:
+			<ul>
+				<li><span class="alert">AS-PATH:</span> contém lista de ASs pelos quais o anúncio do prefixo passou: <i>e.g.</i>, AS 67, AS 17.</li>
+				<li><span class="alert">NEXT-HOP:</span> indica roteador do AS de próximo salto (que pode estar a vários saltos do AS atual).</li>
+			</ul></li>
+			<li>Roteador <i>gateway</i> que recebe anúncios utiliza <span class="alert">política de importação</span> para aceitá-los ou não.
+			<ul>
+				<li><i>e.g.</i>, nunca encaminhe para o AS x.</li>
+				<li>Roteamento baseado em <span class="alert">políticas</span>.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>BGP: Seleção de Rota</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Roteador pode aprender múltiplas rotas para um AS de destino. Seleção é baseada em:
+			<ol>
+				<li>Valor do atributo <i>Local Preference</i>: decisão baseada em política.</li>
+				<li>AS-PATH mais curto.</li>
+				<li>Roteador NEXT-HOP mais próximo: roteamento batata-quente.</li>
+				<li>Critérios adicionais.</li>
+			</ol></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Mensagens BGP</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Mensagens BGP trocadas entre <i>peers</i> sobre conexão TCP.</li>
+			<li>Mensagens BGP:
+			<ul>
+				<li><b>OPEN:</b> abre conexão TCP para o <i>peer</i> e autentica transmissor.</li>
+				<li><b>UPDATE:</b> anuncia novo caminho (ou anula anúnicio antigo).</li>
+				<li><b>KEEPALIVE:</b> mantém a conexão aberta em caso de inatividade prolongada; também serve de ACK para mensagem OPEN.</li>
+				<li><b>NOTIFICATION:</b> reporta erros na mensagem anterior; também usada para fechar conexão.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Juntando Tudo</h1>
+	<div class="slideContent">
+		<ul>
+			<li><span class="alert">Como uma entrada é colocada na tabela de roteamento de um roteador?</span>
+			<ul>
+				<li>Resposta é complicada!</li>
+				<li>Junta Roteamento Hierárquico, BGP e OSPF.</li>
+				<li>Provê boa visão geral do funcionamento do BGP!</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Como a Entrada é Inserida na Tabela de Roteamento? (I)</h1>
+	<div class="slideContent">
+		<center>
+			<img src="imagens/BGPExemplo1.svg" style="width: 70%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Como a Entrada é Inserida na Tabela de Roteamento? (II)</h1>
+	<div class="slideContent">
+		<ul>
+			<li><b>Visão de alto nível:</b>
+			<ol>
+				<li>Roteador passa a conhecer o prefixo.</li>
+				<li>Roteador determina a porta de saída para alcançar o prefixo.</li>
+				<li>Roteador insere mapeamento <tt>porta-prefixo</tt> na tabela de roteamento.</li>
+			</ol></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Roteador Passa a Conhecer o Prefixo</h1>
+	<div class="slideContent">
+		<center>
+			<img src="imagens/BGP1.svg" style="width: 70%;"/>
+		</center>
+		<br>
+		<ul>
+			<li>Mensagem BGP contém &ldquo;rotas&rdquo;.</li>
+			<li>&ldquo;Rota&rdquo; é um prefixo, mais seus atributos: AS-PATH, NEXT-HOP, ...</li>
+			<li>Exemplo de rota BGP:
+			<ul>
+				<li>Prefixo: 138.16.64/22.</li>
+				<li>AS-PATH: AS3 AS131.</li>
+				<li>NEXT-HOP: 201.44.13.125.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Roteador Pode Receber Múltiplas Rotas</h1>
+	<div class="slideContent">
+		<center>
+			<img src="imagens/BGPMultiplasRotas.svg" style="width: 70%;"/>
+		</center>
+		<br>
+		<ul>
+			<li>Roteador pode receber múltiplos anúncios de rotas para <span class="alert">um mesmo prefixo</span>.</li>
+			<li>Precisa selecionar um.</li>
+		</ul>
+		<br>
+		<br>
+		<br>
+		<br>
+	</div>
+	</section>
+
+	<section>
+	<h1>Seleção da Melhor Rota BGP para o Prefixo</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Roteador seleciona rota com base no AS-PATH mais curto.</li>
+			<li>Por exemplo:
+			<ul>
+				<li>AS2 AS17 para alcançar 138.16.64/22 (<span class="alert">selecionada</span>).</li>
+				<li>AS3 AS131 AS201 para alcançar 138.16.64/22.</li>
+			</ul></li>
+			<li>E se ocorrer um empate? Voltaremos a este ponto em breve!</li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Encontrar Melhor Rota Interna para a Rota BGP</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Use o atributo NEXT-HOP da rota selecionada.
+			<ul>
+				<li>É o endereço IP da interface do roteamento que inicia o AS PATH.</li>
+			</ul></li>
+			<li>Exemplo:
+			<ul>
+				<li>AS-PATH: AS2 AS17; NEXT-HOP: 111.99.86.55.</li>
+			</ul></li>
+			<li>Roteador usa OSPF para encontrar caminho mais curto de 1c para 111.99.86.55.</li>
+		</ul>
+		<br>
+		<center>
+			<img src="imagens/BGPRotaInterna.svg" style="width: 70%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Roteador Identifica Porta para Rota</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Identifica porta no caminho mais curto apontado pelo OSPF.</li>
+			<li>Adiciona entrada mapeamento o prefixo à porta na sua tabela de roteamento.
+			<ul>
+				<li><span class="alert"><tt>(183.16.64/22, porta 4)</tt></span>.</li>
+			</ul></li>
+		</ul>
+		<br>
+		<center>
+			<img src="imagens/BGPIdentificarPorta.svg" style="width: 70%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Roteamento Batata-Quente</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Suponha que haja duas ou mais melhores rotas BGP.</li>
+			<li>Então escolha aquela com o NEXT-HOP mais próximo.
+			<ul>
+				<li><span class="alert">Use o OSPF para determinar qual <i>gateway</i> está mais próximo</span>.</li>
+				<li><span class="alert">Pergunta:</span> de 1c, escolher AS3 AS131 ou AS2 AS17?</li>
+				<li><span class="alert">Resposta:</span> rota AS3 AS 131, já que NEXT-HOP é mais próximo.</li>
+			</ul></li>
+		</ul>
+		<br>
+		<center>
+			<img src="imagens/BGPBatataQuente.svg" style="width: 70%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Como uma Entrada é Inserida na Tabela de Roteamento?</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Sumário:
+			<ol>
+				<li>Roteador passa a conhecer o prefixo.
+				<ul>
+					<li>Através de anúncios BGP de outros roteadores.</li>
+				</ul></li>
+				<li>Determina porta de saída para o prefixo.
+				<ul>
+					<li>Usa seleção de rotas BGP para encontrar a melhor rota BGP.</li>
+					<li>Usa OSPF para encontrar melhor rota interna ao AS que leva o pacote até o início da melhor rota BGP.</li>
+					<li>Roteador identifica porta de saída para esta rota.</li>
+				</ul></li>
+				<li>Insere o mapeamento <tt>(prefixo, porta)</tt> na tabela de roteamento.</li>
+			</ol></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>BGP: Políticas de Roteamento (I)</h1>
+	<div class="slideContent">
+		<center>
+			<img src="imagens/BGPPoliticas.svg" style="width: 70%;"/>
+		</center>
+		<br>
+		<ul>
+			<li>A, B e C são redes de provedores.</li>
+			<li>X, W, e Y são consumidores (clientes dos provedores).</li>
+			<li>X é <span class="alert"><i>dual-homed</i></span>: se conecta à Internet por dois provedores diferentes.
+			<ul>
+				<li>X não quer rotear pacotes de B para C.</li>
+				<li>...logo, X não irá anunciar para B uma rota para C.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>BGP: Políticas de Roteamento (II)</h1>
+	<div class="slideContent">
+		<center>
+			<img src="imagens/BGPPoliticas.svg" style="width: 70%;"/>
+		</center>
+		<br>
+		<ul>
+			<li>A anuncia caminho AW para B.</li>
+			<li>B anuncia caminho BAW para X.</li>
+			<li>B deve anunciar caminho BAW para C?
+			<ul>
+				<li>Claro que não! B não lucra roteando CBAW, já que nem W nem C são clientes de B.</li>
+				<li>B quer forçar C a rotear para W por A.</li>
+				<li>B quer rotear <span class="alert">apenas</span> tráfego de e para seus clientes!</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Por que Roteamentos Diferentes Intra- e Inter-AS?</h1>
+	<div class="slideContent">
+		<ul>
+			<li><b>Políticas:</b>
+			<ul>
+				<li>Inter-AS: administrador quer controle sobre como seu tráfego é roteado, quem roteia pela sua rede.</li>
+				<li>Intra-AS: único administrador, não são necessárias decisões políticas.</li>
+			</ul></li>
+			<li><b>Escala:</b>
+			<ul>
+				<li>Roteamento hierárquico reduz tamanho das tabelas, reduz tráfego de atualização de rotas.</li>
+			</ul></li>
+			<li><b>Desempenho:</b>
+			<ul>
+				<li>Intra-AS: foco no desempenho.</li>
+				<li>Inter-AS: políticas podem dominar decisões.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section class="secao">
+	<div class="slideContent">
+		Roteamento <i>Broadcast</i>
+	</div>
+	</section>
+
+	<section>
+	<h1>Roteamento <i>Broadcast</i></h1>
+	<div class="slideContent">
+		<ul>
+			<li>Entrega pacotes da origem a todos os outros nós.</li>
+			<li>Replicação na origem é ineficiente:</li>
+		</ul>
+		<br>
+		<center>
+			<img src="imagens/ReplicacaoOrigem.svg" style="width: 70%;"/>
+		</center>
+		<br>
+		<ul>
+			<li>Replicação na origem: como a origem determina o endereço dos destinatários?</li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Replicação na Rede</h1>
+	<div class="slideContent">
+		<ul>
+			<li><b>Inundação:</b> quando nó recebe pacote em <i>broadcast</i>, envia cópias para todos os seus vizinhos.
+			<ul>
+				<li>Problemas: ciclos e <span class="alert">tempestade de <i>broadcast</i></span>.</li>
+			</ul></li>
+			<li><b>Inundação Controlada:</b> nó só envia cópias se está é a primeira recepção deste pacote.
+			<ul>
+				<li>Nós mantêm lista dos IDs dos pacotes já replicados.</li>
+				<li>Outra alternativa é o <i>Reverse Path Forwarding</i> (RPF): apenas replicar pacotes que chegaram pelo enlace de próximo salto do caminho entre o nó corrente e <span class="alert">a origem</span>.</li>
+			</ul></li>
+			<li><b>Árvore Geradora (<i>Spanning Tree</i>):</b>
+			<ul>
+				<li>Nós nunca recebem pacotes redundantes.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Árvores Geradoras</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Primeiramente, construa uma árvore geradora.
+			<ul>
+				<li>Grafo acíclico conectando todos os nós.</li>
+			</ul></li>
+			<li>Os nós, então, encaminham/criam cópias dos pacotes apenas nos enlaces da árvore geradora.</li>
+		</ul>
+		<center>
+			<img src="imagens/ArvoresGeradoras.svg" style="width: 70%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Árvores Geradoras: Criação Distribuída</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Elege-se um nó central.
+			<ul>
+				<li><i>e.g.</i>, origem do tráfego <i>broadcast</i>.</li>
+			</ul></li>
+			<li>Cada nó envia uma mensagem <i>join</i> em <i>unicast</i> para o nó central.
+			<ul>
+				<li>Mensagem encaminhada normalmente até que chega a um nó que já pertence à árvore geradora.</li>
+			</ul></li>
+		</ul>
+		<br>
+		<center>
+			<img src="imagens/ArvoresGeradorasConstrucao.svg" style="width: 70%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section class="secao">
+	<div class="slideContent">
+		Roteamento <i>Multicast</i>
+	</div>
+	</section>
+
+	<section>
+	<h1>Roteamento <i>Multicast</i>: Definição do Problema</h1>
+	<div class="slideContent">
+		<ul>
+			<li><b>Objetivo:</b> encontrar uma árvore (ou árvores) conectando roteadores <span class="alert">membros de um grupo multicast</span>.</li>
+		</ul>
+		<div class="column" style="width: 70%;">
+			<ul>
+				<li>Mais definições:
+				<ul>
+					<li><b>Árvore</b>: nem todos os enlaces da rede são usados.</li>
+					<li><b>Árvore Compartilhada:</b> uma mesma árvore é usada por todos os membros do grupo.</li>
+					<li><b>Enraizada na Fonte:</b> árvores diferentes para cada transmissor do grupo.</li>
+				</ul></li>
+			</ul>
+			<br>
+			<center>
+				<img src="imagens/TiposMulticast.svg" style="width: 70%;"/>
+			</center>
+		</div>
+		<div class="column" style="width: 30%;">
+			<center>
+				<img src="imagens/TiposMulticastLegenda.svg" style="width: 70%;"/>
+			</center>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Abordagens para Construção de Árvores Multicast</h1>
+	<div class="slideContent">
+		<ul>
+			<li><b>Árvores enraizadas na fonte:</b> uma árvore por fonte.
+			<ul>
+				<li>Árvore de caminhos mais curtos.</li>
+				<li>Encaminhamento baseado no caminho reverso.</li>
+			</ul></li>
+			<li><b>Árvores compartilhadas:</b> grupo todo usa árvore única.
+			<ul>
+				<li>Árvore de custo mínimo (<span class="alert">Árvore de Steiner</span>).</li>
+				<li>Árvore baseadas em nó central.</li>
+			</ul></li>
+			<li>Veremos cada uma destas abordagens.</li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Árvore de Caminhos mais Curtos</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Árvore de encaminhamento <i>multicast</i>: árvore composta pelos caminhos mais curtos da origem até cada destinatário.
+			<ul>
+				<li>Sub-produto do Algoritmo de Dijkstra.</li>
+			</ul></li>
+		</ul>
+		<br>
+		<center>
+			<img src="imagens/ArvoreCaminhosMaisCurtos.svg" style="width: 70%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Encaminhamento baseado no Caminho Reverso</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Se baseia no conhecimento dos roteadores sobre os caminhos <i>unicast</i> mais curtos para a origem.</li>
+			<li>Cada roteador aplica o seguinte algoritmo para realizar o encaminhamento:</li>
+		</ul>
+		<br>
+		<center>
+			<div style="border: 2px solid #a33; text-align: left; width: 70%; padding: 10px;">
+				<b>Se</b> (datagrama <i>multicast</i> foi recebido no enlace de próximo salto no caminho mais curto de volta à origem)<br>
+				&nbsp;&nbsp;&nbsp; <b>Então</b> inunde datagrama para todos os enlaces de saída.<br>
+				&nbsp;&nbsp;&nbsp; <b>Senão</b> ignore datagrama.
+			</div>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Encaminhamento baseado no Caminho Reverso: Exemplo</h1>
+	<div class="slideContent">
+		<center>
+			<img src="imagens/CaminhoReversoExemplo.svg" style="width: 70%;"/>
+		</center>
+		<br>
+		<ul>
+			<li>Resultado é uma árvore específica para nó de origem.
+			<ul>
+				<li>Árvore de caminhos mais curtos reversa.</li>
+				<li>Pode não ser uma boa escolha se enlaces forem muito assimétricos.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Encaminhamento baseado no Caminho Reverso: Poda</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Árvore de encaminhamento contém sub-árvores sem membros do grupo <i>multicast</i>.
+			<ul>
+				<li>Não é necessário encaminhar datagramas por estas sub-árvores.</li>
+				<li>Mensagens de &ldquo;poda&rdquo; enviadas em direção à origem por roteadores sem membros conectados.</li>
+			</ul></li>
+		</ul>
+		<br>
+		<center>
+			<img src="imagens/CaminhoReversoPoda.svg" style="width: 70%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Árvore Compartilhada: Árvore de Steiner</h1>
+	<div class="slideContent">
+		<ul>
+			<li><b>Árvore de Steiner:</b> árvore de custo mínimo conectando todos os roteadores que possuem membros do grupo.</li>
+			<li>Problema é NP-Difícil.
+			<ul>
+				<li><i>i.e.</i>, hoje não conhecemos algoritmos ótimos eficientes.</li>
+				<li>E é possível que não existam.</li>
+			</ul></li>
+			<li>Mas há excelentes heurísticas disponíveis.</li>
+			<li>Mesmo assim, não é utilizado na prática:
+			<ul>
+				<li>Complexidade computacional.</li>
+				<li>Necessidade de informação sobre toda a rede.</li>
+				<li>Monolítico: re-execução é necessária sempre que um novo roteador entra/sai do grupo.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Árvores Baseadas em Nó Central</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Uma única árvore de encaminhamento compartilhada por todos os nós.</li>
+			<li>Um roteador se define como o <span class="alert">&ldquo;centro&rdquo;</span> da árvore.</li>
+			<li>Para se juntar ao grupo:
+			<ul>
+				<li>Roteador de borda envia mensagem <i>unicast</i> do tipo <i>join</i> endereçada ao centro da árvore.</li>
+				<li>Mensagem é &ldquo;processada&rdquo; pelos roteadores intermediários e encaminhada em direção ao centro.</li>
+				<li>A mensagem de <i>join</i> ou chega ao centro ou chega a algum ramo já existente da árvore.</li>
+				<li>Caminho usado pela mensagem <i>join</i> se torna, então, um novo ramo da árvore conectando o novo roteador.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Árvores Baseadas em Nó Central: Exemplo</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Suponha que R6 seja escolhido como centro.</li>
+		</ul>
+		<br>
+		<center>
+			<img src="imagens/ArvoreNoCentral.svg" style="width: 70%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section class="secao">
+	<div class="slideContent">
+		Camada de Enlace: Introdução e Serviços
+	</div>
+	</section>
+
+	<section>
+	<h1>Introdução</h1>
+	<div class="slideContent">
+
+
+		<div class="column" style="width: 60% ;">
+			<ul>
+				<li> Terminologia:
+				<ul>
+					<li> Roteadores e <i>hosts</i>: <b>nós</b>.</li>
+					<li> Canais de comunicação conectando nós adjacentes: <b>enlaces ou links</b>.
+					<ul>
+						<li> Sem fio.</li>
+						<li> Cabeados.</li>
+					</ul>
+					</li>
+					<li> Pacote do nível 2: <b>quadro</b>, encapsula o datagrama.</li>
+				</ul>
+				</li>
+			</ul>
+			<br>
+			<center>
+				<div class="block" style="width:550px;">
+					<div class="blockTitle" style="width: 100%;">
+						<p>Responsabilidade</p>
+					</div>
+					<div class="blockBody">
+						Transferência dos datagramas entre nós conectados fisicamente por um enlace.
+					</div>
+				</div>
+			</center>
+		</div>
+		<div class="column" style="width: 40% ;">
+			<center>
+				<img src="imagens/Terminologia_opt.svg" style="width: 90% ;"/>
+			</center>
+		</div>
+
+	</div>
+	</section>
+
+	<section>
+	<h1>Contextualização</h1>
+	<div class="slideContent">
+
+
+		<div class="column" style="width: 50% ;">
+			<ul>
+				<li> Datagramas são transmitidos por diferentes enlaces e protocolos.
+				<ul>
+					<li> <i>e.g.</i>, Ethernet, ADSL, 802.11, <i>Frame Relay</i>, ...</li>
+				</ul>
+				</li>
+				<li> Protocolos têm suas diferenças.
+				<ul>
+					<li> Podem ou não prover certos serviços.</li>
+					<li> <i>e.g.</i>, transmissão confiável.</li>
+				</ul>
+				</li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50% ;">
+			<ul>
+				<li> Analogia de transporte de pessoas:
+				<ul>
+					<li> Viagem de Niterói para Gramado.
+					<ul>
+						<li> Taxi até o aeroporto.</li>
+						<li> Avião até Porto Alegre.</li>
+						<li> Ônibus até Gramado.</li>
+					</ul>
+					</li>
+				</ul>
+				</li>
+				<li> Turista = datagrama.</li>
+				<li> Trechos da viagem = enlaces.</li>
+				<li> Meio de transporte = protocolo.</li>
+				<li> Agência de viagem = algoritmo de roteamento.</li>
+			</ul>
+		</div>
+
+
+	</div>
+	</section>
+
+	<section>
+	<h1>Serviços da Camada de Enlace (I)</h1>
+	<div class="slideContent">
+
+		<ul>
+			<li> <b>Encapsulamento</b>.
+			<ul>
+				<li> Encapsula datagrama em um <b>quadro</b>.</li>
+				<li> Adiciona informações relevantes à camada de enlace.
+				<ul>
+					<li> <i>Header</i> (cabeçalho), <i>trailer</i>.</li>
+				</ul>
+				</li>
+			</ul>
+			</li>
+		</ul>
+
+		<center>
+			<img src="imagens/Encapsulamento.png" style="width: 50% ;"/>
+		</center>
+
+		<ul>
+			<li> <b>Acesso ao enlace</b>.
+			<ul>
+				<li> Meio <b>dedicado</b> <i>vs.</i> <b>compartilhado</b>.</li>
+				<li> Se múltiplos nós competem, necessitam <b>coordenação</b>.</li>
+			</ul>
+			</li>
+		</ul>
+
+	</div>
+	</section>
+
+	<section>
+	<h1>Serviços da Camada de Enlace (II)</h1>
+	<div class="slideContent">
+
+		<ul>
+			<li> Endereçamento.
+			<ul>
+				<li> <b>Endereço MAC</b>.</li>
+				<li> Identifica origem, destino no cabeçalho do quadro.
+				<ul>
+					<li> Em algumas redes, pode haver mais elementos endereçados.</li>
+				</ul>
+				</li>
+				<li> <b>Diferente do endereçamento da camada de rede.</b>
+				<ul>
+					<li> <i>e.g.</i>, endereço IP.</li>
+				</ul>
+				</li>
+			</ul>
+			</li>
+			<li> Entrega confiável de dados.
+			<ul>
+				<li> Já estudado em Redes I (camada de transporte, TCP).</li>
+				<li> Pouco usado em enlaces com poucos erros: fibras ópticas, alguns tipos de par-trançado.</li>
+				<li> Importante para enlaces sem fio: altas taxas de erro.
+				<ul>
+					<li> <b>Por que implementar no nível de enlace e fim a fim?</b></li>
+				</ul>
+				</li>
+			</ul>
+			</li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Serviços da Camada de Enlace (III)</h1>
+	<div class="slideContent">
+
+
+		<div class="column" style="width: 50% ;">
+			<ul>
+				<li> Detecção de erros.
+				<ul>
+					<li> Erros causados por atenuação de sinal, ruído.</li>
+					<li> Receptor deve ser capaz de detectá-los.
+					<ul>
+						<li> Pede retransmissão ou descarta o quadro.</li>
+					</ul>
+					</li>
+				</ul>
+				</li>
+				<li> Correção de erros.
+				<ul>
+					<li> Passo além do anterior.</li>
+					<li> Receptor identifica <b>e corrige</b> erros.
+					<ul>
+						<li> <b>Sem necessitar de retransmissões</b>.</li>
+					</ul>
+					</li>
+				</ul>
+				</li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50% ;">
+			<ul>
+				<li> Controle de fluxo.
+				<ul>
+					<li> Evitar afogar o receptor.</li>
+					<li> Também discutido no contexto do TCP.</li>
+					<li> Mas aqui, entre dois nós adjacentes.</li>
+				</ul>
+				</li>
+				<li> Transmissão <b>full-duplex</b> ou <b>half-duplex</b>.
+				<ul>
+					<li> <i>Duplex</i> = transmissões em ambos os sentidos.</li>
+					<li> <i>Half-duplex</i> = um de cada vez.</li>
+					<li> <i>Full-duplex</i> = simultaneamente.</li>
+				</ul>
+				</li>
+			</ul>
+		</div>
+
+	</div>
+	</section>
+
+	<section>
+	<h1>Onde a Camada de Enlace é Implementada?</h1>
+	<div class="slideContent">
+
+
+		<div class="column" style="width: 60% ;">
+			<br>
+			<ul>
+				<li> Presente em todos os nós.</li>
+				<li> Implementada no <b>adaptador de rede</b>.
+				<ul>
+					<li> Ou placa de rede.</li>
+					<li> Ou NIC.</li>
+				</ul>
+				</li>
+				<li> Exemplos de adaptadores de rede:
+				<ul>
+					<li> Placa Ethernet, placa 802.11.</li>
+					<li> Implementam tanto a camada de enlace, quanto camada física.</li>
+				</ul>
+				</li>
+				<li> Adaptadores se conectam a barramentos.
+				<ul>
+					<li> PCI, USB, ...</li>
+				</ul>
+				</li>
+				<li> Implementação pode também envolver <i>software</i>, <i>firmware</i>.</li>
+			</ul>
+		</div>
+		<div class="column" style="width: 40% ;">
+			<img src="imagens/Implementacao_opt.svg" style="width: 90% ;"/>
+		</div>
+
+	</div>
+	</section>
+
+	<section>
+	<h1>Comunicação entre Adaptadores</h1>
+	<div class="slideContent">
+
+		<center>
+			<img src="imagens/ComunicacaoAdaptadores_opt.svg" style="width: 70% ;"/>
+		</center>
+
+
+		<div class="column" style="width: 50% ;">
+			<ul>
+				<li> Transmissor:
+				<ul>
+					<li> Encapsula datagrama em quadro.</li>
+					<li> Adiciona informações para verificação/correção de erros, controle de fluxo, transmissão confiável, ...</li>
+				</ul>
+				</li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50% ;">
+			<ul>
+				<li> Receptor:
+				<ul>
+					<li> Verifica/recupera erros, transmissão confiável de dados, ...</li>
+					<li> Extrai datagrama, repassa para camadas superiores.</li>
+				</ul>
+				</li>
+			</ul>
+		</div>
+
+	</div>
+	</section>
+
+	<section class="secao">
+	<div class="slideContent">
+		Detecção e Correção de Erros
+	</div>
+	</section>
+
+	<section>
+	<h1>Detecção de Erros</h1>
+	<div class="slideContent">
+
+
+		<div class="column" style="width: 50% ;">
+			<ul>
+				<li> EDC: bits de detecção e correção de erros.
+				<ul>
+					<li> Redundância.</li>
+				</ul>
+				</li>
+				<li> D: dados protegidos pela redundância.
+				<ul>
+					<li> Pode incluir campos de cabeçalho.</li>
+				</ul>
+				</li>
+				<li> Detecção de erros é probabilística.
+				<ul>
+					<li> Pode falhar, mas geralmente com probabilidade baixa.</li>
+					<li> Quanto mais bits no EDC, menor a probabilidade.</li>
+				</ul>
+				</li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50% ;">
+			<center>
+				<img src="imagens/DeteccaoDeErros1.png" style="width: 90% ;"/>
+			</center>
+		</div>
+
+	</div>
+	</section>
+
+	<section>
+	<h1>Paridade</h1>
+	<div class="slideContent">
+
+
+		<div class="column" style="width: 40% ;">
+			<ul>
+				<li> Um único bit de paridade:</li>
+			</ul>
+			<center>
+				<img src="imagens/paridade1bit.png" style="width: 70% ;"/>
+			</center>
+			<br>
+			<ul>
+				<li>Paridade par <i>vs.</i> paridade ímpar.</li>
+			</ul>
+		</div>
+		<div class="column" style="width: 60% ;">
+			<ul>
+				<li> Paridade bi-dimensional:</li>
+			</ul>
+			<center>
+				<img src="imagens/paridadeBidimensional.svg" style="width: 65% ;"/>
+			</center>
+		</div>
+
+
+	</div>
+	</section>
+
+	<section>
+	<h1>Paridade: Detecção <i>vs.</i> Correção</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Ambas a paridade simples e a bi-dimensional garantem a <b>detecção</b> de certos tipos de erro.
+			<ul>
+				<li>Paridade simples detecta erros quando há um número <b>ímpar</b> de bits errados.</li>
+				<li>Paridade bi-dimensional consegue, <b>adicionalmente</b>, detectar alguns casos de erros com número <b>par</b> de bits errados.</li>
+			</ul></li>
+			<li>Mas funcionalidade da paridade simples para neste ponto.
+			<ul>
+				<li><i>i.e.</i>, não é possível saber qual ou quais bits estão errados.</li>
+			</ul></li>
+			<li>Já a paridade bi-dimensional tem a capacidade de <b>corrigir</b> certos tipos de erro.
+			<ul>
+				<li>Quais?</li>
+			</ul></li>
+			<li>Se há um único bit errado, receptor <b>sabe</b> exatamente <b>onde</b> está o erro e <b>pode corrigi-lo</b>.
+			<ul>
+				<li>Sem necessidade de retransmissão.</li>
+				<li>Capacidade conhecida como <b>FEC</b> (<i>Forward Error Correction</i>).</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Internet Checksum (Revisão)</h1>
+	<div class="slideContent">
+
+		<ul>
+			<li> <b>Objetivo:</b> detectar &ldquo;erros&rdquo; (<i>e.g.</i>, bits com valor trocado) no pacote transmitido.
+			<ul>
+				<li> Usado por protocolos de transporte.</li>
+			</ul>
+			</li>
+		</ul>
+
+
+		<div class="column" style="width: 50% ;">
+			<ul>
+				<li> <b>Transmissor</b>
+				<ul>
+					<li> Trata mensagem como sequência de números de 16 bits.</li>
+					<li> Números são somados em complemento a 1.
+					<ul>
+						<li> Vai-um é somado de volta ao número.</li>
+						<li> Ao final, bits são invertidos.</li>
+					</ul>
+					</li>
+					<li> Resultado é armazenado na mensagem.</li>
+				</ul>
+				</li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50% ;">
+			<ul>
+				<li> <b>Receptor</b>
+				<ul>
+					<li> Computa o checksum da mensagem recebida.</li>
+					<li> Compara o valor computado com o valor encontrado na mensagem.
+					<ul>
+						<li> Diferentes? Erro detectado.</li>
+						<li> Iguais? Nenhum erro <b>detectado</b> (mas não há mesmo erros?).</li>
+					</ul>
+					</li>
+				</ul>
+				</li>
+			</ul>
+		</div>
+
+
+	</div>
+	</section>
+
+	<section>
+	<h1>Internet Checksum: Exemplos</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+				<script type="text/javascript" >
+					var exemploLanternaASCII = '';
+					var exemploLanternaTempo;
+
+					function exemploChecksumZeraTabelaEntrada(l) {
+
+						var tabela = document.getElementById('exemploChecksumInputBits');
+						var tr, td;
+						var i, j;
+
+						tabela.innerHTML = "";
+						for (var i = 0; i < l; i++) {
+
+							if (i % 2 == 0) {
+
+								tr = document.createElement('tr');
+								tabela.appendChild(tr);
+
+								if (i > 0) {
+
+									td = document.createElement('td');
+									tr.appendChild(td);
+									td.style.width = "15px";
+									td.innerHTML = "+";
+								}
+								else {
+
+									td = document.createElement('td');
+									tr.appendChild(td);
+									td.style.width = "15px";
+									td.innerHTML = "";
+								}
+							}
+							else {
+
+								td = document.createElement('td');
+								tr.appendChild(td);
+								td.style.width = "15px";
+							}
+
+							for (j = 0; j < 8; j++) {
+
+								td = document.createElement('td');
+								tr.appendChild(td);
+								td.id = 'checksumInputByte' + i + 'Bit' + j;
+								td.style.width = "15px";
+								td.style.height = "15px";
+								td.style.textAlign = "center";
+							}
+
+							if (i % 2 == 1) {
+
+								td = document.createElement('td');
+								tr.appendChild(td);
+								td.style.width = "190px";
+								td.innerHTML = "&nbsp;&nbsp;&nbsp;(bytes " + (i+1) + " e " + (i) + ")";
+
+								if (i == 3 || (i > 3)) {
+
+									tr.style.borderBottom = "2px solid #000";
+
+									tr = document.createElement('tr');
+									tabela.appendChild(tr);
+									tr.style.color = "#11c";
+
+									td = document.createElement('td');
+									tr.appendChild(td);
+									td.style.width = "15px";
+									td.id = 'checksumInputParcelaCarry' + ((i-3)/2) + 'Bit0';
+									td.innerHTML = "0";
+
+									for (j = 0; j < 16; j++) {
+
+										if (j == 8) {
+
+											td = document.createElement('td');
+											tr.appendChild(td);
+											td.style.width = "15px";
+										}
+
+										td = document.createElement('td');
+										tr.appendChild(td);
+										td.id = 'checksumInputParcelaCarry' + ((i-3)/2) + 'Bit' + (j+1);
+										td.style.width = "15px";
+										td.style.height = "15px";
+										td.style.textAlign = "center";
+										td.innerHTML = "1";
+									}
+
+									td = document.createElement('td');
+									tr.appendChild(td);
+									td.style.width = "210px";
+									td.innerHTML = "&nbsp;&nbsp;&nbsp;(com vai-1)";
+
+									tr = document.createElement('tr');
+									tabela.appendChild(tr);
+									tr.style.color = "#c11";
+
+									td = document.createElement('td');
+									tr.appendChild(td);
+									td.style.width = "15px";
+									td.innerHTML = "";
+
+									for (j = 0; j < 16; j++) {
+
+										if (j == 8) {
+
+											td = document.createElement('td');
+											tr.appendChild(td);
+											td.style.width = "15px";
+										}
+
+										td = document.createElement('td');
+										tr.appendChild(td);
+										td.id = 'checksumInputParcela' + ((i-3)/2) + 'Bit' + j;
+										td.style.width = "15px";
+										td.style.height = "15px";
+										td.style.textAlign = "center";
+										td.innerHTML = "1";
+									}
+
+									td = document.createElement('td');
+									tr.appendChild(td);
+									td.style.width = "190px";
+
+									if (i < l - 1)
+										td.innerHTML = "&nbsp;&nbsp;&nbsp;(parcela)";
+									else
+										td.innerHTML = "&nbsp;&nbsp;&nbsp;(total)";
+
+								}
+							}
+						}
+
+						tr.style.borderBottom = "2px solid #000";
+						tr.children[0].innerHTML = "~";
+
+						tr = document.createElement('tr');
+						tabela.appendChild(tr);
+						tr.style.color = "#1c1";
+
+						td = document.createElement('td');
+						tr.appendChild(td);
+						td.style.width = "15px";
+						td.innerHTML = "";
+
+						for (j = 0; j < 16; j++) {
+
+							if (j == 8) {
+
+								td = document.createElement('td');
+								tr.appendChild(td);
+								td.style.width = "15px";
+							}
+
+							td = document.createElement('td');
+							tr.appendChild(td);
+							td.id = 'checksumInputFinalBit' + j;
+							td.style.width = "15px";
+							td.style.height = "15px";
+							td.style.textAlign = "center";
+							td.innerHTML = "0";
+						}
+
+						td = document.createElement('td');
+						tr.appendChild(td);
+						td.style.width = "190px";
+						td.innerHTML = "&nbsp;&nbsp;&nbsp;(checksum)";
+					}
+
+					function exemploChecksumPreencheTabelaParcelaCarry(parcela, valor) {
+
+						var base2;
+						var bit;
+						var td;
+						var i;
+
+						base2 = valor.toString(2);
+						var padLen = 17 - base2.length;
+						for (i = 0; i < padLen; i++) base2 = "0" + base2;
+
+						for (bit = 0; bit < 17; bit++) {
+							td = document.getElementById('checksumInputParcelaCarry' + parcela + 'Bit' + bit);
+							td.innerHTML = base2.charAt(bit);
+						}
+					}
+
+					function exemploChecksumPreencheTabelaParcelaSemCarry(parcela, valor) {
+
+						var base2;
+						var bit;
+						var td;
+						var i;
+
+						base2 = valor.toString(2);
+						var padLen = 16 - base2.length;
+						for (i = 0; i < padLen; i++) base2 = "0" + base2;
+
+						for (bit = 0; bit < 16; bit++) {
+							td = document.getElementById('checksumInputParcela' + parcela + 'Bit' + bit);
+							td.innerHTML = base2.charAt(bit);
+						}
+					}
+
+					function exemploChecksumPreencheTabelaFinal(valor) {
+
+						var base2;
+						var bit;
+						var td;
+						var i;
+
+						base2 = valor.toString(2);
+						var padLen = 16 - base2.length;
+						for (i = 0; i < padLen; i++) base2 = "0" + base2;
+
+						for (bit = 0; bit < 16; bit++) {
+							td = document.getElementById('checksumInputFinalBit' + bit);
+							td.innerHTML = base2.charAt(bit);
+						}
+					}
+
+					function exemploChecksumPreencheTabelaEntrada(s) {
+
+						var byte, bit;
+						var ascii;
+						var entradaTabela;
+						var i;
+
+						if (s.length % 2 == 0)
+							exemploChecksumZeraTabelaEntrada(s.length);
+						else
+							exemploChecksumZeraTabelaEntrada(s.length + 1);
+
+						for (byte = 0; byte < s.length; byte += 2) {
+
+							if (byte + 1 < s.length) {
+
+								ascii = s.charCodeAt(byte + 1).toString(2);
+								var padLen = 8 - ascii.length;
+								for (i = 0; i < padLen; i++) ascii = "0" + ascii;
+							}
+							else {
+
+								ascii = "00000000";
+							}
+
+							for (bit = 0; bit < 8; bit++) {
+								entradaTabela = document.getElementById('checksumInputByte' + byte + 'Bit' + bit);
+								entradaTabela.innerHTML = ascii.charAt(bit);
+							}
+
+							ascii = s.charCodeAt(byte).toString(2);
+							var padLen = 8 - ascii.length;
+							for (i = 0; i < padLen; i++) ascii = "0" + ascii;
+
+							for (bit = 0; bit < 8; bit++) {
+								entradaTabela = document.getElementById('checksumInputByte' + (byte+1) + 'Bit' + bit);
+								entradaTabela.innerHTML = ascii.charAt(bit);
+							}
+
+						}
+					}
+
+					function exemploChecksum(input) {
+
+						var saida = document.getElementById('exemploChecksumSaida');
+						var entrada = document.getElementById('exemploChecksumEntrada');
+						var s = entrada.value;
+						var i;
+						var sum = 0;
+						var par = 0;
+
+						exemploChecksumPreencheTabelaEntrada(s);
+
+						for (i = 0; i < s.length; i += 2) {
+
+							if (i + 1 < s.length)
+								par = (s.charCodeAt(i + 1) << 8);
+							par += s.charCodeAt(i);
+							sum += par;
+							if (i > 0) {
+
+								exemploChecksumPreencheTabelaParcelaCarry(i / 2 - 1, sum);
+							}
+
+							if (sum >= 65536)
+								sum -= 65535
+
+							if (i > 0) {
+
+								exemploChecksumPreencheTabelaParcelaSemCarry(i / 2 - 1, sum);
+							}
+
+						}
+
+						sum = 65535 - sum;
+						exemploChecksumPreencheTabelaFinal(sum);
+						saida.value = ('0000' + sum.toString(16)).slice(-4);
+					}
+				</script>
+			<ul>
+				<li>Experimente o cálculo do <i>checksum</i> de algumas mensagens (<i>strings</i>):</li>
+			</ul>
+			<center>
+			<div style="width: 60%; border: 2px solid #000; padding-bottom: 10px;">
+			<table class="align" style="width: 90%;">
+				<tr>
+					<td style="width: 90%;">Mensagem</td>
+					<td><input type="text" id="exemploChecksumEntrada" name="exemploChecksumEntrada" value="RedesII" size="10" maxlength="10" style="font-size: 80%; padding: 0.5%;"/></td>
+				</tr>
+				<tr>
+					<td>Checksum</td>
+					<td><input type="text" readonly="true" id="exemploChecksumSaida" name="exemploChecksumSaida" value="a219" size="10" maxlength="4" style="font-size: 80%; padding: 0.5%;" /></td>
+				</tr>
+			</table>
+			<br>
+			<input type="submit" name="exemploChecksumCalcular" value="Calcular" style="padding: 0.5%; font-size: 90%; font-family: 'Lora', sans-serif;" onClick="exemploChecksum();"/>
+			<br>
+			</div>
+			</center>
+			<ul>
+				<li>Sugestão: calcule o <i>checksum</i> de &ldquo;casa&rdquo;.
+				<ul>
+					<li>Resultado: 0x3d29.</li>
+					<li>Em ASCII: 0x3D &#8594; &ldquo;=&rdquo;.</li>
+					<li>Em ASCII: 0x29 &#8594; &ldquo;)&rdquo;.</li>
+				</ul></li>
+				<li><span class="alert">Pergunta:</span> qual é o <i>checksum</i> de &ldquo;casa)=&rdquo;?</li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50%;">
+			<div style="width: 100%; height: 450px;">
+				<table class="align" id="exemploChecksumInputBits">
+				</table>
+			</div>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Internet Checksum: Detecção <i>vs.</i> Correção</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Checksum só é capaz de <b>detectar</b> erros.</li>
+			<li>Mas não é capaz de <b>corrigir</b> erros.</li>
+			<li>Caso típico:
+			<ul>
+				<li>Mensagem chega ao receptor.</li>
+				<li>Receptor calcula o checksum.</li>
+				<li>Valor calculado é comparado ao recebido.</li>
+				<li>Valores são diferentes &rArr; mensagem é <b>completamente descartada</b>.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Internet Checksum: Falso Negativo</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li>Checksum pode não detectar certos erros.
+				<ul>
+					<li><i>i.e.</i>, pode considerar certa uma mensagem com erros.</li>
+				</ul></li>
+				<li>Em outras palavras: mensagem errada pode ter o mesmo checksum da mensagem certa!</li>
+				<li>Exemplo (com pequenas strings):
+				<ul>
+					<li>&ldquo;testar&rdquo; - 0xb3b6</li>
+					<li>&ldquo;tfssar&rdquo; - 0xb3b6</li>
+					<li>&ldquo;settar&rdquo; - 0xb3b6</li>
+					<li>&ldquo;reutar&rdquo; - 0xb3b6</li>
+					<li>...</li>
+				</ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50%;">
+				<script type="text/javascript" >
+					var exemploLanternaASCII = '';
+					var exemploLanternaTempo;
+
+					function exemploChecksum2(input) {
+
+						var saida = document.getElementById('exemploChecksumSaida2');
+						var entrada = document.getElementById('exemploChecksumEntrada2');
+						var s = entrada.value;
+						var i;
+						var sum = 0;
+						var par = 0;
+
+						for (i = 0; i < s.length; i += 2) {
+
+							if (i + 1 < s.length)
+								par = (s.charCodeAt(i + 1) << 8);
+							par += s.charCodeAt(i);
+							sum += par;
+							if (sum >= 65536)
+								sum -= 65535
+						}
+
+						sum = 65535 - sum;
+						saida.value = ('0000' + sum.toString(16)).slice(-4);
+					}
+				</script>
+			<br>
+			<br>
+			<br>
+			<br>
+			<center>
+			<div style="width: 60%; border: 2px solid #000; padding-bottom: 10px;">
+			<table class="align" style="width: 90%;">
+				<tr>
+					<td style="width: 90%;">Mensagem</td>
+					<td><input type="text" id="exemploChecksumEntrada2" name="exemploChecksumEntrada2" value="RedesII" size="10" maxlength="10" style="font-size: 80%; padding: 0.5%;"/></td>
+				</tr>
+				<tr>
+					<td>Checksum</td>
+					<td><input type="text" readonly="true" id="exemploChecksumSaida2" name="exemploChecksumSaida2" value="a219" size="10" maxlength="4" style="font-size: 80%; padding: 0.5%;" /></td>
+				</tr>
+			</table>
+			<br>
+			<input type="submit" name="exemploChecksumCalcular2" value="Calcular" style="padding: 0.5%; font-size: 90%; font-family: 'Lora', sans-serif;" onClick="exemploChecksum2();"/>
+			<br>
+			</div>
+			</center>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Internet Checksum: Falso Positivo</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Valor do checksum é transmitido junto do resto da mensagem.</li>
+			<li><b>Pergunta:</b> se a mensagem pode ser corrompida, por que o checksum não pode?</li>
+			<li><b>Resposta:</b> ele pode!</li>
+			<li>O que acontece quando o valor do checksum é corrompido?
+		</ul>
+		<div class="column" style="width: 45%;">
+			<ul>
+				<li>Primeira possibilidade: apenas o valor do checksum muda.
+				<ul>
+					<li>Exemplo: mensagem &ldquo;testar&rdquo; e checksum 0xb3b7.</li>
+					<li>Dados estão <b>corretos</b>, mas checksum não bate: mensagem correta é descartada!</li>
+				</ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 55%;">
+			<ul>
+				<li>Segunda possibilidade: tanto o valor do checksum, quanto mensagem são corrompidos.
+				<ul>
+					<li>Mais provável: checksum não irá bater, mensagem será (corretamente) descartada.</li>
+					<li>Menos provável: checksum irá bater, mensagem será (erroneamente) aceita!
+					<ul>
+						<li>Exemplo: mensagem &ldquo;tertar&rdquo;, checksum 0xb3b7.</li>
+					</ul></li>
+				</ul></li>
+			</ul>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Cyclic redundancy check (CRC)</h1>
+	<div class="slideContent">
+
+		<ul>
+			<li> Método mais poderoso de detecção de erro.
+			<ul>
+				<li> Resultado de uma &ldquo;conta&rdquo;, como o Checksum.</li>
+				<li> Mas posição dos bits tem maior influência no resultado final.
+				<ul>
+					<li> <b>Menos provável</b> que certos erros comuns não sejam detectados.</li>
+				</ul>
+				</li>
+			</ul>
+			</li>
+		</ul>
+
+
+		<div class="column" style="width: 45% ;">
+			<ul>
+				<li> <b>Ideia</b>
+				<ul>
+					<li> Trata msg <b>M</b> como um polinômio <b>D</b>.</li>
+					<li> Bits são coeficientes:</li>
+					<table class="align">
+						<tr align="center">
+							<td>                    M </td><td style="width: 20px;"> = </td><td style="width: 30px;"> 1 </td><td style="width: 30px;"> 1 </td><td style="width: 30px;"> 0 </td><td style="width: 30px;"> 1 </td><td style="width: 30px;"> 0</td>
+						</tr>
+
+						<tr align="center">
+							<td>                    D </td><td> = </td><td> <span class="math inline">\(x^4\)</span> </td><td> <span class="math inline">\(+x^3\)</span> </td><td> </td><td> <span class="math inline">\(+x^1\)</span> </td><td></td>
+						</tr>
+					</table>
+					<li> Escolhe um <i>polinômio gerador</i> <b>G</b> (grau <b>r</b>).</li>
+					<li> Encontra um polinômio <b>R</b> de grau menor que <span class="math inline">\(r\)</span>, tal que:</li>
+					<span class="math">\(G | (D\cdot x^r + R)\)</span>
+				</ul>
+				</li>
+			</ul>
+		</div>
+		<div class="column" style="width: 55% ;">
+			<ul>
+				<li> <b>Aspectos práticos</b>
+				<ul>
+					<li> Durante a divisão, operações sobre os coeficientes são feitas em módulo 2.
+					<ul>
+						<li> <span class="math inline">\(1 - 1 = 0\)</span></li>
+						<li> <span class="math inline">\(1 - 0 = 1\)</span></li>
+						<li> <span class="math inline">\(0 - 0 = 0\)</span></li>
+						<li> <span class="math inline">\(0 - 1 = 1\)</span></li>
+					</ul>
+					</li>
+					<li> Coeficientes de R são adicionados à mensagem como o CRC (<b>sempre r bits</b>).</li>
+					<li> Receptor trata msg recebida (incluindo CRC) como polinômio e testa divisibilidade.</li>
+				</ul>
+				</li>
+			</ul>
+		</div>
+
+	</div>
+	</section>
+
+	<section>
+	<h1>CRC: Exemplo</h1>
+	<div class="slideContent">
+
+		<ul>
+			<li> Considere:
+			<ul>
+				<li> <span class="math inline">\(M = 101110\)</span>.</li>
+				<li> <span class="math inline">\(G = x^3 + 1\)</span>.
+				<ul>
+					<li> <span class="math inline">\(D = x^5 + x^3 + x^2 + x\implies D\cdot x^3 = x^8 + x^6 + x^5 + x^4\)</span>.</li>
+				</ul>
+				</li>
+			</ul>
+			</li>
+		</ul>
+
+		<ul>
+			<li> <b>Pensando em polinômios:</b></li>
+		</ul>
+		<table class="align">
+			<tr>
+				<td style="width: 25px;">     </td><td style="width: 35px;"> <span class="math inline">\(x^8\)</span> </td><td style="width: 25px;"> + </td><td style="width: 35px;"> <span class="math inline">\(x^6\)</span> </td><td style="width: 25px;"> + </td><td style="width: 35px;"> <span class="math inline">\(x^5\)</span> </td><td style="width: 25px;"> + </td><td style="width: 35px;"> <span class="math inline">\(x^4\)</span> </td><td style="width: 25px;"> </td><td style="width: 35px;"> </td><td style="width: 25px;"> </td><td style="width: 35px;"> </td><td style="width: 25px;"> </td><td style="width: 35px;"> </td> <td style="border-left: 1px solid #000; border-bottom: 1px solid #000; padding-left: 5px; width: 35px;"><span class="math inline">\(x^3\)</span> </td><td style="border-bottom: 1px solid #000; width: 25px;"> + </td><td style="border-bottom: 1px solid #000; width: 35px;"> <span class="math inline">\(1\)</span> </td><td style="border-bottom: 1px solid #000; width: 25px;"> </td><td style="border-bottom: 1px solid #000; width: 25px;"> </td><td style="border-bottom: 1px solid #000; width: 35px;"> </td><td style="border-bottom: 1px solid #000; width: 35px;"></td>
+			</tr>
+			<tr>
+				<td style="border-bottom: 1px solid #000;">    <span class="math inline">\(-\)</span> </td><td style="border-bottom: 1px solid #000;"> <span class="math inline">\(x^8\)</span> </td><td style="border-bottom: 1px solid #000;"> </td><td style="border-bottom: 1px solid #000;"> </td><td style="border-bottom: 1px solid #000;"> <span class="math inline">\(-\)</span> </td><td style="border-bottom: 1px solid #000;"> <span class="math inline">\(x^5\)</span> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td> <td style="border-left: 1px solid #000; padding-left: 5px;"><span class="math inline">\(x^5\)</span> </td><td> + </td><td> <span class="math inline">\(x^3\)</span> </td><td> + </td><td> <span class="math inline">\(x\)</span> </td><td> + </td><td> <span class="math inline">\(1\)</span></td>
+			</tr>
+			<tr>
+				<td>     </td><td> </td><td> </td><td> <span class="math inline">\(x^6\)</span> </td><td> </td><td> </td><td> + </td><td> <span class="math inline">\(x^4\)</span> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td>
+			</tr>
+			<tr>
+				<td>     </td><td> </td><td style="border-bottom: 1px solid #000;"> <span class="math inline">\(-\)</span> </td><td style="border-bottom: 1px solid #000;"> <span class="math inline">\(x^6\)</span> </td><td style="border-bottom: 1px solid #000;"> </td><td style="border-bottom: 1px solid #000;"> </td><td style="border-bottom: 1px solid #000;"> </td><td style="border-bottom: 1px solid #000;"> </td><td style="border-bottom: 1px solid #000;"> <span class="math inline">\(-\)</span></td><td style="border-bottom: 1px solid #000;"> <span class="math inline">\(x^3\)</span> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td></td>
+			</tr>
+			<tr>
+				<td>     </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> + </td><td> <span class="math inline">\(x^4\)</span> </td><td> + </td><td> <span class="math inline">\(x^3\)</span> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td></td>
+			</tr>
+			<tr>
+				<td>     </td><td> </td><td> </td><td> </td><td> </td><td> </td><td style="border-bottom: 1px solid #000;"> <span class="math inline">\(-\)</span> </td><td style="border-bottom: 1px solid #000;"> <span class="math inline">\(x^4\)</span> </td><td style="border-bottom: 1px solid #000;"> </td><td style="border-bottom: 1px solid #000;"> </td><td style="border-bottom: 1px solid #000;"> <span class="math inline">\(-\)</span> </td><td style="border-bottom: 1px solid #000;"> <span class="math inline">\(x\)</span></td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td></td>
+			</tr>
+			<tr>
+				<td>     </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> <span class="math inline">\(x^3\)</span> </td><td> + </td><td> <span class="math inline">\(x\)</span> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td></td>
+			</tr>
+			<tr>
+				<td>     </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td style="border-bottom: 1px solid #000;"> <span class="math inline">\(-\)</span> </td><td style="border-bottom: 1px solid #000;"> <span class="math inline">\(x^3\)</span> </td><td style="border-bottom: 1px solid #000;"> </td><td style="border-bottom: 1px solid #000;"> </td><td style="border-bottom: 1px solid #000;"> <span class="math inline">\(-\)</span> </td><td style="border-bottom: 1px solid #000;"> <span class="math inline">\(1\)</span> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td></td>
+			</tr>
+			<tr>
+				<td>     </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> <span class="math inline">\(x\)</span> </td><td> + </td><td> <span class="math inline">\(1\)</span> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td> </td><td></td>
+			</tr>
+		</table>
+		<ul>
+			<li> <span class="math inline">\(R = x+1\implies \mbox{CRC} = 011\)</span>.</li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>CRC: Exemplo (II)</h1>
+	<div class="slideContent">
+
+		<ul>
+			<li> Alternativa: <b>pensando diretamente nos bits</b></li>
+		</ul>
+
+		<style type = "text/css" scoped>
+			table.slide18 {
+				margin-left: 20px;
+			}
+			table.slide18, table.slide18 td, table.slide18 tr{
+				border: none;
+			}
+			table.slide18 td {
+				text-align: center;
+				width: 45px;
+			}
+			tr.slide18Upper td {
+				border-top: 1px solid #000;
+			}
+		</style>
+
+		<div class="column" style="width: 50% ;">
+			<ul>
+				<li> <b>Transmissor</b></li>
+			</ul>
+
+			<table class="slide18">
+
+				<tr class="slide18Upper">
+					<td>             </td> <td colspan="6" style="text-align: center;">Msg</td><td> </td><td colspan="3" style="text-align: center;">CRC</td>
+				</tr>
+
+				<tr class="slide18Upper">
+					<td>             </td><td> 1 </td><td> 0 </td><td> 1 </td><td> 1 </td><td> 1 </td><td> 0 </td><td> </td><td> 0 </td><td> 0 </td><td> 0</td>
+				</tr>
+				<tr>
+					<td><span class="math inline">\(\oplus\)</span> </td><td> 1 </td><td> 0 </td><td> 0 </td><td> 1 </td><td>   </td><td>   </td><td> </td><td>   </td><td>   </td><td>  </td>
+				</tr>
+
+				<tr class="slide18Upper">
+					<td>             </td><td> 0 </td><td> 0 </td><td> 1 </td><td> 0 </td><td> 1 </td><td> 0 </td><td> </td><td> 0 </td><td> 0 </td><td> 0</td>
+				</tr>
+				<tr>
+					<td><span class="math inline">\(\oplus\)</span> </td><td>   </td><td>   </td><td> 1 </td><td> 0 </td><td> 0 </td><td> 1 </td><td> </td><td>   </td><td>   </td><td>  </td>
+				</tr>
+
+				<tr class="slide18Upper">
+					<td>             </td><td> 0 </td><td> 0 </td><td> 0 </td><td> 0 </td><td> 1 </td><td> 1 </td><td> </td><td> 0 </td><td> 0 </td><td> 0</td>
+				</tr>
+				<tr>
+					<td><span class="math inline">\(\oplus\)</span> </td><td>   </td><td>   </td><td>   </td><td>   </td><td> 1 </td><td> 0 </td><td> </td><td> 0 </td><td> 1 </td><td>  </td>
+				</tr>
+
+				<tr class="slide18Upper">
+					<td>             </td><td> 0 </td><td> 0 </td><td> 0 </td><td> 0 </td><td> 0 </td><td> 1 </td><td> </td><td> 0 </td><td> 1 </td><td> 0</td>
+				</tr>
+				<tr>
+					<td><span class="math inline">\(\oplus\)</span> </td><td>   </td><td>   </td><td>   </td><td>   </td><td>   </td><td> 1 </td><td> </td><td> 0 </td><td> 0 </td><td> 1</td>
+				</tr>
+
+				<tr class="slide18Upper">
+					<td>             </td><td> 0 </td><td> 0 </td><td> 0 </td><td> 0 </td><td> 0 </td><td> 0 </td><td> </td><td> <b>0</b> </td><td> <b>1</b> </td><td> <b>1</b></td>
+				</tr>
+			</table>
+		</div>
+		<div class="column" style="width: 50% ;">
+			<ul>
+				<li> <b>Receptor</b></li>
+			</ul>
+			<table class="slide18">
+				<tr class="slide18Upper">
+					<td>             </td> <td colspan="6" style="text-align: center;">Msg</td><td> </td><td colspan="3" style="text-align: center;">CRC</td>
+				</tr>
+
+				<tr class="slide18Upper">
+					<td>             </td><td> 1 </td><td> 0 </td><td> 1 </td><td> 1 </td><td> 1 </td><td> 0 </td><td> </td><td> 0 </td><td> 1 </td><td> 1</td>
+				</tr>
+				<tr>
+					<td><span class="math inline">\(\oplus\)</span> </td><td> 1 </td><td> 0 </td><td> 0 </td><td> 1 </td><td>   </td><td>   </td><td> </td><td>   </td><td>   </td><td>  </td>
+				</tr>
+
+				<tr class="slide18Upper">
+					<td>             </td><td> 0 </td><td> 0 </td><td> 1 </td><td> 0 </td><td> 1 </td><td> 0 </td><td> </td><td> 0 </td><td> 1 </td><td> 1</td>
+				</tr>
+				<tr>
+					<td><span class="math inline">\(\oplus\)</span> </td><td>   </td><td>   </td><td> 1 </td><td> 0 </td><td> 0 </td><td> 1 </td><td> </td><td>   </td><td>   </td><td>  </td>
+				</tr>
+
+				<tr class="slide18Upper">
+					<td>             </td><td> 0 </td><td> 0 </td><td> 0 </td><td> 0 </td><td> 1 </td><td> 1 </td><td> </td><td> 0 </td><td> 1 </td><td> 1</td>
+				</tr>
+				<tr>
+					<td><span class="math inline">\(\oplus\)</span> </td><td>   </td><td>   </td><td>   </td><td>   </td><td> 1 </td><td> 0 </td><td> </td><td> 0 </td><td> 1 </td><td>  </td>
+				</tr>
+
+				<tr class="slide18Upper">
+					<td>             </td><td> 0 </td><td> 0 </td><td> 0 </td><td> 0 </td><td> 0 </td><td> 1 </td><td> </td><td> 0 </td><td> 0 </td><td> 1</td>
+				</tr>
+				<tr>
+					<td><span class="math inline">\(\oplus\)</span> </td><td>   </td><td>   </td><td>   </td><td>   </td><td>   </td><td> 1 </td><td> </td><td> 0 </td><td> 0 </td><td> 1</td>
+				</tr>
+
+				<tr class="slide18Upper">
+					<td>             </td><td> 0 </td><td> 0 </td><td> 0 </td><td> 0 </td><td> 0 </td><td> 0 </td><td> </td><td> <b>0</b> </td><td> <b>0</b> </td><td> <b>0</b></td>
+				</tr>
+			</table>
+		</div>
+
+	</div>
+	</section>
+
+	<section>
+	<h1>CRC: Uso</h1>
+	<div class="slideContent">
+
+		<div class="column" style="width: 50% ;">
+			<ul>
+				<li> Computacionalmente simples.</li>
+				<li> Efetivo em detectar erros comuns.</li>
+				<li> Parametrizável.
+				<ul>
+					<li> Número de bits (grau do polinômio gerador).</li>
+					<li> Polinômio gerador em si.</li>
+				</ul>
+				</li>
+				<li> <b>Ampla adotação</b> em protocolos da camada de enlace.
+				<ul>
+					<li> Ethernet, 802.11 (Wi-Fi), ...</li>
+				</ul>
+				</li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50% ;">
+			<ul>
+				<li> <b>Escolha do polinômio</b> gerador é importante.
+				<ul>
+					<li> Alguns são melhores que outros.</li>
+				</ul>
+				</li>
+				<li> Para evitar escolhas ruins, há <b>CRCs padronizados</b>.
+				<ul>
+					<li> CRC16&mdash;IBM, <b>CRC32</b>, CRC32&mdash;C, CRC40&mdash;GSM, ...</li>
+				</ul>
+				</li>
+			</ul>
+		</div>
+
+	</div>
+	</section>
+
+	<section>
+	<h1>CRC: Probabilidade de Falha</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50% ;">
+			<ul>
+				<li> CRC pode falhar?
+				<ul>
+					<li> Sim! Mesmos casos vistos para o Checksum, se aplicam.</li>
+					<li> <b>Em particular, duas mensagens diferentes podem ter o mesmo CRC.</b></li>
+					<li> Estamos &ldquo;resumindo&rdquo; mensagem em poucos (<i>e.g.</i> 32) bits.</li>
+					<li> Há mais combinações de mensagens que valores de CRC.</li>
+				</ul>
+				</li>
+				<li> O quão provável é isso?
+				<ul>
+					<li> Assumindo uma &ldquo;boa&rdquo; função de espalhamento, probabilidade de <b>colisão</b>:</li>
+					<center><span class="math">\(\approx 1 - e^{\scriptsize\frac{-2}{2N}}\)</span></center>
+					<li> <span class="math inline">\(N\)</span>: # de diferentes valores de CRC.</li>
+				</ul>
+				</li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50% ;">
+			<center>
+				<img src="imagens/ProbColisao2.png" style="width: 90% ;"/>
+			</center>
+		</div>
+
+	</div>
+	</section>
+
+	<section>
+	<h1>CRC: Exemplo de Colisão</h1>
+	<div class="slideContent">
+		<script>
+				var makeCRCTable = function(){
+					var c;
+					var crcTable = [];
+					for(var n =0; n < 256; n++){
+					c = n;
+					for(var k =0; k < 8; k++){
+					c = ((c&1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1));
+					}
+					crcTable[n] = c;
+					}
+					return crcTable;
+				}
+
+				var crc32 = function(str) {
+						var crcTable = window.crcTable || (window.crcTable = makeCRCTable());
+						var crc = 0 ^ (-1);
+
+						for (var i = 0; i < str.length; i++ ) {
+							crc = (crc >>> 8) ^ crcTable[(crc ^ str.charCodeAt(i)) & 0xFF];
+						}
+
+						return (crc ^ (-1)) >>> 0;
+				};
+				function exemploCRC() {
+
+				var entrada = document.getElementById('exemploCRCEntrada');
+				var saida =  document.getElementById('exemploCRCSaida');
+
+				saida.value = ('00000000' + crc32(entrada.value).toString(16)).slice(-8);
+				}
+		</script>
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li>Alguns pequenos exemplos de colisão do CRC32:
+				<ul>
+					<li>&ldquo;plumless&rdquo; - 0x4ddb0c25.</li>
+					<li>&ldquo;buckeroo&rdquo; - 0x4ddb0c25.</li>
+				</ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50%;">
+			<center>
+			<div style="width: 60%; border: 2px solid #000; padding-bottom: 10px;">
+			<table class="align" style="width: 90%;">
+				<tr>
+					<td style="width: 90%;">Mensagem</td>
+					<td><input type="text" id="exemploCRCEntrada" name="exemploCRCEntrada" value="RedesII" size="10" maxlength="10" style="font-size: 80%; padding: 0.5%;"/></td>
+				</tr>
+				<tr>
+					<td>CRC32</td>
+					<td><input type="text" readonly="true" id="exemploCRCSaida" name="exemploCRCSaida" value="6959b4c4" size="10" maxlength="4" style="font-size: 80%; padding: 0.5%;" /></td>
+				</tr>
+			</table>
+			<br>
+			<input type="submit" name="exemploCRCCalcular" value="Calcular" style="padding: 0.5%; font-size: 90%; font-family: 'Lora', sans-serif;" onClick="exemploCRC();"/>
+			<br>
+			</div>
+			</center>
+
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>CRC <i>vs</i>. Checksum (I)</h1>
+		<br>
+		<br>
+		<br>
+		<br>
+		<ul>
+			<li>CRC é mais eficiente em detectar erros.
+			<ul>
+				<li>Justifica seu emprego comum em protocolos da camada de enlace.</li>
+			</ul></li>
+			<li>Mas por que, então, o checksum é usado nas camadas superiores?</li>
+		</ul>
+	</section>
+
+	<section>
+	<h1>CRC <i>vs</i>. Checksum (II)</h1>
+		<br>
+		<br>
+		<br>
+		<br>
+		<ul>
+			<li>CRC é mais eficiente em detectar erros.
+			<ul>
+				<li>Justifica seu emprego comum em protocolos da camada de enlace.</li>
+			</ul></li>
+			<li>Mas por que, então, o checksum é usado nas camadas superiores?
+			<ul>
+				<li>Cálculo do CRC é mais complexo computacionalmente.</li>
+				<li>Já o checksum é rápido.</li>
+				<li>Lembre-se:
+				<ul>
+					<li>Camada de enlace é normalmente implementada em <i>hardware</i> especializado.</li>
+					<li>Camadas de rede, transporte são geralmente implementadas em <i>software</i>.</li>
+				</ul></li>
+				<li>Conclusão: implementação do CRC é &ldquo;mais viável&rdquo; na camada de enlace.
+				<ul>
+					<li>Ainda relevante hoje?</li>
+				</ul></li>
+			</ul></li>
+		</ul>
+	</section>
+			
+	<!-- {{{{ dzslides core
+	#
+	#
+	#     __  __  __       .  __   ___  __
+	#    |  \  / /__` |    | |  \ |__  /__`
+	#    |__/ /_ .__/ |___ | |__/ |___ .__/ core :€
+	#
+	#
+	# The following block of code is not supposed to be edited.
+	# But if you want to change the behavior of these slides,
+	# feel free to hack it!
+	#
+	-->
+
+    <!-- More CSS -->
+	<link href='../template/css/slides.css' id="slides" rel='stylesheet' type='text/css'>
+	<link href='../template/css/presentationSpecific2.css' id="presentationSpecific2" rel='stylesheet' type='text/css'>
+
+    <!-- More Javascript -->
+	<script type="text/javascript" src="../template/js/dz.js"></script>
+
+	<!-- More CSS -->
+	<link href='../template/css/notesSpecific.css' id="notesSpecific" rel='stylesheet' type='text/css'>
+	<link href='../template/css/printSpecific.css' id="printSpecific" rel='stylesheet' type='text/css'>
+</body>
+</html>

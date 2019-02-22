@@ -1,0 +1,1610 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <!-- Meta info -->
+		<meta charset="utf-8">
+		<meta name="shortauthor" content="Diego Passos"/>
+		<meta name="shorttitle" content="IP, NAT, IPv6, Roteamento (I)"/>
+		<meta name="shortevent" content="Redes de Computadores"/>
+		<title>Redes de Computadores: Aula 6</title>
+
+		<!-- Math support -->
+		<script type="text/x-mathjax-config">
+		MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+			MathJax.InputJax.TeX.Definitions.number = /^(?:[0-9]+(?:\.[0-9]{3})*(?:\{,\}[0-9]*)*|\{,\}[0-9]+)/
+		});
+		</script>
+		<!--<script src="js/plotly-latest.min.js"></script>-->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+		<script src="../../../../../MathJax-2.6-latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+		<script type="text/javascript" src="../template/js/dz_pre.js"></script>
+
+		<!-- Fonts -->
+		<link href='https://fonts.googleapis.com/css?family=Lora:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
+		<link href='../../../../../Fonts/Lora/lora.css' rel='stylesheet' type='text/css'>
+
+		<!-- CSS -->
+		<link href='../template/css/template.css' id="template" rel='stylesheet' type='text/css'>
+		<link href='../template/css/presentationSpecific.css' id="presentationSpecific" rel='stylesheet' type='text/css'>
+
+
+		<!-- Javascript -->
+		<!--
+		<script type="text/javascript" src="../template/js/audio.js"></script>
+		<script src="js/term.js" charset="utf-8"></script>
+    <script src="js/termcast.js" charset="utf-8"></script>
+		<link rel="stylesheet" href="css/googlecode.css">
+		<script src="js/highlight.pack.js"></script>
+		<script>
+			hljs.initHighlightingOnLoad();
+			hljs.configure({
+				tabReplace: '  '
+			});
+		</script>
+		-->
+</head>
+
+<body>
+    <!-- Audio handlers -->
+	<!--<audio src="audio/La.wav" id="La.wav" preload="auto"></audio>-->
+
+    <!-- Title Slide -->
+	<section>
+
+        <div class="slideContent">
+            <h1 class="title">Aula 6 - IP, DHCP, Endereçamento, NAT, ICMP, IPv6, Roteamento (I)</h1>
+            <h2 class="author">Diego Passos</h2>
+            <h4 class="institution">Universidade Federal Fluminense</h4>
+            <h3 class="date">Redes de Computadores</h3>
+        </div>
+		<br>
+		<br>
+			<div style="width: 30%; float: right; padding-right: 2%;">
+			<p style="font-size: 18px; text-align: right;">Material adaptado a partir dos slides originais de J.F Kurose and K.W. Ross.</p>
+		</div>
+	</section>
+
+	<section class="secao">
+	<div class="slideContent">
+	  Protocolo IP: Datagramas
+	</div>
+	</section>
+
+	<section>
+	<h1>A Camada de Rede na Internet</h1>
+	<div class="slideContent">
+		<ul>
+		  <li>Funções da camada de rede de <i>hosts</i> e roteadores.</li>
+		</ul>
+		<br>
+	  <center>
+	    <img src="imagens/InternetCamadaDeRede.svg" style="width: 70%;"/>
+	  </center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Formato do Datagrama (I)</h1>
+	<div class="slideContent">
+	  <div class="column" style="width: 50%;">
+			<ul>
+			  <li><b>version:</b> número de versão.
+			  <ul>
+			    <li><i>e.g.</i>, versão 4, versão 6.</li>
+			  </ul></li>
+			  <li><b>header length:</b> comprimento do cabeçalho, em bytes.
+			  <ul>
+			    <li>Cabeçalho tem tamanho variável.</li>
+			    <li>Vide campo <b>options</b>.</li>
+			  </ul></li>
+			  <li><b>type of service:</b> &ldquo;classe&rdquo; do dado encapsulado.
+			  <ul>
+			    <li><i>e.g.</i>, tráfego de tempo real, melhor esforço.</li>
+			  </ul></li>
+			  <li><b>length:</b> tamanho total do datagrama.
+			  <ul>
+			    <li>Cabeçalho + carga útil.</li>
+					<li>Tamanho máximo: 65535 bytes.</li>
+			  </ul></li>
+			  <li><b>identifier, flags, fragment offset:</b> usados para fragmentação.
+			  <ul>
+			    <li>Mais em breve.</li>
+			  </ul></li>
+			</ul>
+	  </div>
+	  <div class="column" style="width: 50%;">
+			<center>
+			  <img src="imagens/IPFormato.svg" style="width: 70%;"/>
+			</center>
+	  </div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Formato do Datagrama (II)</h1>
+	<div class="slideContent">
+	  <div class="column" style="width: 50%;">
+			<ul>
+				<li><b>time to live:</b> número máximo de saltos que datagrama pode percorrer.
+				<ul>
+				  <li>Decrementado a cada roteador.</li>
+				  <li>Usado, por exemplo, em caso de <i>loops</i> de roteamento.</li>
+				</ul></li>
+				<li><b>upper layer:</b> indica protocolo responsável pela carga útil.
+				<ul>
+				  <li><i>e.g.</i>, TCP, UDP, IP.</li>
+				</ul></li>
+				<li><b>header checksum:</b> verificação de integridade <span class="alert">apenas do cabeçalho</span>.</li>
+				<li><b>endereços de origem e destino:</b> 32 bits cada.</li>
+				<li><b>options:</b> opções de tratamento do datagrama.
+				<ul>
+				  <li><i>e.g.</i>, <i>timestamp</i>, gravar rota, especificação de caminho.</li>
+				</ul></li>
+			</ul>
+	  </div>
+	  <div class="column" style="width: 50%;">
+			<center>
+			  <img src="imagens/IPFormato.svg" style="width: 70%;"/>
+			</center>
+	  </div>
+	</div>
+	</section>
+
+	<section>
+	<h1>IP: Fragmentação, Remontagem de Datagramas (I)</h1>
+	<div class="slideContent">
+	  <div class="column" style="width: 50%;">
+			<ul>
+			  <li>Enlaces de rede têm um MTU (<i>Maximum Transmission Unit</i>).
+			  <ul>
+			    <li>Maior quadro que pode ser transmitido pelo enlace.</li>
+			    <li>Tecnologias diferentes têm MTUs diferentes.</li>
+			  </ul></li>
+			  <li>Datagramas IP grandes são divididos (&ldquo;fragmentados&rdquo;) na rede.
+			  <ul>
+			    <li>Um datagrama quebrado em vários datagramas.</li>
+			    <li>&ldquo;Remontados&rdquo; <span class="alert">apenas no destinatário final</span>.</li>
+			    <li>Bits do cabeçalho IP são usados para identificar e ordenar fragmentos de um mesmo datagrama original.</li>
+			  </ul></li>
+			</ul>
+	  </div>
+	  <div class="column" style="width: 50%;">
+			<br>
+			<br>
+			<br>
+			<center>
+			  <img src="imagens/IPFragmentacao1.svg" style="width: 90%;"/>
+			</center>
+
+	  </div>
+	</div>
+	</section>
+
+	<section>
+	<h1>IP: Fragmentação, Remontagem de Datagramas (II)</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 40%;">
+		<ul>
+		  <li>Exemplo:
+		  <ul>
+		    <li>Datagrama de 4000 bytes.</li>
+		    <li>MTU = 1500 bytes.</li>
+		  </ul></li>
+		  <li><b>Cuidado!</b> O campo <i>offset</i> da fragmentação <span class="alert">é contado em unidade de 8 bytes</span>.</li>
+			<li><b>Além disso:</b> MTU considera o tamanho do datagrama inteiro, <span class="alert">incluindo cabeçalho.</span></li>
+		</ul>
+		</div>
+		<div class="column" style="width: 60%;">
+			<center>
+			  <img src="imagens/IPFragmentacao2.svg" style="width: 80%;"/>
+			</center>
+		</div>
+	</div>
+	</section>
+
+	<section class="secao">
+	<div class="slideContent">
+	  IP: Endereçamento (IPv4)
+	</div>
+	</section>
+
+	<section>
+	<h1>Endereçamento IP: Introdução (I)</h1>
+	<div class="slideContent">
+	  <div class="column" style="width: 50%;">
+			<ul>
+			  <li><b>Endereço IP:</b> identificador de 32 bits para <span class="alert">interfaces</span> de <i>hosts</i>, roteadores.</li>
+			  <li><b>Interface:</b> conexão entre <i>host</i>/roteador e enlace físico.
+			  <ul>
+			    <li>Roteadores tipicamente possuem múltplas interfaces.</li>
+			    <li><i>Host</i> tipicamente possui uma ou duas interfaces (<i>e.g.</i>, Ethernet cabeada e IEEE 802.11 sem fio).</li>
+			  </ul></li>
+			  <li><span class="alert">Endereços IP associados a cada interface</span>.</li>
+			</ul>
+	  </div>
+	  <div class="column" style="width: 50%;">
+			<center>
+			  <img src="imagens/IPEnderecamento1.svg" style="width: 90%;"/>
+			</center>
+	  </div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Endereçamento IP: Introdução (II)</h1>
+	<div class="slideContent">
+	  <div class="column" style="width: 50%;">
+			<ul>
+			  <li><span class="alert">Pergunta:</span> como as interfaces se conectam?</li>
+			  <li><span class="alert">Resposta:</span> tópico dos capítulos 5 e 6.</li>
+			  <li>Interfaces cabeadas Ethernet se conectam através de <i>switches</i> Ethernet.</li>
+			  <li>Interfaces Wi-Fi se conectam através de estações base Wi-Fi.</li>
+			  <li><span class="alert">Por enquanto:</span> não é preciso se preocupar com a interconexão de interfaces.</li>
+			</ul>
+	  </div>
+	  <div class="column" style="width: 50%;">
+			<center>
+			  <img src="imagens/IPEnderecamento2.svg" style="width: 90%;"/>
+			</center>
+
+	  </div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Sub-redes (I)</h1>
+	<div class="slideContent">
+	  <div class="column" style="width: 50%;">
+			<ul>
+			  <li><b>Endereço IP: duas partes</b>.
+			  <ul>
+			    <li>Porção da <span class="alert">sub-rede</span>: bits mais significativos (<i>i.e.</i>, mais à esquerda).</li>
+			    <li>Porção do <i>host</i>: bits menos significativos (<i>i.e.</i>, mais à direita).</li>
+			  </ul></li>
+			  <li><b>O que é uma sub-rede?</b>
+			  <ul>
+			    <li>Interfaces de dispositivos com a mesma porção da sub-rede nos seus endereços IP.</li>
+			    <li>Podem se alcançar diretamente, <span class="alert">sem o intermédio de um roteador</span>.</li>
+			  </ul></li>
+			</ul>
+	  </div>
+	  <div class="column" style="width: 50%;">
+			<center>
+			  <img src="imagens/Subrede.svg" style="width: 70%;"/>
+			</center>
+	  </div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Sub-redes (II)</h1>
+	<div class="slideContent">
+	  <div class="column" style="width: 50%;">
+			<ul>
+			  <li><span class="alert">Receita:</span>
+			  <ul>
+			    <li>Para determinar as sub-redes, desconecte as interfaces de seu <i>host</i> ou roteador, criando ilhas de redes isoladas.</li>
+					<li>Cada rede isolada é uma <span class="alert">sub-rede</span>.</li>
+			  </ul></li>
+				<li><span class="alert">Corolário:</span> roteadores interconectam sub-redes.</li>
+			</ul>
+	  </div>
+	  <div class="column" style="width: 50%;">
+			<center>
+			  <img src="imagens/Subrede2.svg" style="width: 70%;"/>
+			</center>
+	  </div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Sub-redes (III)</h1>
+	<div class="slideContent">
+	  <div class="column" style="width: 45%;">
+			<ul>
+			  <li><b>Quantas sub-redes?</b></li>
+			</ul>
+	  </div>
+	  <div class="column" style="width: 55%;">
+			<center>
+			  <img src="imagens/Subrede3.svg" style="width: 90%;"/>
+			</center>
+
+	  </div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Quantos Bits Identificam a Sub-rede?</h1>
+	<div class="slideContent">
+		<ul>
+		  <li>Recapitulando: endereço IP é dividido em duas partes.
+		  <ul>
+		    <li>Porção da sub-rede (bits mais significativos).</li>
+		    <li>Porção do <i>host</i> (bits menos significativos).</li>
+		  </ul></li>
+		  <li><span class="alert">Pergunta:</span> quantos bits em cada porção?
+		  <ul>
+		    <li>Um endereço IP tem 32 bits <b>no total</b>.</li>
+		    <li>Mas como eles são divididos nas duas porções?</li>
+				<li>Note que <b>nem toda sub-rede precisa ser do mesmo tamanho</b>.</li>
+		  </ul></li>
+		  <li>Duas alternativas:
+		  <ul>
+		    <li>Endereçamento baseado em classes (usado originalmente).</li>
+		    <li>CIDR (usado atualmente).</li>
+		  </ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Endereçamento Baseado em Classes</h1>
+	<div class="slideContent">
+		<ul>
+		  <li>Ideia básica: definimos sub-redes com propósitos diferentes.
+		  <ul>
+		    <li><b>Classe A</b>: redes &ldquo;grandes&rdquo;.
+		    <ul>
+		      <li>Porção da sub-rede com 8 bits, sempre iniciados por 0.</li>
+		      <li><span class="math inline">\(2^{24} = 16777216\)</span> endereços.</li>
+		    </ul></li>
+		    <li><b>Classe B</b>: redes &ldquo;médias&rdquo;.
+		    <ul>
+		      <li>Porção da sub-rede com 16 bits, sempre iniciados por 10.</li>
+		      <li><span class="math inline">\(2^{16} = 65536\)</span> endereços.</li>
+		    </ul></li>
+		    <li><b>Classe C</b>: redes &ldquo;pequenas&rdquo;.
+		    <ul>
+		      <li>Porção da sub-rede com 24 bits, sempre iniciados por 110.</li>
+		      <li><span class="math inline">\(2^{8} = 256\)</span> endereços.</li>
+		    </ul></li>
+				<li><b>Classes D (Multicast) e E (Reservado)</b>: outros usos.
+				<ul>
+				  <li>Endereços iniciados por 1110 e 1111, respectivamente.</li>
+				</ul></li>
+		  </ul></li>
+			<li>Exemplos:
+			<ul>
+			  <li>10.151.0.1 é de classe A (começa por 0), porção da sub-rede é <tt>00001010</tt>.</li>
+			  <li>200.20.15.156 é de classe C (começa por 110), porção da sub-rede é <tt>11001000 00010100 00001111</tt>.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Endereçamento Baseado em Classes: Problemas</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>Três tamanhos não são suficientes.
+	    <ul>
+	      <li>Pouca granularidade.</li>
+	    </ul></li>
+	    <li>Grande sub-utilização do espaço de endereçamento.</li>
+	    <li>Por exemplo: suponha que a UFF precise conectar 1000 dispositivos em uma sub-rede.
+	    <ul>
+	      <li>Sub-rede de classe C é muito pequena: apenas 256 endereços.</li>
+	      <li>Solução: atribuir uma sub-rede de classe B.</li>
+	      <li>Resultado: 65536 - 1000 = 64536 endereços ociosos.
+	      <ul>
+	        <li>Mas <b>alocados</b>!</li>
+	      </ul></li>
+	    </ul></li>
+	  </ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>CIDR</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li><span class="alert">CIDR: C</span>lassless <span class="alert">I</span>nter<span class="alert">D</span>omain <span class="alert">R</span>outing.
+	    <ul>
+	      <li>Porção de sub-rede de tamanho arbitrário.</li>
+	      <li>Formato de endereço: <span class="alert">a.b.c.d/x</span>, onde x é o # de bits na porção da sub-rede.</li>
+	    </ul></li>
+	  </ul>
+		<br>
+		<center>
+		  <img src="imagens/CIDR.svg" style="width: 45%;"/>
+		</center>
+		<br>
+		<ul>
+			<li>Convenciona-se que o endereço IP com todos os bits da porção do <i>host</i> iguais a zero seja denominado o <span class="alert">&ldquo;endereço da rede&rdquo;</span>.</li>
+			<li>Se porção do <i>host</i> só contém 1's, trata-se do <span class="alert">endereço de broadcast</span>.</li>
+		  <li>Porção da sub-rede é comumente chamada de <span class="alert">prefixo</span>.</li>
+			<li>O x, portanto, é o <span class="alert">tamanho do prefixo</span>.</li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>CIDR: Máscara de Sub-rede</h1>
+	<div class="slideContent">
+		<ul>
+		  <li>Notação alternativa:
+		  <ul>
+		    <li>Número de 32 bits tal que um <i>and</i> bit-a-bit entre o endereço de um <i>host</i> e a máscará resulte no endereço da rede.</li>
+				<li>Exemplo:
+				<ul>
+				  <li><i>Host</i> tem endereço 200.20.10.89.</li>
+				  <li>Máscara de sub-rede é 255.255.255.224.</li>
+				  <li>Endereço da rede: 200.20.10.64.</li>
+				</ul></li>
+		  </ul></li>
+		</ul>
+		<center>
+			<style media="screen">
+				table.cidr, table.cidr td, table.cidr tr {
+					border: none;
+				}
+				table.cidr td {
+					padding: 10px;
+				}
+			</style>
+		  <table class="cidr">
+				<tr>
+			  	<td></td><td>200.20.10.89</td> <td>=</td><td><tt>11001000 00010100 00001010 01011001</tt></td>
+				</tr>
+				<tr>
+			  	<td>&and;</td><td>255.255.255.224</td> <td>=</td><td><tt>11111111 11111111 11111111 11100000</tt></td>
+				</tr>
+				<tr style="border-top: 2px solid #000;">
+			  	<td>=</td><td>200.20.10.64</td> <td>=</td><td><tt>11001000 00010100 00001010 01000000</tt></td>
+				</tr>
+		  </table>
+		</center>
+		<br>
+		<ul>
+		  <li>Na prática, máscaras são uma sequência de 1's seguida de uma sequência de 0's.
+		  <ul>
+		    <li>Tamanho da sequência de 1's é o tamanho do prefixo na notação CIDR.</li>
+		  </ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>CIRD e Tamanhos de Sub-Redes</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>O CIDR permite sub-redes de tamanhos arbitrários?
+	    <ul>
+	      <li><span class="alert">Não, ainda há restrições de granularidade</span>.</li>
+	    </ul></li>
+	    <li>Exemplos:
+	    <ul>
+	      <li>Prefixo de 27 bits &mdash; <span class="math inline">\(2^{5} = 32\)</span> endereços.</li>
+	      <li>Prefixo de 26 bits &mdash; <span class="math inline">\(2^{6} = 64\)</span> endereços.</li>
+	      <li>Prefixo de 25 bits &mdash; <span class="math inline">\(2^{7} = 128\)</span> endereços.</li>
+	      <li>Prefixo de 24 bits &mdash; <span class="math inline">\(2^{8} = 256\)</span> endereços.</li>
+				<li>...</li>
+	    </ul></li>
+			<li>Mas há bem mais <b>opções</b>.</li>
+	  </ul>
+	</div>
+	</section>
+
+	<section class="secao">
+	<div class="slideContent">
+		DHCP
+	</div>
+	</section>
+
+	<section>
+	<h1>Endereços IP: Como Conseguir Um?</h1>
+	<div class="slideContent">
+		<ul>
+			<li><span class="alert">Pergunta:</span> como um <i>host</i> obtém seu endereço IP?</li>
+			<li>Algumas possibilidades:
+			<ul>
+				<li>Configurado de maneira <b>estática</b> pelo administrador do sistema em um arquivo.
+				<ul>
+					<li>Windows: painel de controle &rarr; Redes &rarr; Configuração &rarr; TCP/IP &rarr; Propriedades.</li>
+					<li>UNIX: <tt>/etc/rc.config</tt>.</li>
+				</ul></li>
+				<li><span class="alert">DHCP: D</span>ynamic <span class="alert">H</span>ost <span class="alert">C</span>onfiguration <span class="alert">P</span>rotocol.
+				<ul>
+					<li>Obtém configuração dinamicamente diretamente de um servidor.</li>
+					<li>&ldquo;plug-and-play&rdquo;.</li>
+				</ul></li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>DHCP: <i>Dynamic Host Configuration Protocol</i></h1>
+	<div class="slideContent">
+		<ul>
+			<li><b>Objetivo:</b> permitir que <i>host</i> dinamicamente obtenha seu endereço IP de um servidor da rede quando se conecta a ela.
+			<ul>
+				<li>Endereços atribuídos pelo servidor em esquema de &ldquo;empréstimo&rdquo; (<i>lease</i>).</li>
+				<li>Dispositivo pode renovar sua <i>lease</i> durante o uso.</li>
+				<li>Permite reutilização de endereços (dispositivos só possuem endereço enquanto conectados à rede/ligados).</li>
+				<li>Dá suporte a usuários móveis que querem se conectar a rede.</li>
+			</ul></li>
+			<li><b>Visão geral do DHCP:</b>
+			<ul>
+				<li><i>Host</i> envia mensagem do tipo <span class="alert">&ldquo;DHCP discover&rdquo;</span> em <b><i>broadcast</i></b> [opcional].</li>
+				<li>Servidor DHCP responde com um <span class="alert">&ldquo;DHCP offer&rdquo;</span>[opcional].</li>
+				<li><i>Host</i> requisita endereço IP com mensagem <span class="alert">&ldquo;DHCP request&rdquo;</span>.</li>
+				<li>Servidor DHCP envia endereço com mensagem <span class="alert">&ldquo;DHCP ack&rdquo;</span>.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Cenário de Cliente-Servidor DHCP</h1>
+	<div class="slideContent">
+		<center>
+			<img src="imagens/DHCP.svg" style="width: 70%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>DHCP: Interação Típica</h1>
+	<div class="slideContent">
+		<center>
+			<img src="imagens/DHCPInteracao.svg" style="width: 60%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>DHCP: Mais que Apenas Endereços IP</h1>
+	<div class="slideContent">
+		<ul>
+			<li>DHCP pode retornar mais que apenas um endereço IP adequado para aquela sub-rede.
+			<ul>
+				<li>Endereço IP do <span class="alert">roteador de primeiro salto</span>.
+				<ul>
+					<li>Também chamado de <span class="alert">gateway padrão</span>.</li>
+				</ul></li>
+				<li>Nome e endereço IP do servidor DNS local.</li>
+				<li>Máscara de sub-rede.</li>
+				<li>...</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>DHCP: Exemplo (I)</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<center>
+				<img src="imagens/DHCPExemplo.svg" style="width: 70%;"/>
+			</center>
+		</div>
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li>Laptop se conecta à rede e precisa do seu endereço IP, endereço do roteador de primeiro salto, endereço do servidor DNS: utilizar DHCP.</li>
+				<li>Requisição DHCP encapsulada em UDP, encapsulado em IP, encapsulado em 802.3 (Ethernet).</li>
+				<li>Quadro Ethernet enviado em <i>broadcast</i> na rede local, recebido (em particular) no roteador rodando o servidor DHCP.</li>
+				<li>Ethernet demultiplexado para IP, demultiplexado para UDP, demultiplexado para DHCP.</li>
+			</ul>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>DHCP: Exemplo (II)</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<center>
+				<img src="imagens/DHCPExemplo2.svg" style="width: 70%;"/>
+			</center>
+
+		</div>
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li>Servidor DHCP formula um DHCP Ack contendo o endereço IP do cliente, endereço do roteador de primeiro salto, nome e endereço do servidor de DNS.</li>
+				<li>Mensagem é encapsulada e enviada para o cliente.</li>
+				<li>Cliente passa a saber seu endereço IP, endereço do servidor DNS, endereço IP do roteador de primeiro salto.</li>
+			</ul>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>DHCP: Saída de Captura do Wireshark</h1>
+	<div class="slideContent">
+		<center>
+			<img src="imagens/DHCPCaptura.svg" style="width: 90%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section class="secao">
+	<div class="slideContent">
+		Endereçamento Hierárquico
+	</div>
+	</section>
+
+	<section>
+	<h1>Endereçamento IP: Como Obter Um?</h1>
+	<div class="slideContent">
+		<ul>
+			<li><span class="alert">Pergunta:</span> como <b>a rede</b> obtém seus endereços?
+			<ul>
+				<li><i>i.e.</i>, seu prefixo.</li>
+			</ul></li>
+			<li><span class="alert">Resposta:</span> é alocada uma porção do espaço de endereços do seu ISP.
+			<ul>
+				<li>Uma <b>sub-rede menor</b>, contida na sub-rede do ISP, é alocada.</li>
+			</ul></li>
+			<li>Exemplo:</li>
+		</ul>
+		<center>
+			<style media="screen">
+				table.comoObter, table.comoObter td, table.comoObter tr {
+
+					border: none;
+				}
+				table.comoObter td {
+					padding-top: 1px;
+					padding-right: 30px;
+				}
+			</style>
+			<table class="comoObter">
+				<tr style="border-bottom: 2px solid #000;">
+					<td>
+						Bloco do ISP
+					</td>
+					<td>
+						<tt><u>11001000 00010111 0001</u>0000 00000000</tt>
+					</td>
+					<td>
+						200.23.16.0/20
+					</td>
+				</tr>
+				<tr>
+					<td>
+						Organização 1
+					</td>
+					<td>
+						<tt><u>11001000 00010111 0001000</u>0 00000000</tt>
+					</td>
+					<td>
+						200.23.16.0/23
+					</td>
+				</tr>
+				<tr>
+					<td>
+						Organização 2
+					</td>
+					<td>
+						<tt><u>11001000 00010111 0001001</u>0 00000000</tt>
+					</td>
+					<td>
+						200.23.18.0/23
+					</td>
+				</tr>
+				<tr>
+					<td>
+						Organização 3
+					</td>
+					<td>
+						<tt><u>11001000 00010111 0001010</u>0 00000000</tt>
+					</td>
+					<td>
+						200.23.20.0/23
+					</td>
+				</tr>
+				<tr>
+					<td>
+						...
+					</td>
+					<td>
+						...
+					</td>
+					<td>
+						...
+					</td>
+				</tr>
+				<tr>
+					<td>
+						Organização 7
+					</td>
+					<td>
+						<tt><u>11001000 00010111 0001111</u>0 00000000</tt>
+					</td>
+					<td>
+						200.23.30.0/23
+					</td>
+				</tr>
+			</table>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Endereçamento Hierárquico: Agregação de Rotas (I)</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Endereçamento hierárquico permite o anúncio eficiente de informações de roteamento.</li>
+		</ul>
+		<br>
+		<center>
+			<img src="imagens/RoteamentoHierarquico1.svg" style="width: 70%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Endereçamento Hierárquico: Agregação de Rotas (II)</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Suponha que a organização 1 mude de ISP, mas queira manter seus endereços.</li>
+			<li>Agora, o ISPs-R-Us tem rota <span class="alert">mais específica</span> para organização 1.</li>
+			<li>Endereçamento hierárquico + casamento por prefixo mais longo.</li>
+		</ul>
+		<br>
+		<center>
+			<img src="imagens/RoteamentoHierarquico2.svg" style="width: 70%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Endereçamento IP: Última Palavra...</h1>
+	<div class="slideContent">
+		<ul>
+			<li><span class="alert">Pergunta:</span> como um ISP obtém um bloco de endereços?</li>
+			<li><span class="alert">Resposta:</span> ICANN: Internet Corporation for Assigned Names and Numbers.
+			<ul>
+				<li><tt>http://www.icann.org/</tt></li>
+				<li>Aloca endereços.</li>
+				<li>Gerencia DNS.</li>
+				<li>Atribui nomes de domínios, resolve disputas.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section class="secao">
+	<div class="slideContent">
+		NAT
+	</div>
+	</section>
+
+	<section>
+	<h1>NAT: <i>Network Address Translation</i></h1>
+	<div class="slideContent">
+		<center>
+			<img src="imagens/NAT.svg" style="width: 70%;"/>
+		</center>
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li><b>Todos</b> os datagramas <b>deixando</b> a rede local possuem o mesmo único endereço de origem: 138.76.29.7.
+				<ul>
+					<li>Diferenciação através do <span class="alert">número de porta de origem</span>.</li>
+				</ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li>Datagramas com origem ou destino nesta rede possuem endereços de origem, destino da sub-rede 10.0.0/24.</li>
+			</ul>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>NAT: Motivação</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Rede local pode utilizar um único endereço, do ponto de vista do mundo externo.
+			<ul>
+				<li>Não é necessária uma faixa de endereços do ISP: um único endereço IP para todos os dispositivos.</li>
+				<li>Pode-se alterar os endereços dos dispositivos locais sem notificação ao mundo externo.</li>
+				<li>Pode-se mudar de ISP sem que os endereços dos dispositivos locais sejam alterados.</li>
+				<li>Dispositivos dentro da rede local não são explicitamente endereçáveis, visíveis ao mundo externo.
+				<ul>
+					<li>Um (pequeno) benefício de segurança.</li>
+				</ul></li>
+			</ul></li>
+			<li>NAT consegue lidar com a <span class="alert">escassez de endereços IPv4</span>.</li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>NAT: Implementação</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Um roteador que realiza NAT precisa:
+			<ul>
+				<li><b>Datagramas que saem:</b> <span class="alert">substituir</span> <tt>(IP de origem, porta de origem)</tt> de cada datagrama para <tt>(IP do roteador, nova porta de origem)</tt>.
+				<ul>
+					<li>Nó remoto respoderá utilizando <tt>(IP roteador, nova porta de origem)</tt> como destino.</li>
+				</ul></li>
+				<li><b>Armazenar (na tabela NAT)</b> todo mapeamento feito entre <tt>(IP de origem, porta de origem)</tt> e <tt>(IP roteador, nova porta de origem)</tt>.</li>
+				<li><b>Datagramas que chegam:</b> <span class="alert">substituir</span> <tt>(IP roteador, nova porta de origem)</tt> nos campos de destino do pacote por <tt>(IP de origem, porta de origem)</tt> armazenado na tabela NAT.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>NAT: Exemplo</h1>
+	<div class="slideContent">
+		<center>
+			<img src="imagens/NATExemplo.svg" style="width: 80%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>NAT: Análise</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Campo de número de porta: 16 bits.
+			<ul>
+				<li>65000 conexões simultâneas usando um único endereço IP!</li>
+			</ul></li>
+			<li>NAT é controverso:
+			<ul>
+				<li>Roteadores só deveriam processar até a camada 3 (camada de rede).</li>
+				<li>NAT viola o argumento fim-a-fim.
+				<ul>
+					<li>Muitas vezes, o <span class="alert">NAT precisa ser levado em consideração por projetistas de aplicações</span>, <i>e.g.</i>, aplicações P2P.</li>
+				</ul></li>
+				<li>Escassez de endereços deve ser resolvida pela adoção do IPv6.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>NAT <i>Traversal</i> (I)</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li>Cliente quer se conectar ao servidor com endereço 10.0.0.1.
+				<ul>
+					<li>Endereço 10.0.0.1 local para a LAN (cliente não pode usá-lo como endereço de destino).</li>
+					<li>Apenas um endereço visível externamente: 138.76.29.7.</li>
+				</ul></li>
+				<li><b>Solução 1:</b> configurar NAT estaticamente para encaminhar conexões que chegam para uma dada porta para o servidor.
+				<ul>
+					<li><i>e.g.</i>, <tt>(138.76.29.7, porta 2500)</tt> sempre é traduzido (e encaminhado) para <tt>(10.0.0.1, porta 25000)</tt>.<td>
+				</ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50%;">
+			<br>
+			<br>
+			<br>
+			<center>
+				<img src="imagens/NATTraversal.svg" style="width: 70%;"/>
+			</center>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>NAT <i>Traversal</i> (II)</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li><b>Solução 2:</b> <i>Internet Gateway Device Protocol</i> (IGD).
+				<ul>
+					<li>Parte do <i>Universal Plug and Play</i> (UPnP).</li>
+				</ul></li>
+				<li>Permite que <i>host</i> atrás de NAT:
+				<ul>
+					<li>Aprenda endereço IP público (138.76.29.7).</li>
+					<li>Adicione/remova mapeamentos de porta (com tempos de <i>lease</i>).</li>
+				</ul></li>
+				<li><i>i.e.</i>, automatizar configuração estática dos mapeamentos do NAT.</li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50%;">
+			<center>
+				<img src="imagens/IGD.svg" style="width: 70%;"/>
+			</center>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>NAT <i>Traversal</i> (III)</h1>
+	<div class="slideContent">
+		<ul>
+			<li><b>Solução 3:</b> <i>relaying</i> (usado, por exemplo, no Skype).
+			<ul>
+				<li>Cliente atrás do NAT estabelece conexão com <i>host</i> intermediário.</li>
+				<li>Cliente externo se conecta ao mesmo <i>host</i> intermediário.</li>
+				<li><i>Host</i> intermediário (<i>relay</i>) faz a ponte entre pacotes das duas conexões.</li>
+			</ul></li>
+		</ul>
+		<center>
+			<img src="imagens/Relaying.svg" style="width: 70%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section class="secao">
+	<div class="slideContent">
+		ICMP
+	</div>
+	</section>
+
+	<section>
+	<h1>ICMP: <i>Internet Control Message Protocol</i></h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li>Usado por <i>hosts</i> e roteadores para comunicar informações no nível de rede.
+				<ul>
+					<li>Reportar erros: <i>host</i>, rede, porta, protocolo inalcançáveis.</li>
+					<li><i>Echo request/reply</i>: usado pelo utilitário <tt>ping</tt>.</li>
+				</ul></li>
+				<li>Protocolo de camada de rede, mas &ldquo;sobre o IP&rdquo;:
+				<ul>
+					<li>Mensagens ICMP transportadas em datagramas IP.</li>
+				</ul></li>
+				<li><b>Mensagem ICMP:</b> tipo, código, além dos primeiros 8 bytes do datagrama IP que causaram o erro.</li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50%;">
+			<table class="icmp" style="border: 1px solid black;">
+				<style media="screen">
+					th.icmp {
+						padding: 3px;
+					}
+				</style>
+				<tr>
+					<th>
+						Tipo
+					</th>
+					<th>
+						Código
+					</th>
+					<th>
+						Descrição
+					</th>
+				</tr>
+				<tr>
+					<td>0</td><td>0</td><td><i>echo reply</i></td>
+				</tr>
+				<tr>
+					<td>3</td><td>0</td><td>Rede de destino inalcançável</td>
+				</tr>
+				<tr>
+					<td>3</td><td>1</td><td><i>Host</i> de destino inalcançável</td>
+				</tr>
+				<tr>
+					<td>3</td><td>2</td><td>Protocolo de destino inalcançável</td>
+				</tr>
+				<tr>
+					<td>3</td><td>3</td><td>Porta de destino inalcançável</td>
+				</tr>
+				<tr>
+					<td>3</td><td>6</td><td>Rede de destino desconhecida</td>
+				</tr>
+				<tr>
+					<td>3</td><td>7</td><td><i>Host</i> de destino desconhecido</td>
+				</tr>
+				<tr>
+					<td>4</td><td>0</td><td><i>Source quench</i> (controle de congestionamento, não usada)</td>
+				</tr>
+				<tr>
+					<td>8</td><td>0</td><td><i>echo request</i></td>
+				</tr>
+				<tr>
+					<td>9</td><td>0</td><td>anúncio de rota</td>
+				</tr>
+				<tr>
+					<td>10</td><td>0</td><td>descoberta de rota</td>
+				</tr>
+				<tr>
+					<td>11</td><td>0</td><td>TTL expirado</td>
+				</tr>
+				<tr>
+					<td>12</td><td>0</td><td>Cabeçalho IP com erros</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Traceroute e ICMP</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li>Origem envia série de segmentos UDP para o destino.
+				<ul>
+					<li>Primeiro com TTL = 1.</li>
+					<li>Segundo com TTL = 2, etc.</li>
+					<li>Utiliza porta de destino pouco provável.</li>
+				</ul></li>
+				<li>Quando <i>n-ésimo</i> conjunto de datagramas chega ao <i>n-ésimo</i> roteador:
+				<ul>
+					<li>TTL expira, roteador descarta datagrama.</li>
+					<li>Envia mensagem ICMP reportando erro à origem (tipo 11, código 0).</li>
+					<li>Mensagem ICMP inclui nome e endereço IP do roteador.</li>
+				</ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li>Quando mensagem ICMP chega, origem registra o RTT.</li>
+				<li><b>Critério de parada:</b>
+				<ul>
+					<li>Segmento UDP eventualmente chega ao destinatário.</li>
+					<li>Destinatário envia mensagem ICMP do tipo &ldquo;porta inalcançável&rdquo; (tipo 3, código 3).</li>
+					<li>Origem para.</li>
+				</ul></li>
+			</ul>
+		</div>
+		<center>
+			<img src="imagens/traceroute.svg" style="width: 70%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section class="secao">
+	<div class="slideContent">
+		IPv6
+	</div>
+	</section>
+
+	<section>
+	<h1>IPv6: Motivação</h1>
+	<div class="slideContent">
+		<ul>
+			<li><b>Motivação inicial: </b> espaço de endereçamento de 32 bits será esgotado em breve.
+			<ul>
+				<li><i>i.e.</i>, todos os endereços serão alocados.</li>
+			</ul></li>
+			<li>Motivações adicionais:
+			<ul>
+				<li>Formato do cabeçalho facilita e acelera o processamento/encaminhamento.</li>
+				<li>Alterações no cabeçalho para facilitar QoS.</li>
+			</ul></li>
+			<li><b>Formato do datagrama IPv6</b>:
+			<ul>
+				<li>Cabeçalho de tamanho fixo, com 40 bytes.</li>
+				<li>Não permite fragmentação.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>IPv6: Formato do Datagrama</h1>
+	<div class="slideContent">
+		<ul>
+			<li><b>pri:</b> identifica prioridade do datagrama em relação a outros gerados pela mesma origem.</li>
+			<li><b>flow label:</b> identifica datagramas pertencentes a um mesmo &ldquo;fluxo&rdquo; (conceito de fluxo não é bem definido).</li>
+			<li><b>next header:</b> identifica protocolo para a carga útil do pacote.</li>
+		</ul>
+		<center>
+			<img src="imagens/IPv6Datagrama.svg" style="width: 50%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Outras Mudanças em Relação ao IPv4</h1>
+	<div class="slideContent">
+		<ul>
+			<li><b>Checksum:</b> completamente removido para reduzir tempo de processamento em cada salto.</li>
+			<li><b>Opções:</b> permitidas, mas <span class="alert">fora do cabeçalho</span>, indicado pelo valor do campo <b>next header</b>.</li>
+			<li><b>ICMPv6:</b> nova versão do ICMP.
+			<ul>
+				<li>Tipos de mensagem adicionais, <i>e.g.</i>, &ldquo;Pacote Muito Grande&rdquo;.</li>
+				<li>Funções de gerenciamento de grupos multicast.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Transição do IPv4 para o IPv6</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Impossível atualizar todos os roteadores do mundo simultaneamente.
+			<ul>
+				<li>Não existe um &ldquo;dia oficial de migração&rdquo;.</li>
+				<li>Como a rede pode operar com roteadores IPv4 e IPv6 misturados?</li>
+			</ul></li>
+			<li><b>Tunelamento:</b> datagramas IPv6 carregados como carga útil em datagramas IPv4 encaminhados por roteadores IPv4.</li>
+		</ul>
+		<br>
+		<center>
+			<img src="imagens/Tunelamento.svg" style="width: 70%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Tunelamento</h1>
+		<center>
+			<img src="imagens/Tunelamento2.svg" style="width: 70%;"/>
+		</center>
+	</section>
+
+	<section>
+	<h1>Tunelamento</h1>
+		<center>
+			<img src="imagens/Tunelamento32.svg" style="width: 70%;"/>
+		</center>
+	</section>
+
+	<section>
+	<h1>IPv6: Adoção</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Estimativas do US National Institute of Standards [2013]:
+			<ul>
+				<li>~3% dos roteadores IP da indústria.</li>
+				<li>~11% dos roteadores do governo americano.</li>
+			</ul></li>
+			<li><b>Tempo (muito!) longo para implantação, uso.</b>
+			<ul>
+				<li>20 anos e contando!</li>
+				<li>Pense nas mudanças no nível de aplicação nos últimos 20 anos: web, facebook, Netflix, ...</li>
+				<li><span class="alert">Por quê?</span></li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section class="secao">
+	<div class="slideContent">
+		Roteamento: Introdução
+	</div>
+	</section>
+
+	<section>
+	<h1>Sinergia entre Roteamento e Encaminhamento</h1>
+	<div class="slideContent">
+		<center>
+			<img src="imagens/DatagramasTabelaRoteamento.svg" style="width: 70%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Abstração de Grafo</h1>
+	<div class="slideContent">
+		<center>
+			<img src="imagens/GrafoAbstracao.svg" style="width: 40%;"/>
+		</center>
+		<ul>
+			<li>Grafo: G = (N, E).</li>
+			<li>N = conjunto de roteadores = {u, v, w, x, y, z}.</li>
+			<li>E = conjunto de enlaces = {(u,v), (u,x), (v,x), (v,w), (x,w), (x,y), (w,y), (w,z), (y,z)}</li>
+		</ul>
+		<center>
+		<div class="block" style="width:900px;">
+				<div class="blockTitle" style="width: 100%;">
+						<p>Nota</p>
+				</div>
+				<div class="blockBody">
+						Grafos são uma abstração útil em outros contextos de redes de computadores, <i>e.g.</i>, P2P, onde N é o conjunto de pares e E é o o conjunto de conexões TCP.
+				</div>
+		</div>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Abstração de Grafo: Custos</h1>
+	<div class="slideContent">
+		<div style="height: 300px;">
+			<div class="column" style="width: 50%;">
+				<center>
+					<img src="imagens/GrafoAbstracao.svg" style="width: 70%;"/>
+				</center>
+			</div>
+			<div class="column" style="width: 50%;">
+				<ul>
+					<li><span class="math inline">\(c(x, x^\prime) = \)</span> custo do enlace <span class="math inline">\((x, x^\prime)\)</span>.
+					<ul>
+						<li><i>e.g.</i>, <span class="math inline">\(c(w, z) = 5\)</span>.</li>
+					</ul></li>
+					<li>Custo pode ser sempre 1, ou inversamente proporcional à banda, ou inversamente proporcional ao congestionamento.</li>
+				</ul>
+			</div>
+		</div>
+		<br>
+		<ul>
+			<li>Custo de um caminho <span class="math inline">\((x_1, x_2, x_3, ..., x_p) = c(x_1, x_2) + c(x_2, x_3) + ... + c(x_{p-1{}}, x_p)\)</span></li>
+		</ul>
+		<center>
+			<div style="border: 2px solid #c33; width: 90%; text-align: left; padding: 10px;">
+				<span class="alert">Pergunta chave:</span> qual é o caminho de <b>custo mínimo</b> entre u e z?
+				<br>
+				<span class="alert">Algoritmo de roteamento:</span> algoritmo que encontra o caminho de custo mínimo.
+			</div>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Classificação de Algoritmos de Roteamento</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 55%;">
+			<ul>
+				<li><span class="alert">Perguta:</span> informação global ou decentralizada?</li>
+				<li><b>Global:</b>
+				<ul>
+					<li>Todos os roteadores tem <span class="alert">visão completa da topologia, custos de enlaces.</span></li>
+					<li>Algoritmos baseados em &ldquo;Estado de Enlace&rdquo;.
+					<ul>
+						<li><i>Link State</i>, em inglês.</li>
+					</ul></li>
+				</ul></li>
+				<li><b>Decentralizada:</b>
+				<ul>
+					<li>Roteador <span class="alert">conhece vizinhos</span> fisicamente conectados por enlaces, custos dos enlaces para vizinhos.</li>
+					<li>Processo iterativo de computação, troca de informação com vizinhos.</li>
+					<li>Algoritmos baseados em &ldquo;Vetor de Distâncias&rdquo;.
+					<ul>
+						<li><i>Distance Vector</i>, em inglês.</li>
+					</ul></li>
+				</ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 45%;">
+			<ul>
+				<li><span class="alert">Pergunta:</span> estático ou dinâmico?</li>
+				<li><b>Estático:</b> rotas mudam pouco com o tempo.</li>
+				<li><b>Dinâmico:</b> rotas mudam rapidamente.
+				<ul>
+					<li>Em resposta a mudanças nos custos dos enlaces.</li>
+					<li>Atualização periódica.</li>
+				</ul></li>
+				<li><span class="alert">Pergunta:</span> pró-ativo ou reativo?</li>
+				<li><b>Pró-ativo:</b> rotas encontradas antes de serem necessárias.</li>
+				<li><b>Reativo:</b> rotas encontradas sob demanda.</li>
+			</ul>
+		</div>
+	</div>
+	</section>
+
+	<section class="secao">
+	<div class="slideContent">
+		Algoritmos Baseados em Estado de Enlaces
+	</div>
+	</section>
+
+	<section>
+	<h1>Um Algoritmo de Roteamento Baseado em Estado de Enlaces</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 53%;">
+			<ul>
+				<li><b>Algoritmo de Dijkstra:</b>
+				<ul>
+					<li>Topologia da rede, custos dos enlaces conhecidos por todos os nós.
+					<ul>
+						<li>Conseguido através da difusão do &ldquo;estado dos enlaces&rdquo;.</li>
+						<li>Todos os nós tem a mesma informação.
+						<ul>
+							<li>Ou deveriam ter.</li>
+						</ul></li>
+						<li>Computa caminho de custo mínimo de um nó (&ldquo;origem&rdquo;) para todos os outros nós.
+						<ul>
+							<li>Resulta na tabela de roteamento para aquele nó.</li>
+						</ul></li>
+						<li>Iterativo: depois de k iterações, conhece o caminho mínimo para k destinos.</li>
+					</ul></li>
+				</ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 47%;">
+			<ul>
+				<li><b>Notação:</b>
+				<ul>
+					<li><span class="alert"><span class="math inline">\(c(x,y)\)</span>:</span> custo do enlace do nó x para nó y.
+					<ul>
+						<li>infinito, se x e y não são vizinhos.</li>
+					</ul></li>
+					<li><span class="alert"><span class="math inline">\(D(v)\)</span>:</span> custo atualmente conhecido para o caminho da origem até v.</li>
+					<li><span class="alert"><span class="math inline">\(p(v)\)</span>:</span> predecessor de v no caminho da origem para v.</li>
+					<li><span class="alert"><span class="math inline">\(N^\prime\)</span>:</span> conjunto de nós para os quais definitivamente conhecemos o melhor custo.</li>
+				</ul></li>
+			</ul>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Algoritmo de Dijkstra</h1>
+	<div class="slideContent">
+		<style media="screen">
+			table.dijkstra, td.dijkstra, tr.dijkstra {
+				border: none;
+			}
+			td.dijkstra {
+				padding-left: 10px;
+				padding-right: 10px;
+				padding-top: 5px;
+			}
+		</style>
+		<!--<center>-->
+			<table class="dijkstra" style="margin-left: 60px;">
+				<tr>
+					<td>1</td><td><span class="math inline">\(N^\prime \leftarrow \{u\}\)</span></td><td style="color: #666;">// Caminho para origem é trivial</td>
+				</tr>
+				<tr>
+					<td>2</td><td><span class="math inline">\(\forall v \in N\)</span></td><td style="color: #666;">// Para os demais nós</td>
+				</tr>
+				<tr>
+					<td>3</td><td>&nbsp;&nbsp;&nbsp;&nbsp;<b>se</b> <span class="math inline">\((u, v) \in E\)</span></td><td style="color: #666;">// É vizinho da origem?</td>
+				</tr>
+				<tr>
+					<td>4</td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>então</b> <span class="math inline">\(D(v) \leftarrow c(u,v)\)</span></td><td style="color: #666;">// Conhecemos um caminho</td>
+				</tr>
+				<tr>
+					<td>5</td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>senão</b> <span class="math inline">\(D(v) = \infty\)</span></td><td style="color: #666;">// Ainda sem caminho</td>
+				</tr>
+				<tr>
+					<td>6</td><td></td>
+				</tr>
+				<tr>
+					<td>7</td><td><b>Repita</b></td><td style="color: #666;">// Loop principal</td>
+				</tr>
+				<tr>
+					<td>8</td><td>&nbsp;&nbsp;&nbsp;&nbsp;Encontre <span class="math inline">\(w \not\in N^\prime\)</span> tal que D(w) seja mínimo</td><td style="color: #666;">// Melhor caminho provisório</td>
+				</tr>
+				<tr>
+					<td>9</td><td>&nbsp;&nbsp;&nbsp;&nbsp;<span class="math inline">\(N^\prime\leftarrow N^\prime\cup\{w\}\)</span></td><td style="color: #666;">// Se torna definitivo</td>
+				</tr>
+				<tr>
+					<td>10</td><td>&nbsp;&nbsp;&nbsp;&nbsp;<span class="math inline">\(\forall v\)</span> tal que <span class="math inline">\(v \not\in N^\prime \land (w, v) \in E\)</span></td><td style="color: #666;">// Vizinhos de w ainda provisórios</td>
+				</tr>
+				<tr>
+					<td>11</td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="math inline">\(D(v) \leftarrow min(D(v), D(w) + c(w, v))\)</span></td><td style="color: #666;">// Anterior ou passando por w?</td>
+				</tr>
+				<tr>
+					<td>12</td><td><b>Até que </b> <span class="math inline">\(N^\prime = N\)</span></td><td style="color: #666;">// Até adição de todos os nós</td>
+				</tr>
+			</table>
+		<!--</center>-->
+	</div>
+	</section>
+
+	<section>
+	<h1>Algoritmo de Dijkstra: Exemplo</h1>
+	<div class="slideContent">
+		<div style="height: 400px;">
+			<div class="column" style="width: 60%;">
+				<style media="screen">
+					.circle {
+						width:60px;
+						height:40px;
+						border-radius:50%;
+						border: 2px solid #c33;
+						line-height:40px;
+						text-align:center;
+					}
+				</style>
+				<table>
+					<tr><td></td><td></td><td><span class="math inline">\(D(v)\)</span><td><span class="math inline">\(D(w)\)</span></td><td><span class="math inline">\(D(x)\)</span></td><td><span class="math inline">\(D(y)\)</span></td><td><span class="math inline">\(D(z)\)</span></td></tr>
+					<tr style="border-bottom: 4px solid #33a;"><td>Passo</td><td><span class="math inline">\(N^\prime\)</span></td><td><span class="math inline">\(p(v)\)</span></td><td><span class="math inline">\(p(w)\)</span></td><td><span class="math inline">\(p(x)\)</span></td><td><span class="math inline">\(p(y)\)</span></td><td><span class="math inline">\(p(z)\)</span></td></tr>
+					<tr style="border-bottom: 2px solid #33a;"><td>0</td><td>u</td><td style="text-align: center;">7,u</td><td style="text-align: center;"><center><div class="circle">3,u</div></center></td><td style="text-align: center;">5,u</td><td style="text-align: center;"><span class="math inline">\(\infty\)</span></td><td style="text-align: center;"><span class="math inline">\(\infty\)</span></td></tr>
+					<tr style="border-bottom: 2px solid #33a;"><td>1</td><td>uw</td><td style="text-align: center;">6,w</td><td></td><td><center><div class="circle">5,u</div></center></td><td style="text-align: center;">11,w</td><td style="text-align: center;"><span class="math inline">\(\infty\)</span></td></tr>
+					<tr style="border-bottom: 2px solid #33a;"><td>2</td><td>uwx</td><td style="text-align: center;"><center><div class="circle">6,w</div></center></td><td style="text-align: center;"></td><td style="text-align: center;"></td><td style="text-align: center;">11,w</td><td style="text-align: center;">14,x</td></tr>
+					<tr style="border-bottom: 2px solid #33a;"><td>3</td><td>uwxv</td><td style="text-align: center;"></td><td style="text-align: center;"></td><td style="text-align: center;"></td><td style="text-align: center;"><center><div class="circle">10,v</div></center></td><td style="text-align: center;">14,x</td></tr>
+					<tr style="border-bottom: 2px solid #33a;"><td>4</td><td>uwxvy</td><td style="text-align: center;"></td><td style="text-align: center;"></td><td style="text-align: center;"></td><td style="text-align: center;"></td><td style="text-align: center;"><center><div class="circle">12,y</div></center></td></tr>
+					<tr style="border-bottom: 2px solid #33a; line-height: 45px;"><td>5</td><td>uwxvyz</td><td></td><td></td><td></td><td></td><td></td></tr>
+				</table>
+			</div>
+			<div class="column" style="width: 40%;">
+				<center>
+					<img src="imagens/DijkstraExemplo1.svg" style="width: 100%;"/>
+				</center>
+			</div>
+		</div>
+		<br>
+		<center>
+		<div class="block" style="width:1150px;">
+				<div class="blockTitle" style="width: 100%;">
+						<p>Notas</p>
+				</div>
+				<div class="blockBody">
+						<ul>
+							<li>Constrói uma <b>árvore de caminhos de custo mínimo</b> percorrendo predecessores.</li>
+							<li>Podem existir empates. Critério de desempate é arbitrário.</li>
+						</ul>
+				</div>
+		</div>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Algoritmo de Dijkstra: Outro Exemplo (I)</h1>
+	<div class="slideContent">
+		<center>
+			<table>
+				<tr style="border-bottom: 4px solid #33a;"><td>Passo</td><td><span class="math inline">\(N^\prime\)</span></td><td><span class="math inline">\(D(v),p(v)\)</span></td><td><span class="math inline">\(D(w),p(w)\)</span></td><td><span class="math inline">\(D(x),p(x)\)</span></td><td><span class="math inline">\(D(y),p(y)\)</span></td><td><span class="math inline">\(D(z),p(z)\)</span></td></tr>
+				<tr style="border-bottom: 2px solid #33a;"><td>0</td><td>u</td><td style="text-align: center;">2,u</td><td style="text-align: center;">5,u</td><td style="text-align: center;"><center><div class="circle">1,u</div></center></td><td style="text-align: center;"><span class="math inline">\(\infty\)</span></td><td style="text-align: center;"><span class="math inline">\(\infty\)</span></td></tr>
+				<tr style="border-bottom: 2px solid #33a;"><td>1</td><td>ux</td><td style="text-align: center;">2,u</td><td style="text-align: center;">4,x</td><td style="text-align: center;"></td><td style="text-align: center;"><center><div class="circle">2,x</div></center></td><td style="text-align: center;"><span class="math inline">\(\infty\)</span></td></tr>
+				<tr style="border-bottom: 2px solid #33a;"><td>2</td><td>uxy</td><td style="text-align: center;"><center><div class="circle">2,u</div></center></td><td style="text-align: center;">3,y</td><td style="text-align: center;"></td><td style="text-align: center;"></td><td style="text-align: center;">4,y</td></tr>
+				<tr style="border-bottom: 2px solid #33a;"><td>3</td><td>uxyv</td><td style="text-align: center;"></td><td style="text-align: center;"><center><div class="circle">3,y</div></center></td><td style="text-align: center;"></td><td style="text-align: center;"></td><td style="text-align: center;">4,y</td></tr>
+				<tr style="border-bottom: 2px solid #33a;"><td>4</td><td>uxyvw</td><td style="text-align: center;"></td><td style="text-align: center;"></td><td style="text-align: center;"></td><td style="text-align: center;"></td><td style="text-align: center;"><center><div class="circle">4,y</div></center></td></tr>
+				<tr style="border-bottom: 2px solid #33a; line-height: 45px;"><td>5</td><td>uxyvwz</td><td></td><td></td><td></td><td></td><td></td></tr>
+			</table>
+			<br>
+			<img src="imagens/DijkstraExemplo2.svg" style="width: 30%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Algoritmo de Dijkstra: Outro Exemplo (II)</h1>
+	<div class="slideContent">
+			<div class="column" style="width: 50%;">
+				<ul>
+					<li>Árvore de caminhos de menor custo formada a partir de u:</li>
+				</ul>
+				<br>
+				<center>
+					<img src="imagens/Arvore.svg" style="width: 70%;"/>
+				</center>
+			</div>
+			<div class="column" style="width: 50%;">
+				<ul>
+					<li>Tabela de roteamento resultante:</li>
+				</ul>
+				<br>
+				<center>
+					<table>
+						<tr style="border-bottom: 2px solid #33c;">
+							<td style="border-right: 2px solid #33c; text-align: center;">
+								Destino
+							</td>
+							<td>
+								Enlace
+							</td>
+						</tr>
+						<tr>
+							<td style="border-right: 2px solid #33c; text-align: center;">
+								v
+							</td>
+							<td>
+								(u,v)
+							</td>
+						</tr>
+						<tr>
+							<td style="border-right: 2px solid #33c; text-align: center;">
+								x
+							</td>
+							<td>
+								(u,x)
+							</td>
+						</tr>
+						<tr>
+							<td style="border-right: 2px solid #33c; text-align: center;">
+								y
+							</td>
+							<td>
+								(u,x)
+							</td>
+						</tr>
+						<tr>
+							<td style="border-right: 2px solid #33c; text-align: center;">
+								w
+							</td>
+							<td>
+								(u,x)
+							</td>
+						</tr>
+						<tr>
+							<td style="border-right: 2px solid #33c; text-align: center;">
+								z
+							</td>
+							<td>
+								(u,x)
+							</td>
+						</tr>
+					</table>
+				</center>
+			</div>
+	</div>
+	</section>
+
+<!--
+	<section>
+	<h1>Crie seu Exemplo</h1>
+	<div class="slideContent">
+		<center>
+			<div style="border: 2px solid #333; width: 550px;">
+				<svg id="DijkstraArbitrario" style="width: 550px; height: 280px;"></svg>
+				<script type="text/javascript">
+
+				var s = Snap("#DijkstraArbitrario");
+
+				var nodes = [];
+				nodes.push(DrawNode(s, 50, 150, 'A'));
+				nodes.push(DrawNode(s, 200, 45, 'B'));
+				nodes.push(DrawNode(s, 200, 150, 'C'));
+				nodes.push(DrawNode(s, 200, 255, 'D'));
+				nodes.push(DrawNode(s, 350, 150, 'E'));
+				nodes.push(DrawNode(s, 500, 150, 'F'));
+
+				DrawEdge(s, nodes[0], nodes[1], '3');
+				DrawEdge(s, nodes[0], nodes[2], '1');
+				DrawEdge(s, nodes[0], nodes[3], '5');
+				DrawEdge(s, nodes[1], nodes[2], '1');
+				DrawEdge(s, nodes[1], nodes[4], '7');
+				DrawEdge(s, nodes[1], nodes[5], '2');
+				DrawEdge(s, nodes[2], nodes[3], '3');
+				DrawEdge(s, nodes[2], nodes[4], '5');
+				DrawEdge(s, nodes[3], nodes[4], '5');
+				DrawEdge(s, nodes[4], nodes[5], '8');
+
+				for (var i = 0; i < nodes.length; i++) {
+
+					nodes[i][0].drag(moveNode, null, null);
+					nodes[i][0].mouseover(function(){console.log('qweqe');});
+				}
+				</script>
+			</div>
+		</center>
+	</div>
+	</section>
+-->
+
+	<section>
+	<h1>Algoritmo de Dijkstra: Discussão</h1>
+	<div class="slideContent">
+		<ul>
+			<li><b>Complexidade do algoritmo:</b> com <span class="math inline">\(n\)</span> nós.
+			<ul>
+				<li>Cada iteração: verifica todos os possíveis nós <span class="math inline">\(w \not\in N^\prime\)</span>.</li>
+				<li><span class="math inline">\(\frac{n(n+1)}{2}\)</span> comparações: <span class="math inline">\(O(n^2)\)</span>.</li>
+				<li>Implementações mais eficientes são possíveis: <span class="math inline">\(O(n\cdot log\;n)\)</span>.</li>
+			</ul></li>
+			<li><b>Podem ocorrer oscilações:</b>
+			<ul>
+				<li><i>e.g.</i> custos dos enlaces iguais a quantidade de tráfego transportado:</li>
+			</ul></li>
+		</ul>
+		<br>
+		<center>
+			<img src="imagens/Oscilacao.svg" style="width: 80%;"/>
+		</center>
+	</div>
+	</section>
+
+		
+		
+	<!-- {{{{ dzslides core
+	#
+	#
+	#     __  __  __       .  __   ___  __
+	#    |  \  / /__` |    | |  \ |__  /__`
+	#    |__/ /_ .__/ |___ | |__/ |___ .__/ core :€
+	#
+	#
+	# The following block of code is not supposed to be edited.
+	# But if you want to change the behavior of these slides,
+	# feel free to hack it!
+	#
+	-->
+
+    <!-- More CSS -->
+	<link href='../template/css/slides.css' id="slides" rel='stylesheet' type='text/css'>
+	<link href='../template/css/presentationSpecific2.css' id="presentationSpecific2" rel='stylesheet' type='text/css'>
+
+    <!-- More Javascript -->
+	<script type="text/javascript" src="../template/js/dz.js"></script>
+
+	<!-- More CSS -->
+	<link href='../template/css/notesSpecific.css' id="notesSpecific" rel='stylesheet' type='text/css'>
+	<link href='../template/css/printSpecific.css' id="printSpecific" rel='stylesheet' type='text/css'>
+</body>
+</html>

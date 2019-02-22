@@ -1,0 +1,4 @@
+1) Demonstrar separacao logica de trafego em switch com VLANs.
+  * Ping para broadcast, sniffer em portas de cada VLAN.
+2) Mostrar processo de tag sendo realizado por um switch em uma porta trunk.
+3) Mostrar segundo switch recebendo quadro taggeado e encaminhando apenas para as portas adequadas.

@@ -1,0 +1,48 @@
+Script started on Mon 16 May 2016 03:21:23 PM BRT
+ExperimentosRedesI:# dig uff.br ns
+
+; <<>> DiG 9.9.5-9+deb8u2-Debian <<>> uff.br ns
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 12116
+;; flags: qr rd ra; QUERY: 1, ANSWER: 3, AUTHORITY: 0, ADDITIONAL: 1
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 512
+;; QUESTION SECTION:
+;uff.br.				IN	NS
+
+;; ANSWER SECTION:
+uff.br.			3517	IN	NS	marlin.telecom.uff.br.
+uff.br.			3517	IN	NS	server.uff.br.
+uff.br.			3517	IN	NS	guanabara.rederio.br.
+
+;; Query time: 122 msec
+;; SERVER: 8.8.8.8#53(8.8.8.8)
+;; WHEN: Mon May 16 15:21:30 BRT 2016
+;; MSG SIZE  rcvd: 117
+
+ExperimentosRedesI:# dig server.uff.br a
+
+; <<>> DiG 9.9.5-9+deb8u2-Debian <<>> server.uff.br a
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 4663
+;; flags: qr rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 1
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 512
+;; QUESTION SECTION:
+;server.uff.br.			IN	A
+
+;; ANSWER SECTION:
+server.uff.br.		3599	IN	A	200.20.0.18
+
+;; Query time: 145 msec
+;; SERVER: 8.8.8.8#53(8.8.8.8)
+;; WHEN: Mon May 16 15:21:40 BRT 2016
+;; MSG SIZE  rcvd: 58
+
+ExperimentosRedesI:# exit
+
+Script done on Mon 16 May 2016 03:21:44 PM BRT
