@@ -16,6 +16,7 @@
    version="1.1"
    inkscape:version="0.91 r13725"
    sodipodi:docname="rdt2_2Transmissor.svg">
+<defs><style type="text/css">@import url(https://fonts.googleapis.com/css?family=Lora:400,400italic,700,700italic)</style></defs>
   <defs
      id="defs6768">
     <marker
@@ -2289,12 +2290,12 @@
          sodipodi:role="line"
          x="-185.68384"
          y="513.44061"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Latin Modern Mono';-inkscape-font-specification:'Latin Modern Mono'">&amp;&amp; !corrupt(rcvpkt)</tspan><tspan
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family: Lora;!corrupt(rcvpkt)</tspan><tspan
          id="tspan3720"
          sodipodi:role="line"
          x="-185.68384"
          y="563.44061"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Latin Modern Mono';-inkscape-font-specification:'Latin Modern Mono'">&amp;&amp; <tspan
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family: Lora;<tspan
    style="fill:#ff0000"
    id="tspan5205">isACK1(rcvpkt)</tspan></tspan><tspan
          sodipodi:role="line"

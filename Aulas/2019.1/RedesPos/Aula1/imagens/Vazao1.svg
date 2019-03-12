@@ -14,8 +14,27 @@
    height="230.4637"
    id="svg3310"
    version="1.1"
-   inkscape:version="0.48.5 r10040"
-   sodipodi:docname="Perdas.svg">
+   inkscape:version="0.92.3 (2405546, 2018-03-11)"
+   viewBox="0 0 876.099980 230.463700"
+   sodipodi:docname="Vazao1.svg">
+  <defs
+     id="defs4">
+    <style
+       type="text/css"
+       id="style2">@import url(https://fonts.googleapis.com/css?family=Lora:400,400italic,700,700italic)</style>
+  </defs>
+  <defs
+     id="defs8">
+    <style
+       type="text/css"
+       id="style6">@import url(https://fonts.googleapis.com/css?family=Lora:400,400italic,700,700italic)</style>
+  </defs>
+  <defs
+     id="defs12">
+    <style
+       type="text/css"
+       id="style10">@import url(https://fonts.googleapis.com/css?family=Lora:400,400italic,700,700italic)</style>
+  </defs>
   <defs
      id="defs3312">
     <linearGradient
@@ -561,9 +580,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.35"
-     inkscape:cx="400.31406"
-     inkscape:cy="-5.2110199"
+     inkscape:zoom="0.98994949"
+     inkscape:cx="276.40149"
+     inkscape:cy="-34.643033"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -571,11 +590,11 @@
      fit-margin-left="0"
      fit-margin-right="0"
      fit-margin-bottom="0"
-     inkscape:window-width="593"
-     inkscape:window-height="434"
-     inkscape:window-x="313"
-     inkscape:window-y="87"
-     inkscape:window-maximized="0" />
+     inkscape:window-width="1920"
+     inkscape:window-height="1031"
+     inkscape:window-x="0"
+     inkscape:window-y="25"
+     inkscape:window-maximized="1" />
   <metadata
      id="metadata3315">
     <rdf:RDF>
@@ -584,7 +603,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -877,130 +896,94 @@
          id="path3742" />
     </g>
     <text
-       style="font-size:15px"
-       y="456.34491"
-       x="-3.34531"
-       id="text3788">
-      <tspan
-         style="font-size:25px;font-variant:normal;font-weight:normal;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Gill Sans MT;-inkscape-font-specification:Gill Sans MT"
-         x="-3.34531 6.1546903 18.129696 28.879696 39.379696 51.354687 58.879696 61.879696 68.3797 86.354706 91.829712 100.15469"
-         y="456.34491"
-         sodipodi:role="line"
-         id="tspan3790">server, with</tspan>
-    </text>
-    <text
-       style="font-size:15px"
-       y="481.8699"
-       x="-7.5953097"
-       id="text3792">
-      <tspan
-         style="font-size:25.03125px;font-variant:normal;font-weight:normal;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Gill Sans MT;-inkscape-font-specification:Gill Sans MT"
-         x="-7.5953097 -1.3374974 4.1443448 9.6262016 21.616161 28.149319 41.966564 48.224377 55.183071 66.922745 73.656128 86.171753 91.653595 99.91391 109.42578"
-         y="481.8699"
-         sodipodi:role="line"
-         id="tspan3794">file of F bits</tspan>
-    </text>
-    <text
-       style="font-size:15px"
-       y="507.36993"
-       x="-28.59531"
-       id="text3796">
-      <tspan
-         style="font-size:25px;font-variant:normal;font-weight:normal;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Gill Sans MT;-inkscape-font-specification:Gill Sans MT"
-         x="-28.59531 -20.34531 -6.5453067 0.15469012 9.6546898 21.629696 34.129696 46.879696 53.879711 62.129711 75.929688 82.8797 93.829712 99.354706 104.82971 116.80469 129.30469"
-         y="507.36993"
-         sodipodi:role="line"
-         id="tspan3798">to send to client</tspan>
-    </text>
-    <text
-       style="font-size:15px"
+       style="line-height:0%"
        y="456.03241"
        x="209.27969"
        id="text3800">
       <tspan
-         style="font-size:25px;font-variant:normal;font-weight:normal;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Gill Sans MT;-inkscape-font-specification:Gill Sans MT"
-         x="209.27969 214.7547 220.22971 232.72971 244.7547 251.2547 262.20468 272.7547 285.2547 295.97971 306.92969 312.45468 320.70468"
+         style="font-variant:normal;font-weight:normal;font-size:25px;line-height:1.25;font-family:Lora;-inkscape-font-specification:'Gill Sans MT';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         x="209.27969"
          y="456.03241"
          sodipodi:role="line"
          id="tspan3802">link capacity</tspan>
     </text>
     <text
-       style="font-size:15px"
+       style="font-size:15px;line-height:0%"
        y="481.5574"
        x="222.02969"
        id="text3804">
       <tspan
-         style="font-size:25.03125px;font-variant:normal;font-weight:normal;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Gill Sans MT;-inkscape-font-specification:Gill Sans MT"
+         style="font-variant:normal;font-weight:normal;font-size:25.03125px;font-family:Lora;-inkscape-font-specification:'Gill Sans MT';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
          x="222.02969"
          y="481.5574"
          id="tspan3806">R</tspan>
     </text>
     <text
-       style="font-size:15px"
+       style="font-size:15px;line-height:0%"
        y="490.0574"
        x="237.02969"
        id="text3808">
       <tspan
-         style="font-size:23.28125px;font-variant:normal;font-weight:normal;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Gill Sans MT;-inkscape-font-specification:Gill Sans MT"
+         style="font-variant:normal;font-weight:normal;font-size:23.28125px;font-family:Lora;-inkscape-font-specification:'Gill Sans MT';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
          x="237.02969"
          y="490.0574"
          id="tspan3810">s</tspan>
     </text>
     <text
-       style="font-size:15px"
+       style="line-height:0%"
        y="481.5574"
        x="250.77969"
        id="text3812">
       <tspan
-         style="font-size:25.03125px;font-variant:normal;font-weight:normal;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Gill Sans MT;-inkscape-font-specification:Gill Sans MT"
-         x="250.77969 263.29532 268.77716 277.03748 286.54935 293.58313 303.04495 315.03491"
+         style="font-variant:normal;font-weight:normal;font-size:25.03125px;line-height:1.25;font-family:Lora;-inkscape-font-specification:'Gill Sans MT';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         x="250.77969"
          y="481.5574"
          sodipodi:role="line"
          id="tspan3814">bits/sec</tspan>
     </text>
     <text
-       style="font-size:15px"
+       style="line-height:0%"
        y="456.8074"
        x="491.71722"
        id="text3816">
       <tspan
-         style="font-size:25px;font-variant:normal;font-weight:normal;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Gill Sans MT;-inkscape-font-specification:Gill Sans MT"
-         x="491.71722 497.1922 502.66724 515.16724 527.1922 533.6922 544.64221 555.1922 567.6922 578.41724 589.36725 594.89221 603.14221"
+         style="font-variant:normal;font-weight:normal;font-size:25px;line-height:1.25;font-family:Lora;-inkscape-font-specification:'Gill Sans MT';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         x="491.71722"
          y="456.8074"
          sodipodi:role="line"
          id="tspan3818">link capacity</tspan>
     </text>
     <text
-       style="font-size:15px"
-       y="482.33243"
-       x="503.71722"
+       style="font-size:15px;line-height:0%"
+       y="484.35275"
+       x="505.73752"
        id="text3820">
       <tspan
-         style="font-size:25.03125px;font-variant:normal;font-weight:normal;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Gill Sans MT;-inkscape-font-specification:Gill Sans MT"
-         x="503.71722"
-         y="482.33243"
+         style="font-variant:normal;font-weight:normal;font-size:25.03125px;font-family:Lora;-inkscape-font-specification:'Gill Sans MT';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         x="505.73752"
+         y="484.35275"
          id="tspan3822">R</tspan>
     </text>
     <text
-       style="font-size:15px"
-       y="490.83865"
-       x="518.71722"
+       style="font-size:15px;line-height:0%"
+       y="492.85898"
+       x="520.73755"
        id="text3824">
       <tspan
-         style="font-size:23.28125px;font-variant:normal;font-weight:normal;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Gill Sans MT;-inkscape-font-specification:Gill Sans MT"
-         x="518.71722"
-         y="490.83865"
+         style="font-variant:normal;font-weight:normal;font-size:23.28125px;font-family:Lora;-inkscape-font-specification:'Gill Sans MT';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         x="520.73755"
+         y="492.85898"
          id="tspan3826">c</tspan>
     </text>
     <text
-       style="font-size:15px"
-       y="482.33243"
-       x="533.71722"
+       style="line-height:0%"
+       y="484.35275"
+       x="535.73755"
        id="text3828">
       <tspan
-         style="font-size:25.03125px;font-variant:normal;font-weight:normal;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Gill Sans MT;-inkscape-font-specification:Gill Sans MT"
-         x="533.71722 546.23285 551.71472 559.97504 569.48688 576.52063 585.98248 597.97247"
-         y="482.33243"
+         style="font-variant:normal;font-weight:normal;font-size:25.03125px;line-height:1.25;font-family:Lora;-inkscape-font-specification:'Gill Sans MT';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         x="535.73755"
+         y="484.35275"
          sodipodi:role="line"
          id="tspan3830">bits/sec</tspan>
     </text>
@@ -1197,160 +1180,29 @@
          style="fill:url(#linearGradient3946);fill-opacity:1;fill-rule:evenodd;stroke:none"
          id="path3952" />
     </g>
-    <path
-       inkscape:connector-curvature="0"
-       d="m -50.314056,527.15116 228.287496,0 0,-85.46875 -228.287496,0 0,85.46875 z"
-       style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:none"
-       id="path3954" />
     <text
-       style="font-size:15px"
-       y="465.8699"
-       x="-21.50156"
+       style="line-height:0%"
+       y="466.58417"
+       x="-45.787273"
        id="text3956">
       <tspan
-         style="font-size:25.03125px;font-variant:normal;font-weight:normal;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Gill Sans MT;-inkscape-font-specification:Gill Sans MT"
-         x="-21.50156 -11.989674 0.00028642928 10.738689 21.226788 33.216763 43.20422 49.712353 59.224224 71.214203 83.729828 96.495758 105.9826 113.21664 125.73227 131.21411 139.47443 148.9863"
-         y="465.8699"
+         style="font-variant:normal;font-weight:normal;font-size:25.03125px;line-height:1.25;font-family:Lora;-inkscape-font-specification:'Gill Sans MT';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         x="-45.787273"
+         y="466.58417"
          sodipodi:role="line"
          id="tspan3958">server sends bits</tspan>
     </text>
     <text
-       style="font-size:15px"
-       y="491.40115"
-       x="-13.50156"
+       style="line-height:0%"
+       y="492.11542"
+       x="-31.3587"
        id="text3960">
       <tspan
-         style="font-size:25px;font-variant:normal;font-weight:normal;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Gill Sans MT;-inkscape-font-specification:Gill Sans MT"
-         x="-13.50156 -5.5015597 0.74844009 6.2234464 18.723446 24.198437 36.948437 45.023449 51.973446 57.448437 69.948441 78.273438 91.998444 98.748444 111.24844 116.72345 129.22345"
-         y="491.40115"
+         style="font-variant:normal;font-weight:normal;font-size:25px;line-height:1.25;font-family:Lora;-inkscape-font-specification:'Gill Sans MT';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         x="-31.3587"
+         y="492.11542"
          sodipodi:role="line"
          id="tspan3962">(fluid) into pipe</tspan>
-    </text>
-    <path
-       inkscape:connector-curvature="0"
-       d="m 195.46719,524.33866 276.4125,0 0,-85.46875 -276.4125,0 0,85.46875 z"
-       style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:none"
-       id="path3964" />
-    <text
-       style="font-size:15px"
-       y="463.0574"
-       x="242.09219"
-       id="text3966">
-      <tspan
-         style="font-size:25px;font-variant:normal;font-weight:normal;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Gill Sans MT;-inkscape-font-specification:Gill Sans MT"
-         x="242.09219 254.59219 260.0672 272.5672 284.54221 291.34219 299.59219 312.09219 322.8172 331.0672 337.8172 348.76721 359.54224 372.04224 378.79224 389.74219 400.51721 410.26721 420.99219"
-         y="463.0574"
-         sodipodi:role="line"
-         id="tspan3968">pipe that can carry</tspan>
-    </text>
-    <text
-       style="font-size:15px"
-       y="488.58865"
-       x="275.6297"
-       id="text3970">
-      <tspan
-         style="font-size:25px;font-variant:normal;font-weight:normal;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Gill Sans MT;-inkscape-font-specification:Gill Sans MT"
-         x="275.6297 281.8797 287.35471 299.85471 305.32968 318.07968 324.8797 335.60474 343.85474 350.60474 360.57971 371.30469 379.55469"
-         y="488.58865"
-         sodipodi:role="line"
-         id="tspan3972">fluid at rate</tspan>
-    </text>
-    <text
-       style="font-size:15px"
-       y="514.08868"
-       x="281.11719"
-       id="text3974">
-      <tspan
-         style="font-size:25px;font-variant:normal;font-weight:normal;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Gill Sans MT;-inkscape-font-specification:Gill Sans MT"
-         x="281.11719"
-         y="514.08868"
-         id="tspan3976">R</tspan>
-    </text>
-    <text
-       style="font-size:15px"
-       y="522.58868"
-       x="296.11719"
-       id="text3978">
-      <tspan
-         style="font-size:23.25px;font-variant:normal;font-weight:normal;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Gill Sans MT;-inkscape-font-specification:Gill Sans MT"
-         x="296.11719"
-         y="522.58868"
-         id="tspan3980">s</tspan>
-    </text>
-    <text
-       style="font-size:15px"
-       y="514.08868"
-       x="309.86719"
-       id="text3982">
-      <tspan
-         style="font-size:25px;font-variant:normal;font-weight:normal;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Gill Sans MT;-inkscape-font-specification:Gill Sans MT"
-         x="309.86719 322.36719 327.84219 336.16724 345.61719 352.64221 362.11719 374.09222 385.09222"
-         y="514.08868"
-         sodipodi:role="line"
-         id="tspan3984">bits/sec)</tspan>
-    </text>
-    <path
-       inkscape:connector-curvature="0"
-       d="m 469.69219,525.74491 290.625,0 0,-85.46875 -290.625,0 0,85.46875 z"
-       style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:none"
-       id="path3986" />
-    <text
-       style="font-size:15px"
-       y="464.46991"
-       x="523.40472"
-       id="text3988">
-      <tspan
-         style="font-size:25.03125px;font-variant:normal;font-weight:normal;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Gill Sans MT;-inkscape-font-specification:Gill Sans MT"
-         x="523.40472 535.92035 541.40222 553.91785 565.90778 572.6662 580.92651 593.44214 604.13049 612.46588 619.17426 630.138 640.90143 653.41705 660.15045 671.11414 681.87756 691.63977 702.35315"
-         y="464.46991"
-         sodipodi:role="line"
-         id="tspan3990">pipe that can carry</tspan>
-    </text>
-    <text
-       style="font-size:15px"
-       y="489.9949"
-       x="557.1922"
-       id="text3992">
-      <tspan
-         style="font-size:25px;font-variant:normal;font-weight:normal;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Gill Sans MT;-inkscape-font-specification:Gill Sans MT"
-         x="557.1922 563.4422 568.91724 581.41724 586.89221 599.64221 606.4422 617.16724 625.41724 632.16724 642.14221 652.86725 661.11725"
-         y="489.9949"
-         sodipodi:role="line"
-         id="tspan3994">fluid at rate</tspan>
-    </text>
-    <text
-       style="font-size:15px"
-       y="515.49493"
-       x="561.92975"
-       id="text3996">
-      <tspan
-         style="font-size:25px;font-variant:normal;font-weight:normal;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Gill Sans MT;-inkscape-font-specification:Gill Sans MT"
-         x="561.92975"
-         y="515.49493"
-         id="tspan3998">R</tspan>
-    </text>
-    <text
-       style="font-size:15px"
-       y="523.99493"
-       x="576.92975"
-       id="text4000">
-      <tspan
-         style="font-size:23.25px;font-variant:normal;font-weight:normal;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Gill Sans MT;-inkscape-font-specification:Gill Sans MT"
-         x="576.92975"
-         y="523.99493"
-         id="tspan4002">c</tspan>
-    </text>
-    <text
-       style="font-size:15px"
-       y="515.49493"
-       x="591.92975"
-       id="text4004">
-      <tspan
-         style="font-size:25px;font-variant:normal;font-weight:normal;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Gill Sans MT;-inkscape-font-specification:Gill Sans MT"
-         x="591.92975 604.42975 609.90472 618.22974 627.67975 634.70471 644.17975 656.15472 667.15472"
-         y="515.49493"
-         sodipodi:role="line"
-         id="tspan4006">bits/sec)</tspan>
     </text>
     <g
        transform="matrix(1.25,0,0,-1.25,-73.907806,610.74491)"

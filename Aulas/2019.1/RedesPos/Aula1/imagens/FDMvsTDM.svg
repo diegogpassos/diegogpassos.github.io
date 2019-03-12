@@ -17,6 +17,9 @@
    version="1.1"
    inkscape:version="0.91 r13725"
    sodipodi:docname="FDMvsTDM.svg">
+<defs><style type="text/css">@import url(https://fonts.googleapis.com/css?family=Lora:400,400italic,700,700italic)</style></defs>
+<defs><style type="text/css">@import url(https://fonts.googleapis.com/css?family=Lora:400,400italic,700,700italic)</style></defs>
+<defs><style type="text/css">@import url(https://fonts.googleapis.com/css?family=Lora:400,400italic,700,700italic)</style></defs>
   <defs
      id="defs7579">
     <linearGradient
@@ -4188,10 +4191,10 @@
     <text
        y="205.71358"
        x="-100.57098"
-       style="font-variant:normal;font-weight:normal;font-size:30px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       style="font-variant:normal;font-weight:normal;font-size:30px;font-family: Lora;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
        id="text15696">
       <tspan
-         x="-100.57098 -82.240974 -60.580978"
+         x="-100.57098"
          y="205.71358"
          sodipodi:role="line"
          id="tspan15698">FDM</tspan>
@@ -4204,10 +4207,10 @@
     <text
        y="310.93857"
        x="-33.039719"
-       style="font-variant:normal;font-weight:normal;font-size:30.03125px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       style="font-variant:normal;font-weight:normal;font-size:30.03125px;font-family: Lora;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
        id="text15702">
       <tspan
-         x="-33.039719 -24.78113 -14.780717 1.9166553 18.674086 35.371475 52.158936 68.856308 83.871933"
+         x="-33.039719"
          y="310.93857"
          sodipodi:role="line"
          id="tspan15704">frequency</tspan>
@@ -4220,10 +4223,10 @@
     <text
        y="400.81357"
        x="330.80405"
-       style="font-variant:normal;font-weight:normal;font-size:30.03125px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       style="font-variant:normal;font-weight:normal;font-size:30.03125px;font-family: Lora;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
        id="text15708">
       <tspan
-         x="330.80405 339.06265 345.72955 370.80566"
+         x="330.80405"
          y="400.81357"
          sodipodi:role="line"
          id="tspan15710">time</tspan>
@@ -4281,10 +4284,10 @@
     <text
        y="418.62607"
        x="-101.82098"
-       style="font-variant:normal;font-weight:normal;font-size:30px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       style="font-variant:normal;font-weight:normal;font-size:30px;font-family: Lora;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
        id="text15732">
       <tspan
-         x="-101.82098 -83.490974 -61.830978"
+         x="-101.82098"
          y="418.62607"
          sodipodi:role="line"
          id="tspan15734">TDM</tspan>
@@ -4297,10 +4300,10 @@
     <text
        y="531.46356"
        x="-34.289719"
-       style="font-variant:normal;font-weight:normal;font-size:30px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       style="font-variant:normal;font-weight:normal;font-size:30px;font-family: Lora;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
        id="text15738">
       <tspan
-         x="-34.289719 -25.949724 -15.959718 0.72027469 17.400282 34.170288 50.850281 67.650284 82.650284"
+         x="-34.289719"
          y="531.46356"
          sodipodi:role="line"
          id="tspan15740">frequency</tspan>
@@ -4313,10 +4316,10 @@
     <text
        y="621.34485"
        x="329.55405"
-       style="font-variant:normal;font-weight:normal;font-size:30px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       style="font-variant:normal;font-weight:normal;font-size:30px;font-family: Lora;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
        id="text15744">
       <tspan
-         x="329.55405 337.89404 344.55402 369.54401"
+         x="329.55405"
          y="621.34485"
          sodipodi:role="line"
          id="tspan15746">time</tspan>
@@ -4860,10 +4863,10 @@
     <text
        y="222.16357"
        x="389.27905"
-       style="font-variant:normal;font-weight:normal;font-size:30.03125px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       style="font-variant:normal;font-weight:normal;font-size:30.03125px;font-family: Lora;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
        id="text15972">
       <tspan
-         x="389.27905 405.97638 414.02478 430.72217 445.73779 462.43512 472.43555"
+         x="389.27905"
          y="222.16357"
          sodipodi:role="line"
          id="tspan15974">4 users</tspan>
@@ -4911,10 +4914,10 @@
     <text
        y="173.37607"
        x="389.74152"
-       style="font-variant:normal;font-weight:normal;font-size:30px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       style="font-variant:normal;font-weight:normal;font-size:30px;font-family: Lora;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
        id="text15992">
       <tspan
-         x="389.74152 409.75153 424.48151 441.1615 466.15149 482.95154 489.67151 506.3515"
+         x="389.74152"
          y="173.37607"
          sodipodi:role="line"
          id="tspan15994">Example:</tspan>

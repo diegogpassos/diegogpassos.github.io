@@ -16,6 +16,7 @@
    version="1.1"
    inkscape:version="0.91 r13725"
    sodipodi:docname="rdt2_0Exemplo1_1.svg">
+<defs><style type="text/css">@import url(https://fonts.googleapis.com/css?family=Lora:400,400italic,700,700italic)</style></defs>
   <defs
      id="defs4">
     <marker
@@ -2904,7 +2905,7 @@
          id="tspan27362"
          x="668.53406"
          y="412.61621"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Latin Modern Mono';-inkscape-font-specification:'Latin Modern Mono'">rdt_recv(rcvpkt) &amp;&amp; </tspan><tspan
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family: Lora;</tspan><tspan
          id="tspan27364"
          sodipodi:role="line"
          x="668.53406"
@@ -2989,7 +2990,7 @@
          id="tspan15105-4"
          x="1580.3856"
          y="142.97552"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Latin Modern Mono';-inkscape-font-specification:'Latin Modern Mono'">rdt_recv(pkt) &amp;&amp; </tspan><tspan
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family: Lora;</tspan><tspan
          sodipodi:role="line"
          x="1580.3856"
          y="192.97552"

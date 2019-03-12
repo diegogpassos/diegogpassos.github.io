@@ -17,6 +17,9 @@
    version="1.1"
    inkscape:version="0.91 r13725"
    sodipodi:docname="MultiplexacaoEstatisticaCenario.svg">
+<defs><style type="text/css">@import url(https://fonts.googleapis.com/css?family=Lora:400,400italic,700,700italic)</style></defs>
+<defs><style type="text/css">@import url(https://fonts.googleapis.com/css?family=Lora:400,400italic,700,700italic)</style></defs>
+<defs><style type="text/css">@import url(https://fonts.googleapis.com/css?family=Lora:400,400italic,700,700italic)</style></defs>
   <defs
      id="defs7579">
     <linearGradient
@@ -4362,7 +4365,7 @@
     <text
        y="341.07831"
        x="51.373833"
-       style="font-style:italic;font-variant:normal;font-weight:normal;font-size:25.03125px;font-family:'Gill Sans MT';-inkscape-font-specification:'Gill Sans MT Italic';writing-mode:lr-tb;fill:#000099;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       style="font-style:italic;font-variant:normal;font-weight:normal;font-size:25.03125px;font-family: Lora;-inkscape-font-specification:'Gill Sans MT Italic';writing-mode:lr-tb;fill:#000099;fill-opacity:1;fill-rule:nonzero;stroke:none"
        id="text16667">
       <tspan
          x="51.373833"
@@ -4372,10 +4375,10 @@
     <text
        y="365.07831"
        x="36.373829"
-       style="font-variant:normal;font-weight:normal;font-size:25px;font-family:'Gill Sans MT';-inkscape-font-specification:'Gill Sans MT';writing-mode:lr-tb;fill:#000099;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       style="font-variant:normal;font-weight:normal;font-size:25px;font-family: Lora;-inkscape-font-specification:'Gill Sans MT';writing-mode:lr-tb;fill:#000099;fill-opacity:1;fill-rule:nonzero;stroke:none"
        id="text16671">
       <tspan
-         x="36.373829 48.873833 58.373833 70.348831 80.348831"
+         x="36.373829"
          y="365.07831"
          sodipodi:role="line"
          id="tspan16673">users</tspan>
@@ -4383,10 +4386,10 @@
     <text
        y="402.80331"
        x="272.31134"
-       style="font-variant:normal;font-weight:normal;font-size:25px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       style="font-variant:normal;font-weight:normal;font-size:25px;font-family: Lora;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
        id="text16675">
       <tspan
-         x="272.31134 286.28635 292.78635 313.61133 327.51135 341.51132 354.01132 360.76132 366.31131 371.76132 385.7363"
+         x="272.31134"
          y="402.80331"
          sodipodi:role="line"
          id="tspan16677">1 Mbps link</tspan>

@@ -10,19 +10,38 @@
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="212.62601mm"
-   height="136.03021mm"
-   viewBox="0 0 753.39924 481.99681"
+   width="219.71387mm"
+   height="136.0164mm"
+   viewBox="0 0 778.51371 481.94788"
    id="svg10221"
    version="1.1"
-   inkscape:version="0.91 r13725">
+   inkscape:version="0.92.3 (2405546, 2018-03-11)"
+   sodipodi:docname="FunInternetApps.svg">
+  <defs
+     id="defs4">
+    <style
+       type="text/css"
+       id="style2">@import url(https://fonts.googleapis.com/css?family=Lora:400,400italic,700,700italic)</style>
+  </defs>
+  <defs
+     id="defs8">
+    <style
+       type="text/css"
+       id="style6">@import url(https://fonts.googleapis.com/css?family=Lora:400,400italic,700,700italic)</style>
+  </defs>
+  <defs
+     id="defs12">
+    <style
+       type="text/css"
+       id="style10">@import url(https://fonts.googleapis.com/css?family=Lora:400,400italic,700,700italic)</style>
+  </defs>
   <defs
      id="defs10223">
     <clipPath
        clipPathUnits="userSpaceOnUse"
        id="clipPath9904">
       <path
-         d="M -1.097e-6,1.8311e-4 720,1.8311e-4 720,540.00018 -1.097e-6,540.00018 l 0,-539.99999689 z"
+         d="M -1.097e-6,1.8311e-4 H 720 V 540.00018 H -1.097e-6 Z"
          id="path9906"
          inkscape:connector-curvature="0"
          style="clip-rule:evenodd" />
@@ -31,7 +50,7 @@
        clipPathUnits="userSpaceOnUse"
        id="clipPath9916">
       <path
-         d="M -6.15e-7,2.4414e-4 720,2.4414e-4 720,540.00024 -6.15e-7,540.00024 l 0,-539.99999586 z"
+         d="M -6.15e-7,2.4414e-4 H 720 V 540.00024 H -6.15e-7 Z"
          id="path9918"
          inkscape:connector-curvature="0"
          style="clip-rule:evenodd" />
@@ -40,7 +59,7 @@
        clipPathUnits="userSpaceOnUse"
        id="clipPath9952">
       <path
-         d="M 3.092e-6,1.8311e-4 720,1.8311e-4 720,540.00018 3.092e-6,540.00018 l 0,-539.99999689 z"
+         d="M 3.092e-6,1.8311e-4 H 720 V 540.00018 H 3.092e-6 Z"
          id="path9954"
          inkscape:connector-curvature="0"
          style="clip-rule:evenodd" />
@@ -49,7 +68,7 @@
        clipPathUnits="userSpaceOnUse"
        id="clipPath9968">
       <path
-         d="M -3.05e-7,1.2207e-4 720,1.2207e-4 720,540.00012 -3.05e-7,540.00012 l 0,-539.99999793 z"
+         d="M -3.05e-7,1.2207e-4 H 720 V 540.00012 H -3.05e-7 Z"
          id="path9970"
          inkscape:connector-curvature="0"
          style="clip-rule:evenodd" />
@@ -58,7 +77,7 @@
        clipPathUnits="userSpaceOnUse"
        id="clipPath9988">
       <path
-         d="M 7.63e-7,1.8311e-4 720,1.8311e-4 720,540.00018 7.63e-7,540.00018 l 0,-539.99999689 z"
+         d="M 7.63e-7,1.8311e-4 H 720 V 540.00018 H 7.63e-7 Z"
          id="path9990"
          inkscape:connector-curvature="0"
          style="clip-rule:evenodd" />
@@ -67,7 +86,7 @@
        clipPathUnits="userSpaceOnUse"
        id="clipPath10020">
       <path
-         d="m -5.62e-6,1.8311e-4 719.99999562,0 0,539.99999689 -719.99999562,0 0,-539.99999689 z"
+         d="M -5.62e-6,1.8311e-4 H 719.99999 V 540.00018 H -5.62e-6 Z"
          id="path10022"
          inkscape:connector-curvature="0"
          style="clip-rule:evenodd" />
@@ -76,7 +95,7 @@
        clipPathUnits="userSpaceOnUse"
        id="clipPath10030">
       <path
-         d="m 0,0 239.96,0 0,378.34 L 0,378.34 0,0 Z"
+         d="M 0,0 H 239.96 V 378.34 H 0 Z"
          id="path10032"
          inkscape:connector-curvature="0" />
     </clipPath>
@@ -89,8 +108,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.35"
-     inkscape:cx="394.55675"
-     inkscape:cy="78.141266"
+     inkscape:cx="-51.157536"
+     inkscape:cy="66.660531"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -98,8 +117,8 @@
      fit-margin-left="0"
      fit-margin-right="0"
      fit-margin-bottom="0"
-     inkscape:window-width="1360"
-     inkscape:window-height="719"
+     inkscape:window-width="1920"
+     inkscape:window-height="1031"
      inkscape:window-x="0"
      inkscape:window-y="25"
      inkscape:window-maximized="1" />
@@ -161,37 +180,40 @@
       </g>
       <text
          id="text9924"
-         style="font-variant:normal;font-weight:normal;font-size:16.02499962px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         style="font-variant:normal;font-weight:normal;line-height:0%;font-family:Lora;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
          transform="matrix(1,0,0,-1,77.725,301.08)">
         <tspan
            id="tspan9926"
            sodipodi:role="line"
            y="0"
-           x="0 4.4068751 14.8071 19.213976 28.0117 31.56925 39.581749 44.036701 52.818401 58.202801 67.000526 71.583672 76.166824 81.551224 90.348953 103.72983">IP picture frame</tspan>
+           x="0"
+           style="font-size:16.02499962px;line-height:1.25">IP picture frame</tspan>
       </text>
       <text
          id="text9928"
-         style="font-variant:normal;font-weight:normal;font-size:16px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         style="font-variant:normal;font-weight:normal;line-height:0%;font-family:Lora;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
          transform="matrix(1,0,0,-1,77.725,281.88)">
         <tspan
            id="tspan9930"
            sodipodi:role="line"
            y="0"
-           x="0 8.8000002 13.248 17.6 26.4 30.848 35.200001 39.647999 50.992001 62.383999 72.991997 77.440002 85.391998 94.192001 97.744003 105.968 114.768 119.216 127.168 135.968 149.34399">http://www.ceiva.com/</tspan>
+           x="0"
+           style="font-size:16px;line-height:1.25">http://www.ceiva.com/</tspan>
       </text>
       <text
          id="text9932"
-         style="font-variant:normal;font-weight:normal;font-size:16.02499962px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         style="font-variant:normal;font-weight:normal;line-height:0%;font-family:Lora;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
          transform="matrix(1,0,0,-1,450.33,364.1)">
         <tspan
            id="tspan9934"
            sodipodi:role="line"
            y="0"
-           x="0 15.384 24.181725">Web</tspan>
+           x="0"
+           style="font-size:16.02499962px;line-height:1.25">Web</tspan>
       </text>
       <text
          id="text9936"
-         style="font-variant:normal;font-weight:normal;font-size:16.02499962px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         style="font-variant:normal;font-weight:normal;font-size:16.02499962px;line-height:0%;font-family:Lora;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
          transform="matrix(1,0,0,-1,483.33,364.1)">
         <tspan
            id="tspan9938"
@@ -200,23 +222,25 @@
       </text>
       <text
          id="text9940"
-         style="font-variant:normal;font-weight:normal;font-size:16.02499962px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         style="font-variant:normal;font-weight:normal;line-height:0%;font-family:Lora;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
          transform="matrix(1,0,0,-1,488.75,364.1)">
         <tspan
            id="tspan9942"
            sodipodi:role="line"
            y="0"
-           x="0 8.7977247 17.595449 26.393175 35.190899 38.748451 47.59425 56.391975 60.590527 64.997398 73.795128 82.59285 90.605347 94.996201 103.79392 109.17832 114.1621">enabled toaster +</tspan>
+           x="0"
+           style="font-size:16.02499962px;line-height:1.25">enabled toaster +</tspan>
       </text>
       <text
          id="text9944"
-         style="font-variant:normal;font-weight:normal;font-size:16px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         style="font-variant:normal;font-weight:normal;line-height:0%;font-family:Lora;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
          transform="matrix(1,0,0,-1,450.33,344.9)">
         <tspan
            id="tspan9946"
            sodipodi:role="line"
            y="0"
-           x="0 11.392 20.191999 28.992001 33.439999 42.192001 50.992001 56.383999 61.167999 65.744003 74.543999 79.935997 88.736 96.736 105.536 113.536 117.936 126.736">weather forecaster</tspan>
+           x="0"
+           style="font-size:16px;line-height:1.25">weather forecaster</tspan>
       </text>
       <g
          id="g9948">
@@ -238,13 +262,14 @@
       </g>
       <text
          id="text9960"
-         style="font-variant:normal;font-weight:normal;font-size:16.02499962px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         style="font-variant:normal;font-weight:normal;line-height:0%;font-family:Lora;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
          transform="matrix(1,0,0,-1,472.83,46.85)">
         <tspan
            id="tspan9962"
            sodipodi:role="line"
            y="0"
-           x="0 4.4068751 13.2046 17.611475 26.409201 31.7936 40.591324 49.38905 53.795925 58.587399 67.385124 76.182854 84.980576 93.778297 102.57603">Internet phones</tspan>
+           x="0"
+           style="font-size:16.02499962px;line-height:1.25">Internet phones</tspan>
       </text>
       <g
          id="g9964">
@@ -266,23 +291,25 @@
       </g>
       <text
          id="text9976"
-         style="font-variant:normal;font-weight:normal;font-size:16px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         style="font-variant:normal;font-weight:normal;line-height:0%;font-family:Lora;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
          transform="matrix(1,0,0,-1,84.475,64.75)">
         <tspan
            id="tspan9978"
            sodipodi:role="line"
            y="0"
-           x="0 4.448 13.2 17.648001 26.4 31.792 40.591999 49.391998 53.84">Internet</tspan>
+           x="0"
+           style="font-size:16px;line-height:1.25">Internet</tspan>
       </text>
       <text
          id="text9980"
-         style="font-variant:normal;font-weight:normal;font-size:16.02499962px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         style="font-variant:normal;font-weight:normal;line-height:0%;font-family:Lora;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
          transform="matrix(1,0,0,-1,84.475,45.525)">
         <tspan
            id="tspan9982"
            sodipodi:role="line"
            y="0"
-           x="0 5.3843999 14.182125 18.765274 24.149675 27.707226 36.553024 45.35075 50.735149 59.532875 63.939751 72.737473">refrigerator</tspan>
+           x="0"
+           style="font-size:16.02499962px;line-height:1.25">refrigerator</tspan>
       </text>
       <g
          id="g9984">
@@ -304,23 +331,25 @@
       </g>
       <text
          id="text9996"
-         style="font-variant:normal;font-weight:normal;font-size:16.02499962px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         style="font-variant:normal;font-weight:normal;line-height:0%;font-family:Lora;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
          transform="matrix(1,0,0,-1,229.65,111)">
         <tspan
            id="tspan9998"
            sodipodi:role="line"
            y="0"
-           x="0 10.592525 14.150075 17.771725 26.56945 35.367176 44.164902 52.962624 61.151402 65.558273 69.965149 81.358925 90.156647 94.563522 102.57603 111.35773">Slingbox: watch,</tspan>
+           x="0"
+           style="font-size:16.02499962px;line-height:1.25">Slingbox: watch,</tspan>
       </text>
       <text
          id="text10000"
-         style="font-variant:normal;font-weight:normal;font-size:16px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         style="font-variant:normal;font-weight:normal;line-height:0%;font-family:Lora;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
          transform="matrix(1,0,0,-1,229.65,91.8)">
         <tspan
            id="tspan10002"
            sodipodi:role="line"
            y="0"
-           x="0 8 16.799999 25.6 30.048 35.375999 44.192001 47.743999 52.368 60.368 69.167999 77.968002 81.519997 90.367996 94.559998 104.544 115.152 119.6 124.928 133.744 147.12 155.92 160.368 169.12 172.672">control cable TV remotely</tspan>
+           x="0"
+           style="font-size:16px;line-height:1.25">control cable TV remotely</tspan>
       </text>
       <g
          id="g10016">
@@ -362,17 +391,18 @@
       </g>
       <text
          id="text10044"
-         style="font-variant:normal;font-weight:normal;font-size:16px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         style="font-variant:normal;font-weight:normal;line-height:0%;font-family:Lora;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
          transform="matrix(1,0,0,-1,539.1,218.17)">
         <tspan
            id="tspan10046"
            sodipodi:role="line"
            y="0"
-           x="0 9.1999998 20.591999 29.392 38.192001">Tweet</tspan>
+           x="0"
+           style="font-size:16px;line-height:1.25">Tweet</tspan>
       </text>
       <text
          id="text10048"
-         style="font-variant:normal;font-weight:normal;font-size:16px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         style="font-variant:normal;font-weight:normal;font-size:16px;line-height:0%;font-family:Lora;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
          transform="matrix(1,0,0,-1,581.72,218.17)">
         <tspan
            id="tspan10050"
@@ -381,7 +411,7 @@
       </text>
       <text
          id="text10052"
-         style="font-variant:normal;font-weight:normal;font-size:16px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         style="font-variant:normal;font-weight:normal;font-size:16px;line-height:0%;font-family:Lora;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
          transform="matrix(1,0,0,-1,587.13,218.17)">
         <tspan
            id="tspan10054"
@@ -390,7 +420,7 @@
       </text>
       <text
          id="text10056"
-         style="font-variant:normal;font-weight:normal;font-size:16px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         style="font-variant:normal;font-weight:normal;font-size:16px;line-height:0%;font-family:Lora;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
          transform="matrix(1,0,0,-1,595.92,218.17)">
         <tspan
            id="tspan10058"
@@ -399,23 +429,25 @@
       </text>
       <text
          id="text10060"
-         style="font-variant:normal;font-weight:normal;font-size:16px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         style="font-variant:normal;font-weight:normal;line-height:0%;font-family:Lora;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
          transform="matrix(1,0,0,-1,601.33,218.17)">
         <tspan
            id="tspan10062"
            sodipodi:role="line"
            y="0"
-           x="0 11.392 20.191999 24.639999 28.992001 33.439999">watt:</tspan>
+           x="0"
+           style="font-size:16px;line-height:1.25">watt:</tspan>
       </text>
       <text
          id="text10064"
-         style="font-variant:normal;font-weight:normal;font-size:16px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         style="font-variant:normal;font-weight:normal;line-height:0%;font-family:Lora;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
          transform="matrix(1,0,0,-1,539.1,198.98)">
         <tspan
            id="tspan10066"
            sodipodi:role="line"
            y="0"
-           x="0 13.376 22.176001 30.976 34.528 38.976002 47.776001 53.167999 57.616001 66.367996 75.167999 83.968002 89.360001 98.160004 105.968 110.96 119.76 127.76">monitor energy use</tspan>
+           x="0"
+           style="font-size:16px;line-height:1.25">monitor energy use</tspan>
       </text>
     </g>
   </g>

@@ -17,6 +17,9 @@
    version="1.1"
    inkscape:version="0.91 r13725"
    sodipodi:docname="AtrasoEnfileiramento.svg">
+<defs><style type="text/css">@import url(https://fonts.googleapis.com/css?family=Lora:400,400italic,700,700italic)</style></defs>
+<defs><style type="text/css">@import url(https://fonts.googleapis.com/css?family=Lora:400,400italic,700,700italic)</style></defs>
+<defs><style type="text/css">@import url(https://fonts.googleapis.com/css?family=Lora:400,400italic,700,700italic)</style></defs>
   <defs
      id="defs7579">
     <linearGradient
@@ -4403,10 +4406,10 @@
     <text
        y="378.26239"
        x="7.7929144"
-       style="font-variant:normal;font-weight:normal;font-size:25px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000099;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       style="font-variant:normal;font-weight:normal;font-size:25px;font-family: Lora;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000099;fill-opacity:1;fill-rule:nonzero;stroke:none"
        id="text17638">
       <tspan
-         x="7.7929144 14.742918 23.067915 36.967911 43.792923 50.74292 56.292923 68.792923 74.792908 80.342911 94.242912 101.26791 115.24291 129.21791 141.71791 147.26793 154.21791 166.46791"
+         x="7.7929144"
          y="378.26239"
          sodipodi:role="line"
          id="tspan17640">traffic intensity</tspan>
@@ -4414,10 +4417,10 @@
     <text
        y="403.78741"
        x="50.042923"
-       style="font-variant:normal;font-weight:normal;font-size:25px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000099;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       style="font-variant:normal;font-weight:normal;font-size:25px;font-family: Lora;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000099;fill-opacity:1;fill-rule:nonzero;stroke:none"
        id="text17642">
       <tspan
-         x="50.042923 64.542923 71.292923 85.267914 99.242912 106.19291"
+         x="50.042923"
          y="403.78741"
          sodipodi:role="line"
          id="tspan17644">= La/R</tspan>
@@ -4426,10 +4429,10 @@
        y="-39.332088"
        x="-357.26239"
        transform="matrix(0,-1,1,0,0,0)"
-       style="font-variant:normal;font-weight:normal;font-size:25px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000099;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       style="font-variant:normal;font-weight:normal;font-size:25px;font-family: Lora;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000099;fill-opacity:1;fill-rule:nonzero;stroke:none"
        id="text17708">
       <tspan
-         x="-357.26239 -343.28741 -331.03741 -317.06241 -308.81241 -294.8374 -281.0874 -267.1124 -253.41243 -239.61241 -225.63741 -211.6624 -197.68742 -183.71242 -178.16243 -164.26244 -150.46242"
+         x="-357.26239"
          y="-39.332088"
          sodipodi:role="line"
          id="tspan17710">average queueing</tspan>
@@ -4438,10 +4441,10 @@
        y="-13.807084"
        x="-266.72491"
        transform="matrix(0,-1,1,0,0,0)"
-       style="font-variant:normal;font-weight:normal;font-size:25.03125px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000099;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       style="font-variant:normal;font-weight:normal;font-size:25.03125px;font-family: Lora;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000099;fill-opacity:1;fill-rule:nonzero;stroke:none"
        id="text17712">
       <tspan
-         x="-266.72491 -252.75749 -238.79005 -233.23311 -219.31572"
+         x="-266.72491"
          y="-13.807084"
          sodipodi:role="line"
          id="tspan17714">delay</tspan>
@@ -4487,10 +4490,10 @@
     <text
        y="453.47357"
        x="-34.65667"
-       style="font-variant:normal;font-weight:normal;font-size:22.5px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       style="font-variant:normal;font-weight:normal;font-size:22.5px;font-family: Lora;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
        id="text17740">
       <tspan
-         x="-34.65667 -22.14666 -9.6366663 -3.3816609 12.863296 18.848312 32.078293 38.333298"
+         x="-34.65667"
          y="453.47357"
          sodipodi:role="line"
          id="tspan17742">La/R ~ 0</tspan>
@@ -4498,10 +4501,10 @@
     <text
        y="454.82339"
        x="164.53912"
-       style="font-variant:normal;font-weight:normal;font-size:22.53125px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       style="font-variant:normal;font-weight:normal;font-size:22.53125px;font-family: Lora;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
        id="text17748">
       <tspan
-         x="164.53912 177.06647 189.59384 195.78995 212.0575"
+         x="164.53912"
          y="454.82339"
          sodipodi:role="line"
          id="tspan17750">La/R</tspan>
@@ -4509,7 +4512,7 @@
     <text
        y="454.82339"
        x="218.0766"
-       style="font-variant:normal;font-weight:normal;font-size:22.53125px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       style="font-variant:normal;font-weight:normal;font-size:22.53125px;font-family: Lora;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
        id="text17752">
       <tspan
          x="218.0766"
@@ -4519,10 +4522,10 @@
     <text
        y="454.82339"
        x="225.5766"
-       style="font-variant:normal;font-weight:normal;font-size:22.53125px;font-family:Arial;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       style="font-variant:normal;font-weight:normal;font-size:22.53125px;font-family: Lora;-inkscape-font-specification:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
        id="text17756">
       <tspan
-         x="225.5766 238.80243 245.06613"
+         x="225.5766"
          y="454.82339"
          sodipodi:role="line"
          id="tspan17758">&gt; 1</tspan>

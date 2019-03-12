@@ -15,7 +15,11 @@
    id="svg8025"
    version="1.1"
    inkscape:version="0.48.5 r10040"
+viewBox="0 0 457.108860 289.832890"
    sodipodi:docname="Roteamento.svg">
+<defs><style type="text/css">@import url(https://fonts.googleapis.com/css?family=Lora:400,400italic,700,700italic)</style></defs>
+<defs><style type="text/css">@import url(https://fonts.googleapis.com/css?family=Lora:400,400italic,700,700italic)</style></defs>
+<defs><style type="text/css">@import url(https://fonts.googleapis.com/css?family=Lora:400,400italic,700,700italic)</style></defs>
   <defs
      id="defs8027">
     <clipPath
@@ -3789,7 +3793,7 @@
        x="484.85321"
        id="text11165">
       <tspan
-         style="font-size:22.53125px;font-variant:normal;font-weight:normal;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
+         style="font-size:22.53125px;font-variant:normal;font-weight:normal;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family: Lora;-inkscape-font-specification:Arial"
          x="484.85321"
          y="407.216"
          id="tspan11167">1</tspan>
@@ -3800,7 +3804,7 @@
        x="478.75323"
        id="text11169">
       <tspan
-         style="font-size:20px;font-variant:normal;font-weight:normal;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
+         style="font-size:20px;font-variant:normal;font-weight:normal;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family: Lora;-inkscape-font-specification:Arial"
          x="478.75323"
          y="445.50351"
          id="tspan11171">2</tspan>
@@ -3811,7 +3815,7 @@
        x="454.06573"
        id="text11173">
       <tspan
-         style="font-size:20px;font-variant:normal;font-weight:normal;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
+         style="font-size:20px;font-variant:normal;font-weight:normal;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family: Lora;-inkscape-font-specification:Arial"
          x="454.06573"
          y="452.69101"
          id="tspan11175">3</tspan>
@@ -3865,8 +3869,8 @@
        x="253.21568"
        id="text11199">
       <tspan
-         style="font-size:20.03125px;font-variant:normal;font-weight:normal;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
-         x="253.21568 264.21286 275.21002 285.22565 290.7142 296.44315 307.44031 318.43747 329.4346 336.16513 347.16226 357.17792 367.19354 373.14282 377.58972 388.64697 394.15558 405.15271 411.88324 418.61371 423.06067 433.33673 437.78363 448.84088"
+         style="font-size:20.03125px;font-variant:normal;font-weight:normal;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family: Lora;-inkscape-font-specification:Arial"
+         x="253.21568"
          y="558.68475"
          sodipodi:role="line"
          id="tspan11201">dest address in arriving</tspan>
@@ -3877,8 +3881,8 @@
        x="253.21568"
        id="text11203">
       <tspan
-         style="font-size:20px;font-variant:normal;font-weight:normal;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
-         x="253.21568 264.2157 275.2157 285.2157 295.2157 306.2157"
+         style="font-size:20px;font-variant:normal;font-weight:normal;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family: Lora;-inkscape-font-specification:Arial"
+         x="253.21568"
          y="582.93475"
          sodipodi:role="line"
          id="tspan11205">packet</tspan>
@@ -3889,7 +3893,7 @@
        x="311.72821"
        id="text11207">
       <tspan
-         style="font-size:20px;font-variant:normal;font-weight:normal;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:MS PGothic;-inkscape-font-specification:MS PGothic"
+         style="font-size:20px;font-variant:normal;font-weight:normal;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family: Lora;-inkscape-font-specification:MS PGothic"
          x="311.72821"
          y="582.93475"
          id="tspan11209">’</tspan>
@@ -3900,8 +3904,8 @@
        x="321.7532"
        id="text11211">
       <tspan
-         style="font-size:20px;font-variant:normal;font-weight:normal;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"
-         x="321.7532 331.7532 337.49319 348.49323 359.49323 370.49323 381.49323 392.49323"
+         style="font-size:20px;font-variant:normal;font-weight:normal;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family: Lora;-inkscape-font-specification:Arial"
+         x="321.7532"
          y="582.93475"
          sodipodi:role="line"
          id="tspan11213">s header</tspan>

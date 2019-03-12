@@ -16,6 +16,7 @@
    version="1.1"
    inkscape:version="0.91 r13725"
    sodipodi:docname="rdt2_2Receptor.svg">
+<defs><style type="text/css">@import url(https://fonts.googleapis.com/css?family=Lora:400,400italic,700,700italic)</style></defs>
   <defs
      id="defs4">
     <marker
@@ -352,7 +353,7 @@
          id="tspan11720"
          x="1038.1918"
          y="664.57599"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Latin Modern Mono';-inkscape-font-specification:'Latin Modern Mono'">rdt_recv(pkt) &amp;&amp; </tspan><tspan
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family: Lora;</tspan><tspan
          id="tspan11722"
          sodipodi:role="line"
          x="1038.1918"
@@ -433,7 +434,7 @@
          id="tspan12100"
          x="414.56985"
          y="689.47827"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Latin Modern Mono';-inkscape-font-specification:'Latin Modern Mono'">rdt_recv(pkt) &amp;&amp; </tspan><tspan
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family: Lora;</tspan><tspan
          sodipodi:role="line"
          x="414.56985"
          y="739.47827"

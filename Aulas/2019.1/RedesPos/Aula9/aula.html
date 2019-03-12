@@ -5,7 +5,7 @@
     <!-- Meta info -->
 	<meta charset="utf-8">
 	<meta name="shortauthor" content="Diego Passos"/>
-	<meta name="shorttitle" content="VLANs, STP, MPLS"/>
+	<meta name="shorttitle" content="Acesso Múltiplo, ARP, Ethernet, Switches"/>
 	<meta name="shortevent" content="Redes de Computadores"/>
 	<title>Redes de Computadores: Aula 9</title>
 
@@ -38,7 +38,7 @@
 	<section>
 
         <div class="slideContent">
-            <h1 class="title">Aula 9 - VLANs, STP, MPLS</h1>
+            <h1 class="title">Aula 9 - Protocolos de Acesso Múltiplo, ARP, Ethernet, Switches</h1>
             <h2 class="author">Diego Passos</h2>
             <h4 class="institution">Universidade Federal Fluminense</h4>
             <h3 class="date">Redes de Computadores</h3>
@@ -47,700 +47,1704 @@
 	</section>
 
     <!-- Content slides -->
-	<section class="secao">
-	<div class="slideContent">
-		VLANs
-	</div>
-	</section>
-
 	<section>
-	<h1>VLANs: Motivação</h1>
-	<div class="slideContent">
+		<h1>Enlaces (e Protocolos) de Acesso Múltiplo</h1>
+		<div class="slideContent">
 
-
-			<div class="column" style="width: 50% ;">
-					<br><br>
-					<center>
-							<img src="imagens/VLANMotivacao_opt.svg" style="width: 80% ;"/>
-					</center>
-			</div>
-			<div class="column" style="width: 50% ;">
-					<ul>
-							<li> Considere os seguintes aspectos:
-							<ul>
-									<li> Funcionário da CS muda para escritório na EE.
-									<ul>
-											<li> É possível mantê-lo &ldquo;conectado&rdquo; ao switch da CS?</li>
-									</ul>
-									</li>
-									<li> Outra questão: único domínio de <i>broadcast</i>.
-									<ul>
-											<li> Todo tráfego de nível 2 (ARP, DHCP, inundações por falta de entrada nas tabelas de encaminhamento) atravessa toda a LAN.</li>
-											<li> Problemas de privacidade/segurança e eficiência.</li>
-									</ul>
-									</li>
-							</ul>
-							</li>
-					</ul>
-			</div>
-
-
-	</div>
-	</section>
-
-	<section>
-	<h1>VLANs</h1>
-	<div class="slideContent">
-
-			<center>
-					<div class="block" style="width:1000px;">
-							<div class="blockTitle" style="width: 100%;">
-									<p><i>Virtual Local Area Network</i></p>
-							</div>
-							<div class="blockBody">
-									<ul>
-											<li> Switches que possuem capacidades de VLAN podem definir <b>múltiplas LANs virtuais</b> usando uma única infraestrutura física.</li>
-									</ul>
-							</div>
-					</div>
-			</center>
-
+		<ul>
+			<li> Dois tipos de &ldquo;enlaces&rdquo;:
 			<ul>
-					<li> <span class="alert">VLAN baseada em porta:</span>
-					<ul>
-							<li> Portas do switch agrupadas (pelo <i>software</i> de gerenciamento do switch).</li>
-					</ul>
-					</li>
+			<li> Ponto-a-ponto.
+			<ul>
+				<li> PPP para acesso discado.</li>
+				<li> Link ponto-a-ponto entre <i>switch</i> e <i>host</i> Ethernet.</li>
 			</ul>
-
-			<div class="column" style="width: 50% ;">
-					<ul>
-							<li> Um único switch físico...</li>
-					</ul>
-					<center>
-							<img src="imagens/VLANPorPorta1_opt.svg" style="width: 80% ;"/>
-					</center>
-			</div>
-			<div class="column" style="width: 50% ;">
-					<ul>
-							<li> ... age como <b>múltiplos</b> switches virtuais.</li>
-					</ul>
-					<center>
-							<img src="imagens/VLANPorPorta2_opt.svg" style="width: 80% ;"/>
-					</center>
-			</div>
-
-
-	</div>
-	</section>
-
-	<section>
-	<h1>VLAN Baseada em Porta</h1>
-	<div class="slideContent">
-
-
-			<div class="column" style="width: 50% ;">
-					<ul>
-							<li> <span class="alert">Isolamento de tráfego:</span> quadros originários das portas 1&mdash;8 chegam <b>apenas</b> às portas 1&mdash;8.</li>
-							<li> <span class="alert">Alocação dinâmica:</span> portas podem ser alocadas dinamicamente a VLANs.
-							<ul>
-									<li> É possível definir VLANs com base nos MACs dos dispositivos.</li>
-							</ul>
-							</li>
-							<li> <span class="alert">Encaminhamento entre VLANs:</span> feita via roteamento (nível 3).
-							<ul>
-									<li> Na prática, fabricantes vendem switches que são, também, roteadores.</li>
-							</ul>
-							</li>
-					</ul>
-			</div>
-			<div class="column" style="width: 50% ;">
-					<center>
-							<img src="imagens/VLANPorPorta3_opt.svg" style="width: 80% ;"/>
-					</center>
-			</div>
-
-
-	</div>
-	</section>
-
-	<section>
-	<h1>VLANs Formadas por Múltiplos Switches Físicos</h1>
-	<div class="slideContent">
-
-			<center>
-					<img src="imagens/VLANMultiplosSwitches_opt.svg" style="width: 80% ;"/>
-			</center>
-
+	</li>
+			<li> <b>Difusão/Broadcast (cabo ou meio compartilhado).</b>
 			<ul>
-					<li> <span class="alert">Porta <i>trunk</i>:</span> transportam quadros entre VLANs definidas sobre múltiplos switches físicos.
-					<ul>
-							<li> Quadros encaminhados dentro da mesma VLAN entre switches diferentes não podem ser quadros Ethernet &ldquo;normais&rdquo;.
-							<ul>
-									<li> Precisam armazenar identificador da VLAN.</li>
-							</ul>
-							</li>
-							<li> Protocolo 802.1Q adiciona/remove campos adicionais de cabeçalho para quadros transmitidos entre portas <i>trunk</i>.</li>
-					</ul>
-					</li>
+				<li> Ethernet original.</li>
+				<li> <i>Upload</i> em redes HFC.</li>
+				<li> 802.11 (Wi-Fi).</li>
 			</ul>
-	</div>
+	</li>
+			</ul>
+	</li>
+		</ul>
+
+		<center>
+	<object type="image/svg+xml" data="imagens/ProtocolosCompartilhados_opt.svg" style="width: 80% ;"></object>
+		</center>
+		</div>
 	</section>
 
 	<section>
-	<h1>Formato de um Quadro 802.1Q</h1>
-	<div class="slideContent">
+		<h1>Protocolos de Acesso Múltiplo</h1>
+		<div class="slideContent">
 
-			<center>
-					<img src="imagens/802_1q_opt.svg" style="width: 80% ;"/>
-			</center>
-
-	</div>
-	</section>
-
-	<section>
-	<h1>IEEE 802.1Q: Adição e Remoção de <i>tags</i> (I)</h1>
-	<div class="slideContent">
 		<ul>
-			<li>Dispositivos como <i>switches</i> gerenciáveis normalmente são &ldquo;cientes&rdquo; da existência das VLANs de uma rede.</li>
-			<li>Já dispositivos como <i>hosts</i> comumente não tem este conhecimento.</li>
-			<li>É possível dividir a rede em duas porções:
+			<li> Único canal de comunicação em difusão.</li>
+			<li> Transmissões simultâneas por dois ou mais nós &rArr; interferência.
 			<ul>
-				<li>Porção ciente das VLANs.</li>
-				<li>Resto da rede.</li>
-			</ul></li>
+			<li> <b>Colisão</b>, quando nó recebe dois sinais misturados.</li>
+			</ul>
+	</li>
 		</ul>
 		<center>
-			<img src="imagens/porcaoCiente.svg" style="width: 70%;"/>
-		</center>
-
-	</div>
-	</section>
-
-	<section>
-	<h1>IEEE 802.1Q: Adição e Remoção de <i>tags</i> (II)</h1>
-	<div class="slideContent">
-		<ul>
-			<li>Quando quadro entra na porção ciente da rede, não possui uma <i>tag</i> especificada.
+		<div class="block" style="width:1000px;">
+		<div class="blockTitle" style="width: 100%;">
+			<p>Protocolo de Acesso Múltiplo</p>
+		</div>
+		<div class="blockBody">
 			<ul>
-				<li>Switch associa quadro a uma VLAN padrão (para a porta de entrada ou para a rede).</li>
-				<li><i>Tag</i> correspondente é adicionada usando o cabeçalho IEEE 802.1Q.</li>
-			</ul></li>
-		</ul>
-		<br>
-		<br>
-		<center>
-			<img src="imagens/quadroIngressante.svg" style="width: 70%;"/>
-		</center>
-
-	</div>
-	</section>
-
-	<section>
-	<h1>IEEE 802.1Q: Adição e Remoção de <i>tags</i> (III)</h1>
-	<div class="slideContent">
-		<ul>
-			<li>Comunicações internas à porção ciente mantém a <i>tag</i> no quadro.
+			<li> Algoritmo (possivelmente distribuído) que define como nós compartilham o meio de transmissão.
 			<ul>
-				<li>Permite que dispositivo que recebe o quadro identifique a VLAN.</li>
-			</ul></li>
-		</ul>
-		<br>
-		<br>
-		<center>
-			<img src="imagens/quadroEgressoComTag.svg" style="width: 70%;"/>
-		</center>
-
-	</div>
-	</section>
-
-	<section>
-	<h1>IEEE 802.1Q: Adição e Remoção de <i>tags</i> (III)</h1>
-	<div class="slideContent">
-		<ul>
-			<li>Quando quadro deixa a porção ciente, <i>tag</i> precisa ser removida.</li>
-		</ul>
-		<br>
-		<br>
-		<center>
-			<img src="imagens/quadroEgressoSemTag.svg" style="width: 70%;"/>
-		</center>
-
-	</div>
-	</section>
-
-	<section class="secao">
-	<div class="slideContent">
-		<i>Spanning Tree Protocol</i>
-	</div>
-	</section>
-
-	<section>
-	<h1>STP: Introdução</h1>
-	<div class="slideContent">
-		<div class="column" style="width: 55%;">
+				<li> <i>i.e.</i>, quando cada nó pode transmitir.</li>
+			</ul>
+	</li>
+			<li> <b>Normalmente</b>, comunicação usada para a coordenação usa o próprio canal compartilhado.
 			<ul>
-				<li>Protocolo executado na camada de enlace.</li>
-				<li>Criado por Radia Perlman, padronizado no IEEE 802.1D.</li>
-				<li>Objetiva evitar <i>loops</i> lógicos, ainda que existam <i>loops</i> físicos.</li>
-				<li>Como funciona:
+				<li> Sem comunicação fora-de-banda.</li>
+			</ul>
+	</li>
+			</ul>
+		</div>
+	</div>
+		</center>
+		</div>
+	</section>
+
+	<section>
+		<h1>Protocolo de Acesso Múltiplo Ideal</h1>
+		<div class="slideContent">
+
+		<ul>
+			<li> <b>Dado</b>: canal de comunicação compartilhado com capacidade de <span class="math inline">\(R\)</span>&nbsp;b/s.</li>
+			<li> <b>Características desejadas</b>:
+			<ul>
+			<li> Quando um nó quer transmitir, pode enviar dados à taxa <span class="math inline">\(R\)</span>.</li>
+			<li> Quando <span class="math inline">\(M\)</span> nós querem transmitir, cada um obtém uma taxa <b>média</b> de <span class="math inline">\(\frac{R}{M}\)</span>.</li>
+			<li> Totalmente descentralizado.
+			<ul>
+				<li> Não há nó especial para coordenação.</li>
+				<li> Não necessita de sincronização entre nós.</li>
+			</ul>
+	</li>
+			<li> Simples.</li>
+			</ul>
+	</li>
+		</ul>
+		</div>
+	</section>
+
+	<section>
+		<h1>Taxinomia de Protocolos MAC: Três Grandes Categorias</h1>
+		<div class="slideContent">
+
+		<center>
+		<div class="block" style="width:1000px;">
+		<div class="blockTitle" style="width: 100%;">
+			<p>Particionamento de Canal</p>
+		</div>
+		<div class="blockBody">
+			<ul>
+			<li> Divide o canal em &ldquo;pedaços&rdquo; menores.
+			<ul>
+				<li> <i>Slots</i> de tempo, frequências diferentes, códigos diferentes.</li>
+			</ul>
+	</li>
+			<li> Pedaços são alocados para uso exclusivo dos nós.</li>
+			</ul>
+		</div>
+	</div>
+	<br>
+		<div class="block" style="width:1000px;">
+		<div class="blockTitle" style="width: 100%;">
+			<p>Acesso Aleatório</p>
+		</div>
+		<div class="blockBody">
+			<ul>
+			<li> Canal não é dividido, colisões podem ocorrer.</li>
+			<li> Utilizam-se métodos para &ldquo;recuperação&rdquo; de colisões.</li>
+			</ul>
+		</div>
+	</div>
+
+	<br>
+		<div class="block" style="width:1000px;">
+		<div class="blockTitle" style="width: 100%;">
+			<p>Acesso Alternado (&ldquo;Taking-turns&rdquo;)</p>
+		</div>
+		<div class="blockBody">
+			<ul>
+			<li> Ou &ldquo;revezamento&rdquo;.</li>
+			<li> Nós se alternam no acesso ao meio.</li>
+			<li> Nós com mais dados podem usar o meio por mais tempo.</li>
+			</ul>
+		</div>
+	</div>
+		</center>
+		</div>
+	</section>
+
+	<section>
+		<h1>Protocolos de Particionamento de Canal: TDMA</h1>
+		<div class="slideContent">
+
+		<ul>
+			<li> <i>Time Division Multiple Access</i>.
+			<ul>
+			<li> Acesso ao canal feito em &ldquo;rodadas&rdquo;.</li>
+			<li> Cada estação ganha um <i>slot</i> de duração fixa a cada rodada.
+			<ul>
+				<li> Duração suficiente para transmissão de quadro.</li>
+			</ul>
+	</li>
+			<li> Em <i>Slots</i> não usados, canal ocioso.</li>
+			<li> Exemplo com 6 estações:
+			<ul>
+				<li> 1, 3 e 4 têm quadros a transmitir.</li>
+				<li> 2, 5 e 6 não usam seus <i>slots</i>.</li>
+			</ul>
+	</li>
+			</ul>
+	</li>
+		</ul>
+
+		<center>
+	<object type="image/svg+xml" data="imagens/tdma_opt.svg" style="width: 60% ;"></object>
+		</center>
+		</div>
+	</section>
+
+	<section>
+		<h1>Protocolos de Particionamento de Canal: FDMA</h1>
+		<div class="slideContent">
+
+		<ul>
+			<li> <i>Frequency Division Multiple Access</i>.
+			<ul>
+			<li> Canal dividido em bandas de frequência.</li>
+			<li> Cada estação ganha uma frequência fixa.
+			<ul>
+				<li> Estações podem transmitir simultaneamente, desde que em frequências diferentes.</li>
+			</ul>
+	</li>
+			<li> Se uma estação não utiliza sua frequência durante um intervalo, esta fica ociosa.</li>
+			<li> Exemplo com 6 estações:
+			<ul>
+				<li> 1, 3 e 4 têm quadros a transmitir.</li>
+				<li> 2, 5 e 6 não usam suas frequências.</li>
+			</ul>
+	</li>
+			</ul>
+	</li>
+		</ul>
+
+		<center>
+	<object type="image/svg+xml" data="imagens/fdma_opt.svg" style="width: 60% ;"></object>
+		</center>
+		</div>
+	</section>
+
+	<section>
+		<h1>Protocolos de Acesso Aleatório</h1>
+		<div class="slideContent">
+
+		<ul>
+			<li> Quando nó tem quadros a transmitir, usa o canal &ldquo;inteiro&rdquo;.</li>
+			<li> Não há coordenação prévia entre nós.</li>
+			<li> Se dois ou mais nós transmitem ao mesmo tempo, há <b>colisão</b>.</li>
+			<li> Um protocolo MAC de acesso aleatório especifica:
+			<ul>
+			<li> Como determinar ocorrência de colisões.</li>
+			<li> Como se recuperar de colisões.
+			<ul>
+				<li> <i>e.g.</i>, via retransmissão do quadro.</li>
+			</ul>
+	</li>
+			</ul>
+	</li>
+			<li> Exemplos de protocolos de acesso aleatório:
+			<ul>
+			<li> Slotted ALOHA.</li>
+			<li> ALOHA.</li>
+			<li> CSMA, CSMA/CD, CSMA/CA.</li>
+			</ul>
+	</li>
+		</ul>
+		</div>
+	</section>
+
+	<section>
+		<h1>Slotted ALOHA (I)</h1>
+		<div class="slideContent">
+
+
+	<div class="column" style="width: 50% ;">
+			<ul>
+				<li> Hipóteses:
 				<ul>
-					<li>Dispositivos (<i>e.g.</i>, switches) criam uma árvore geradora (mínima) da topologia física.</li>
-					<li>Enlaces/portas que causariam <i>loops</i> são desativados para dados.</li>
-				</ul></li>
+					<li> Todos os quadros têm mesmo tamanho.</li>
+					<li> Tempo é discretizado em <i>slots</i> de duração fixa.
+					<ul>
+						<li> Suficiente para a transmissão de um quadro.</li>
+					</ul>
+	</li>
+					<li> Nós só começam a transmitir no início de <i>slots</i>.</li>
+					<li> Nós estão sincronizados.
+					<ul>
+						<li> <i>i.e.</i>, sabem quando começa e termina um <i>slot</i>.</li>
+					</ul>
+	</li>
+					<li> Se dois ou mais nós transmitem em um <i>slot</i>, todos detectam a colisão.</li>
+				</ul>
+	</li>
+			</ul>
+			</div>
+	<div class="column" style="width: 50% ;">
+			<ul>
+				<li> Operação:
+				<ul>
+					<li> Quando nó possui quadro, transmite no início do próximo <i>slot</i>.</li>
+					<li> <b>Se não houve colisão</b>, nó pode enviar novo quadro no próximo <i>slot</i>.</li>
+					<li> <b>Se houve colisão</b>, nó retransmite o quadro nos <i>slots</i> subsequentes até o sucesso.
+					<ul>
+						<li> A cada novo <i>slot</i>, nó tenta retransmissão com probabilidade <span class="math inline">\(p\)</span>.</li>
+					</ul>
+	</li>
+				</ul>
+	</li>
+			</ul>
+			</div>
+
+		</div>
+	</section>
+
+	<section>
+		<h1>Slotted ALOHA (II)</h1>
+		<div class="slideContent">
+
+		<center>
+	<object type="image/svg+xml" data="imagens/slottedAloha_opt.svg" style="width: 60% ;"></object>
+		</center>
+
+
+	<div class="column" style="width: 50% ;">
+			<ul>
+				<li> Pontos positivos:
+				<ul>
+					<li> Com um único nó ativo, este pode usar toda a capacidade do canal.</li>
+					<li> Altamente decentralizado: requer apenas sincronização de <i>slots</i>.</li>
+					<li> Simples.</li>
+				</ul>
+	</li>
+			</ul>
+			</div>
+	<div class="column" style="width: 50% ;">
+			<ul>
+				<li> Pontos Negativos:
+				<ul>
+					<li> Colisões, desperdiçando <i>slots</i>.</li>
+					<li> Se nós podem detectar colisões em menos tempo que a duração de um <i>slot</i>, retransmissão poderia ser feita antes.</li>
+					<li> Requer sincronização de relógio.</li>
+				</ul>
+	</li>
+			</ul>
+			</div>
+
+
+		</div>
+	</section>
+
+	<section>
+		<h1>Slotted ALOHA: Eficiência (I)</h1>
+		<div class="slideContent">
+
+
+	<div class="column" style="width: 50% ;">
+			<ul>
+				<li> <b>Eficiência</b>: fração de <i>slots</i> bem sucedidos <b>a longo prazo</b>.
+			<ul>
+			<li> Considerando muitos nós, todos com muitos quadros a enviar.</li>
+			</ul>
+	</li>
+				<li> Suponha <span class="math inline">\(N\)</span> nós com <i>backlog</i> infinito.
+				<ul>
+					<li> <i>i.e.</i>, sempre há quadros a enviar.</li>
+				</ul>
+	</li>
+				<li> Cada nó tenta transmissão em um <i>slot</i> com probabilidade <span class="math inline">\(p\)</span>.</li>
+				<li> Sucesso ocorre quando apenas um nó tenta transmitir no <i>slot</i>:</li>
+				<br><center><span class="math">\(P(\mbox{Sucesso}) = p(1-p)^{N-1}\)</span><center>
+			</ul>
+			</div>
+	<div class="column" style="width: 50% ;">
+			<ul>
+				<li> Mas se há <span class="math inline">\(N\)</span> nós:</li>
+					<br><center><span class="math">\(\boxed{Efic(p) = N\cdot p(1-p)^{N-1}}\)</span><center>
+			</ul>
+			<center>
+	<img src="imagens/aloha_effic_param.png" style="width: 90% ;"/>
+			</center>
+			</div>
+
+
+		</div>
+	</section>
+
+	<section>
+		<h1>Slotted ALOHA: Eficiência (II)</h1>
+		<div class="slideContent">
+
+
+	<div class="column" style="width: 50% ;">
+			<ul>
+				<li> Eficiência máxima depende de <span class="math inline">\(p\)</span>.</li>
+				<li> Valor ótimo de <span class="math inline">\(p\)</span> depende de N.
+				<ul>
+					<li> Quanto mais nós, menor o <span class="math inline">\(p\)</span> ideal.</li>
+					<li> Faz sentido?</li>
+				</ul>
+	</li>
+				<li> Qual é o <span class="math inline">\(p\)</span> ideal para um dado <span class="math inline">\(N\)</span>?
+				<ul>
+					<li> Máximo ocorre quando <span class="math inline">\(Efic^\prime(p) = 0\)</span>:</li>
+				</ul>
+	</li>
+			</ul>
+			<span class="math">\begin{eqnarray*}
+				0 & = & N(1-p)^{N-1}\\
+					& - & N\cdot(N-1)\cdot p(1-p)^{N-2}\\
+				0 & = & (1-p) - (N-1)p\\
+				p & = & \frac{1}{N}\\
+			\end{eqnarray*}</span>
+			</div>
+	<div class="column" style="width: 50% ;">
+			<ul>
+				<li> Logo:</li>
+				<center><span class="math">\(\boxed{MaxEfic(N) = \left(1 - \frac{1}{N}\right)^{N-1}}\)</span></center>
+			</ul>
+			<center>
+	<img src="imagens/aloha_effic_max.png" style="width: 90% ;"/>
+			</center>
+			</div>
+
+		</div>
+	</section>
+
+	<section>
+		<h1>ALOHA Puro (Unslotted)</h1>
+		<div class="slideContent">
+
+		<ul>
+			<li> Unslotted Aloha: mais simples, sem sincronização.
+			<ul>
+			<li> Quando quadro chega, transmite imediatamente.</li>
+			<li> Em caso de colisão, nós aguardam tempo aleatório antes de tentar novamente.</li>
+			</ul>
+	</li>
+			<li> Probabilidade de colisão aumenta.
+			<ul>
+			<li> Quadro enviado em <span class="math inline">\(t_0\)</span> colide com quadros enviados em <span class="math inline">\([t_0 - 1, t_0 + 1]\)</span>.</li>
+			</ul>
+	</li>
+		</ul>
+
+
+	<div class="column" style="width: 55% ;">
+			<center>
+	<img src="imagens/unslottedAloha.png" style="width: 90% ;"/>
+			</center>
+			</div>
+	<div class="column" style="width: 45% ;">
+			<ul>
+				<li> Resultado: <b>eficiência é ainda mais baixa.</b></li>
+				<li> No máximo 18%!</li>
+			</ul>
+			</div>
+
+		</div>
+	</section>
+
+	<section>
+		<h1>CSMA</h1>
+		<div class="slideContent">
+
+
+	<div class="column" style="width: 50% ;">
+		<ul>
+			<li> <i>Carrier Sense Multiple Access</i>: ouça antes de transmitir.
+			<ul>
+			<li> Se o meio está ocioso, transmita o quadro inteiro.</li>
+			<li> Se o meio está ocupado, transmita mais tarde.</li>
+			</ul>
+	</li>
+			<li> Analogia da comunicação humana:
+			<ul>
+			<li> Não interrompa os outros.</li>
+			</ul>
+	</li>
+			<li> Evita totalmente as colisões?
+			<ul>
+			<li> Não! O atraso de propagação pode fazer um nó não perceber uma transmissão.</li>
+			<li> Em caso de colisão, todo o quadro é perdido.</li>
+			</ul>
+	</li>
+		</ul>
+			</div>
+	<div class="column" style="width: 50% ;">
+	<img src="imagens/CSMACollision.png" style="width: 90% ;"/>
+			</div>
+
+		</div>
+	</section>
+
+	<section>
+		<h1>CSMA/CD</h1>
+		<div class="slideContent">
+
+
+		<div style="width: 100%; height: 380px;">
+	<div class="column" style="width: 60% ;">
+			<ul>
+				<li> <i>Carrier Sense Multiple Access with Collision Detection</i>.
+				<ul>
+					<li> Mesmo princípio básico do CSMA: ouvir antes de transmitir.</li>
+					<li> Durante a transmissão, nó checa por colisões.
+					<ul>
+						<li> Detecção rápida.</li>
+					</ul>
+	</li>
+					<li> Em caso de colisão, transmissão é abortada.
+					<ul>
+						<li> Reduz desperdício do canal.</li>
+					</ul>
+	</li>
+					<li> Analogia de comunicação humana: interlocutor educado.</li>
+				</ul>
+	</li>
+			</ul>
+			</div>
+	<div class="column" style="width: 40% ;">
+	<img src="imagens/ColisaoCSMACD2.png" style="width: 95% ;"/>
+			</div>
+
+	</div>
+		<ul>
+			<li> Detecção de colisões.
+			<ul>
+			<li> Simples em redes cabeadas: medir intensidade do sinal, comparar sinal transmitido e recebido.</li>
+			<li> Difícil em redes sem fio: potência do sinal transmitido é muito maior que do sinal recebido.</li>
+			</ul>
+	</li>
+		</ul>
+		</div>
+	</section>
+
+	<section>
+		<h1>O Algoritmo do CSMA/CD no Ethernet</h1>
+		<div class="slideContent">
+
+		<ol>
+			<li> Interface recebe pacote da camada de rede, cria quadro.</li>
+			<li> Se o canal está livre, começa a transmissão do quadro.
+			<ul>
+			<li> Caso contrário, aguarda canal se tornar ocioso.</li>
+			<li> E então transmite.</li>
+			</ul>
+	</li>
+			<li> Se a transmissão é completada sem que se tenha detectado uma colisão, processo termina.</li>
+			<li> Se durante a transmissão uma colisão é detectada, transmissão é abortada e <b>interface envia sinal de jamming</b>.
+			<ul>
+			<li> Por quê?</li>
+			</ul>
+	</li>
+			<li> Depois de abortar, interface entra em <b><i>backoff</i> binário (exponencial)</b>.
+			<ul>
+			<li> Após a <i>n-ésima</i> colisão, sorteia valor inteiro <span class="math inline">\(k\)</span> no intervalo <span class="math inline">\([0, 2^n - 1]\)</span>.</li>
+			<li> Aguarda um tempo igual a <span class="math inline">\(k\cdot 512\)</span> <i>durações de bit</i> e volta ao passo 2.</li>
+			<li> Mais colisões <span class="math inline">\(\implies\)</span> maiores <i>backoffs</i>.</li>
+			</ul>
+	</li>
+		</ol>
+		</div>
+	</section>
+
+	<section>
+		<h1>CSMA/CD: Eficiência</h1>
+		<div class="slideContent">
+
+
+	<div class="column" style="width: 50% ;">
+			<ul>
+				<li> <span class="math inline">\(t_{prop}\)</span>: tempo máximo de propagação entre dois nós.</li>
+				<li> <span class="math inline">\(t_{trans}\)</span>: tempo de transmissão de quadro.</li>
+			</ul>
+			<center>
+			<span class="math">\(\boxed{\mbox{eficiência} = \frac{1}{1+\frac{5t_{prop}}{t_{trans}}}}\)</span>
+			</center>
+			<ul>
+				<li> Eficiência tende a 1 se:
+				<ul>
+					<li> <span class="math inline">\(t_{prop}\)</span> tende a 0; ou</li>
+					<li> <span class="math inline">\(t_{trans}\)</span> tende a infinito.</li>
+				</ul>
+	</li>
+				<li> Melhor que o Aloha.
+				<ul>
+					<li> Além de simples, barato e decentralizado.</li>
+				</ul>
+	</li>
+			</ul>
+			</div>
+	<div class="column" style="width: 50% ;">
+			<center>
+	<img src="imagens/CSMACDEffic.png" style="width: 90% ;"/>
+			</center>
+			</div>
+
+		</div>
+	</section>
+
+	<section>
+		<h1>Protocolos de Acesso Alternado</h1>
+		<div class="slideContent">
+
+		<ul>
+			<li> <b>Protocolos de Particionamento de Canal</b>:
+			<ul>
+			<li> Compartilhamento é <b>eficiente</b> e <b>justo</b> sob <b>altas cargas</b>.</li>
+			<li> Mas <b>ineficiente</b> para <b>cargas baixas</b>.
+			<ul>
+				<li> Atraso no acesso ao canal.</li>
+				<li> Banda alocada de apenas <span class="math inline">\(1/N\)</span>, mesmo com um único nó ativo.</li>
+			</ul>
+	</li>
+			</ul>
+	</li>
+			<li> <b>Protocolos de Acesso Aleatório</b>:
+			<ul>
+			<li> Eficientes sob <b>baixa carga</b>.</li>
+			<li> Mas sob <b>alta carga</b>: <b>colisões</b>.</li>
+			</ul>
+	</li>
+			<li> <b>Protocolos de Acesso Alternado</b>:
+			<ul>
+			<li> Tentativa: combinar o melhor dos dois mundos!</li>
+			</ul>
+	</li>
+		</ul>
+		</div>
+	</section>
+
+	<section>
+		<h1>Acesso Alternado: Polling</h1>
+		<div class="slideContent">
+
+
+	<div class="column" style="width: 50% ;">
+			<ul>
+				<li> Nó mestre &ldquo;convida&rdquo; nós subordinados para transmitir alternadamente.</li>
+				<li> Normalmente usado com dispositivos subordinados &ldquo;sem inteligência&rdquo;.</li>
+			</ul>
+			<br>
+			<center>
+	<object type="image/svg+xml" data="imagens/polling2.svg" style="width: 90% ;"></object>
+			</center>
+			</div>
+	<div class="column" style="width: 40% ;">
+			<center>
+	<object type="image/svg+xml" data="imagens/polling_opt.svg" style="width: 90% ;"></object>
+			</center>
+			<ul>
+				<li> Potenciais problemas:
+				<ul>
+					<li> <i>Overhead</i> do <i>polling</i>.</li>
+					<li> Latência.</li>
+					<li> Ponto único de falha.</li>
+				</ul>
+	</li>
+			</ul>
+
+			</div>
+
+		</div>
+	</section>
+
+	<section>
+		<h1>Acesso Alternado: Passagem de Token</h1>
+		<div class="slideContent">
+
+
+	<div class="column" style="width: 50% ;">
+			<br>
+			<ul>
+				<li> Token: representa o controle do canal.
+				<ul>
+					<li> Nó com token tem direito de transmitir.</li>
+					<li> Após uso (ou não), nó repassa o token.
+					<ul>
+						<li> Mensagem ou sinal transmitido no próprio canal.</li>
+					</ul>
+	</li>
+				</ul>
+	</li>
+				<li> Potenciais problemas:
+				<ul>
+					<li> <i>Overhead</i> de passagem do token.</li>
+					<li> Latência.</li>
+					<li> Ponto único de falha.
+					<ul>
+						<li> O token.</li>
+					</ul>
+	</li>
+				</ul>
+	</li>
+			</ul>
+			</div>
+	<div class="column" style="width: 40% ;">
+			<center>
+	<object type="image/svg+xml" data="imagens/tokenPassing_opt.svg" style="width: 90% ;"></object>
+			</center>
+			</div>
+
+		</div>
+	</section>
+
+	<section>
+		<h1>DOCSIS (I)</h1>
+		<div class="slideContent">
+
+		<ul>
+			<li> <i>Data Over Cable Service Interface Specification</i>.</li>
+		</ul>
+
+		<center>
+	<object type="image/svg+xml" data="imagens/Cable1_opt.svg" style="width: 70% ;"></object>
+		</center>
+
+		<ul>
+			<li> <b>Múltiplos canais</b> (compartilhados) de <i>downlink</i> (40&nbsp;Mb/s).
+			<ul>
+			<li> Todos usados pelo CMTS (<i>Cable Modem Termination System</i>).</li>
+			</ul>
+	</li>
+			<li> <b>Múltiplos canais</b> de <i>uplink</i> (30&nbsp;Mb/s).
+			<ul>
+			<li> <b>Acesso múltiplo:</b> todos os usuários competem por <i>slots</i> em certos canais de <i>uplink</i>.</li>
+			</ul>
+	</li>
+		</ul>
+		</div>
+	</section>
+
+	<section>
+		<h1>DOCSIS (II)</h1>
+		<div class="slideContent">
+
+		<center>
+	<object type="image/svg+xml" data="imagens/Cable2_opt.svg" style="width: 70% ;"></object>
+		</center>
+
+		<ul>
+			<li> FDM no <i>uplink</i> e <i>downlink</i>.</li>
+			<li> TDM em canais de <i>uplink</i>:
+			<ul>
+			<li> Alguns <i>slots</i> atribuídos, outros para contenção.
+			<ul>
+				<li> Atribuição especificada por um <i>MAP frame</i>.</li>
+			</ul>
+	</li>
+			</ul>
+	</li>
+		</ul>
+		</div>
+	</section>
+
+	<section>
+		<h1>Resumo dos Protocolos de Acesso ao Meio</h1>
+		<div class="slideContent">
+
+		<ul>
+			<li> <b>Particionamento de canal</b>, por tempo, frequência ou código.
+			<ul>
+			<li> TDMA, FDMA, CDMA.</li>
+			</ul>
+	</li>
+			<li> <b>Acesso aleatório</b>.
+			<ul>
+			<li> ALOHA, S&mdash;ALOHA, CSMA, CSMA/CD.</li>
+			<li> Carrier Sense (Detecção de Portadora): fácil em certas tecnologias (cabeadas), difícil em outras (sem fio).</li>
+			<li> CSMA/CD usado no Ethernet.</li>
+			<li> CSMA/CA usado no 802.11 (Wi-Fi).</li>
+			</ul>
+	</li>
+			<li> <b>Acesso alternado</b>.
+			<ul>
+			<li> Polling, passagem de token.</li>
+			<li> Bluetooth, FDDI, Token Ring.</li>
+			</ul>
+	</li>
+		</ul>
+		</div>
+	</section>
+
+	<section>
+	<h1>Endereços MAC (I)</h1>
+	<div class="slideContent">
+
+		<ul>
+			<li> <b>Endereços IP.</b>
+			<ul>
+				<li> Endereço da camada de rede.</li>
+				<li> Atribuído a uma interface.</li>
+				<li> Usado para encaminhamento na camada 3.</li>
+			</ul>
+			</li>
+			<li> <b>Endereço MAC (ou físico).</b>
+			<ul>
+				<li> Usado <b>localmente</b> na comunicação de quadros entre interfaces conectadas fisicamente.
+				<ul>
+					<li> Na mesma &ldquo;sub-rede&rdquo;, no contexto do IP.</li>
+				</ul>
+				</li>
+				<li> Na maioria das LANs, possui 48 bits.</li>
+				<li> <i>Hardcoded</i> em ROM ou configurável via <i>software</i>.</li>
+				<li> Exemplo:
+				<ul>
+					<li> 1A-2F-BB-76-09-AD (outra notação comum: 1A:2F:BB:76:09:AD)</li>
+					<li> Pares de algarismos hexadecimais, cada um é um octeto.</li>
+				</ul>
+				</li>
+			</ul>
+			</li>
+		</ul>
+	</div>
+	</section>
+
+	<!-- Aqui cabe uma captura de tráfego mostrando como o sniffer é capaz de traduzir prefixos MAC para fabricantes.-->
+	<section>
+	<h1>Endereços MAC (II)</h1>
+	<div class="slideContent">
+
+
+		<div class="column" style="width: 55% ;">
+			<ul>
+				<li> Cada adaptador em uma LAN tem um endereço MAC único.</li>
+			</ul>
+			<center>
+				<object type="image/svg+xml" data="imagens/LAN_opt.svg" style="width: 95% ;"></object>
+			</center>
+		</div>
+		<div class="column" style="width: 45% ;">
+			<ul>
+				<li> Alocação de endereços MAC feita pelo IEEE.</li>
+				<li> Fabricantes compram porções do espaço de endereçamento.
+				<ul>
+					<li> Garante unicidade.</li>
+					<li> Geralmente, prefixo determina fabricante.</li>
+				</ul>
+				</li>
+				<li> MAC <i>vs.</i> IP: portabilidade.
+				<ul>
+					<li> MAC é plano: interface pode ser movida entre LANs.</li>
+					<li> IP é hierárquico: depende da sub-rede específica.</li>
+				</ul>
+				</li>
 			</ul>
 		</div>
-		<div class="column" style="width: 45%;">
+
+	</div>
+	</section>
+
+	<!-- Demonstração: exibir tabela ARP. Exibir ARPing.-->
+	<!-- Falar de ARP Proxy? -->
+	<section>
+	<h1>ARP: Resolução de Endereços</h1>
+	<div class="slideContent">
+
+
+		<div class="column" style="width: 50% ;">
+
 			<center>
-				<span style=" font-size: 14pt; font-family: cursive;">Algorhyme</tt>
-				<div style="text-align:left; font-family: cursive; font-size: 14pt; margin-left: 30px;">
-					<br>
-	I think that I shall never see <br>
-	a graph more lovely than a tree.<br>
-	A tree whose crucial property<br>
-	is loop-free connectivity.<br>
-	A tree that must be sure to span<br>
-	so packet can reach every LAN.<br>
-	First, the root must be selected.<br>
-	By ID, it is elected.<br>
-	Least-cost paths from root are traced.<br>
-	In the tree, these paths are placed.<br>
-	A mesh is made by folks like me,<br>
-	then bridges find a spanning tree.<br>
-<br>
-				</div>
-					<div style="text-align:right; font-family: cursive; font-size: 14pt; margin-right: 30px;">Radia Perlman</span>
+				<object type="image/svg+xml" data="imagens/LAN2_opt.svg" style="width: 90% ;"></object>
+			</center>
+		</div>
+		<div class="column" style="width: 50% ;">
+			<div style="border: 1px solid #000; width: 90%; padding: 20px; text-align: center;">
+				<span class="alert">Pergunta:</span> Como determinar o MAC da interface sabendo o IP?
+			</div>
+			<br>
+			<ul>
+				<li> <span class="alert">Tabela ARP:</span> cada nó IP (roteador, host) em uma LAN possui uma.
+				<ul>
+					<li> Mapeamento IP &hArr; MAC:</li>
+					<center>
+						<tt>&lt; IP; MAC; TTL&gt;</tt>
+					</center>
+					<li> TTL (<i>Time To Live</i>): validade da entrada (<i>e.g.</i>, esquecida após 20 min).</li>
+				</ul>
+				</li>
+			</ul>
+		</div>
+
+	</div>
+	</section>
+
+	<!-- Ao final deste slide, poderia fazer demonstrações com a tabela ARP do laptop.-->
+	<section>
+	<h1>O Protocolo ARP: Dentro de uma LAN</h1>
+	<div class="slideContent">
+
+
+		<div class="column" style="width: 60% ;">
+			<ul>
+				<li> <b>A</b> deseja enviar datagrama para <b>B</b>.
+				<ul>
+					<li> Mas MAC de <b>B</b> não está na tabela ARP de <b>A</b>.</li>
+				</ul>
+				</li>
+				<li> <b>A</b> gera um <i>ARP Query</i> contendo o IP de <b>B</b>.
+				<ul>
+					<li> Endereço MAC de destino: <tt>FF:FF:FF:FF:FF:FF</tt> (<b><i>broadcast</i></b>).</li>
+					<li> Todos os nós da LAN recebem o ARP Query.
+					<ul>
+						<li> Em particular, <b>B</b>.</li>
+					</ul>
+					</li>
+				</ul>
+				</li>
+				<li> <b>B</b> gera um <i>ARP Reply</i>.
+				<ul>
+					<li> Quadro <b><i>unicast</i></b>.</li>
+					<li> MAC de origem: de <b>B</b>.</li>
+					<li> MAC de destino: de <b>A</b>.</li>
+				</ul>
+				</li>
+			</ul>
+		</div>
+		<div class="column" style="width: 40% ;">
+			<ul>
+				<li> Tabela ARP é uma <i>cache</i>: mapeamentos são guardados até ficarem antigos.
+				<ul>
+					<li> <i>Soft State</i>: informação expira se não é renovada.</li>
+				</ul>
+				</li>
+				<li> O ARP é um protocolo &ldquo;plug&mdash;and&mdash;play&rdquo;.
+				<ul>
+					<li> Tabela é criada automaticamente.</li>
+					<li> Sem intervenção ou configuração do administrador.</li>
+				</ul>
+				</li>
+			</ul>
+		</div>
+
+	</div>
+	</section>
+
+	<section>
+	<h1>ARP e Roteamento: Enviando Pacote para Outra LAN</h1>
+	<div class="slideContent">
+
+		<ul>
+			<li> <span class="alert">Passo a passo:</span> envio de pacote de <b>A</b> para <b>B</b> usando <b>R</b>.
+			<ul>
+				<li> Foco no endereçamento &mdash; nas camadas de rede (datagrama) e enlace (quadro).</li>
+				<li> Assumindo que:
+				<ul>
+					<li> <b>A</b> sabe IP de <b>B</b>.</li>
+					<li> <b>A</b> sabe IP do roteador de primeiro salto <b>R</b> (como?).</li>
+					<li> <b>A</b> sabe o MAC de <b>R</b> (como?).</li>
+				</ul>
+				</li>
+			</ul>
+			</li>
+		</ul>
+
+		<center>
+			<object type="image/svg+xml" data="imagens/ARPMultihop1_opt.svg" style="width: 70% ;"></object>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>ARP e Roteamento: Enviando Pacote para Outra LAN</h1>
+	<div class="slideContent">
+
+		<ul>
+			<li> <b>A</b> cria datagrama IP com origem <b>A</b>, destino <b>B</b>.</li>
+			<li> <b>A</b> encapsula datagrama em quadro com MAC de <b>R</b> como destino, e de <b>A</b> como origem.</li>
+		</ul>
+
+		<center>
+			<object type="image/svg+xml" data="imagens/ARPMultihop2_opt.svg" style="width: 70% ;"></object>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>ARP e Roteamento: Enviando Pacote para Outra LAN</h1>
+	<div class="slideContent">
+
+		<ul>
+			<li> Quadro é enviado de <b>A</b> para <b>R</b> através do enlace.</li>
+			<li> <b>R</b> recebe quadro, extrai datagrama, e o repassa para o IP.</li>
+		</ul>
+
+		<center>
+			<object type="image/svg+xml" data="imagens/ARPMultihop3_opt.svg" style="width: 70% ;"></object>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>ARP e Roteamento: Enviando Pacote para Outra LAN</h1>
+	<div class="slideContent">
+
+		<ul>
+			<li> <b>R</b> encaminha datagrama com IP de origem de <b>A</b> e IP de destino de <b>B</b>.</li>
+			<li> <b>R</b> encapsula datagrama em quadro com MAC de <b>B</b> como destino, e MAC de <b>R</b> como origem.</li>
+		</ul>
+
+		<center>
+			<object type="image/svg+xml" data="imagens/ARPMultihop4_opt.svg" style="width: 70% ;"></object>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>ARP e Roteamento: Enviando Pacote para Outra LAN</h1>
+	<div class="slideContent">
+
+		<ul>
+			<li> <b>B</b> recebe o quadro e extrai datagrama.</li>
+			<li> Em <b>B</b>, camada de rede verifica que datagrama é destinado ao próprio nó.</li>
+		</ul>
+
+		<center>
+			<object type="image/svg+xml" data="imagens/ARPMultihop5_opt.svg" style="width: 70% ;"></object>
+		</center>
+	</div>
+	</section>
+
+	<section class="secao">
+	<div class="slideContent">
+		Redes Locais (LANs): Ethernet
+	</div>
+	</section>
+
+	<section>
+	<h1>Ethernet</h1>
+	<div class="slideContent">
+
+		<ul>
+			<li> Tecnologia &ldquo;dominante&rdquo; para LANs cabeadas.
+			<ul>
+				<li> Barata: interface Gigabit Ethernet por R$ 30,00.</li>
+				<li> Primeira tecnologia para LANs amplamente utilizada.</li>
+				<li> Mais simples e barata que alternativas: <i>e.g.</i>, Token LANs, ATM.</li>
+				<li> Acompanhou evolução das taxas de transmissão: 10&nbsp;Mb/s &mdash; 10&nbsp;Gb/s.</li>
+			</ul>
+			</li>
+		</ul>
+
+		<center>
+			<img src="imagens/metcalfe.png" style="width: 40% ;"/><br>
+			<p class="scriptsize">Esboço do Ethernet feito por Metcalfe.</p>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Ethernet: Topologia Física</h1>
+	<div class="slideContent">
+
+		<ul>
+			<li> <span class="alert">Barramento:</span> popular até meados dos anos 90.
+			<ul>
+				<li> Todos os nós no mesmo <b>domínio de colisão</b>.
+				<ul>
+					<li> Transmissões podem colidir umas com as outras.</li>
+				</ul>
+				</li>
+			</ul>
+			</li>
+			<li> <span class="alert">Estrela:</span> prevalecente hoje.
+			<ul>
+				<li> Elemento ativo no centro: <b><i>switch</i></b>.</li>
+				<li> Cada cabo conectando o <i>switch</i> a um nó roda um protocolo Ethernet (separado).
+				<ul>
+					<li> Colisões são impossíveis.</li>
+				</ul>
+				</li>
+			</ul>
+			</li>
+		</ul>
+
+		<center>
+			<object type="image/svg+xml" data="imagens/Ethernet_opt.svg" style="width: 70% ;"></object>
+		</center>
+	</div>
+	</section>
+
+<section>
+<h1>Ethernet: Hubs</h1>
+<div class="slideContent">
+		<ul>
+			<li>Comum no final da década de 90.</li>
+			<li>Topologia estrela, mas hub era o intermediário.
+			<ul>
+				<li>Ao invés de um <i>switch</i>.</li>
+			</ul></li>
+			<li>Sinal recebido em uma porta era <b>regenerado</b> e replicado para as demais.</li>
+			<li>Domínio de colisão <b>único</b>.</li>
+			<li>Assim como nos barramentos, <b>colisões eram possíveis!</b>
+			<ul>
+				<li>Hub + cabos = meio de difusão.</li>
+			</ul></li>
+		</ul>
+</div>
+</section>
+
+	<section>
+	<h1>Estrutura de um Quadro Ethernet (I)</h1>
+	<div class="slideContent">
+
+		<ul>
+			<li> Interface encapsula datagrama IP (ou qualquer outro protocolo de rede) em quadro Ethernet.
+			<ul>
+				<li>De 46 a 1500 bytes.</li>
+			<li>Por que tamanhos máximo e mínimo?</li>
+			<li>O que ocorre se o datagrama é maior ou menor?</li>
+			</ul></li>
+		</ul>
+
+		<center>
+			<object type="image/svg+xml" data="imagens/QuadroEthernet_opt.svg" style="width: 60% ;"></object>
+		</center>
+
+		<ul>
+			<li> <span class="alert">Preâmbulo</span>:
+			<ul>
+				<li> 7 bytes com o padrão <tt>10101010</tt> seguidos de 1 byte com o padrão <tt>10101011</tt>.</li>
+				<li> Usado para sincronizar transmissor e receptor.</li>
+			</ul>
+			</li>
+		</ul>
+	</div>
+	</section>
+
+	<!-- Vale a pena falar de modo promíscuo aqui?-->
+	<section>
+	<h1>Estrutura de um Quadro Ethernet (II)</h1>
+	<div class="slideContent">
+
+		<ul>
+			<li> <span class="alert">Endereços</span>: origem e destino, 6 bytes cada.
+			<ul>
+				<li> Interface filtra quadros recebidos pelo endereço de destino.</li>
+				<li> Se endereço é o MAC da interface, ou de <i>broadcast</i>, pacote é desencapsulado e passado para cima.</li>
+				<li> Caso contrário, quadro é descartado.</li>
+			</ul>
+			</li>
+			<li> <span class="alert">Tipo</span>: indica protocolo da camada superior (tipicamente IP, mas também pode ser IPX, AppleTalk, ...).</li>
+			<li> <span class="alert">CRC</span>: verificação de integridade.
+			<ul>
+				<li> Erros detectados: quadro é descartado.</li>
+			</ul>
+			</li>
+		</ul>
+
+		<center>
+			<object type="image/svg+xml" data="imagens/QuadroEthernet_opt.svg" style="width: 60% ;"></object>
+		</center>
+
+	</div>
+	</section>
+
+	<section>
+	<h1>Ethernet: Não Confiável, Sem Conexão</h1>
+	<div class="slideContent">
+
+		<ul>
+			<li> <span class="alert">Sem Conexão</span>: não há <i>handshake</i> entre estações transmissora e receptora.
+			<ul>
+				<li> Transmissor simplesmente transmite quadro.</li>
+			</ul>
+			</li>
+			<li> <span class="alert">Não confiável</span>: receptor não envia <i>acks</i> ou <i>nacks</i> ao transmissor.
+			<ul>
+				<li> Dados encapsulados em quadros perdidos só recuperados por camada superior.
+				<ul>
+					<li> <i>e.g.</i>, via retransmissões do TCP.</li>
+				</ul>
+				</li>
+			</ul>
+			</li>
+			<li> <span class="alert">Protoloco de acesso ao meio</span>: CSMA/CD com backoff binário exponencial (unslotted).</li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Padrões Ethernet 802.3: Camadas Física e de Enlace (I)</h1>
+	<div class="slideContent">
+
+		<ul>
+			<li> <span class="alert">Vários</span> padrões Ethernet diferentes:
+			<ul>
+				<li> Em comum, protocolo de acesso ao meio e formato de quadro.</li>
+				<li> Mas taxas de transmissão diferentes: 2&nbsp;Mb/s, 10&nbsp;Mb/s, 100&nbsp;Mb/s, 1&nbsp;Gb/s, 10&nbsp;Gb/s.</li>
+				<li> Meios de transmissão também diferentes: fibra óptica, cabos de cobre.</li>
+			</ul>
+			</li>
+		</ul>
+
+		<center>
+			<object type="image/svg+xml" data="imagens/PadroesEthernet_opt.svg" style="width: 50% ;"></object>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Padrões Ethernet 802.3: Camadas Física e de Enlace (II)</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<center>
+				<img src="imagens/EthernetParTrancado.jpg" style="width: 70%;"/>
+				<br>
+				Cabo de par trançado, conector RJ45.
+			</center>
+
+		</div>
+		<div class="column" style="width: 50%;">
+			<center>
+				<img src="imagens/EthernetCoaxial.jpg" style="width: 50%;"/>
+				<br>
+				Cabo coaxial, conector BNC.
+				<br>
+				<br>
+				<img src="imagens/ConectorT_BNC.jpg" style="width: 50%;"/>
+				<br>
+				Conector tipo T, BNC.
 			</center>
 		</div>
 	</div>
 	</section>
 
 	<section>
-	<h1>STP: Operação Básica</h1>
+	<h1>Padrões Ethernet 802.3: Camadas Física e de Enlace (III)</h1>
+	<div class="slideContent">
+		<center>
+			<img src="imagens/EthernetFibraLC.jpg" style="width: 50%;"/>
+			<br>
+			Fibra óptica, conector LC.
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Padrões Ethernet 802.3: Comprimento Máximo</h1>
 	<div class="slideContent">
 		<ul>
-			<li>Protocolo dividido nos seguintes passos:
+			<li>Comprimento dos <b>segmentos</b> do Ethernet é limitado pelos padrões.
+			<ul>
+				<li>Por que?</li>
+				<li>Segmentos <i>vs.</i> cabo?</li>
+			</ul></li>
+			<li>Exemplos:
+			<ul>
+				<li>10Base2 (Ethernet 10 Mb/s, cabo coaxial fino), máximo de 185 metros.</li>
+				<li>10Base5 (Ethernet 10 Mb/s, cabo coaxial mais grosso), máximo de 500 metros.</li>
+				<li>100BaseT (Fast Ethernet [100 Mb/s], par trançado), máximo de 100 metros.</li>
+				<li>1000BaseLX10 (Gigabit Ethernet [1000 Mb/s], fibra óptica), máximo de 10 quilômetros.</li>
+			</ul></li>
+			<li>Repetidores podem ser usados para interconectar segmentos.
+			<ul>
+				<li>Pouco comum hoje, geralmente substituídos por <i>switches</i>.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Switch Ethernet</h1>
+	<div class="slideContent">
+
+		<ul>
+			<li> Dispositivo <b>ativo</b> da camada de enlace.
+			<ul>
+				<li> Armazena e encaminha quadros Ethernet.</li>
+				<li> Examina endereços do quadro que chega.
+				<ul>
+					<li> <b>Seletivamente</b>, o encaminha para um <b>ou mais</b> enlaces de saída.</li>
+				</ul>
+				</li>
+				<li> Utiliza CSMA/CD para acessar enlaces.</li>
+			</ul>
+			</li>
+			<li> <span class="alert">Transparente</span>: <i>hosts</i> não sabem da presença dos <i>switches</i>.</li>
+			<li> <span class="alert">Plug-and-play, aprendizado automático</span>: não requerem configuração para executar encaminhamento.</li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Switches e Transmissões Simultâneas</h1>
+	<div class="slideContent">
+
+
+		<div class="column" style="width: 60% ;">
+			<br>
+			<br>
+			<ul>
+				<li> Hosts têm enlaces dedicados, <i>full-duplex</i>, diretos com o <i>switch</i>.</li>
+				<li> <i>Switches</i> armazenam quadros em <i>buffers</i> internos.</li>
+				<li> Protocolo MAC do Ethernet usado em cada enlace, mas não há colisões.
+				<ul>
+					<li> Cada enlace é seu próprio domínio de colisão confinado.</li>
+				</ul>
+				</li>
+				<li> Transmissões entre <b>A</b> e <b>A&prime;</b> e <b>B</b> e <b>B&prime;</b> podem ocorrer simultaneamente.</li>
+			</ul>
+		</div>
+		<div class="column" style="width: 40% ;">
+			<center>
+				<object type="image/svg+xml" data="imagens/switch_opt.svg" style="width: 90% ;"></object>
+			</center>
+		</div>
+
+	</div>
+	</section>
+
+	<!-- Aqui, pode ser interessante mostrar um switch gerenciável e sua -->
+	<!-- tabela de endereçamento. Também pode ser útil na parte sobre -->
+	<!-- vlans.-->
+	<section>
+	<h1>Switches e Tabelas de Encaminhamento</h1>
+	<div class="slideContent">
+
+
+		<div class="column" style="width: 60% ;">
+			<br>
+			<ul>
+				<li> Como o switch sabe que <b>A&prime;</b> é alcançável pela interface 4?</li>
+				<li> E <b>B&prime;</b> pela interface 5?
+				<ul>
+					<li> <b>Resposta:</b> cada switch possui uma <b>tabela de encaminhamento</b>.</li>
+					<li> Cada entrada da tabela é uma tupla da forma:
+					<ul>
+						<li> <tt>&lt;MAC, interface, timestamp&gt;</tt>.</li>
+					</ul>
+					</li>
+					<li> Similar à tabela de roteamento!</li>
+				</ul>
+				</li>
+				<li> Mas como as entradas são gerenciadas?
+				<ul>
+					<li> De forma parecida com um protocolo de roteamento?</li>
+				</ul>
+				</li>
+			</ul>
+		</div>
+		<div class="column" style="width: 40% ;">
+			<center>
+				<object type="image/svg+xml" data="imagens/switch_opt.svg" style="width: 90% ;"></object>
+			</center>
+		</div>
+
+
+	</div>
+	</section>
+
+	<section>
+	<h1>Switches: Auto-aprendizado</h1>
+	<div class="slideContent">
+
+
+		<div class="column" style="width: 50% ;">
+			<br><br><br>
+			<ul>
+				<li> Switch <b>aprende</b> quais <i>hosts</i> são alcançáveis por quais interfaces.
+				<ul>
+					<li> Quando quadro é recebido, switch aprende localização do emissor.</li>
+					<li> Localização é armazenada na tabela de encaminhamento do switch.</li>
+				</ul>
+				</li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50% ;">
+			<center>
+				<object type="image/svg+xml" data="imagens/selfLearning_opt.svg" style="width: 80% ;"></object>
+			</center>
+		</div>
+
+	</div>
+	</section>
+
+	<section>
+	<h1>Switch: Filtragem/Encaminhamento de Quadros</h1>
+	<div class="slideContent">
+
+		<ul>
+			<li> Quando um quadro chega a uma dada porta do switch:
 			<ol>
-				<li>Escolha de uma raiz para a árvore geradora.
-				<ul>
-					<li>Algoritmo distribuído de eleição de líder.</li>
-					<li>Eleição se dá de acordo com identificador de cada dispositivo.</li>
-				</ul></li>
-				<li>Determinição do caminho mais curto entre cada dispositivo e a raiz.
-				<ul>
-					<li>Similar ao funcionamento de um algoritmo de roteamento de vetor de distâncias.</li>
-					<li>Mas apenas uma distância importa: até a raiz.</li>
-				</ul></li>
-				<li>Configuração das portas.
-				<ul>
-					<li>Porta que leva à raiz só é deixada ativa se pertence à árvore geradora.</li>
-					<li>Portas que não levam à raiz (<i>e.g.</i>, interconectam <i>hosts</i>) são deixadas ativas.</li>
-				</ul></li>
-			</ol></li>
+				<li> Armazena número de porta, MAC de origem na tabela de encaminhamento.</li>
+				<li> Utiliza MAC de destino como índice da tabela de encaminhamento.</li>
+				<li> Se há uma entrada:
+				<ol>
+					<li> Se destino está na mesma porta pela qual quadro chegou, descarte o quadro (<span class="alert">Por quê?</span>).</li>
+					<li> Caso contrário, encaminhe o quadro para a porta.</li>
+				</ol>
+				</li>
+				<li> Caso contrário, inundação (<i>i.e.</i>, replique quadro por todas as portas, exceto pela qual ele chegou).</li>
+			</ol>
+			</li>
 		</ul>
 	</div>
 	</section>
 
 	<section>
-	<h1>STP: Mais (Alguns Poucos) Detalhes</h1>
+	<h1>Auto-aprendizado e Encaminhamento: Exemplo</h1>
 	<div class="slideContent">
-		<div class="column" style="width: 50%;">
+
+
+		<div class="column" style="width: 50% ;">
 			<ul>
-				<li>Cada switch envia periodicamente BPDUs (<i>Bridge Protocol Data Units</i>).
+				<li> <b>A</b> envia quadro destinado a <b>A&prime;</b>.
 				<ul>
-					<li>Quadro de controle do protocolo.</li>
-					<li>Informa (entre outras coisas):
+					<li> Switch recebe pela porta 1.
 					<ul>
-						<li>Identificador do switch.</li>
-						<li>Raiz da árvore.</li>
-						<li>Distância para a raiz.</li>
-					</ul></li>
-					<li>Normalmente, a cada 2 segundos.</li>
-					<li>Enviado para o endereço MAC multicast <tt>01:80:C2:00:00:00</tt>.</li>
-				</ul></li>
-				<li>Identificador: prioridade, concatenada com MAC.
-				<ul>
-					<li>Prioridade é configurável.</li>
-					<li>Switch com menor identificador é eleito raiz.</li>
-				</ul></li>
-			</ul>
-		</div>
-		<div class="column" style="width: 50%;">
-			<ul>
-				<li>Inicialmente:
-				<ul>
-					<li>Switches não sabem nada sobre a topologia.</li>
-					<li>Cada switch <b>assume ser a raiz</b>.</li>
-					<li>Envia BPDU com a tupla &lt;ID, ID, 0&gt; para todas as portas.</li>
-				</ul></li>
-				<li>Ao receber um BPDU por uma porta:
-				<ul>
-					<li>Verifica se ID da raiz reportada é menor que a da raiz atualmente conhecida.
+						<li> Armazena mapeamento <tt>(<b>A</b>, 1)</tt> na tabela de encaminhamento.</li>
+					</ul>
+					</li>
+					<li> Não conhece localização de <b>A&prime;</b>.
 					<ul>
-						<li>Se sim: atualiza raiz, distância.</li>
-						<li>Se não: ainda pode atualizar distância se menor.</li>
+						<li> Inunda todas as portas (exceto a 1).</li>
+					</ul>
+					</li>
+				</ul>
+				</li>
+				<li> <b>A&prime;</b> envia quadro destinado a <b>A</b>.
+				<ul>
+					<li> Switch recebe pela porta 4.
+					<ul>
+						<li> Armazena mapeamento <tt>(<b>A&prime;</b>, 4)</tt> na tabela de encaminhamento.</li>
+					</ul>
+					</li>
+					<li> Sabe que <b>A</b> está na porta 1.
+					<ul>
+						<li> Envio <b>seletivo</b>.</li>
+					</ul>
+					</li>
+				</ul>
+				</li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50% ;">
+			<center>
+				<object type="image/svg+xml" data="imagens/selfLearning2_opt.svg" style="width: 80% ;"></object>
+			</center>
+		</div>
+
+	</div>
+	</section>
+
+	<section>
+	<h1>Interconectando Switches</h1>
+	<div class="slideContent">
+
+		<ul>
+			<li> Switches podem ser interconectados.</li>
+		</ul>
+		<center>
+			<object type="image/svg+xml" data="imagens/multipleSwitches_opt.svg" style="width: 70% ;"></object>
+		</center>
+		<ul>
+			<li> <span class="alert">Pergunta:</span> quadro de <b>A</b> para <b>G</b> &mdash; como <b>S<sub>1</sub></b> sabe que deve encaminhar através de <b>S<sub>4</sub></b> e <b>S<sub>3</sub></b>?
+			<ul>
+				<li> <span class="alert">Resposta:</span> auto-aprendizado! (exatamente da mesma forma que no caso com único switch!)</li>
+			</ul>
+			</li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Interconectando Switches: Exemplo de Auto-aprendizado</h1>
+	<div class="slideContent">
+
+		<ul>
+			<li> Assuma que <b>C</b> envia quadro para <b>I</b> e <b>I</b> envia resposta para <b>C</b>.</li>
+		</ul>
+		<center>
+			<object type="image/svg+xml" data="imagens/multipleSwitches_opt.svg" style="width: 70% ;"></object>
+		</center>
+		<ul>
+			<li> <b>Após estes envios</b>, mostre as tabelas de encaminhamento em <b>S<sub>1</sub></b>, <b>S<sub>2</sub></b>, <b>S<sub>3</sub></b>, <b>S<sub>4</sub></b>.</li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Rede Institucional (Possível Arquitetura)</h1>
+	<div class="slideContent">
+
+		<center>
+			<object type="image/svg+xml" data="imagens/RedeInstitucional_opt.svg" style="width: 70% ;"></object>
+		</center>
+
+	</div>
+	</section>
+
+	<section>
+	<h1>Switches: Vantagens em Relação à Hubs/Repetidores/Barramentos</h1>
+	<div class="slideContent">
+		<ul>
+			<li><b>Eliminação de colisões</b>:
+			<ul>
+				<li>Colisões são <b>impossíveis</b>.</li>
+				<li>Banda não é desperdiçada.</li>
+				<li>Ganho de eficiência.</li>
+			</ul></li>
+			<li><b>Possibilidade de enlaces heterogêneos:</b>
+			<ul>
+				<li>Como cada porta do switch corresponde a um enlace isolado, portas diferentes podem operar em taxas diferentes.</li>
+				<li>Garante interoperabilidade entre dispositivos modernos e legados.</li>
+				<li>Graças também a grande retro-compatibilidade do Ethernet.</li>
+			</ul></li>
+			<li><b>Facilidade de gerenciamento:</b>
+			<ul>
+				<li>Como portas são isoladas, é possível desativar portas individualmente.
+				<ul>
+					<li><i>e.g.</i>, por conta do mau-funcionamento de um dispositivo.</li>
+				</ul></li>
+				<li>Switches modernos também reportam estatísticas sobre cada porta (detalhes no Cap. 9).</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Switches <i>vs.</i> Roteadores</h1>
+	<div class="slideContent">
+
+
+		<div class="column" style="width: 50% ;">
+			<ul>
+				<li> Ambos utilizam o <i>store-and-forward</i>.
+				<ul>
+					<li> <span class="alert">Roteadores:</span> dispositivos da camada de rede (examinam cabeçalhos de nível 3).</li>
+					<li> <span class="alert">Switches:</span> dispositivos da camada de enlace (examinam cabeçalhos de nível 2).</li>
+				</ul>
+				</li>
+				<li> Ambos possuem tabelas de encaminhamento/roteamento.
+				<ul>
+					<li> <span class="alert">Roteadores:</span> computam tabelas usando algoritmos de roteamento, endereços IP.</li>
+					<li> <span class="alert">Switches:</span> montam tabelas de encaminhamento utilizando inundação, auto-aprendizagem, endereços MAC.</li>
+				</ul>
+				</li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50% ;">
+			<center>
+				<object type="image/svg+xml" data="imagens/SwitchesVsRoteadores_opt.svg" style="width: 80% ;"></object>
+			</center>
+		</div>
+
+
+	</div>
+	</section>
+
+			<section>
+			<h1>Switches: Domínio de <i>Broadcast</i></h1>
+			<div class="slideContent">
+				<ul>
+				<li>A menos que haja VLANs (próxima aula), todas as portas de um switch constituem um único <b>domínio de <i>broadcast</i></b>.</li>
+				<li>Significa que:
+				<ul>
+					<li>Quadro enviado em <i>broadcast</i> a partir de uma porta é replicado para todas as portas.</li>
+				</ul></li>
+				<li>O mesmo ocorre com múltiplos switches interconectados: quadros <i>broadcast</i> enviados para todas as portas de todos os switches.</li>
+				<li>Em muitos casos, comportamento é desejável.
+				<ul>
+					<li><i>e.g.</i>, tráfego broadcast de um protocolo de roteamento.</li>
+				</ul></li>
+				<li>Em outros casos, não.
+				<ul>
+					<li><i>e.g.</i>, requisição ARP para o endereço do nó A é entregue aos nós B, C, D, ...</li>
+				</ul></li>
+					<li><b>Tempestade de <i>broadcast</i>:</b> excesso de tráfego <i>broadcast</i>, consumindo quantidade considerável de recursos da rede.</li>
+				</ul>
+			</div>
+			</section>
+
+			<section>
+			<h1>Switches: <i>loops</i> (I)</h1>
+			<div class="slideContent">
+					<div class="column" style="width: 60%;">
+						<ul>
+							<li>Considere a topologia ao lado.
+							<ul>
+							<li><b>Problemas?</b></li>
+							</ul></li>
+						</ul>
+					</div>
+					<div class="column" style="width: 40%;">
+						<center>
+							<object type="image/svg+xml" data="imagens/switchLoop.svg" style="width: 90%;"></object>
+						</center>
+					</div>
+			</div>
+			</section>
+
+			<section>
+			<h1>Switches: <i>loops</i> (II)</h1>
+			<div class="slideContent">
+					<div class="column" style="width: 60%;">
+						<ul>
+							<li>Considere a topologia ao lado.
+							<ul>
+							<li><b>Problemas?</b></li>
+							</ul></li>
+							<li>Tráfego <i>broadcast</i>.
+							<ul>
+							<li>A envia quadro <i>broadcast</i> para S<sub>2</sub>.</li>
+							<li>S<sub>2</sub> replica para S<sub>1</sub> e S<sub>3</sub>.</li>
+							<li>S<sub>3</sub> replica para S<sub>1</sub> e B.</li>
+							<li>S<sub>1</sub> replica para S<sub>3</sub>.</li>
+							<li>S<sub>3</sub> replica para S<sub>2</sub> e B.</li>
+							<li>S<sub>2</sub> replica para S<sub>1</sub> e A.</li>
+							<li>S<sub>1</sub> replica para S<sub>3</sub>.</li>
+							<li>S<sub>3</sub> replica para S<sub>2</sub> e B.</li>
+							<li>S<sub>2</sub> replica para S<sub>1</sub> e A.</li>
+							<li>...</li>
+							</ul></li>
+						</ul>
+					</div>
+					<div class="column" style="width: 40%;">
+						<center>
+							<object type="image/svg+xml" data="imagens/switchLoop.svg" style="width: 90%;"></object>
+						</center>
+					</div>
+			</div>
+			</section>
+
+			<section>
+			<h1>Conflitos de Endereços (I)</h1>
+			<div class="slideContent">
+				<div class="column" style="width: 60%;">
+					<ul>
+					<li>O que ocorre se dois <i>hosts</i> com o mesmo IP se conectam a um switch?
+					<ul>
+						<li>Resposta: <b>conflito de IP</b>.</li>
 					</ul></li>
-				</ul></li>
-			</ul>
-		</div>
-	</div>
-	</section>
-
-	<section>
-	<h1>STP: Exemplo (I)</h1>
-	<div class="slideContent">
-		<center>
-			<img src="imagens/STPExemplo.svg" style="width: 95%;"/>
-		</center>
-	</div>
-	</section>
-
-	<section>
-	<h1>STP: Exemplo (II)</h1>
-	<div class="slideContent">
-		<center>
-			<img src="imagens/STPExemplo2.svg" style="width: 95%;"/>
-		</center>
-	</div>
-	</section>
-
-	<section>
-	<h1>STP: Exemplo (III)</h1>
-	<div class="slideContent">
-		<center>
-			<img src="imagens/STPExemplo3.svg" style="width: 95%;"/>
-		</center>
-	</div>
-	</section>
-
-	<section>
-	<h1>STP: Exemplo (IV)</h1>
-	<div class="slideContent">
-		<center>
-			<img src="imagens/STPExemplo4.svg" style="width: 95%;"/>
-		</center>
-	</div>
-	</section>
-
-	<section>
-	<h1>STP: Exemplo (V)</h1>
-	<div class="slideContent">
-		<center>
-			<img src="imagens/STPExemplo5.svg" style="width: 95%;"/>
-		</center>
-	</div>
-	</section>
-
-	<section class="secao">
-	<div class="slideContent">
-		MPLS
-	</div>
-	</section>
-
-	<section>
-	<h1>Duas Funções Chave da Camada de Rede [Revisão]</h1>
-	<div class="slideContent">
-		<div class="column" style="width: 50%;">
-			<ul>
-				<li><b>Encaminhamento:</b> mover pacotes da entrada para a saída de um roteador.</li>
-				<li><b>Roteamento:</b> determina rota usada por pacote da origem ao destino.
-				<ul>
-					<li><span class="alert">Algoritmos de roteamento</span>.</li>
-				</ul></li>
-			</ul>
-		</div>
-		<div class="column" style="width: 50%;">
-			<ul>
-				<li><b>Analogia:</b>
-				<ul>
-					<li><b>Roteamento:</b> processo de planejar uma viagem da origem ao destino.</li>
-					<li><b>Encaminhamento:</b> processo de realizar um trecho da viagem.</li>
-				</ul></li>
-			</ul>
-		</div>
-	</div>
-	</section>
-
-	<section>
-	<h1>Sinergia entre Roteamento e Encaminhamento [Revisão]</h1>
-	<div class="slideContent">
-		<center>
-			<img src="imagens/RoteamentoEEncaminhamento.svg" style="width: 70%;"/>
-		</center>
-	</div>
-	</section>
-
-	<section>
-	<h1>Redes de Datagramas: Tabela de Roteamento (I) [Revisão]</h1>
-	<div class="slideContent">
-		<center>
-			<img src="imagens/DatagramasTabelaRoteamento.svg" style="width: 65%;"/>
-		</center>
-	</div>
-	</section>
-
-	<section>
-	<h1>Redes de Datagramas: Tabela de Roteamento (II) [Revisão]</h1>
-	<div class="slideContent">
-		<center>
-			<img src="imagens/DatagramasTabelaRoteamento2.svg" style="width: 70%;"/>
-		</center>
-		<ul>
-			<li><span class="alert">Pergunta:</span> e se os endereços não são divididos de forma tão organizada?</li>
-		</ul>
-	</div>
-	</section>
-
-	<section>
-	<h1>Casamento por Prefixo mais Longo [Revisão]</h1>
-	<div class="slideContent">
-		<center>
-		<div class="block" style="width:1100px;">
-				<div class="blockTitle" style="width: 100%;">
-						<p>Casamento por Prefixo mais longo</p>
+					<li>Se B envia uma requisição ARP para <tt>10.0.0.1</tt>, duas respostas são recebidas.</li>
+						<li>Suponha que B aceite apenas a primeira resposta:
+						<ul>
+							<li>Seus datagramas IP, dali para frente, serão enviados ao <i>host</i> que respondeu mais rapidamente.</li>
+							<li>Mas <b>este é o destinatário correto?</b></li>
+						</ul></li>
+						<li>Note que B é capaz de <b>detectar</b> conflito de IP através da resposta duplicada.</li>
+					</ul>
 				</div>
-				<div class="blockBody">
-						Ao procurar por uma entrada na tabela de roteamento para um destino, opte sempre pelo <span class="alert">prefixo mais longo</span> que casa com o endereço do destino.
+				<div class="column" style="width: 40%;">
+					<center>
+					<object type="image/svg+xml" data="imagens/ConflitoIP.svg" style="width: 70%;"></object>
+					</center>
 				</div>
-		</div>
-		</center>
-		<br>
-		<center>
-			<img src="imagens/TabelaRoteamentoPrefixo.svg" style="width: 70%;"/>
-		</center>
-		<br>
+			</div>
+			</section>
+
+
+			<section>
+			<h1>Conflitos de Endereços (II)</h1>
+			<div class="slideContent">
+				<div class="column" style="width: 60%;">
+					<ul>
+					<li>O que ocorre se dois <i>hosts</i> com o mesmo <b>endereço MAC</b> se conectam a um switch?
+					<ul>
+						<li>Resposta: <b>conflito de MAC</b>.</li>
+					</ul></li>
+						<li>Suponha que B envie um quadro unicast com endereço de destino <tt>06:00:00:00:00:01</tt>.
+						<ul>
+							<li>Para qual dos dois <i>hosts</i> o switch encaminha?</li>
+						</ul></li>
+						<li>Depende:
+						<ul>
+							<li>Se já houver entrada na tabela de encaminhamento, para a porta associada.</li>
+							<li>Se não houver, para ambas.</li>
+						</ul></li>
+						<li>Novamente, comunicação pode se dar com dispositivo errado.</li>
+						<li>Mas agora, B <b>pode não ser capaz de identificar o conflito</b>.</li>
+					</ul>
+				</div>
+				<div class="column" style="width: 40%;">
+					<center>
+					<object type="image/svg+xml" data="imagens/ConflitoMAC.svg" style="width: 95%;"></object>
+					</center>
+				</div>
+			</div>
+			</section>
+
+
+<section>
+<h1>Switches ou Roteadores? (I)</h1>
+	<br>
+	<br>
+	<ul>
+		<li>Você foi contratado para projetar a infraestrutura de rede interna de uma instituição.</li>
+		<li>Qual a melhor opção?
 		<ul>
-			<li><b>Exemplos:</b>
-			<ul>
-				<li>Destino: <tt>11001000 00010111 0001<span style="background-color: green;">0110 10100001</span></tt>. <span class="alert">Qual interface?</span></li>
-				<li>Destino: <tt>11001000 00010111 0001<span style="background-color: green;">1000 10101010</span></tt>. <span class="alert">Qual interface?</span></li>
-			</ul></li>
-		</ul>
-	</div>
-	</section>
+			<li>Interconectar <b>todos</b> os dispositivos em nível 2 (<i>i.e.</i>, usando apenas <i>switches</i>)?</li>
+			<li>Ou dividir a rede em sub-redes, interconectadas por roteadores?</li>
+		</ul></li>
+	</ul>
+</section>
 
-	<section>
-	<h1>Busca em Tabela de Roteamento</h1>
-	<div class="slideContent">
+<!-- Demonstrar problemas de loops, por exemplo? Talvez conflito de MAC? -->
+<section>
+<h1>Switches ou Roteadores? (II)</h1>
+	<br>
+	<br>
+	<ul>
+		<li>Você foi contratado para projetar a infraestrutura de rede interna de uma instituição.</li>
+		<li>Qual a melhor opção?
 		<ul>
-			<li>Pode ser implementada de várias formas.</li>
-			<li>Por <i>software</i>:
-			<ul>
-				<li>Busca linear: <span class="math inline">\(O\left(n\right)\)</span>.</li>
-				<li>Busca binária (assumindo ordenação das entradas): <span class="math inline">\(O\left(log_2 n\right)\)</span></li>
-			</ul></li>
-			<li>Esta complexidade é &ldquo;boa&rdquo;?</li>
-			<li>Lembre-se que:
-			<ul>
-				<li>Volume de pacotes encaminhados pode ser muito grande: pode chegar a vários <b>milhões por segundo</b>.</li>
-				<li>As tabelas de roteamento da Internet hoje não são tão compactas assim.</li>
-			</ul></li>
-		</ul>
-	</div>
-	</section>
-
-	<section>
-	<h1><i>Multiprotocol Label Switching (MPLS)</i></h1>
-	<div class="slideContent">
+			<li>Interconectar <b>todos</b> os dispositivos em nível 2 (<i>i.e.</i>, usando apenas <i>switches</i>)?</li>
+			<li>Ou dividir a rede em sub-redes, interconectadas por roteadores?</li>
+		</ul></li>
+		<li>Resposta: <b>depende.</b></li>
+		<li>Cada solução tem seus prós e contras. Exemplos:
 		<ul>
-			<li>Objetivo inicial: encaminhamento IP rápido utilizando <i>label</i> de tamanho fixo (ao invés de endereço IP).
+			<li>Roteadores requerem configurações mais complexas, e tempo de processamento é maior.</li>
+			<li>Switches são <i>plug-and-play</i>, e processam apenas até a camada 2.</li>
+			<li>Por outro lado, roteadores proveem melhor isolamento de tráfego.</li>
+			<li>Switches interligados constituem (a princípio) um <b>único grande domínio de broadcast</b>.
 			<ul>
-				<li>Busca rápida em tabela de roteamento utilizando identificador como índice (ao invés de casamento de prefixo mais longo).</li>
-				<li>Empresta ideias das Redes de Circuitos Virtuais (VC).</li>
-				<li>Mas datagrama IP ainda mantém seus endereços IP de origem/destino.</li>
+				<li>Possibilidade de tempestade de <i>broadcast</i>.</li>
+				<li>Além disso, problemas como <i>loops</i> são mais difíceis de diagnosticar.</li>
+				<li>Por fim, muitos switches em cascata sobrecarregam tabelas de encaminhamento.</li>
 			</ul></li>
-		</ul>
-		<br>
-		<center>
-			<img src="imagens/MPLSHeader.svg" style="width: 70%;"/>
-		</center>
+		</ul></li>
+	</ul>
+</section>
 
-	</div>
-	</section>
-
-	<section>
-	<h1>Roteadores MPLS</h1>
-	<div class="slideContent">
+<section>
+<h1>Switches ou Roteadores? (III)</h1>
+<div class="slideContent">
+	<ul>
+		<li>Em geral, para redes &ldquo;pequenas&rdquo; (<i>i.e.</i>, com poucos nós), topologias apenas com <i>switches</i> são razoáveis. </li>
+		<li>À medida que a rede cresce, o domínio de broadcast único se torna problemático.
 		<ul>
-			<li>Também conhecidos como <i>label-switching router</i>.</li>
-			<li>Encaminham pacotes para interfaces de saída com base apenas no valor do <i>label</i> (não inspecionam endereço IP).
-			<ul>
-				<li>Tabela de roteamento MPLS é distinta da tabela de roteamento IP.</li>
-			</ul></li>
-			<li><span class="alert">Flexibilidade:</span> decisões de encaminhamento do MPLS podem ser diferentes das do IP.
-			<ul>
-				<li>Utilizar endereços de destino <b>e de origem</b> para rotear fluxos para o mesmo destino de forma diferente (<b>engenharia de tráfego</b>).</li>
-				<li>Re-rotear fluxos rapidamente se enlace falha: caminhos de <i>backup</i> pré-computados (útil para VoIP).</li>
-			</ul></li>
-		</ul>
-	</div>
-	</section>
-
-	<section>
-	<h1>Caminhos MPLS <i>vs.</i> Caminhos IP (I)</h1>
-	<div class="slideContent">
-		<center>
-			<img src="imagens/CaminhoIP.svg" style="width: 70%;"/>
-		</center>
-
-		<br>
-		<ul>
-			<li><span class="alert">Roteamento IP:</span> caminho para o destinatário é determinado apenas pelo endereço IP de destino.</li>
-		</ul>
-	</div>
-	</section>
-
-	<section>
-	<h1>Caminhos MPLS <i>vs.</i> Caminhos IP (II)</h1>
-	<div class="slideContent">
-		<center>
-			<img src="imagens/CaminhoMPLS.svg" style="width: 70%;"/>
-		</center>
-		<ul>
-			<li><span class="alert">Roteamento IP:</span> caminho para o destinatário é determinado apenas pelo endereço IP de destino.</li>
-			<li><span class="alert">Roteamento MPLS:</span> caminho para o destino pode ser baseado em ambos os endereços de origem e destino.
-			<ul>
-				<li>Reestabelecimento rápido de rotas: rotas de <i>backup</i> pré-computadas em caso de falhas de enlaces.</li>
-			</ul></li>
-		</ul>
-	</div>
-	</section>
-
-	<section>
-	<h1>Sinalização MPLS</h1>
-	<div class="slideContent">
-		<ul>
-			<li>Modificar protocolos de estado de enlace como o OSPF e o IS-IS para carregar informação utilizada pelo roteamento MPLS.
-			<ul>
-				<li><i>e.g.</i>, largura de banda dos enlaces, quantidade de banda &ldquo;reservada&rdquo;.</li>
-			</ul></li>
-			<li>Roteadores MPLS de borda (LERs) usam o protocolo de sinalização RSVP-TE para configurar o encaminhamento MPLS dos demais roteadores MPLS.</li>
-		</ul>
-		<br>
-		<center>
-			<img src="imagens/SinalizacaoMPLS.svg" style="width: 60%;"/>
-		</center>
-	</div>
-	</section>
-
-	<section>
-	<h1>Tabelas de Roteamento MPLS</h1>
-	<div class="slideContent">
-		<center>
-			<img src="imagens/TabelasMPLS.svg" style="width: 50%;"/>
-		</center>
-	</div>
-	</section>
-
-	<section>
-	<h1>MPLS: Empilhamento de <i>Labels</i> (I)</h1>
-	<div class="slideContent">
-		<ul>
-			<li>Roteadores MLPS podem &ldquo;empilhar&rdquo; <i>labels</i>.
-			<ul>
-				<li>Pacote MPLS (<i>i.e.</i>, incluindo cabeçalho MPLS) é encapsulado em outro cabeçalho MPLS.</li>
-				<li><i>Label</i> original é mantido, novo <i>label</i> <b>externo</b> é adicionado.</li>
-				<li>Operação de <i>push</i>.</li>
-			</ul></li>
-		</ul>
-		<br>
-		<center>
-			<img src="imagens/MPLSHeaderEmpilhado.svg" style="width: 70%;"/>
-		</center>
-	</div>
-	</section>
-
-	<section>
-	<h1>MPLS: Empilhamento de <i>Labels</i> (II)</h1>
-	<div class="slideContent">
-		<ul>
-			<li>Encaminhamento realizado apenas com base no <i>label</i> mais externo.</li>
-			<li>Em certo roteador, tabela pode instruir a realização de um <i>pop</i>, revelando <i>label</i> mais interno.</li>
-		</ul>
-		<br>
-		<center>
-			<img src="imagens/MPLSHeaderEmpilhado.svg" style="width: 70%;"/>
-		</center>
-		<ul>
-			<li>Permite <b>roteamento hierárquico</b>.</li>
-		</ul>
-	</div>
-	</section>
-
-	<section>
-	<h1>MPLS: Classes de Tráfego</h1>
-	<div class="slideContent">
-
-		<ul>
-			<li>O campo Exp, de 3 bits, atualmente é usado como um identificador de Classe de Serviço (CoS).</li>
-			<li>Permite diferenciar, para um mesmo <i>label</i>, pacotes que devem ser tratados de forma distinta.</li>
-			<li><b>Diferenciação de tráfego</b>.
-			<ul>
-				<li>Mais detalhes no Capítulo 7.</li>
-			</ul></li>
-		</ul>
-		<center>
-			<img src="imagens/MPLSHeader.svg" style="width: 70%;"/>
-		</center>
-	</div>
-	</section>
-
-	<section>
-	<h1>MPLS: Camada 2.5</h1>
-	<div class="slideContent">
-		<ul>
-			<li>MPLS não é um protocolo de camada 2.
-			<ul>
-				<li>Se preocupa com encaminhamento de pacotes por <b>múltiplos saltos</b>.</li>
-			</ul></li>
-			<li>Também não é exatamente um protocolo de camada 3.
-			<ul>
-				<li>Encapsula o IP.</li>
-			</ul></li>
-			<li>Sua localização exata na pilha de protocolos é discutível.
-			<ul>
-				<li><i>e.g.</i>, Kurose e Ross o apresentam no capítulo da camada de enlace.</li>
-				<li><i>e.g.</i>, Tanenbaum e Wetherall o apresentam no capítulo de camada de rede.</li>
-			</ul></li>
-			<li>Por isso, alguns autores classificam o MPLS como um protocolo de <b>camada 2.5</b>.</li>
-		</ul>
-	</div>
-	</section>
-
-	<section>
-	<h1>MPLS e Outros Protocolos</h1>
-	<div class="slideContent">
-		<ul>
-			<li>MPLS foi idealizado para encapsular tráfego IP.</li>
-			<li><span class="alert">Mas</span> é genérico o suficiente para trabalhar com outros protocolos da camada de rede.</li>
-			<li>Também pode ser usado com diversas tecnologias de camada de enlace.
-			<ul>
-				<li>Não necessariamente Ethernet.</li>
-			</ul></li>
-		</ul>
-	</div>
-	</section>
-
-	<section>
-	<h1>MPLS: Usos</h1>
-	<div class="slideContent">
-		<ul>
-			<li>Motivação original era acelerar encaminhamento de datagramas IP, simplificando buscas na tabela de roteamento.
-			<ul>
-				<li>Ainda relevante com tecnologias como TCAM?</li>
-			</ul></li>
-			<li>Hoje, muito empregado por sua flexibilidade.
-			<ul>
-				<li>Dissocia roteamento do encaminhamento.</li>
-				<li>Permite aplicação de critérios variados, diferenciação de tráfego.</li>
-				<li>Simplifica implantação de soluções de <b>Engenharia de Tráfego</b>.</li>
-				<li>Simplifica a utilização de múltiplas rotas entre origem e destino.</li>
-				<li>...</li>
-			</ul></li>
-		</ul>
-	</div>
-	</section>
-		
+			<li>Em termos de desempenho: quadros em <i>broadcast</i> enviados para a rede toda.</li>
+			<li>Em termos de gerência: difícil descobrir fontes de problemas, como endereços duplicados.</li>
+			<li>Em termos de segurança: difícil impedir uso/acesso não autorizado a recursos da rede.</li>
+		</ul></li>
+	</ul>
+</div>
+</section>
+	
 	<!-- {{{{ dzslides core
 	#
 	#

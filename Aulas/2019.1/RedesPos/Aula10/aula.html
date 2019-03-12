@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <!-- Meta info -->
+	<meta charset="utf-8">
+	<meta name="shortauthor" content="Diego Passos"/>
+	<meta name="shorttitle" content="VLANs, STP, MPLS"/>
+	<meta name="shortevent" content="Redes de Computadores"/>
+	<title>Redes de Computadores: Aula 10</title>
+
+    <!-- Math support -->
+	<script type="text/x-mathjax-config">
+		MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+			MathJax.InputJax.TeX.Definitions.number = /^(?:[0-9]+(?:\.[0-9]{3})*(?:\{,\}[0-9]*)*|\{,\}[0-9]+)/
+		});
+	</script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+	<script src="../../../../../MathJax-2.6-latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+
+    <!-- Fonts -->
+	<link href='https://fonts.googleapis.com/css?family=Lora:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
+	<link href='../../../../../Fonts/Lora/lora.css' rel='stylesheet' type='text/css'>
+	<link href="https://fonts.googleapis.com/css?family=Satisfy" rel="stylesheet">
+
+
+    <!-- CSS -->
+	<link href='../template/css/template.css' id="template" rel='stylesheet' type='text/css'>
+	<link href='../template/css/presentationSpecific.css' id="presentationSpecific" rel='stylesheet' type='text/css'>
+
+    <!-- Javascript -->
+	<script type="text/javascript" src="../template/js/audio.js"></script>
+</head>
+
+<body>
+    <!-- Audio handlers -->
+	<!--<audio src="audio/La.wav" id="La.wav" preload="auto"></audio>-->
+
+    <!-- Title Slide -->
+	<section>
+
+        <div class="slideContent">
+            <h1 class="title">Aula 10 - VLANs, STP, MPLS</h1>
+            <h2 class="author">Diego Passos</h2>
+            <h4 class="institution">Universidade Federal Fluminense</h4>
+            <h3 class="date">Redes de Computadores</h3>
+        </div>
+
+	</section>
+
+    <!-- Content slides -->
+	<section class="secao">
+	<div class="slideContent">
+		VLANs
+	</div>
+	</section>
+
+	<section>
+	<h1>VLANs: Motivação</h1>
+	<div class="slideContent">
+
+
+			<div class="column" style="width: 50% ;">
+					<br><br>
+					<center>
+						<!--<object type="image/svg+xml" data="imagens/VLANMotivacao_opt.svg" style="width: 80% ;"></object>-->
+						<object type="image/svg+xml" data="imagens/VLANMotivacao_opt.svg" style="width: 95% ;"></object>
+					</center>
+			</div>
+			<div class="column" style="width: 50% ;">
+					<ul>
+							<li> Considere os seguintes aspectos:
+							<ul>
+									<li> Funcionário da CS muda para escritório na EE.
+									<ul>
+											<li> É possível mantê-lo &ldquo;conectado&rdquo; ao switch da CS?</li>
+									</ul>
+									</li>
+									<li> Outra questão: único domínio de <i>broadcast</i>.
+									<ul>
+											<li> Todo tráfego de nível 2 (ARP, DHCP, inundações por falta de entrada nas tabelas de encaminhamento) atravessa toda a LAN.</li>
+											<li> Problemas de privacidade/segurança e eficiência.</li>
+									</ul>
+									</li>
+							</ul>
+							</li>
+					</ul>
+			</div>
+
+
+	</div>
+	</section>
+
+	<section>
+	<h1>VLANs</h1>
+	<div class="slideContent">
+
+			<center>
+					<div class="block" style="width:1000px;">
+							<div class="blockTitle" style="width: 100%;">
+									<p><i>Virtual Local Area Network</i></p>
+							</div>
+							<div class="blockBody">
+									<ul>
+											<li> Switches que possuem capacidades de VLAN podem definir <b>múltiplas LANs virtuais</b> usando uma única infraestrutura física.</li>
+									</ul>
+							</div>
+					</div>
+			</center>
+
+			<ul>
+					<li> <span class="alert">VLAN baseada em porta:</span>
+					<ul>
+							<li> Portas do switch agrupadas (pelo <i>software</i> de gerenciamento do switch).</li>
+					</ul>
+					</li>
+			</ul>
+
+			<div class="column" style="width: 50% ;">
+					<ul>
+							<li> Um único switch físico...</li>
+					</ul>
+					<center>
+							<object type="image/svg+xml" data="imagens/VLANPorPorta1_opt.svg" style="width: 80% ;"></object>
+					</center>
+			</div>
+			<div class="column" style="width: 50% ;">
+					<ul>
+							<li> ... age como <b>múltiplos</b> switches virtuais.</li>
+					</ul>
+					<center>
+							<object type="image/svg+xml" data="imagens/VLANPorPorta2_opt.svg" style="width: 80% ;"></object>
+					</center>
+			</div>
+
+
+	</div>
+	</section>
+
+	<section>
+	<h1>VLAN Baseada em Porta</h1>
+	<div class="slideContent">
+
+
+			<div class="column" style="width: 50% ;">
+					<ul>
+							<li> <span class="alert">Isolamento de tráfego:</span> quadros originários das portas 1&mdash;8 chegam <b>apenas</b> às portas 1&mdash;8.</li>
+							<li> <span class="alert">Alocação dinâmica:</span> portas podem ser alocadas dinamicamente a VLANs.
+							<ul>
+									<li> É possível definir VLANs com base nos MACs dos dispositivos.</li>
+							</ul>
+							</li>
+							<li> <span class="alert">Encaminhamento entre VLANs:</span> feita via roteamento (nível 3).
+							<ul>
+									<li> Na prática, fabricantes vendem switches que são, também, roteadores.</li>
+							</ul>
+							</li>
+					</ul>
+			</div>
+			<div class="column" style="width: 50% ;">
+					<center>
+							<object type="image/svg+xml" data="imagens/VLANPorPorta3_opt.svg" style="width: 80% ;"></object>
+					</center>
+			</div>
+
+
+	</div>
+	</section>
+
+	<section>
+	<h1>VLANs Formadas por Múltiplos Switches Físicos</h1>
+	<div class="slideContent">
+
+			<center>
+					<object type="image/svg+xml" data="imagens/VLANMultiplosSwitches_opt.svg" style="width: 80% ;"></object>
+			</center>
+
+			<ul>
+					<li> <span class="alert">Porta <i>trunk</i>:</span> transportam quadros entre VLANs definidas sobre múltiplos switches físicos.
+					<ul>
+							<li> Quadros encaminhados dentro da mesma VLAN entre switches diferentes não podem ser quadros Ethernet &ldquo;normais&rdquo;.
+							<ul>
+									<li> Precisam armazenar identificador da VLAN.</li>
+							</ul>
+							</li>
+							<li> Protocolo 802.1Q adiciona/remove campos adicionais de cabeçalho para quadros transmitidos entre portas <i>trunk</i>.</li>
+					</ul>
+					</li>
+			</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Formato de um Quadro 802.1Q</h1>
+	<div class="slideContent">
+
+			<center>
+					<object type="image/svg+xml" data="imagens/802_1q_opt.svg" style="width: 80% ;"></object>
+			</center>
+
+	</div>
+	</section>
+
+	<section>
+	<h1>IEEE 802.1Q: Adição e Remoção de <i>tags</i> (I)</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Dispositivos como <i>switches</i> gerenciáveis normalmente são &ldquo;cientes&rdquo; da existência das VLANs de uma rede.</li>
+			<li>Já dispositivos como <i>hosts</i> comumente não tem este conhecimento.</li>
+			<li>É possível dividir a rede em duas porções:
+			<ul>
+				<li>Porção ciente das VLANs.</li>
+				<li>Resto da rede.</li>
+			</ul></li>
+		</ul>
+		<center>
+			<object type="image/svg+xml" data="imagens/porcaoCiente.svg" style="width: 70%;"></object>
+		</center>
+
+	</div>
+	</section>
+
+	<section>
+	<h1>IEEE 802.1Q: Adição e Remoção de <i>tags</i> (II)</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Quando quadro entra na porção ciente da rede, não possui uma <i>tag</i> especificada.
+			<ul>
+				<li>Switch associa quadro a uma VLAN padrão (para a porta de entrada ou para a rede).</li>
+				<li><i>Tag</i> correspondente é adicionada usando o cabeçalho IEEE 802.1Q.</li>
+			</ul></li>
+		</ul>
+		<br>
+		<br>
+		<center>
+			<object type="image/svg+xml" data="imagens/quadroIngressante.svg" style="width: 70%;"></object>
+		</center>
+
+	</div>
+	</section>
+
+	<section>
+	<h1>IEEE 802.1Q: Adição e Remoção de <i>tags</i> (III)</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Comunicações internas à porção ciente mantém a <i>tag</i> no quadro.
+			<ul>
+				<li>Permite que dispositivo que recebe o quadro identifique a VLAN.</li>
+			</ul></li>
+		</ul>
+		<br>
+		<br>
+		<center>
+			<object type="image/svg+xml" data="imagens/quadroEgressoComTag.svg" style="width: 70%;"></object>
+		</center>
+
+	</div>
+	</section>
+
+	<section>
+	<h1>IEEE 802.1Q: Adição e Remoção de <i>tags</i> (III)</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Quando quadro deixa a porção ciente, <i>tag</i> precisa ser removida.</li>
+		</ul>
+		<br>
+		<br>
+		<center>
+			<object type="image/svg+xml" data="imagens/quadroEgressoSemTag.svg" style="width: 70%;"></object>
+		</center>
+
+	</div>
+	</section>
+
+	<section class="secao">
+	<div class="slideContent">
+		<i>Spanning Tree Protocol</i>
+	</div>
+	</section>
+
+	<section>
+	<h1>STP: Introdução</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 55%;">
+			<ul>
+				<li>Protocolo executado na camada de enlace.</li>
+				<li>Criado por Radia Perlman, padronizado no IEEE 802.1D.</li>
+				<li>Objetiva evitar <i>loops</i> lógicos, ainda que existam <i>loops</i> físicos.</li>
+				<li>Como funciona:
+				<ul>
+					<li>Dispositivos (<i>e.g.</i>, switches) criam uma árvore geradora (mínima) da topologia física.</li>
+					<li>Enlaces/portas que causariam <i>loops</i> são desativados para dados.</li>
+				</ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 45%;">
+			<center>
+				<span style=" font-size: 18pt; font-family: 'Satisfy', cursive;">Algorhyme</tt>
+				<div style="text-align:left; font-family: 'Satisfy', cursive; font-size: 18pt; margin-left: 30px;">
+					<br>
+	I think that I shall never see <br>
+	a graph more lovely than a tree.<br>
+	A tree whose crucial property<br>
+	is loop-free connectivity.<br>
+	A tree that must be sure to span<br>
+	so packet can reach every LAN.<br>
+	First, the root must be selected.<br>
+	By ID, it is elected.<br>
+	Least-cost paths from root are traced.<br>
+	In the tree, these paths are placed.<br>
+	A mesh is made by folks like me,<br>
+	then bridges find a spanning tree.<br>
+<br>
+				</div>
+					<div style="text-align:right; font-family: 'Satisfy', cursive; font-size: 18pt; margin-right: 30px;">Radia Perlman</span>
+			</center>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>STP: Operação Básica</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Protocolo dividido nos seguintes passos:
+			<ol>
+				<li>Escolha de uma raiz para a árvore geradora.
+				<ul>
+					<li>Algoritmo distribuído de eleição de líder.</li>
+					<li>Eleição se dá de acordo com identificador de cada dispositivo.</li>
+				</ul></li>
+				<li>Determinição do caminho mais curto entre cada dispositivo e a raiz.
+				<ul>
+					<li>Similar ao funcionamento de um algoritmo de roteamento de vetor de distâncias.</li>
+					<li>Mas apenas uma distância importa: até a raiz.</li>
+				</ul></li>
+				<li>Configuração das portas.
+				<ul>
+					<li>Porta que leva à raiz só é deixada ativa se pertence à árvore geradora.</li>
+					<li>Portas que não levam à raiz (<i>e.g.</i>, interconectam <i>hosts</i>) são deixadas ativas.</li>
+				</ul></li>
+			</ol></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>STP: Mais (Alguns Poucos) Detalhes</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li>Cada switch envia periodicamente BPDUs (<i>Bridge Protocol Data Units</i>).
+				<ul>
+					<li>Quadro de controle do protocolo.</li>
+					<li>Informa (entre outras coisas):
+					<ul>
+						<li>Identificador do switch.</li>
+						<li>Raiz da árvore.</li>
+						<li>Distância para a raiz.</li>
+					</ul></li>
+					<li>Normalmente, a cada 2 segundos.</li>
+					<li>Enviado para o endereço MAC multicast <tt>01:80:C2:00:00:00</tt>.</li>
+				</ul></li>
+				<li>Identificador: prioridade, concatenada com MAC.
+				<ul>
+					<li>Prioridade é configurável.</li>
+					<li>Switch com menor identificador é eleito raiz.</li>
+				</ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li>Inicialmente:
+				<ul>
+					<li>Switches não sabem nada sobre a topologia.</li>
+					<li>Cada switch <b>assume ser a raiz</b>.</li>
+					<li>Envia BPDU com a tupla &lt;ID, ID, 0&gt; para todas as portas.</li>
+				</ul></li>
+				<li>Ao receber um BPDU por uma porta:
+				<ul>
+					<li>Verifica se ID da raiz reportada é menor que a da raiz atualmente conhecida.
+					<ul>
+						<li>Se sim: atualiza raiz, distância.</li>
+						<li>Se não: ainda pode atualizar distância se menor.</li>
+					</ul></li>
+				</ul></li>
+			</ul>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>STP: Exemplo (I)</h1>
+	<div class="slideContent">
+		<center>
+			<object type="image/svg+xml" data="imagens/STPExemplo.svg" style="width: 95%;"></object>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>STP: Exemplo (II)</h1>
+	<div class="slideContent">
+		<center>
+			<object type="image/svg+xml" data="imagens/STPExemplo2.svg" style="width: 95%;"></object>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>STP: Exemplo (III)</h1>
+	<div class="slideContent">
+		<center>
+			<object type="image/svg+xml" data="imagens/STPExemplo3.svg" style="width: 95%;"></object>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>STP: Exemplo (IV)</h1>
+	<div class="slideContent">
+		<center>
+			<object type="image/svg+xml" data="imagens/STPExemplo4.svg" style="width: 95%;"></object>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>STP: Exemplo (V)</h1>
+	<div class="slideContent">
+		<center>
+			<object type="image/svg+xml" data="imagens/STPExemplo5.svg" style="width: 95%;"></object>
+		</center>
+	</div>
+	</section>
+
+	<section class="secao">
+	<div class="slideContent">
+		MPLS
+	</div>
+	</section>
+
+	<section>
+	<h1>Duas Funções Chave da Camada de Rede [Revisão]</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li><b>Encaminhamento:</b> mover pacotes da entrada para a saída de um roteador.</li>
+				<li><b>Roteamento:</b> determina rota usada por pacote da origem ao destino.
+				<ul>
+					<li><span class="alert">Algoritmos de roteamento</span>.</li>
+				</ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li><b>Analogia:</b>
+				<ul>
+					<li><b>Roteamento:</b> processo de planejar uma viagem da origem ao destino.</li>
+					<li><b>Encaminhamento:</b> processo de realizar um trecho da viagem.</li>
+				</ul></li>
+			</ul>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Sinergia entre Roteamento e Encaminhamento [Revisão]</h1>
+	<div class="slideContent">
+		<center>
+			<object type="image/svg+xml" data="imagens/RoteamentoEEncaminhamento.svg" style="width: 70%;"></object>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Redes de Datagramas: Tabela de Roteamento (I) [Revisão]</h1>
+	<div class="slideContent">
+		<center>
+			<object type="image/svg+xml" data="imagens/DatagramasTabelaRoteamento.svg" style="width: 65%;"></object>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Redes de Datagramas: Tabela de Roteamento (II) [Revisão]</h1>
+	<div class="slideContent">
+		<center>
+			<object type="image/svg+xml" data="imagens/DatagramasTabelaRoteamento2.svg" style="width: 70%;"></object>
+		</center>
+		<ul>
+			<li><span class="alert">Pergunta:</span> e se os endereços não são divididos de forma tão organizada?</li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Casamento por Prefixo mais Longo [Revisão]</h1>
+	<div class="slideContent">
+		<center>
+		<div class="block" style="width:1100px;">
+				<div class="blockTitle" style="width: 100%;">
+						<p>Casamento por Prefixo mais longo</p>
+				</div>
+				<div class="blockBody">
+						Ao procurar por uma entrada na tabela de roteamento para um destino, opte sempre pelo <span class="alert">prefixo mais longo</span> que casa com o endereço do destino.
+				</div>
+		</div>
+		</center>
+		<br>
+		<center>
+			<object type="image/svg+xml" data="imagens/TabelaRoteamentoPrefixo.svg" style="width: 70%;"></object>
+		</center>
+		<br>
+		<ul>
+			<li><b>Exemplos:</b>
+			<ul>
+				<li>Destino: <tt>11001000 00010111 0001<span style="background-color: green;">0110 10100001</span></tt>. <span class="alert">Qual interface?</span></li>
+				<li>Destino: <tt>11001000 00010111 0001<span style="background-color: green;">1000 10101010</span></tt>. <span class="alert">Qual interface?</span></li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Busca em Tabela de Roteamento</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Pode ser implementada de várias formas.</li>
+			<li>Por <i>software</i>:
+			<ul>
+				<li>Busca linear: <span class="math inline">\(O\left(n\right)\)</span>.</li>
+				<li>Busca binária (assumindo ordenação das entradas): <span class="math inline">\(O\left(log_2 n\right)\)</span></li>
+			</ul></li>
+			<li>Esta complexidade é &ldquo;boa&rdquo;?</li>
+			<li>Lembre-se que:
+			<ul>
+				<li>Volume de pacotes encaminhados pode ser muito grande: pode chegar a vários <b>milhões por segundo</b>.</li>
+				<li>As tabelas de roteamento da Internet hoje não são tão compactas assim.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1><i>Multiprotocol Label Switching (MPLS)</i></h1>
+	<div class="slideContent">
+		<ul>
+			<li>Objetivo inicial: encaminhamento IP rápido utilizando <i>label</i> de tamanho fixo (ao invés de endereço IP).
+			<ul>
+				<li>Busca rápida em tabela de roteamento utilizando identificador como índice (ao invés de casamento de prefixo mais longo).</li>
+				<li>Empresta ideias das Redes de Circuitos Virtuais (VC).</li>
+				<li>Mas datagrama IP ainda mantém seus endereços IP de origem/destino.</li>
+			</ul></li>
+		</ul>
+		<br>
+		<center>
+			<object type="image/svg+xml" data="imagens/MPLSHeader.svg" style="width: 70%;"></object>
+		</center>
+
+	</div>
+	</section>
+
+	<section>
+	<h1>Roteadores MPLS</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Também conhecidos como <i>label-switching router</i>.</li>
+			<li>Encaminham pacotes para interfaces de saída com base apenas no valor do <i>label</i> (não inspecionam endereço IP).
+			<ul>
+				<li>Tabela de roteamento MPLS é distinta da tabela de roteamento IP.</li>
+			</ul></li>
+			<li><span class="alert">Flexibilidade:</span> decisões de encaminhamento do MPLS podem ser diferentes das do IP.
+			<ul>
+				<li>Utilizar endereços de destino <b>e de origem</b> para rotear fluxos para o mesmo destino de forma diferente (<b>engenharia de tráfego</b>).</li>
+				<li>Re-rotear fluxos rapidamente se enlace falha: caminhos de <i>backup</i> pré-computados (útil para VoIP).</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Caminhos MPLS <i>vs.</i> Caminhos IP (I)</h1>
+	<div class="slideContent">
+		<center>
+			<object type="image/svg+xml" data="imagens/CaminhoIP.svg" style="width: 70%;"></object>
+		</center>
+
+		<br>
+		<ul>
+			<li><span class="alert">Roteamento IP:</span> caminho para o destinatário é determinado apenas pelo endereço IP de destino.</li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Caminhos MPLS <i>vs.</i> Caminhos IP (II)</h1>
+	<div class="slideContent">
+		<center>
+			<object type="image/svg+xml" data="imagens/CaminhoMPLS.svg" style="width: 70%;"></object>
+		</center>
+		<ul>
+			<li><span class="alert">Roteamento IP:</span> caminho para o destinatário é determinado apenas pelo endereço IP de destino.</li>
+			<li><span class="alert">Roteamento MPLS:</span> caminho para o destino pode ser baseado em ambos os endereços de origem e destino.
+			<ul>
+				<li>Reestabelecimento rápido de rotas: rotas de <i>backup</i> pré-computadas em caso de falhas de enlaces.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Sinalização MPLS</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Modificar protocolos de estado de enlace como o OSPF e o IS-IS para carregar informação utilizada pelo roteamento MPLS.
+			<ul>
+				<li><i>e.g.</i>, largura de banda dos enlaces, quantidade de banda &ldquo;reservada&rdquo;.</li>
+			</ul></li>
+			<li>Roteadores MPLS de borda (LERs) usam o protocolo de sinalização RSVP-TE para configurar o encaminhamento MPLS dos demais roteadores MPLS.</li>
+		</ul>
+		<br>
+		<center>
+			<object type="image/svg+xml" data="imagens/SinalizacaoMPLS.svg" style="width: 60%;"></object>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Tabelas de Roteamento MPLS</h1>
+	<div class="slideContent">
+		<center>
+			<object type="image/svg+xml" data="imagens/TabelasMPLS.svg" style="width: 50%;"></object>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>MPLS: Empilhamento de <i>Labels</i> (I)</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Roteadores MLPS podem &ldquo;empilhar&rdquo; <i>labels</i>.
+			<ul>
+				<li>Pacote MPLS (<i>i.e.</i>, incluindo cabeçalho MPLS) é encapsulado em outro cabeçalho MPLS.</li>
+				<li><i>Label</i> original é mantido, novo <i>label</i> <b>externo</b> é adicionado.</li>
+				<li>Operação de <i>push</i>.</li>
+			</ul></li>
+		</ul>
+		<br>
+		<center>
+			<object type="image/svg+xml" data="imagens/MPLSHeaderEmpilhado.svg" style="width: 70%;"></object>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>MPLS: Empilhamento de <i>Labels</i> (II)</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Encaminhamento realizado apenas com base no <i>label</i> mais externo.</li>
+			<li>Em certo roteador, tabela pode instruir a realização de um <i>pop</i>, revelando <i>label</i> mais interno.</li>
+		</ul>
+		<br>
+		<center>
+			<object type="image/svg+xml" data="imagens/MPLSHeaderEmpilhado.svg" style="width: 70%;"></object>
+		</center>
+		<ul>
+			<li>Permite <b>roteamento hierárquico</b>.</li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>MPLS: Classes de Tráfego</h1>
+	<div class="slideContent">
+
+		<ul>
+			<li>O campo Exp, de 3 bits, atualmente é usado como um identificador de Classe de Serviço (CoS).</li>
+			<li>Permite diferenciar, para um mesmo <i>label</i>, pacotes que devem ser tratados de forma distinta.</li>
+			<li><b>Diferenciação de tráfego</b>.
+			<ul>
+				<li>Mais detalhes no Capítulo 7.</li>
+			</ul></li>
+		</ul>
+		<center>
+			<object type="image/svg+xml" data="imagens/MPLSHeader.svg" style="width: 70%;"></object>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>MPLS: Camada 2.5</h1>
+	<div class="slideContent">
+		<ul>
+			<li>MPLS não é um protocolo de camada 2.
+			<ul>
+				<li>Se preocupa com encaminhamento de pacotes por <b>múltiplos saltos</b>.</li>
+			</ul></li>
+			<li>Também não é exatamente um protocolo de camada 3.
+			<ul>
+				<li>Encapsula o IP.</li>
+			</ul></li>
+			<li>Sua localização exata na pilha de protocolos é discutível.
+			<ul>
+				<li><i>e.g.</i>, Kurose e Ross o apresentam no capítulo da camada de enlace.</li>
+				<li><i>e.g.</i>, Tanenbaum e Wetherall o apresentam no capítulo de camada de rede.</li>
+			</ul></li>
+			<li>Por isso, alguns autores classificam o MPLS como um protocolo de <b>camada 2.5</b>.</li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>MPLS e Outros Protocolos</h1>
+	<div class="slideContent">
+		<ul>
+			<li>MPLS foi idealizado para encapsular tráfego IP.</li>
+			<li><span class="alert">Mas</span> é genérico o suficiente para trabalhar com outros protocolos da camada de rede.</li>
+			<li>Também pode ser usado com diversas tecnologias de camada de enlace.
+			<ul>
+				<li>Não necessariamente Ethernet.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>MPLS: Usos</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Motivação original era acelerar encaminhamento de datagramas IP, simplificando buscas na tabela de roteamento.
+			<ul>
+				<li>Ainda relevante com tecnologias como TCAM?</li>
+			</ul></li>
+			<li>Hoje, muito empregado por sua flexibilidade.
+			<ul>
+				<li>Dissocia roteamento do encaminhamento.</li>
+				<li>Permite aplicação de critérios variados, diferenciação de tráfego.</li>
+				<li>Simplifica implantação de soluções de <b>Engenharia de Tráfego</b>.</li>
+				<li>Simplifica a utilização de múltiplas rotas entre origem e destino.</li>
+				<li>...</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+		
+	<!-- {{{{ dzslides core
+	#
+	#
+	#     __  __  __       .  __   ___  __
+	#    |  \  / /__` |    | |  \ |__  /__`
+	#    |__/ /_ .__/ |___ | |__/ |___ .__/ core :€
+	#
+	#
+	# The following block of code is not supposed to be edited.
+	# But if you want to change the behavior of these slides,
+	# feel free to hack it!
+	#
+	-->
+
+    <!-- More CSS -->
+	<link href='../template/css/slides.css' id="slides" rel='stylesheet' type='text/css'>
+	<link href='../template/css/presentationSpecific2.css' id="presentationSpecific2" rel='stylesheet' type='text/css'>
+
+    <!-- More Javascript -->
+	<script type="text/javascript" src="../template/js/dz.js"></script>
+
+	<!-- More CSS -->
+	<link href='../template/css/notesSpecific.css' id="notesSpecific" rel='stylesheet' type='text/css'>
+	<link href='../template/css/printSpecific.css' id="printSpecific" rel='stylesheet' type='text/css'>
+</body>
+</html>
