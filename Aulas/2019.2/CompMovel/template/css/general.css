@@ -1,0 +1,24 @@
+/*
+ * General style for the slides.
+ */
+
+/*
+ * Defines a default font family for the overall slides.
+ */
+body {
+  font-family: 'Roboto', sans-serif;
+}
+
+/*
+ * Definitions for the slide content area.
+ */
+.remark-slide-content {
+  font-size: 24px;
+  padding: 4em 2em 1em 2em;
+}
+
+.remark-slide-number {
+  position: absolute;
+  right: 110px;
+  font-size: 18px;
+}

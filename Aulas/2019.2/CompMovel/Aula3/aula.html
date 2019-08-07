@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Computação Móvel: Aula 3</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" type="text/css" href="../template/css/roboto.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/general.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/code.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/cover.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/section.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/elements.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/table.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/block.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/dagre.css">
+  </head>
+  <body>
+
+    <textarea id="source">
+
+class: cover-slide
+
+![:cover](
+Computação Móvel
+Aula 3: Mais Conceitos &mdash; Antenas e Propagação
+Diego Passos
+../template/img/logo.svg
+)
+
+---
+
+class: section-slide
+
+# Antenas
+
+---
+
+class: middle
+layout: true
+name: conteudo
+
+.title[
+{{slideTitle}}
+<hr>]
+
+---
+
+slideTitle: Antena
+
+### Transdutor
+![:block](
+.center[
+#### Corrente elétrica &hArr; onda eletromagnética
+]
+)
+
+![:dagre width: 850px; height: 530px; font-size: 18px;](
+digraph {
+    ranksep=20;
+    nodesep=20;
+    A[label="Antena"];
+    subgraph cluster_0 {
+        label="Características Importantes";
+        B[label="Irradiação"];
+        C[label="Frequência"];
+    }
+    subgraph cluster_1 {
+        D[label="2,4 GHz"];
+        E[label="5 GHz"];
+        F[label="..."];
+        G[label="Omnidirecional"];
+        H[label="Setorial"];
+        I[label="Direcional"];
+        J[label="..."];
+    }
+    A -> B;
+    A -> C;
+    B -> G;
+    B -> H;
+    B -> I;
+    B -> J;
+    C -> D;
+    C -> E;
+    C -> F;
+}
+)
+
+---
+
+slideTitle: Diretividade de uma Antena
+
+### Irradiador .alert[isotrópico] *vs.* .alert[não-isotrópico]
+
+![:column 60%](
+.center[
+![:image 85%](Irradiacao.svg\)
+]
+)
+
+![:column 40%](
+#### Antenas práticas
+* Não-isotrópicas.
+#### Diretividade
+* Concentração da energia.
+* .alert[Ganho].
+)
+
+---
+
+slideTitle: Padrão de Irradiação (I)
+
+### Representação gráfica
+* Cortes horizontal e vertical.
+
+
+.center[
+#### Exemplo para antena omnidirecional
+![:image 85%](padraoOmni.png)
+]
+
+---
+
+slideTitle: Padrão de Irradiação (II)
+
+### Representação gráfica
+* Cortes horizontal e vertical.
+
+
+.center[
+#### Exemplo para antena direcional
+![:image 85%](padraoDir.png)
+]
+
+---
+
+slideTitle: Ganho de Diretividade
+
+#### Medido em dBi
+* Escala logarítmica.
+
+$$Ganho\_{(dBi)} = 10\cdot\log\_{10}\left(\frac{DMAX}{DREF}\right)$$
+
+#### DMAX e DREF: densidades de potência
+* DMAX: na direção de irradia mais intensa.
+* DREF: do irradiador isotrópico.
+
+---
+
+slideTitle: Formação de Feixe
+
+#### *Beamforming*
+* Várias antenas omnidirecionais &rArr; um feixe direcional.
+#### Usos
+
+.col-2[
+* Sonar.
+* Radar.
+* Telefonia móvel.
+]
+
+.col-2[
+![:block height:200px;](
+* IEEE 802.11n (sem sucesso\).
+* IEEE 802.11ac.
+)
+]
+
+---
+
+layout: false
+class: section-slide
+
+# Potência do Sinal e Parâmetros Correlatos
+
+---
+
+layout: true
+template: conteudo
+
+---
+
+slideTitle: Mais Medidas Logarítmicas
+
+.container[
+
+![:column 70%](
+#### Medidas Logarítmicas
+* Práticas para grandes amplitudes de valores.
+* Multiplicações &rArr; somas.
+* Divisões &rArr; subtrações.
+)
+
+![:column 30%](
+#### Usos
+* Potência.
+* Atenuação.
+* Ganhos.
+* Sensibilidade.
+)]
+
+| dB | dBi | dBm |
+| --- | --- | --- |
+| Ganho ou Perda | Ganho relativo a irradiador isotrópico | Potência |
+| Aumento de 1000 vezes &equiv; ganho de 30 dB | Ganho de 23 dBi &equiv; 200 vezes mais potência irradiada | 100 mW = 20 dBm |
+
+---
+
+slideTitle: Ganhos e Perdas em dB
+
+![:column 55%](
+#### Bel (B\)
+* Aumento de uma ordem de grandeza.
+    * Aumento de 10 vezes &rArr; 1 Bel.
+    * Aumento de 100 vezes &rArr; 2 Béis.
+
+#### Decibel (dB\)
+* 1 B = 10 dB.
+    * Aumento de 10 vezes &rArr; 10 dB.
+    * Aumento de 100 vezes &rArr; 20 dB.
+)
+
+![:column 45%](
+![:block](Propriedades úteis
+* Dobrar de valor:
+    * $10\cdot\log_{10} 2 \approx 3$ dB.
+* Cair pela metade:
+    * $10\cdot\log_{10} 0,5 \approx - 3$ dB.
+* Corolário: perdas são ganhos negativos.
+\)
+)
+
+$$G\_{(dB)} = 10\cdot\log\_{10} G\_{(lin)}\rightarrow G\_{(lin)} = 10^{{G\_{(dB)}}\over{10}}$$
+
+
+---
+
+slideTitle: Potência em dBm
+
+
+![:column 60%](
+#### Usual
+* Facilita cálculos.
+* Comum em *datasheets*, manuais.
+
+#### Definição
+* Ganho/perda em relação  1 mW:
+
+$$ Pwr\_{(dBm\)} = 10\cdot\log\_{10} Pwr\_{(mW\)}$$
+)
+
+![:column 40%](
+.center[
+### Exemplos
+]
+
+| mW | dBm |
+| :--: | :---: |
+| 100 | 20 |
+| 50 | 17 |
+| 10 | 10 |
+| 1 | 0 |
+| 0,5 | -3 |
+| 0,1 | -10 |
+)
+
+---
+
+slideTitle: Ganho de Diretividade em dBi
+
+#### Relembrando
+$$Ganho\_{(dBi)} = 10\cdot\log\_{10}\left(\frac{DMAX}{DREF}\right)$$
+
+#### Uso
+* Determinar energia transmitida na direção do ganho.
+* Exemplo:
+    * $Pwr_{trans}$: 15 dBm.
+    * Ganho: 8 dBi.
+    * Potência irradiada: $15 + 8 = 23$ dBm.
+    * Em escala linear: 31,6 mW $\times$ 6,31 = 199,4 mW.
+
+---
+
+slideTitle: Sensibilidade do Rádio em dBm
+
+#### Significado
+* Menor potência tal que sinal possa ser decodificado.
+
+#### Varios fatores
+* Características do receptor.
+* Taxa de transmissão.
+    * Robustez da modulação.
+* ...
+
+---
+
+slideTitle: Exemplos de Valores de Sensibilidade
+
+.container[
+| Taxa | IEEE 802.11g | IEEE 802.11a |
+| ---- | ------------ | ------- |
+| 6 Mb/s | -90 dBm | -87 dBm |
+| 9 Mb/s  | -84 dBm | -87 dBm |
+| 12 Mb/s  | -82 dBm | -85 dBm |
+| 18 Mb/s  | -80 dBm | -84 dBm |
+| 24 Mb/s | -77 dBm | -81 dBm |
+| 36 Mb/s  | -73 dBm | -78 dBm |
+| 48 Mb/s | -72 dBm | -73 dBm |
+| 54 Mb/s | -72 dBm | -72 dBm |
+]
+.footnote[Segundo a Cisco, para o rádio do ponto de acesso Aironet Série 1200.]
+
+---
+
+slideTitle: Relação Sinal-Ruído, SNR
+
+#### *Signal to Noise Ratio*
+* Razão entre potência do sinal desejado e ruído:
+
+$$SNR\_{(dB)} = 10\cdot\log\_{10}\frac{sinal}{ruido}$$
+
+.col-2[
+#### Importância
+* Capacidade de decodificação.
+    * .red[&dArr; SNR], .red[&dArr; probabilidade de sucesso].
+    * Mesmo acima da sensibilidade!
+]
+.col-2[
+#### Fontes de ruído
+* Ruído térmico.
+    * Inevitável.
+    * Depende da largura de banda:
+        * -101 dBm para 20 MHz.
+        * Dobra com a largura.
+* Outros equipamentos.
+]
+---
+
+layout: false
+class: section-slide
+
+# Propagação
+
+---
+
+layout: true
+template: conteudo
+
+---
+
+slideTitle: Atenuação
+
+#### Motivos
+* Dispersão da energia no espaço.
+* Absorção da energia por partículas e obstáculos.
+
+#### Representativa
+* Várias ordens de grandeza.
+
+#### Modelos de propagação
+* Prever atenuação
+* Às vezes complexos, muitos parâmetros.
+    * Típicos: frequência, distância e altura das antenas.
+    * Mais raros: vegetação, rugosidade do solo, ...
+
+---
+
+slideTitle: Modelo de Propagação no Espaço Livre
+
+.col-2[
+#### *Free-space path loss* (FSPL)
+* Simples
+    * Considera apenas a dispersão da energia.]
+.col-2[
+#### Ideia básica
+* Energia espalhada na superfície de uma esfera.
+* Raio aumenta com distância.]
+
+$$FSPL(dB) = 20\cdot\log_{10}(d) + 20\cdot\log{10}(f) + 32,45$$
+* Onde:
+    * d = distância em Km.
+    * f = frequência em MHz.
+
+---
+
+slideTitle: Obstáculos à propagação
+
+#### Efeitos
+* Absorção.
+* Reflexão.
+* ...
+#### Material e espessura
+* *e.g.*, madeira e vidro: atenuação moderada.
+* *e.g.*, paredes de alvenaria e concreto: forte atenuação.
+* *e.g.*, água: atenuação extrema.
+
+---
+
+slideTitle: Exemplos de Obstáculos
+
+| Tipo de obstáculo | Atenuação típica (2,4 GHz) |
+| :---------------- | -------------------------------------- |
+| Parede de concreto (20 cm) ou laje | 35 dB |
+| Parede de alvenaria | 15 dB |
+| Parede de gesso acartonado | 3 dB |
+| Divisórias (núcleo colmeia) | 2 dB |
+| Porta de madeira | 3 dB |
+| Janela de vidro | 3 dB |
+.footnote[Fonte: Daniel M. Dobkin, *RF Engineering for Wireless Networks*.]
+
+---
+
+layout: false
+class: section-slide
+
+# Próxima aula
+
+---
+
+layout: true
+template: conteudo
+
+---
+
+slideTitle: Próxima aula
+
+### Começamos a estudar o IEEE 802.11
+* Características básicas e arquiteturas.
+
+### Tarefas
+| Todos os alunos |
+| --------------- |
+| Ler capítulo 2 do livro *Tecnologias de Redes Sem Fio*|
+
+</figcaption>
+</template>
+    </textarea>
+
+    <script src="../template/js/remark-latest.min.js" type="text/javascript"></script>
+    <script src="../template/js/d3.v4.js"></script>
+    <script src="../template/js/graphlib-dot.js"></script>
+    <script src="../template/js/dagre-d3.min.js"></script>
+    <script src="../template/js/dagre-d3-extra.js"></script>
+    <script src="../template/js/macros.js" type="text/javascript"></script>
+    <script src="../template/js/callbacks.js" type="text/javascript"></script>
+    <script src="../template/js/katex.min.js"></script>
+    <script src="../template/js/auto-render.min.js"></script>
+    <link rel="stylesheet" href="../template/css/katex.min.css">
+
+    <script type="text/javascript">
+      var renderMath = function() {
+        renderMathInElement(document.body, {delimiters: [
+           {left: "$$", right: "$$", display: true},
+           {left: "$", right: "$", display: false},
+        ]});
+      }
+
+      var slideshow = remark.create({highlightStyle: "github", highlightLines: "true", highlightSpans: "true", slideNumberFormat: onSlideCallback}, renderMath);
+
+      dagreRenderAllSlides();
+
+    </script>
+</body>
+</html>

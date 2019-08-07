@@ -1,0 +1,32 @@
+.node {
+  white-space: nowrap;
+}
+
+.node rect,
+.node circle,
+.node ellipse,
+.node polygon {
+  fill: #BADADA;
+  /*stroke: #137562;
+  stroke-width: 3px;*/
+  stroke: none;
+  filter: drop-shadow( 0px 1px 5px #000 );
+  -webkit-filter: drop-shadow( 0px 1px 5px #032 );
+}
+
+.cluster rect {
+  stroke: #333;
+  fill: #000;
+  fill-opacity: 0.1;
+  stroke-width: 1.5px;
+}
+
+.edgePath path.path {
+  stroke: #137562;
+  stroke-width: 3px;
+  fill: none;
+}
+
+.edgePath marker path {
+  fill: #137562;
+}

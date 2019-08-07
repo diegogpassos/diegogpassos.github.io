@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Computação Móvel: Aula 5</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" type="text/css" href="../template/css/roboto.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/general.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/code.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/cover.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/section.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/elements.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/table.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/block.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/dagre.css">
+  </head>
+  <body>
+
+    <textarea id="source">
+
+class: cover-slide
+
+![:cover](
+Computação Móvel
+Aula 5: IEEE 802.11 &mdash; Camada de Enlace
+Diego Passos
+../template/img/logo.svg
+)
+
+---
+
+class: section-slide
+
+# Conceitos Básicos
+
+---
+
+class: middle
+layout: true
+name: conteudo
+
+.title[
+{{slideTitle}}
+<hr>]
+
+---
+
+slideTitle: Contexto
+
+#### Meio sem fio
+* Compartilhado.
+* .alert[Conteção].
+* .red[Demanda coordenação].
+
+#### Várias redes
+* Sem conexão física.
+    * Processo lógico.
+
+---
+
+slideTitle: CSMA/CD
+
+#### *Carrier Sense Multiple Access with Collision Detection*
+* Baseado em contenção.
+
+#### Pontos-chave
+| Característica | Observação |
+| :------------ | :-------- |
+| .alert[Detecção de portadora] | Só transmitir se meio está livre |
+| .alert[Detecção de colisões] | Executada .red[durante] transmissão |
+| .alert[Retransmissões] | Em caso de colisão |
+
+.center[
+### Adequado a meios cabeados]
+
+---
+
+slideTitle: CSMA/CA
+
+.center[
+### *Carrier Sense Multiple Access with Collision Avoidance*]
+
+![:column 55%](
+* Alternativa ao CSMA/CD.
+* Colisão &rArr; ausência de ACK.
+)
+
+![:column 45%](
+![:block margin-top: 5px; margin-left: 5px;](Menos Eficiente
+* Quadros transmitidos completamente.
+* Adição do ack.
+\)
+)
+
+.center[
+![:dagre width: 850px; height: 300px; font-size: 16px;](
+digraph {
+    rankdir=LR;
+    ranksep=30;
+    nodesep=20;
+    B[label="CCA" rank=1];
+    C[label="Backoff" rank=1];
+    D[label="Transmissão" rank=2];
+    E[label="    Limite\n       de\nTentativas?" shape="diamond" rank=3];
+    G[label="Sucesso" rank=4];
+    H[label="Fracasso" rank=4];
+
+    B -> C [label="Ocupado"];
+    B -> D [label="Livre"];
+    C -> D;
+    D -> G [label="    Ack\nRecebido" minlen=2];
+    D -> E [label="   Ack\nPerdido"];
+    E -> C [label="Não"];
+    E -> H [label="Sim"];
+}
+)
+]
+---
+
+slideTitle: Terminal Escondido
+
+.center[
+![:image 90%](TerminalEscondido.svg)
+]
+
+.col-2[
+#### CSMA/CA falha
+* Meio .red[parece] livre.
+* Mas há transmissão em curso.
+    * Fora do alcance do transmissor.
+    * Mas no alcance do receptor.]
+
+.col-2[
+![:block margin-top: 80px;](Nota
+* Colisão: .red[receptor].
+* Detecção de portadora: .blue[transmissor].
+)
+]
+
+---
+
+slideTitle: RTS/CTS (I)
+
+.col-2[
+.center[
+![:dagre width: 100%; height: 350px; font-size: 16px;](
+digraph {
+    rankdir=TB;
+    ranksep=50;
+    nodesep=20;
+    A[label="Envia\nRTS"];
+    B[label="CTS Recebido?" shape="diamond"];
+    C[label="Backoff"];
+    D[label="Envia\nDado"];
+
+    A -> B;
+    B -> C [label="Não"];
+    B -> D [label="Sim"];
+    C -> A;
+}
+)
+]
+]
+
+.col-2[
+#### Reserva virtual do meio
+* RTS (*Request To Send*).
+* CTS (*Clear To Send*).
+
+#### CTS recebido &rArr; meio reservado
+* Não utilizar o canal.
+]
+
+| Característica | Porém... |
+| :------------- | :------- |
+| .red[Mais *overhead*] | .blue[Limiar de RTS/CTS] |
+| .blue[Menos colisões] | .red[Terminais expostos] |
+
+---
+
+slideTitle: RTS/CTS (II)
+
+.right[
+![:image 75%](RTSCTS.svg)
+]
+
+![:block width: 35%; position: absolute; left: 5%; bottom: 15%;](Nota
+* Colisão: .red[receptor].
+* Reserva do meio: .red[receptor].
+)
+
+---
+
+slideTitle: Terminal Exposto
+
+![:imageS width: 60%; position: absolute; top: 15%; right: 5%](TerminalExposto.svg)
+
+![:position bottom: 5%; left: 5%](
+#### "Oposto" do terminal escondido.
+* Transmissão sem colisão possível.
+    * Mas não realizada!
+* Não resolvido com RTS/CTS.
+    * Ao menos no IEEE 802.11.
+)
+
+---
+
+layout: false
+class: section-slide
+
+# Detalhes do IEEE 802.11
+
+---
+
+layout: true
+template: conteudo
+
+---
+
+slideTitle: Funções de Coordenação
+
+#### Vários Protocolos MAC
+* DCF: *Distributed Coordination Function*.
+* PCF: *Point Coordination Function*.
+
+| DCF | PCF |
+| :-- | :-- |
+| Mandatório no Wi-Fi | Opcional no Wi-Fi |
+| Distribuído, CSMA/CA | Centralizado, coordenação do AP |
+| RTS/CTS opcional | Não implementado comercialmente |
+
+![:block position: absolute; top: 20%; right: 5%; width: 45%;](Nota
+* HCF: *Hybrid Coordination Function*.
+* IEEE 802.11e.
+)
+
+---
+
+slideTitle: Operação Atômica
+
+![:block](
+.center[
+### Sequência de eventos que não deve ser interrompida
+]
+)
+
+#### Exemplo: Transmissão de quadro
+
+.center[
+![:dagre width: 60%; height: 120px; font-size: 16px;](
+digraph {
+    rankdir=LR;
+    ranksep=50;
+    nodesep=20;
+    subgraph rtscst {
+        RTS -> CTS;
+    }
+
+    CTS -> Transmission;
+    Transmission[label="Dados"];
+    Ack[label="Ack"];
+
+    Transmission -> Ack;
+}
+)
+]
+
+---
+
+slideTitle: Intervalo entre Quadros
+
+#### IFS (*Interframe Spaces*)
+* Separam ações dos nós.
+* Precisam ser respeitados.
+
+| SIFS | DIFS |
+| :--- | :--- |
+| *Short Interframe Space * | DCF Interframe Space |
+| Separa partes de uma operação atômica | Separa operações atômicas |
+| *e.g.*, entre dados e ack | *e.g.*, meio livre por DIFS antes de transmissão |
+
+![:block position: absolute; top: 20%; right: 5%; width: 45%;](Outros exemplos
+* PIFS: *PCF Interframe Space*.
+* EIFS: *Extended Interframe Space*.
+)
+
+---
+
+slideTitle: NAV
+
+.container[
+.col-2[
+#### *Network Allocation Vector*
+* Detecção de portadora virtual.
+]
+.col-2[
+#### Objetivos
+* Economia de energia.
+* Suporte a RTS/CTS.
+]
+]
+
+![:block margin-top:30px;](Funcionamento
+* Campo `duração` no cabeçalho
+* Contador regressivo.
+* Estação pode "desligar".
+)
+
+---
+
+slideTitle: Backoff Exponencial (I)
+
+#### Aplicação
+* Após colisão.
+* Se meio ocupado na detecção de portadora.
+
+#### Tempo aleatório
+* Nó não acessa o meio.
+* Evita sincronização do acesso ao meio pelos nós.
+* Tende a crescer a cada retransmissão.
+
+---
+
+
+slideTitle: Backoff Exponencial (II)
+
+.center[
+![:image 100%](Backoff.svg)
+]
+
+---
+
+slideTitle: Backoff &mdash; Exemplo
+
+.center[
+![:image 100%](BackoffExemplo.png)
+]
+.footnote[Fonte: *Tecnologias de Redes Sem Fio*.]
+
+---
+
+slideTitle: Juntando Tudo
+
+.center[
+![:image 100%](DCFResumo.png)
+]
+.footnote[Fonte: *Tecnologias de Redes Sem Fio*.]
+
+---
+
+layout: false
+class: section-slide
+
+# Gerência e Controle
+
+---
+
+layout: true
+template: conteudo
+
+---
+
+slideTitle: Quadros do IEEE 802.11
+
+<table>
+    <thead>
+        <tr>
+            <th colspan=4 style="text-align: center;">Tipos</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td colspan=4 style="text-align: center;"><b>Controle</b></td>
+        </tr>
+        <tr>
+            <td>ack</td><td>rts</td><td>cts</td><td>...</td>
+        </tr>
+        <tr>
+            <td colspan=4 style="text-align: center;"><b>Gerência</b></td>
+        </tr>
+        <tr>
+            <td>Associação</td><td>Autenticação</td><td>Beacon</td><td>...</td>
+        </tr>
+        <tr>
+            <td colspan=4 style="text-align: center;"><b>Dados</b></td>
+        </tr>
+    </tbody>
+</table>
+
+---
+
+slideTitle: Formato do Cabeçalho
+
+.center[
+![:image 80%](header.svg)
+]
+
+---
+
+slideTitle: Campos *To DS* e *From DS*
+
+| To DS | From DS | Address 1 | Address 2 | Address 3 | Address 4 |
+| ----- | ------- | --------- | --------- | --------- | --------- |
+| 0     | 0       | Destino |   Origem | BSSID | N/A |
+| 0     | 1       | Destino |   BSSID | Origem | N/A |
+| 1     | 0       | BSSID |   Origem | Destino | N/A |
+| 1     | 1       | Receptor |   Transmissor | Destino | Origem |
+
+---
+
+slideTitle: Quadros de Gerência e Operações
+
+.center[
+![:image 100%](QuadrosOperacoes.svg)
+]
+
+---
+
+slideTitle: Anunciando uma Rede
+
+#### *Beacons*
+* Pequenos.
+* Periódicos.
+    * e.g., 100 ms
+* Gerados pelo AP.
+
+#### Conteúdo
+* Características do BSS.
+    * ESSID, canal, taxas, criptografia, ...
+
+---
+
+slideTitle: Indagando sobre redes
+
+![:position left: 5%; top: 15%; width: 50%](
+![:image 100%](Probe.svg\)
+)
+
+![:block width: 50%; position: absolute; right: 5%; bottom: 8%;](Probe restrito
+* *e.g.*, conjunto particular de taxas.
+* *e.g.*, ESSID específico.
+* AP só responde se houver casamento.
+)
+
+---
+
+slideTitle: Varredura
+
+.center[
+### Descoberta de BSSs
+]
+
+.container[
+![:column 40%](
+.center[
+#### Ativa
+]
+![:image 100%](Probe.svg\)
+)
+
+![:column 15%](
+.center[
+.veryLarge[
+.alert[**X**]
+]
+]
+)
+
+![:column 40%](
+.center[
+#### Passiva
+]
+![:image 100%](VarreduraPassiva.svg\)
+)
+]
+
+.center[
+### Um canal ou múltiplos
+]
+
+---
+
+slideTitle: Autenticação
+
+![:block](Definição
+* Verificar se estação está autorizada a usar o BSS/ESS.
+* Antecede associação.
+)
+
+#### Vários tipos
+* Complexos:
+    * Criptografia, chaves, filtro de endereços, ...
+* Simples:
+    * Mera formalidade.
+
+---
+
+slideTitle: Associação
+
+#### Vínculo entre estação e BSS.
+* Pré-requisito: autenticação.
+
+#### Quadros
+* *Association request*.
+* *Association response*.
+    * AID (ID da associação).
+
+---
+
+slideTitle: Outras Operações
+
+![:column 55%](
+| Exemplos | Comentário |
+| :------ | :--------- |
+| Desassociação | Auto-explicativo |
+| Desautenticação |  Auto-explicativo |
+| Reassociação | Mesmo AP ou outro do mesmo ESS |
+
+
+<br>
+<br>
+)
+
+![:position width: 35%; right: 10%; bottom: 15%;](
+![:block](Reassociação
+* Estado preservado.
+* Suporte à mobilidade.
+\)
+)
+
+---
+
+layout: false
+class: section-slide
+
+# Eficiência
+
+---
+
+layout: true
+template: conteudo
+
+---
+
+slideTitle: Eficiência do Wi-Fi
+
+.col-2[
+#### Fontes de ineficiência
+* Perda de quadros.
+* Cabeçalhos.
+* IFSs.
+
+![:block margin-top: 70px;](Nota
+* Atacado por emendas recentes.
+    * *e.g.*, agregação de pacotes.
+    * *e.g.*, reuso espacial.
+)]
+
+.col-2[
+![:image 95%](Eficiencia2.png)
+.footnote[Fonte: *Tecnologias de Redes Sem Fio*.]
+]
+
+---
+
+layout: false
+class: section-slide
+
+# Próxima aula
+
+---
+
+layout: true
+template: conteudo
+
+---
+
+slideTitle: Próxima aula
+
+### Fim da discussão (específica) sobre IEEE 802.11
+* Duas emendas recentes:
+    * IEEE 802.11ah.
+    * IEEE 802.11ax.
+
+### Tarefas
+| Todos os alunos |
+| --------------- |
+| Leitura dos artigos [1,2]|
+
+</figcaption>
+</template>
+    </textarea>
+
+    <script src="../template/js/remark-latest.min.js" type="text/javascript"></script>
+    <script src="../template/js/d3.v4.js"></script>
+    <script src="../template/js/graphlib-dot.js"></script>
+    <script src="../template/js/dagre-d3.min.js"></script>
+    <script src="../template/js/dagre-d3-extra.js"></script>
+    <script src="../template/js/macros.js" type="text/javascript"></script>
+    <script src="../template/js/callbacks.js" type="text/javascript"></script>
+    <script src="../template/js/katex.min.js"></script>
+    <script src="../template/js/auto-render.min.js"></script>
+    <link rel="stylesheet" href="../template/css/katex.min.css">
+
+    <script type="text/javascript">
+      var renderMath = function() {
+        renderMathInElement(document.body, {delimiters: [
+           {left: "$$", right: "$$", display: true},
+           {left: "$", right: "$", display: false},
+        ]});
+      }
+
+      var slideshow = remark.create({highlightStyle: "github", highlightLines: "true", highlightSpans: "true", slideNumberFormat: onSlideCallback}, renderMath);
+
+      dagreRenderAllSlides();
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Computação Móvel: Aula 2</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" type="text/css" href="../template/css/roboto.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/general.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/code.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/cover.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/section.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/elements.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/table.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/block.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/dagre.css">
+  </head>
+  <body>
+
+    <textarea id="source">
+
+class: cover-slide
+
+![:cover](
+Computação Móvel
+Aula 2: Introdução às Redes Móveis
+Diego Passos
+../template/img/logo.svg
+)
+
+---
+
+class: section-slide
+
+# Histórico e Motivação
+
+---
+
+class: middle
+layout: true
+name: conteudo
+
+.title[
+{{slideTitle}}
+<hr>]
+
+---
+
+slideTitle: Redes Sem Fio
+
+#### Popularização
+* Final dos anos 1990.
+    * Redes celular.
+    * Redes Locais Sem Fio (WLAN).
+
+![:column 90%](
+#### Comparação com redes cabeadas
+
+| Prós | Contras |
+| ---- | ------- |
+| .blue[Praticidade] | .red[Escalabilidade] |
+| .blue[Custo] | .red[Desempenho] |
+| .blue[Novas aplicações] | .red[Segurança] |
+| .blue[...] | .red[...] |
+)
+
+---
+
+slideTitle: Comunicação Sem Fio
+
+#### História mais longa
+| Época  | Marco |
+| :----- | ----- |
+| Década de 1890 | Surgimento do rádio |
+| Meados do Século XX | Rádio e TV: comunicação em massa |
+| Final do Século XX | Telefonia móvel |
+| Final do Século XX | Redes Locais Sem Fio |
+
+#### Desafios específicos
+.col-3[
+* Atenuação
+]
+.col-3[
+* Interferências
+]
+.col-3[
+* Segurança
+]
+
+---
+
+slideTitle: Comunicação de Dados Sem Fio
+
+#### Sistemas especializados (TV, rádio, telefonia)
+* Incorporação pela Internet.
+* Fluxo contínuo &rArr; comutação de pacotes.
+
+<br>
+<br>
+
+![:block](Pacotes &mdash; informação fracionada
+* Endereços, outros parâmetros da comunicação:
+    * Cabeçalhos.
+    * *Trailers*.
+)
+
+---
+
+slideTitle: Sistemas de Comunicação de Dados Móvel
+
+#### Evolução em dois ramos
+
+|     | Telefonia Móvel | Redes Locais Sem Fio |
+| :-- | :-------------- | :------------------- |
+| Comutação de pacotes? | Originalmente, não | Sim |
+| Investimento | Alto | Baixo |
+| Área de atuação principal | *outdoor* | *indoor* |
+
+---
+
+slideTitle: Níveis de Abrangência
+
+#### Classificação quanto ao alcance
+
+| Tipo | Abrangência | Exemplos |
+| ---- | :---------- | -------- |
+| WBAN | Corporal    | IEEE 802.15.6? |
+| WPAN | Pessoal | Bluetooth, Zigbee |
+| WLAN | Local | Wi-Fi |
+| WMAN | Metropolitana | LTE, WiMax |
+| WWAN | Longa distância | LTE, WiMax? |
+| WRAN | Regional | IEEE 802.22? |
+
+---
+
+slideTitle: WLANs: Precursores
+
+#### ALOHAnet
+* Universidade do Havaí, 1970.
+* .alert[Comutação de pacotes].
+* .alert[MAC: ALOHA e *slotted* ALOHA].
+
+.col-2[#### WaveLAN
+* AT&T, Lucent e NCR, 1988.
+* Precursor direto do Wi-Fi.]
+
+.col-2[#### HiperLAN.
+* ETSI, 1992.
+* Sem êxito comercial.]
+
+---
+
+layout: false
+class: section-slide
+
+# Faixas de Frequência
+
+---
+
+layout: true
+template: conteudo
+
+---
+
+slideTitle: Comunicação de Rádio
+
+![:column 60%](
+#### Método mais comum
+* Ondas eletromagnéticas
+* 3 kHz a 300 GHz.
+#### Espectro
+* Dividido em .alert[bandas]
+    * Faixas de frequência.
+    * Características diferentes.
+)
+![:column 40%](
+![:block](Alternativas
+* Infra-vermelho.
+* Luz visível.
+* Ondas acústicas.
+* ...
+\)
+)
+
+---
+
+slideTitle: Bandas Não Licenciadas
+
+![:column 100%](
+.col-2[
+#### Espectro é regulado
+* Agências governamentais.
+    * *e.g.*, ANATEL.
+    * *e.g.*, FCC.
+* Recomendações da ITU.]
+.col-2[
+#### Licença
+* Concessão para uso.
+* Leilões bilhonários.
+* Burocracia.]
+)
+.col-2[
+#### Bandas não licenciadas
+* Dispensam licença.]
+.col-2[
+#### Exemplos:
+* Bandas ISM.
+* Banda U-NII.]
+
+---
+
+slideTitle: Mapa de Atribuição de Frequências no Brasil
+
+.center[
+![](mapaANATEL.png)
+]
+
+---
+
+slideTitle: Bandas ISM
+
+#### *Industrial, Scientific and Medical*
+* Diversas faixas.
+* Mais populares: 2,4 GHz e 5,8 GHz.
+    * *e.g.*, Wi-Fi.
+* Outras faixas de interesse: 900 MHz e 60 GHz.
+
+---
+
+slideTitle: Bandas ISM segundo a ITU (MHz)
+
+| Faixa de frequências | Largura da faixa | Abrangência |
+| :------------------- | ---------------- | :---------- |
+| 6,765 a 6,795 MHz | 30 kHz | Sujeita à aceitação local |
+| 13,553 a 13,567 MHz | 14 kHz | Mundial |
+| 26,957 a 27,283 MHz | 326 kHz | Mundial |
+| 40,66 a 40,7 MHz | 40 kHz | Mundial |
+| 433,05 a 434,79 MHz | 1,74 MHz | Região 1, sujeita à aceitação |
+| 902 a 928 MHz | 28 MHz | Região 2 (com exceções) |
+
+---
+
+slideTitle: Bandas ISM segundo a ITU (GHz)
+
+| Faixa de frequências | Largura da faixa | Abrangência |
+| :------------------- | ---------------- | :---------- |
+| 2,4 a 2,5 GHz | 100 MHz | Mundial |
+| 5,725 a 5,875 GHz  | 150 MHz | Mundial |
+| 24 a 25 GHz | 250 MHz | Mundial |
+| 61 a 61,5 GHz |500 MHz | Sujeita à aceitação local |
+| 122 a 123 GHz |1 GHz | Sujeita à aceitação local |
+| 244 a 246 GHz | 2 GHz | Sujeita à aceitação local |
+
+---
+
+slideTitle: Bandas U-NII
+
+| Sub-banda | Faixa de frequência | Largura da faixa |
+| :-------- | ------------------- | ---------------- |
+| U-NII 1 (ou Baixa) | 5,15 a 5,25 GHz | 100 MHz |
+| U-NII 2 (ou Média) | 5,25 a 5,35 GHz | 100 MHz |
+| U-NII 2e (ou Mundial) | 5,47 a 5,725 GHz | 255 MHz |
+| U-NII 3 (ou Alta) | 5,725 a 5,825 GHz | 150 MHz |
+
+---
+
+layout: false
+class: section-slide
+
+# Conceitos Básicos de Camada Física
+
+---
+
+layout: true
+template: conteudo
+
+---
+
+slideTitle: Camada Física = PHY
+
+#### *Chipset* de rádio
+* Lida com bits no canal.
+* Serviços à camada MAC.
+
+.col-2[
+#### Recepção
+* Recepção do sinal.
+* Decodificação.
+* Montagem do quadro.]
+.col-2[#### Transmissão
+* Recepção do quadro.
+* Codificação.
+* Transmissão do sinal.]
+
+.center[
+### Mesma tecnologia pode definir múltiplas PHYs!]
+
+---
+
+slideTitle: Preparando o Quadro para Transmissão
+
+#### Informações de controle adicionadas
+
+|       | Preâmbulo |  Postâmbulo |
+| :---- | :-------- | :---------- |
+| **Posição** | Antes do quadro |  Após o quadro |
+| **Finalidade** | Auxilia recepção |  Geralmente, para integridade |
+| **Exemplos** | Seleção de antena, sincronização | CRC32 no Ethernet, Wi-Fi |
+
+---
+
+slideTitle: Codificação
+
+![:column 45%](
+#### Bits redundantes
+* Maior imunidade à erros.
+* Possibilita detecção e correção.
+)
+![:column 55%](
+#### Redundância ajustável
+* .blue[&uArr; Robustez] .red[&dArr; Taxa de Transmissão]
+* Taxas de codificação comuns:
+    * 1/2, 2/3, 3/4.
+)
+
+.center[
+### Usado em adição ao mecanismo de verificação de integridade.
+]
+
+---
+
+slideTitle: Portadora
+
+.col-2[
+#### Onda que transporta sinal
+* Matematicamente, senoide.
+* Parâmetros: .alert[frequência, amplitude, fase].]
+.col2[
+#### Exemplo: Wi-Fi
+* Canal 1: portadora em 2,412 GHz.]
+
+.center[
+![:image 60%](portadora.png)]
+
+---
+
+slideTitle: Modulação
+
+![:block](Definição
+Alteração de características da portadora, introduzindo informação.
+)
+
+.col-2[
+#### Informação e portadora
+* Portadora adequada ao sistema em questão.
+* Independente da representação da informação.
+]
+.col-2[
+#### Sinal modulante
+* Informação.
+* Combinado à portadora.
+
+#### Diversos tipos
+* Variam na forma de alteração da portadora.
+]
+---
+
+slideTitle: Modulação por Amplitude
+
+
+![:column 50%](
+#### AM = *Amplitude Modulation*
+* .blue[Dados diferentes] &rArr; .red[Amplitudes diferentes].
+)
+![:column 50%](
+#### Exemplo: ASK
+* Modulação por amplitude .alert[binária].
+    * Duas amplitudes &rArr; 0 e 1.
+)
+
+.center[
+![:imageS width: 70%; margin-top: 40px;](AM.svg)
+]
+
+---
+
+slideTitle: Modulação por Frequência
+
+.center[
+![:imageS width: 70%; margin-top: 40px;](FM.svg)
+]
+
+![:column 50%](
+#### FM = *Frequency Modulation*
+* .blue[Dados diferentes] &rArr; .red[Frequências diferentes].
+    * Relativas à frequência da portadora.
+)
+![:column 50%](
+#### Exemplo: FSK
+* Modulação por frequência .alert[binária].
+    * Duas frequências &rArr; 0 e 1.
+)
+
+---
+
+slideTitle: Modulação por Fase
+
+![:column 50%](
+#### PM = *Phase Modulation*
+* .blue[Dados diferentes] &rArr; .red[Fases diferentes].
+    * Deslocamento temporal.
+)
+![:column 50%](
+#### Exemplo: BPSK
+* Modulação por fase .alert[binária].
+    * Duas fases &rArr; 0 e 1.
+)
+
+.center[
+![:imageS width: 70%; margin-top: 40px;](BPSK.svg)
+]
+
+---
+
+slideTitle: Modulação Multinível
+
+![:block](Símbolo
+Estado discreto da portadora modulada.)
+
+.col-2[
+#### Símbolos Binários
+* Exemplos anteriores.
+* .blue[1 símbolo] &hArr; .red[1 bit].
+]
+.col-2[
+#### Símbolos Multinível
+* a .blue[1 símbolo] &hArr; .red[$N$ bits].
+    * $2^N$ estados da portadora.
+]
+
+| Modulação | Característica Modulada | Níveis | Símbolos |
+| --------- | ------------------------ | ------ | -------- |
+| ASK       | Amplitude                | 2      | `0` e `1`|
+| 4ASK      | Amplitude                | 4      | `00`, `01`, `10` e `11`|
+| 256QAM    | Amplitude e Fase         | 256    | `00000000`, `00000001`, ...|
+
+---
+
+slideTitle: Largura de Banda
+
+.container[
+.col-2[
+![:block margin-top: 30px;](
+.center[
+### Tamanho da faixa de frequência utilizada para transmissão]
+)
+]
+
+.col-2[
+| Padrão   | Largura de banda |
+| -------- | ---------------- |
+| 802.11a  | 20 MHz |
+| 802.11n  | 20 ou 40 MHz |
+| 802.11ac | 80 MHz |
+| 802.11ah | 2, 4, 8 ou 16 MHz |
+
+<br>
+]
+]
+
+#### Largura de banda *vs.* capacidade (b/s)
+* .blue[&uArr; largura de banda] &rArr; .blue[&uArr; maior a capacidade].
+* .red[&dArr; largura de banda] &rArr; .red[&dArr; maior a capacidade].
+
+---
+
+slideTitle: Espalhamento espectral
+
+.center[
+### Tipicamente obrigatório em bandas não licenciadas
+]
+
+.container[
+.col-2[
+![:block margin-top: 30px;](
+.center[
+#### Dispersar o sinal por uma banda mais larga que a necessária
+]
+)
+]
+
+.col-2[
+#### Motivação
+* Redução da interferência
+* Melhor coexistência.
+]
+]
+
+![:block]( Diversas técnicas
+* Salto de frequências.
+* DSSS.
+* OFDM.
+)
+---
+
+slideTitle: Salto de Frequências
+
+.col-2[
+#### Histórico
+* Segunda Guerra Mundial.
+
+#### Princípio
+* Transmissor e receptor saltam de canal.
+    * Rápido.
+    * Sincronizado.
+]
+.col-2[
+#### Vantagens
+* Dificuldade de interceptação da comunicação.
+* Espalhamento espectral.
+
+#### Exemplos de uso
+* IEEE 802.11 (legado).
+* Bluetooth.
+]
+
+---
+
+slideTitle: Salto de Frequências: Exemplo
+
+.center[
+![:image 70%](FH.svg)
+]
+
+---
+
+slideTitle: DSSS (*Direct Sequence Spread Spectrum*)
+
+.container[
+![:column 70%](
+#### Funcionamento
+* Cada bit &rArr; sequência de *chips*.
+    * Pseudo-aleatória.
+* .alert[Duração de um *chip* bem menor que de um bit].
+)
+![:column 30%](
+#### Uso
+* IEEE 802.11 (legado\)
+)
+]
+.center[
+![:image 100%](DSSS.svg)
+]
+
+---
+
+slideTitle: OFDM (*Orthogonal Frequency Division Multiplexing*)
+
+#### Funcionamento
+* Várias **subportadoras**.
+    * Analogia: subcanais usados em paralelo.
+* Informação quebrada entre subportadoras.
+* Modulações tradicionais em cada subportadora.
+
+![:column 60%](
+#### Vantagem
+* Robustez contra interferências de banda estreita e poluição espectral.
+)
+
+![:column 40%](
+![:block](
+<br>
+#### Ampla utilização: tecnologias sem fio e cabeadas.
+<br>
+\)
+)
+
+---
+
+layout: false
+class: section-slide
+
+# Próxima aula
+
+---
+
+layout: true
+template: conteudo
+
+---
+
+slideTitle: Próxima aula
+
+### Mais conceitos básicos
+* Agora sobre propagação.
+
+### Tarefas
+| Pós-graduação | Todos os alunos |
+| ------------- | --------------- |
+| Escolher primeiro artigo a ser apresentado (dentre os 10 primeiros da lista) | Ler páginas 74 a 83 (antenas) e 111 a 118 (propagação) do livro *Tecnologias de Redes Sem Fio* |
+
+</figcaption>
+</template>
+    </textarea>
+
+    <script src="../template/js/remark-latest.min.js" type="text/javascript"></script>
+    <script src="../template/js/d3.v4.js"></script>
+    <script src="../template/js/graphlib-dot.js"></script>
+    <script src="../template/js/dagre-d3.min.js"></script>
+    <script src="../template/js/dagre-d3-extra.js"></script>
+    <script src="../template/js/macros.js" type="text/javascript"></script>
+    <script src="../template/js/callbacks.js" type="text/javascript"></script>
+    <script src="../template/js/katex.min.js"></script>
+    <script src="../template/js/auto-render.min.js"></script>
+    <link rel="stylesheet" href="../template/css/katex.min.css">
+    <script type="text/javascript">
+
+      var renderMath = function() {
+        renderMathInElement(document.body, {delimiters: [
+           {left: "$$", right: "$$", display: true},
+           {left: "$", right: "$", display: false},
+        ]});
+      }
+
+      var slideshow = remark.create({highlightStyle: "github", highlightLines: "true", highlightSpans: "true", slideNumberFormat: onSlideCallback}, renderMath);
+
+      dagreRenderAllSlides();
+
+    </script>
+</body>
+</html>

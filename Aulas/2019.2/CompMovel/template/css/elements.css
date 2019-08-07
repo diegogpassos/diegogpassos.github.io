@@ -1,0 +1,175 @@
+/*
+ * Styles for basic elements, such as lists.
+ */
+
+/*
+ * Slide title properties, including the horizontal rule below it.
+ */
+
+.title {
+ position: absolute;
+ top: 2%;
+ left: 5%;
+ color: #137562;
+ font-size: 40px;
+ width: 90%;
+}
+
+.title > p {
+ margin: 0;
+}
+
+.title > hr {
+ margin-top: 10px;
+ border: 0;
+ border-top: 7px solid #137562;
+ box-shadow: 3px 3px #add2cb;
+}
+
+/*
+ * Unordered lists.
+ */
+
+ul {
+ padding: 0;
+ padding-left: 5px;
+ list-style-position: inside;
+}
+
+ul ul {
+ padding-left: 40px;
+}
+
+ul li {
+ margin-bottom: 5px;
+ list-style-image: url(../img/bullet1.png);
+}
+
+ul li ul li {
+ margin-bottom: 5px;
+ list-style-image: url(../img/bullet2.png);
+}
+
+ul li ul li ul li {
+ margin-bottom: 5px;
+ list-style-image: url(../img/bullet3.png);
+}
+
+/*
+ * Ordered lists.
+ */
+
+ol {
+ counter-reset: item;
+ padding: 0;
+ padding-left: 5px;
+ list-style-type: none;
+}
+
+ol ol {
+ padding-left: 40px;
+}
+
+li {
+ counter-increment: item;
+}
+
+ol li:before {
+ margin-right: 15px;
+ content: counter(item);
+ background: #137562;
+ border-radius: 100%;
+ color: white;
+ width: 30px;
+ height: 30px;
+ line-height: 28px;
+ text-align: center;
+ display: inline-block;
+ font-size: 20px;
+}
+
+/*
+ * Multi-column slides (two, three or four columns).
+ */
+
+.col-2 {
+ width: 48%;
+ float: left;
+ padding-left: 0;
+ padding-right: 2%;
+}
+
+.col-3 {
+ width: 31%;
+ float: left;
+ padding-left: 0;
+ padding-right: 2%;
+}
+
+.col-4 {
+ width: 25%;
+ float: left;
+ padding-left: 0;
+ padding-right: 2%;
+}
+
+/*
+ * Colored text.
+ */
+
+.red {
+  color: #fa0000;
+}
+
+.blue {
+  color: #0000fa;
+}
+
+.alert {
+  color: #137562;
+}
+
+/*
+ * Horizontall alignments.
+ */
+
+.center {text-align: center;}
+.right {text-align: right;}
+.left {text-align: left;}
+
+/*
+ * Container: a simple div that encloses other divs.
+ * The "overflow: hidden" property guarantees that this div will have height
+ * equal of that needed for its content. This is useful in order to allow
+ * floating div's (e.g., columns) to be placed on top of other content in the
+ * slide properly.
+ */
+
+.container {
+    overflow: hidden;
+    padding: 20px;
+    padding: 0;
+}
+
+/*
+ * Headers.
+ */
+
+h1, h2, h3, h4 {
+  color: #137562;
+}
+
+/*
+ * A simple footnote.
+ */
+
+.footnote {
+    font-size: 12px;
+}
+
+/*
+ * Others.
+ */
+.veryLarge {
+    font-size: 105px;
+}

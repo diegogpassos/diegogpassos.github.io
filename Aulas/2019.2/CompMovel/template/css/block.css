@@ -1,0 +1,29 @@
+/*
+ * Styles for the block element.
+ */
+
+table.block {
+  margin-bottom: 20px;
+}
+
+table.block thead tr {
+  height: 40px;
+}
+
+table.block tbody tr:hover {
+  color: inherit;
+  background-color: initial;
+  cursor: initial;
+  color: #000000;
+  background-color: #BADADA;
+}
+
+table.block tbody tr {
+  color: #000000;
+  background-color: #BADADA;
+}
+
+table.block tbody tr ul {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
