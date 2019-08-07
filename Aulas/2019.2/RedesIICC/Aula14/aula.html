@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <!-- Meta info -->
+	<meta charset="utf-8">
+	<meta name="shortauthor" content="Diego Passos"/>
+	<meta name="shorttitle" content="Mobilidade: IP Móvel, Mobilidade Celular"/>
+	<meta name="shortevent" content="Redes de Computadores II"/>
+	<title>Redes de Computadores II: Aula 14</title>
+
+    <!-- Math support -->
+	<script type="text/x-mathjax-config">
+		MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+			MathJax.InputJax.TeX.Definitions.number = /^(?:[0-9]+(?:\.[0-9]{3})*(?:\{,\}[0-9]*)*|\{,\}[0-9]+)/
+		});
+	</script>
+	<!--<script src="../MathJax/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>-->
+	<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+	<!--<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>-->
+
+    <!-- Fonts -->
+	<link href='https://fonts.googleapis.com/css?family=Lora:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
+	<!--<link href='../../../../Fonts/Lora/lora.css' rel='stylesheet' type='text/css'>-->
+
+    <!-- CSS -->
+	<link href='../template/css/template.css' id="template" rel='stylesheet' type='text/css'>
+	<link href='../template/css/presentationSpecific.css' id="presentationSpecific" rel='stylesheet' type='text/css'>
+
+    <!-- Javascript -->
+	<script type="text/javascript" src="../template/js/audio.js"></script>
+</head>
+
+<body>
+    <!-- Audio handlers -->
+     <audio src="audio/ASCII_a_multiPercurso.wav" id="ASCII_a_multiPercurso.wav" preload="auto"></audio>
+
+    <!-- Title Slide -->
+	<section>
+
+        <div class="slideContent">
+            <h1 class="title">Aula 14 - Mobilidade: IP Móvel, Mobilidade Celular</h1>
+            <h2 class="author">Diego Passos</h2>
+            <h4 class="institution">Universidade Federal Fluminense</h4>
+            <h3 class="date">Redes de Computadores II</h3>
+        </div>
+
+	</section>
+
+    <!-- Content slides -->
+
+	<section>
+	<h1>Na Última Aula...</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li>Redes celular: arquitetura.
+				<ul>
+					<li><b>Célula</b>: região de cobertura.
+					<ul>
+						<li>Estação base, usuários móveis.</li>
+					</ul></li>
+					<li>Células se conectam à infraestrutura cabeada por um <b>MSC</b>.
+					<ul>
+						<li>Responsável por <b>ligações, mobilidade</b>.</li>
+					</ul></li>
+				</ul></li>
+				<li>Redes celular: comunicação entre usuário e estação.
+				<ul>
+					<li>Combinação de FDMA e TDMA.</li>
+					<li>Ou <b>CDMA</b>.</li>
+				</ul></li>
+				<li>Redes celular: evolução.
+				<ul>
+					<li>2G: somente voz.</li>
+					<li>3G: rede de voz idêntica, <b>rede de dados paralela</b>.</li>
+				</ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li>Mobilidade: tipos.
+				<ul>
+					<li>Dentro de um mesmo ponto de acesso.</li>
+					<li>Entre redes, obtendo novo IP.</li>
+					<li>Entre pontos de acesso, mantendo conexões.</li>
+				</ul></li>
+				<li>Mobilidade: jargão.
+				<ul>
+					<li>Rede de origem: <b>home network</b>, <b>home agent</b>, <b>home address</b>.</li>
+					<li>Rede de destino: <b>foreign agent</b>, <b>care-of-address</b>.</li>
+				</ul></li>
+				<li>Mobilidade: abordagens.
+				<ul>
+					<li>Atualização de <b>tabelas de roteamento</b>: não escala.</li>
+					<li>Sistemas finais: <b>roteamento direto ou indireto</b>.</li>
+				</ul></li>
+			</ul>
+		</div>
+	</div>
+	</section>
+
+
+	<section class="secao">
+	<div class="slideContent">
+		IP Móvel
+	</div>
+	</section>
+
+	<section>
+	<h1>IP Móvel</h1>
+	<div class="slideContent">
+	   <ul>
+	   		<li>Padrão para suporte a mobilidade a Internet.
+	   		<ul>
+	   			<li>Arquitetura, protocolos.</li>
+	   		</ul></li>
+			<li>Flexível, vários modos de operação suportados.</li>
+			 <li>RFC 3344.</li>
+			 <li>Várias características já discutidas:
+			 <ul>
+			 	<li><i>home agents</i>, <i>foreign agents</i>, registro no <i>foreign agent</i>, endereço temporário, encapsulamento (pacote dentro de um pacote).</li>
+			 </ul></li>
+			 <li>Três componentes do padrão:
+			 <ul>
+			 	<li>Roteamento indireto de datagramas.</li>
+				<li>Descoberta de agente.</li>
+				<li>Registro no <i>home agent</i>.</li>
+			 </ul></li>
+	   </ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>IP Móvel: Roteamento Indireto</h1>
+	<div class="slideContent">
+		<center>
+			<img src="imagens/IPMovelRoteamentoIndireto.svg" style="width: 80%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>IP Móvel: Descoberta de Agentes</h1>
+	<div class="slideContent">
+		<ul>
+			<li><span class="alert">Anúncio de agente:</span> <i>foreign/home agent</i> anuncia serviço enviando mensagens ICMP em <i>broadcast</i> (campo <tt>type</tt> = 9).</li>
+		</ul>
+		<center>
+			<img src="imagens/IPMovelICMP.svg" style="width: 70%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>IP Móvel: Exemplo de Registro</h1>
+	<div class="slideContent">
+		<center>
+			<img src="imagens/IPMovelRegistro.svg" style="width: 60%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>IP Móvel: Segurança</h1>
+	<div class="slideContent">
+		<ul>
+			<li>O que impede um atacante de fingir ser um determinado nó, registrando seu IP como um <i>care-of-address</i>?
+			<ul>
+				<li>Se bem sucedido, tráfego para o nó é redirecionado para o atacante.</li>
+				<li>Grande problema de segurança!</li>
+			</ul></li>
+			<li>IP Móvel tem preocupação com aspectos de segurança.
+			<ul>
+				<li>Por exemplo, pedidos de registro precisam ser <b>autenticados</b>.</li>
+			</ul></li>
+			<li>Mas não nos preocuparemos com segurança nesta aula.
+			<ul>
+				<li>Assunto de outra disciplina.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section class="secao">
+	<div class="slideContent">
+		Mobilidade em Rede Celular
+	</div>
+	</section>
+
+	<section>
+	<h1>Relembrando: Componentes da Arquitetura de Rede Celular</h1>
+	<div class="slideContent">
+		<center>
+			<img src="imagens/ArquiteturaCelular.svg" style="width: 60%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Lidando com a Mobilidade</h1>
+	<div class="slideContent">
+		<ul>
+			<li><span class="alert">Rede Nativa (<i>Home Network</i>):</span> rede da operadora de celular que você assina (<i>e.g.</i>, Oi, Tim, Claro, Vivo).
+			<ul>
+				<li><span class="alert">Home Location Register (HLR):</span> base de dados na rede de origem, contendo:
+				<ul>
+					<li>Número permanente do celular.</li>
+					<li>Informações de perfil (serviços, preferencias, cobrança).</li>
+					<li>Informações sobre a localização atual (pode ser outra rede).</li>
+				</ul></li>
+			</ul></li>
+			<li><span class="alert">Rede Visitada (<i>Visited Network</i>):</span> rede na qual nó atualmente está.
+			<ul>
+				<li><span class="alert">Visitor Location Register (VLR):</span> base de dados com entradas para cada usuário atualmente na rede.</li>
+				<li>Pode ser a rede de origem.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>GSM: Roteamento Indireto</h1>
+	<div class="slideContent">
+		<center>
+			<img src="imagens/GSMMobilidade.svg" style="width: 80%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>GSM: <i>Handoff</i> Dentro de um Mesmo MSC (I)</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<br>
+			<center>
+				<img src="imagens/GSMHandoff.svg" style="width: 70%;"/>
+			</center>
+		</div>
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li><span class="alert">Objetivo do <i>handoff</i>:</span> rotear ligação através de nova estação base.
+				<ul>
+					<li>Sem interrupção.</li>
+				</ul></li>
+				<li>Razoes para o <i>handoff</i>:
+				<ul>
+					<li>Sinal mais forte para um novo BSS (manter conectividade, menos uso de bateria).</li>
+					<li>Balanceamento de carga: liberar canais no BSS atual.</li>
+					<li>GSM não especifica políticas de <i>handoff</i> (<i>i.e.</i>, por que fazer), apenas mecanismos (<i>i.e.</i>, como fazer).</li>
+				</ul></li>
+				<li><i>Handoff</i> iniciado pelo BSS anterior.</li>
+			</ul>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>GSM: <i>Handoff</i> Dentro de um Mesmo MSC (II)</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<br>
+			<br>
+			<br>
+			<center>
+				<img src="imagens/GSMHandoff2.svg" style="width: 70%;"/>
+			</center>
+		</div>
+		<div class="column" style="width: 50%;">
+			<ol>
+				<li>BSS anterior informa MSC do <i>handoff</i> iminente, provê lista de 1 ou mais novos BSSs.</li>
+				<li>MSC configura rota (aloca recursos) para o novo BSS.</li>
+				<li>Novo BSS aloca canal de rádio para uso do nó móvel.</li>
+				<li>Novo BSS sinaliza ao MSC e ao BSS anterior que está pronto.</li>
+				<li>BSS anterior avisa ao nó móvel: faça o <i>handoff</i> para o novo BSS.</li>
+				<li>Nó móvel e novo BSS se comunicam para ativar o novo canal.</li>
+				<li>Nó móvel sinaliza ao MSC (através do novo BSS): <i>handoff</i> está completo.</li>
+				<li>MSC redireciona chamada.</li>
+				<li>Recursos do MSC para o BSS anterior são liberados.</li>
+			</ol>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>GSM: <i>Handoff</i> entre MSCs (I)</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<center>
+				<img src="imagens/GSMHandoffMSCs.svg" style="width: 80%;"/>
+			</center>
+		</div>
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li><span class="alert">MSC âncora:</span> primeiro MSC visitado durante uma ligação.
+				<ul>
+					<li>Ligação permanece sendo roteada pelo MSC âncora.</li>
+				</ul></li>
+				<li>Novos MSCs adicionados ao final da cadeia de MSCs à medida que nó móvel visita outros MSCs.</li>
+				<li>Opcionalmente, pode haver um passo de minimização para encurtar cadeia de MSCs.</li>
+			</ul>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>GSM: <i>Handoff</i> entre MSCs (II)</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<center>
+				<img src="imagens/GSMHandoffMSCs2.svg" style="width: 80%;"/>
+			</center>
+		</div>
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li><span class="alert">MSC âncora:</span> primeiro MSC visitado durante uma ligação.
+				<ul>
+					<li>Ligação permanece sendo roteada pelo MSC âncora.</li>
+				</ul></li>
+				<li>Novos MSCs adicionados ao final da cadeia de MSCs à medida que nó móvel visita outros MSCs.</li>
+				<li>Opcionalmente, pode haver um passo de minimização para encurtar cadeia de MSCs.</li>
+			</ul>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Mobilidade: GSM <i>vs.</i> IP Móvel</h1>
+	<div class="slideContent">
+		<center>
+			   <table style="font-size: 80%; width: 80%;">
+				   <tr>
+					   <th style="width: 25%">Elemento do GSM</th>
+					   <th style="width: 50%">Observação (sobre GSM)</th>
+					   <th style="width: 25%">Elemento do IP Móvel</th>
+				   </tr>
+				   <tr>
+					   <td>Home System</td>
+					   <td>Rede a qual número permanente do usuário móvel pertence.</td>
+					   <td>Home Network</td>
+				   </tr>
+
+				   <tr>
+					   <td>Gateway Mobile Switching Center, ou &ldquo;home MSC&rdquo; Home Location Register (HLR)</td>
+					   <td>Home MSC: ponto de contato para obtenção do endereço roteável do usuário móvel. HLR: base de dados no home system contendo número de telefone permanente, informações de perfil, localização atual do usuário móvel.</td>
+					   <td>Home agent</td>
+				   </tr>
+
+				   <tr>
+					   <td>Visited System</td>
+					   <td>Rede (diferente do home system) na qual o usuário está atualmente.</td>
+					   <td>Visited Network</td>
+				   </tr>
+
+				   <tr>
+					   <td>Visited Mobile services Switching Center. Visitor Location Record (VLR)</td>
+					   <td>Visited MSC: responsável pela configuração das chamadas de/para nós móveis em células associadas ao MSC. VLR: entrada temporária na base de dados do sistema visitado, contendo informações para cada usuário móvel visitante.</td>
+					   <td>Foreign Agent</td>
+				   </tr>
+
+				   <tr>
+					   <td>Mobile Station Roaming Number (MSRN)</td>
+					   <td>Endereço roteável para segmento da chamada telefônica entre o home MSC e o visited MSC, transparente tanto para o nó móvel, quanto para o nó remoto.</td>
+					   <td><i>Care-of-address</i></td>
+				   </tr>
+			   </table>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Redes Sem Fio, Mobilidade: Impacto nos Protocolos de Camadas Superiores</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Em termos lógicos, o impacto <i>deveria</i> ser mínimo.
+			<ul>
+				<li>Modelo de serviço baseado em melhor esforço permanece inalterado.</li>
+				<li>TCP e UDP pode rodar (e rodam) sobre enlaces sem fio, dispositivos móveis.</li>
+			</ul></li>
+			<li>Mas em termos de <b>desempenho</b>:
+			<ul>
+				<li>Perda de pacotes/atrasos devido a erros de bits (descarte de pacotes, atraso por conta de retransmissões na camada de enlace), <i>handoffs</i>.</li>
+				<li>TCP interpreta perdas como sinal de congestionamento.
+				<ul>
+					<li>Decrementa janela de congestionamento desnecessariamente.</li>
+				</ul></li>
+				<li>Atrasos excessivos para tráfego em tempo real.</li>
+				<li>Banda limitada em enlaces sem fio.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>TCP e Enlaces Sem Fio</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Como fazer o TCP funcionar &ldquo;bem&rdquo; em enlaces/redes sem fio?</li>
+			<li>Problema abordado desde a década de 1990. Algumas possibilidades:
+			<ul>
+				<li>Recuperação local de erros: pacotes perdidos em enlaces são recuperados localmente, e não fim-a-fim.
+				<ul>
+					<li>Reação mais rápida a erros.</li>
+				</ul></li>
+				<li>TCP ciente dos enlaces sem fio: tenta-se distinguir perdas nos enlaces sem fio das perdas por enfileiramento.
+				<ul>
+					<li>Enfileiramento &rArr; redução da janela de congestionamento.</li>
+					<li>Perda nos enlaces sem fio &rArr; apenas retransmissões.</li>
+					<li>A pergunta é: <b>como fazer esta distinção?</b></li>
+				</ul></li>
+				<li>Conexões divididas: dividir conexão fim-a-fim em duas partes, segmento cabeado e segmento sem fio.
+				<ul>
+					<li>Segmento sem fio pode utilizar protocolo específico, mais adequado.</li>
+					<li>Esconde perdas nos enlaces sem fio do TCP do segmento cabeado.</li>
+				</ul></li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Resumo da Aula...</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 57%;">
+			<ul>
+				<li>IP Móvel:
+				<ul>
+					<li><b>Roteamento indireto</b>.</li>
+					<li>Descoberta de agentes através de mensagens ICMP.</li>
+					<li>Registro com agentes.</li>
+				</ul></li>
+				<li>IP Móvel e segurança.
+				<ul>
+					<li>É preciso haver algum tipo de <b>autenticação</b>.</li>
+				</ul></li>
+				<li>Mobilidade celular:
+				<ul>
+					<li>Mobilidade entre operadoras diferentes: <i>roaming</i>.
+					<ul>
+						<li>HLR: informações de usuários <b>originalmente</b> daquela operadora.</li>
+						<li>VLR: informações de usuários que, <b>no momento</b>, estão naquela rede.</li>
+						<li><b>Roteamento indireto</b>.
+						<ul>
+							<li>Rede de origem encaminha ligações para rede de atual.</li>
+						</ul></li>
+					</ul></li>
+				</ul>
+			</ul>
+		</div>
+		<div class="column" style="width: 43%;">
+			<ul>
+				<li>Mobilidade celular:
+				<ul>
+					<li><i>Handoff</i>: mobilidade entre duas estações bases.
+					<ul>
+						<li>Objetivo: manter ligações sem interrupção.</li>
+						<li><b>Usuário monitora</b>conectividade com estações base.
+						<ul>
+							<li>Envia dados para estação base atual.</li>
+						</ul></li>
+						<li><b>Rede</b> instrui usuário a fazer o <i>handoff</i>.</li>
+						<li>Pode ocorrer também entre torres de MSCs diferentes.</li>
+					</ul></li>
+				</ul></li>
+			</ul>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Leitura e Exercícios Sugeridos</h1>
+	<div class="slideContent">
+		<ul>
+			<li>IP Móvel:
+			<ul>
+				<li>Páginas 412 a 415 do Kurose (Seção 6.6).</li>
+				<li>Exercício de fixação 18 do capítulo 6 do Kurose.</li>
+				<li>Problemas 13, 14 e 15 do capítulo 6 do Kurose.</li>
+			</ul></li>
+			<li>Mobilidade em redes celular:
+			<ul>
+				<li>Páginas 415 a 420 do Kurose (Seção 6.7).</li>
+				<li>Exercícios de fixação 19 e 20 do capítulo 6 do Kurose.</li>
+			</ul></li>
+			<li>Impactos nas camadas superiores:
+			<ul>
+				<li>Páginas 420 a 422 do Kurose (Seção 6.8).</li>
+				<li>Exercício de fixação 21 do capítulo 6 do Kurose.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Sumário do Capítulo 6</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li><span class="alert">Redes Sem Fio</span>
+				<ul>
+					<li>Enlaces sem fio:
+					<ul>
+						<li>Capacidade, distância.</li>
+						<li>Problemas dos canais.</li>
+						<li>CDMA.</li>
+					</ul></li>
+					<li>IEEE 802.11 (&ldquo;Wi-Fi&rdquo;)
+					<ul>
+						<li>CSMA/CA reflete características do canal sem fio.</li>
+					</ul></li>
+					<li>Acesso celular:
+					<ul>
+						<li>Arquitetura.</li>
+						<li>Padrões (<i>e.g.</i>, GSM, 3G, 4G LTE).</li>
+					</ul></li>
+				</ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li><span class="alert">Mobilidade</span>
+				<ul>
+					<li>Princípios: endereçamento, roteamento até usuários móveis.
+					<ul>
+						<li>Redes de origem e visitadas.</li>
+						<li>Roteamento direto e indireto.</li>
+						<li>Endereços temporários.</li>
+					</ul></li>
+					<li>Estudos de caso.
+					<ul>
+						<li>IP Móvel.</li>
+						<li>Mobilidade no GSM.</li>
+					</ul></li>
+				     <li>Impacto nos protocolos de camadas superiores.</li>
+				</ul></li>
+			</ul>
+		</div>
+	</div>
+	</section>
+
+
+	<section>
+		<h1>Próxima Aula...</h1>
+		<div class="slideContent">
+			<ul>
+				<li>Novo capítulo, assunto: segurança em redes.
+				<ul>
+					<li>Capítulo 8 (cap. 7 será abordado mais tarde).</li>
+				</ul></li>
+				<li>Especificamente na próxima aula:
+				<ul>
+					<li>Conceitos básicos de segurança.</li>
+					<li>Usos, requisitos.</li>
+					<li>Princípios de criptografia.</li>
+				</ul></li>
+			</ul>
+		</div>
+	</section>
+
+	<!-- {{{{ dzslides core
+	#
+	#
+	#     __  __  __       .  __   ___  __
+	#    |  \  / /__` |    | |  \ |__  /__`
+	#    |__/ /_ .__/ |___ | |__/ |___ .__/ core :€
+	#
+	#
+	# The following block of code is not supposed to be edited.
+	# But if you want to change the behavior of these slides,
+	# feel free to hack it!
+	#
+	-->
+
+    <!-- More CSS -->
+	<link href='../template/css/slides.css' id="slides" rel='stylesheet' type='text/css'>
+	<link href='../template/css/presentationSpecific2.css' id="presentationSpecific2" rel='stylesheet' type='text/css'>
+
+    <!-- More Javascript -->
+	<script type="text/javascript" src="../template/js/dz.js"></script>
+
+	<!-- More CSS -->
+	<link href='../template/css/notesSpecific.css' id="notesSpecific" rel='stylesheet' type='text/css'>
+	<link href='../template/css/printSpecific.css' id="printSpecific" rel='stylesheet' type='text/css'>
+</body>
+</html>

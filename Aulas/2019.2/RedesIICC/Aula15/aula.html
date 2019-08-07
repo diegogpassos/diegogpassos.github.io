@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <!-- Meta info -->
+	<meta charset="utf-8">
+	<meta name="shortauthor" content="Diego Passos"/>
+	<meta name="shorttitle" content="Segurança: Conceitos, Criptografia"/>
+	<meta name="shortevent" content="Redes de Computadores II"/>
+	<title>Redes de Computadores II: Aula 15</title>
+
+    <!-- Math support -->
+	<script type="text/x-mathjax-config">
+		MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+			MathJax.InputJax.TeX.Definitions.number = /^(?:[0-9]+(?:\.[0-9]{3})*(?:\{,\}[0-9]*)*|\{,\}[0-9]+)/
+		});
+	</script>
+	<!--<script src="../MathJax/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>-->
+	<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+	<!--<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>-->
+
+    <!-- Fonts -->
+	<link href='https://fonts.googleapis.com/css?family=Lora:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
+
+    <!-- CSS -->
+	<link href='../template/css/template.css' id="template" rel='stylesheet' type='text/css'>
+	<link href='../template/css/presentationSpecific.css' id="presentationSpecific" rel='stylesheet' type='text/css'>
+
+    <!-- Javascript -->
+	<script type="text/javascript" src="../template/js/audio.js"></script>
+</head>
+
+<body>
+    <!-- Audio handlers -->
+     <!--<audio src="audio/ASCII_a_multiPercurso.wav" id="ASCII_a_multiPercurso.wav" preload="auto"></audio>-->
+
+    <!-- Title Slide -->
+	<section>
+
+        <div class="slideContent">
+            <h1 class="title">Aula 15 - Segurança: Conceitos, Criptografia</h1>
+            <h2 class="author">Diego Passos</h2>
+            <h4 class="institution">Universidade Federal Fluminense</h4>
+            <h3 class="date">Redes de Computadores II</h3>
+        </div>
+
+	</section>
+
+    <!-- Content slides -->
+
+	<section>
+	<h1>Na Última Aula...</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 57%;">
+			<ul>
+				<li>IP Móvel:
+				<ul>
+					<li><b>Roteamento indireto</b>.</li>
+					<li>Descoberta de agentes através de mensagens ICMP.</li>
+					<li>Registro com agentes.</li>
+				</ul></li>
+				<li>IP Móvel e segurança.
+				<ul>
+					<li>É preciso haver algum tipo de <b>autenticação</b>.</li>
+				</ul></li>
+				<li>Mobilidade celular:
+				<ul>
+					<li>Mobilidade entre operadoras diferentes: <i>roaming</i>.
+					<ul>
+						<li>HLR: informações de usuários <b>originalmente</b> daquela operadora.</li>
+						<li>VLR: informações de usuários que, <b>no momento</b>, estão naquela rede.</li>
+						<li><b>Roteamento indireto</b>.
+						<ul>
+							<li>Rede de origem encaminha ligações para rede de atual.</li>
+						</ul></li>
+					</ul></li>
+				</ul>
+			</ul>
+		</div>
+		<div class="column" style="width: 43%;">
+			<ul>
+				<li>Mobilidade celular:
+				<ul>
+					<li><i>Handoff</i>: mobilidade entre duas estações bases.
+					<ul>
+						<li>Objetivo: manter ligações sem interrupção.</li>
+						<li><b>Usuário monitora</b>conectividade com estações base.
+						<ul>
+							<li>Envia dados para estação base atual.</li>
+						</ul></li>
+						<li><b>Rede</b> instrui usuário a fazer o <i>handoff</i>.</li>
+						<li>Pode ocorrer também entre torres de MSCs diferentes.</li>
+					</ul></li>
+				</ul></li>
+			</ul>
+		</div>
+
+	</div>
+	</section>
+
+
+    <section>
+    <h1>Objetivos do Capítulo 8</h1>
+    <div class="slideContent">
+    		<ul>
+    			<li>Entender os princípios de segurança em redes.
+    			<ul>
+    				<li>Criptografia e seus <b>muitos</b> usos além da &ldquo;confidencialidade&rdquo;.</li>
+				<li>Autenticação.</li>
+				<li>Integridade de mensagens.</li>
+    			</ul></li>
+			<li>Segurança na prática.
+			<ul>
+				<li>Firewalls e sistemas de detecção de intrusão.</li>
+				<li>Segurança nas camadas de aplicação, transporte, rede e enlace.</li>
+			</ul></li>
+    		</ul>
+    </div>
+    </section>
+
+    <section>
+    <h1>Agenda</h1>
+    <div class="slideContent">
+    		<ul>
+    			<li>O que é segurança em redes?</li>
+			<li>Princípios de criptografia.</li>
+			<li>Integridade de mensagens e autenticação.</li>
+			<li>E-mail seguro.</li>
+			<li>Conexões TCP seguras: SSL.</li>
+			<li>Segurança na camada de rede: IPsec.</li>
+			<li>Segurança em LANs sem fio.</li>
+			<li>Segurança operacional: firewalls e IDS.</li>
+    		</ul>
+    </div>
+    </section>
+
+    <section class="secao">
+    <div class="slideContent">
+    		O Que É Segurança em Redes?
+    </div>
+    </section>
+
+    <section>
+    <h1>O Que É Segurança em Redes</h1>
+    <div class="slideContent">
+    		<ul>
+    			<li>Requisitos de segurança:
+    			<ul>
+    				<li><span class="alert">Confidencialidade:</span> apenas origem e destino devem &ldquo;entender&rdquo; conteúdo da mensagem.
+    				<ul>
+    					<li>Origem criptografa/cifra mensagem.</li>
+					<li>Destino descriptografa/decifra.</li>
+    				</ul></li>
+				<li><span class="alert">Autenticidade:</span> origem e destino querem confirmar a identidade um do outro.</li>
+				<li><span class="alert">Integridade:</span> origem e destino querem garantir que mensagem não seja alterada (em trânsito ou depois) sem detecção.</li>
+				<li><span class="alert">Acesso e disponibilidade:</span> serviços precisam estar acessíveis e disponíveis para os usuários.</li>
+    			</ul></li>
+    		</ul>
+    </div>
+    </section>
+
+    <section>
+    <h1>Amigos e Inimigos: Alice, Bob e Trudy</h1>
+    <div class="slideContent">
+    		<ul>
+    			<li>Termos muito usados no mundo da segurança de redes.</li>
+			<li>Bob e Alice (amantes!) querem se comunicar de forma &ldquo;segura&rdquo;.</li>
+			<li>Trudy (intrusa) pode interceptar, apagar e criar mensagens.</li>
+    		</ul>
+		<center>
+			<img src="imagens/AliceBobTrudy.svg" style="width: 70%;"/>
+		</center>
+    </div>
+    </section>
+
+    <section>
+    <h1>Quem Seriam Bob e Alice?</h1>
+    <div class="slideContent">
+    		<ul>
+    			<li>Bem..., Bobs e Alices da vida real!</li>
+			<li>Browser/servidor para transações eletrônicas (<i>e.g.</i>, compras on-line).</li>
+			<li>Cliente/servidor de Internet banking.</li>
+			<li>Servidores de DNS.</li>
+			<li>Roteadores trocando mensagens de atualização de rotas.</li>
+			<li>Outros exemplos?</li>
+    		</ul>
+    </div>
+    </section>
+
+    <!-- Demonstração de algum destes ataques seria interessante. -->
+    <section>
+    <h1>Existem Pessoas Mal-intencionadas por aí!</h1>
+    <div class="slideContent">
+    		<ul>
+    			<li><span class="alert">Pergunta:</span> o que alguém &ldquo;mal-intencionado&rdquo; faz?</li>
+			<li><span class="alert">Resposta:</span> muita coisa (ver seção 1.6):
+			<ul>
+				<li><span class="alert">Eavesdrop:</span> interceptar mensagens alheias.</li>
+				<li><span class="alert">Inserir</span> ativamente mensagens na comunicação.</li>
+				<li><span class="alert">Personificação:</span> falsificar (<i>spoof</i>) endereço de origem no pacote (ou qualquer outro campo).</li>
+				<li><span class="alert">Sequestro:</span> assumir controle de comunicação em andamento através da substituição da origem ou do destino por si próprio.</li>
+				<li><span class="alert">Negação de serviço:</span> não permitir que serviço seja usado por outros (<i>e.g.</i>, sobrecarregando recursos).</li>
+			</ul></li>
+    		</ul>
+    </div>
+    </section>
+
+    <section class="secao">
+    <div class="slideContent">
+    		Princípios de Criptografia
+    </div>
+    </section>
+
+    <section>
+    <h1>Criptografia: Objetivos</h1>
+    <div class="slideContent">
+    		<ul>
+    			<li>Criptografia é uma das bases da segurança em redes.</li>
+			<li>Originalmente, objetivo era <b>ofuscar</b> mensagens.
+			<ul>
+				<li>Fazer com que mensagem ficasse <b>ininteligível</b> para pessoas/dispositivos não autorizados.</li>
+				<li><b>Mas</b> ainda compreensível por indivíduos autorizados.</li>
+			</ul></li>
+			<li><b>Hoje</b>, métodos de criptografia são usados com vários outros propósitos adicionais.
+			<ul>
+				<li>Em alguns casos, mensagens criptografadas são compreensíveis para qualquer um.</li>
+				<li>Criptografia é usada apenas por conta de <b>outras propriedades</b>.
+				<ul>
+					<li>Estudadas em detalhes nas próximas aulas.</li>
+				</ul></li>
+			</ul></li>
+    		</ul>
+    </div>
+    </section>
+
+    <section>
+    <h1>O Jargão da Criptografia</h1>
+    <div class="slideContent">
+    		<center>
+    			<img src="imagens/Jargao.svg" style="width: 70%;"/>
+    		</center>
+		<ul>
+			<li>Onde:
+			<ul>
+				<li><span class="alert">m:</span> mensagem em <b>texto plano/texto aberto/texto claro</b>.</li>
+				<li><span class="alert">K<sub>A</sub>(m):</span> mensagem cifrada com a chave K<sub>A</sub> (texto cifrado).</li>
+				<li><span class="alert">m = K<sub>B</sub>(K<sub>A</sub>(m))</span>.</li>
+			</ul></li>
+		</ul>
+    </div>
+    </section>
+
+    <!-- TODO: verificar argumento sobre cifra de substituição e letras dobradas. Não está claro. -->
+    <section>
+    <h1>Quebrando um Esquema de Criptografia</h1>
+    <div class="slideContent">
+    		<div class="column" style="width: 45%;">
+    			<ul>
+    				<li><span class="alert">Acesso apenas à mensagem cifrada:</span>
+    				<ul>
+    					<li>Trudy possui a mensagem cifrada, pode analisá-la.</li>
+    				</ul></li>
+				<li><span class="alert">Duas abordagens:</span>
+				<ul>
+					<li>Força bruta: realizar busca em todas as chaves possíveis.</li>
+					<li>Análise estatística.</li>
+				</ul></li>
+    			</ul>
+    		</div>
+		<div class="column" style="width: 55%;">
+			<ul>
+				<li><span class="alert">Ataques baseados em texto plano conhecido:</span>
+				<ul>
+					<li>De alguma forma, Trudy conhece o texto plano correspondente à mensagem cifrada.
+					<ul>
+						<li><i>e.g.</i>, em uma cifra de substituição, Trudy determina pares para letras como s, r.</li>
+					</ul></li>
+				</ul></li>
+				<li><span class="alert">Ataque baseado em texto plano escolhido:</span>
+				<ul>
+					<li>Trudy pode conseguir versão cifrada de um texto plano escolhido por ela.</li>
+				</ul></li>
+			</ul>
+		</div>
+    </div>
+    </section>
+
+    <!-- TODO: falar de Diffie-Hellman? -->
+    <section>
+    <h1>Criptografia de Chave Simétrica</h1>
+    <div class="slideContent">
+    		<center>
+    			<img src="imagens/CriptografiaSimetrica.svg" style="width: 70%;"/>
+    		</center>
+		<ul>
+			<li>Bob e Alice compartilham a mesma chave (simétrica).
+			<ul>
+				<li><i>e.g.</i>, chave é uma tabela que descreve padrão de substituição em um esquema de cifra de substituição.</li>
+			</ul></li>
+			<li><span class="alert">Pergunta:</span> como Bob e Alice estabelecem o valor da chave?</li>
+		</ul>
+    </div>
+    </section>
+
+    <section>
+    <h1>Esquema Simples de Criptografia</h1>
+    <div class="slideContent">
+    		<ul>
+    			<li><span class="alert">Cifra de substituição:</span> substitui uma coisa por outra.
+    			<ul>
+    				<li>Cifra monoalfabética: substitui uma letra por outra.</li>
+    			</ul></li>
+    		</ul>
+
+		<br>
+		<center>
+		<style>
+			td.letter {
+				   width: 2%;
+				   text-align: center;
+			}
+		</style>
+		<table class="align" style="width: 80%;">
+			<tr>
+				<td style="width: 20%;"><b>Texto plano:</b></td>
+				<td class="letter"><b>a</b></td>
+				<td class="letter"><b>b</b></td>
+				<td class="letter"><b>c</b></td>
+				<td class="letter"><b>d</b></td>
+				<td class="letter"><b>e</b></td>
+				<td class="letter"><b>f</b></td>
+				<td class="letter"><b>g</b></td>
+				<td class="letter"><b>h</b></td>
+				<td class="letter"><b>i</b></td>
+				<td class="letter"><b>j</b></td>
+				<td class="letter"><b>k</b></td>
+				<td class="letter"><b>l</b></td>
+				<td class="letter"><b>m</b></td>
+				<td class="letter"><b>n</b></td>
+				<td class="letter"><b>o</b></td>
+				<td class="letter"><b>p</b></td>
+				<td class="letter"><b>q</b></td>
+				<td class="letter"><b>r</b></td>
+				<td class="letter"><b>s</b></td>
+				<td class="letter"><b>t</b></td>
+				<td class="letter"><b>u</b></td>
+				<td class="letter"><b>v</b></td>
+				<td class="letter"><b>w</b></td>
+				<td class="letter"><b>x</b></td>
+				<td class="letter"><b>y</b></td>
+				<td class="letter"><b>z</b></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td class="letter"><span class="alert">&darr;</span></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td class="letter"><span class="alert">&darr;</span></td>
+			</tr>
+			<tr>
+				<td><b>Mensagem cifrada:</b></td>
+				<td class="letter"><b>m</b></td>
+				<td class="letter"><b>n</b></td>
+				<td class="letter"><b>b</b></td>
+				<td class="letter"><b>v</b></td>
+				<td class="letter"><b>c</b></td>
+				<td class="letter"><b>x</b></td>
+				<td class="letter"><b>z</b></td>
+				<td class="letter"><b>a</b></td>
+				<td class="letter"><b>s</b></td>
+				<td class="letter"><b>d</b></td>
+				<td class="letter"><b>f</b></td>
+				<td class="letter"><b>g</b></td>
+				<td class="letter"><b>h</b></td>
+				<td class="letter"><b>j</b></td>
+				<td class="letter"><b>k</b></td>
+				<td class="letter"><b>l</b></td>
+				<td class="letter"><b>p</b></td>
+				<td class="letter"><b>o</b></td>
+				<td class="letter"><b>i</b></td>
+				<td class="letter"><b>u</b></td>
+				<td class="letter"><b>y</b></td>
+				<td class="letter"><b>t</b></td>
+				<td class="letter"><b>r</b></td>
+				<td class="letter"><b>e</b></td>
+				<td class="letter"><b>w</b></td>
+				<td class="letter"><b>q</b></td>
+			</tr>
+		</table>
+		</center>
+
+		<br>
+		<ul>
+			<li>Exemplo:</li>
+		</ul>
+
+		<br>
+		<center>
+		<table class="align" style="width: 80%;">
+			<tr>
+				<td style="width: 20%;"><b>Texto plano:</b></td>
+				<td class="letter"><b></b></td>
+				<td class="letter"><b>b</b></td>
+				<td class="letter"><b>o</b></td>
+				<td class="letter"><b>b</b></td>
+				<td class="letter"><b>.</b></td>
+				<td class="letter"><b></b></td>
+				<td class="letter"><b>i</b></td>
+				<td class="letter"><b></b></td>
+				<td class="letter"><b>l</b></td>
+				<td class="letter"><b>o</b></td>
+				<td class="letter"><b>v</b></td>
+				<td class="letter"><b>e</b></td>
+				<td class="letter"><b></b></td>
+				<td class="letter"><b>y</b></td>
+				<td class="letter"><b>o</b></td>
+				<td class="letter"><b>u</b></td>
+				<td class="letter"><b>.</b></td>
+				<td class="letter"><b></b></td>
+				<td class="letter"><b>a</b></td>
+				<td class="letter"><b>l</b></td>
+				<td class="letter"><b>i</b></td>
+				<td class="letter"><b>c</b></td>
+				<td class="letter"><b>e</b></td>
+			</tr>
+			<tr>
+				<td><b>Mensagem cifrada:</b></td>
+				<td class="letter"><b></b></td>
+				<td class="letter"><b>n</b></td>
+				<td class="letter"><b>k</b></td>
+				<td class="letter"><b>n</b></td>
+				<td class="letter"><b>.</b></td>
+				<td class="letter"><b></b></td>
+				<td class="letter"><b>s</b></td>
+				<td class="letter"><b></b></td>
+				<td class="letter"><b>g</b></td>
+				<td class="letter"><b>k</b></td>
+				<td class="letter"><b>t</b></td>
+				<td class="letter"><b>c</b></td>
+				<td class="letter"><b></b></td>
+				<td class="letter"><b>w</b></td>
+				<td class="letter"><b>k</b></td>
+				<td class="letter"><b>y</b></td>
+				<td class="letter"><b>.</b></td>
+				<td class="letter"><b></b></td>
+				<td class="letter"><b>m</b></td>
+				<td class="letter"><b>g</b></td>
+				<td class="letter"><b>s</b></td>
+				<td class="letter"><b>b</b></td>
+				<td class="letter"><b>c</b></td>
+			</tr>
+		</table>
+		</center>
+
+		<br>
+		<ul>
+			<li><img src="imagens/Chave.svg" style="width: 3%;"/> <span class="alert">Chave de criptografia:</span> mapeamento do conjunto de 26 letras para um outro conjunto de 26 letras.</li>
+		</ul>
+    </div>
+    </section>
+
+    <section>
+    <h1>Uma Abordagem Criptográfica mais Sofisticada</h1>
+    <div class="slideContent">
+    		<ul>
+    			<li><i>n</i> cifras de substituição, M<sub>1</sub>, M<sub>2</sub>, ..., M<sub>n</sub>.</li>
+			<li>Padrões cíclicos:
+			<ul>
+				<li><span style="color: green;"><i>e.g.</i>, n = 4: M<sub>1</sub>, M<sub>3</sub>, M<sub>4</sub>, M<sub>3</sub>, M<sub>2</sub>; M<sub>1</sub>, M<sub>3</sub>, M<sub>4</sub>, M<sub>3</sub>, M<sub>2</sub>; ...</span></li>
+			</ul></li>
+			<li>Para cada novo símbolo em texto plano, utiliza-se o padrão de substituição seguinte no ciclo.
+			<ul>
+				<li><span style="color: green;">cachorro: c de M<sub>1</sub>, a de M<sub>3</sub>, c de M<sub>4</sub>, ...</li>
+			</ul></li>
+			<li><img src="imagens/Chave.svg" style="width: 3%;"/> <span class="alert">Chave de criptografia:</span> n cifras de substituição e o padrão cíclico.
+			<ul>
+				<li>Chave não é necessariamente um simples padrão de <i>m</i> bits.</li>
+			</ul></li>
+    		</ul>
+    </div>
+    </section>
+
+    <section>
+    <h1>Criptografia de Chave Simétrica: DES (I)</h1>
+    <div class="slideContent">
+    		<ul>
+    			<li><span class="alert">DES: </span><i>Data Encryption Standard</i>.
+    			<ul>
+    				<li>Padrão norte-americano de criptografia [NIST 1993].</li>
+				<li>Chave simétrica de 56 bits, texto plano de entrada em <b>blocos</b> de 64 bits.</li>
+				<li><b>Cifra de bloco</b> com <b>encadeamento</b> de cifras.</li>
+				<li>O quão seguro é o DES?
+				<ul>
+					<li>Desafio do DES: mensagem criptografada com chave de 56 bits quebrada (força bruta) em menos de um dia. </li>
+					<li>Não são conhecidos bons ataques analíticos.</li>
+				</ul></li>
+				<li>Tornando o DES mais seguro:
+				<ul>
+					<li>3DES: cifrar 3 vezes com 3 chaves diferentes.</li>
+				</ul></li>
+    			</ul></li>
+    		</ul>
+    </div>
+    </section>
+
+    <section>
+    <h1>Criptografia de Chave Simétrica: DES (II)</h1>
+    <div class="slideContent">
+    		<div class="column" style="width: 60%;">
+			<br>
+			<br>
+			<br>
+    			<ul>
+    				<li><span class="alert">Operação do DES</span></li>
+    			</ul>
+			 <center>
+				<div style="border: solid 1px #c00; width: 80%; text-align:left;">
+				<ul>
+					<li>Permutação inicial.</li>
+					<li>16 &ldquo;rodadas&rdquo; idênticas de aplicação da função, cada uma usando porções diferentes de 48 bits da chave.</li>
+					<li>Permutação final.</li>
+				</ul>
+				</div>
+			 </center>
+    		</div>
+		<div class="column" style="width: 40%;">
+			<img src="imagens/DES.svg" style="width: 70%;"/>
+		</div>
+    </div>
+    </section>
+
+    <section>
+    <h1>AES: <i>Advanced Encryption Standard</i></h1>
+    <div class="slideContent">
+    		<ul>
+    			<li>Padrão do NIST para criptografia de chave simétrica, substituiu o DES (Novembro de 2001).</li>
+			<li>Processa dados em blocos de 128 bits.</li>
+			<li>Chaves de 128, 192 ou 256 bits.</li>
+			<li>Se um computador fosse capaz de quebrar por força bruta (tentar cada chave) o DES em 1 segundo, levaria 149 trilhões de anos para quebrar o AES.</li>
+    		</ul>
+    </div>
+    </section>
+
+    <section>
+    <h1>Criptografia de Chave Pública (I)</h1>
+    <div class="slideContent">
+    		<div class="column" style="width: 50%;">
+    			<ul>
+    				<li><span class="alert">Criptografia de chave simétrica:</span>
+    				<ul>
+    					<li>Requer que origem e destino conheçam a chave secreta compartilhada.</li>
+					<li>Pergunta: como esta chave é estabelecida inicialmente (particularmente, se os lados nunca &ldquo;se conheceram&rdquo;)?</li>
+    				</ul></li>
+    			</ul>
+    		</div>
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li><span class="alert">Criptografia de chave pública</span></li>
+			</ul>
+			 <center>
+				<div style="border: solid 1px #c00; width: 80%; text-align:left;">
+				<ul>
+					<li>Abordagem radicalmente diferente [Diffie-Hellman76, RSA78].</li>
+					<li>Origem e destino <b>não</b> compartilham chave secreta.</li>
+					<li>Chave <b>pública</b> (cifrar) conhecida por <b>todos</b>.</li>
+					<li>Chave <b>privada</b> (decifrar) conhecida apenas pelo receptor.</li>
+				</ul>
+				</div>
+			 </center>
+		</div>
+    </div>
+    </section>
+
+    <section>
+    <h1>Criptografia de Chave Pública (II)</h1>
+    <div class="slideContent">
+    		<center>
+    			<img src="imagens/CriptografiaChavePublica.svg" style="width: 70%;"/>
+    		</center>
+    </div>
+    </section>
+
+    <section>
+    <h1>Algoritmos de Criptografia de Chave Pública</h1>
+    <div class="slideContent">
+    		<ul>
+    			<li>Requisitos:
+    			<ol>
+    				<li>São necessárias chaves <span class="math inline">\(K^{+}_{B}(.)\)</span> e <span class="math inline">\(K^{-}_{B}(.)\)</span> tais que:
+				<center>
+					<span class="math">\(K^{-}_{B}(K^{+}_{B}(m)) = m\)</span>
+				</center>
+				</li>
+				<li>Dada a chave pública <span class="math inline">\(K^{+}_{B}\)</span> deve ser impossível computar a chave privada <span class="math inline">\(K^{-}_{B}\)</span>.
+				<ul>
+					<li>Impossível = computacionalmente inviável.</li>
+				</ul></li>
+    			</ol></li>
+			<li><span class="alert">RSA:</span> Algoritmo criado por Rivest, Shamir, Adleman.</li>
+    		</ul>
+    </div>
+    </section>
+
+    <section>
+    <h1>Pré-requisito: Aritmética Modular</h1>
+    <div class="slideContent">
+    		<ul>
+    			<li>x mod n = resto da divisão de x por n.</li>
+			<li>Fatos:
+			<ul>
+				<li><span style="color: blue;">[(a mod n) + (b mod n)] mod n = (a + b) mod n</span></li>
+				<li><span style="color: blue;">[(a mod n) - (b mod n)] mod n = (a - b) mod n</span></li>
+				<li><span style="color: blue;">[(a mod n) * (b mod n)] mod n = (a * b) mod n</span></li>
+			</ul></li>
+			<li>Logo:
+			<center>
+				<span class="math">\((a\;\textrm{mod}\;n)^d\;\textrm{mod}\;n = a^d\;\textrm{mod}\;n\)</span>
+			</center>
+			</li>
+			<li>Exemplo: x = 14, n = 10, d = 2.
+			<center>
+				<span class="math">\((x\;\textrm{mod}\;n)^d\;\textrm{mod}\;n = 4^2\;\textrm{mod}\;10 = 6\)</span><br>
+				<span class="math">\(x^d = 14^2 = 196\quad x^d\;\textrm{mod}\;10 = 6\)</span>
+			</center>
+			</li>
+    		</ul>
+    </div>
+    </section>
+
+    <section>
+    <h1>RSA: Conceitos</h1>
+    <div class="slideContent">
+    		<ul>
+    			<li>Mensagem: apenas uma sequência de bits.</li>
+			<li>Sequência de bits pode ser unicamente representada por um número inteiro.</li>
+			<li>Logo, cifrar uma mensagem é equivalente a cifrar um número.</li>
+			<li><span class="alert">Exemplo:</span>
+			<ul>
+				<li>m = <tt>10010001</tt>. Esta mensagem é unicamente representada pelo número decimal 145.</li>
+				<li>Para criptografar m, basta cifrar o número correspondente, obtendo-se um novo número (texto cifrado).</li>
+			</ul></li>
+    		</ul>
+    </div>
+    </section>
+
+    <section>
+    <h1>RSA: Criação do Par de Chaves Pública/Privada</h1>
+    <div class="slideContent">
+    		<ol>
+    			<li>Escolha dois números primos grandes <i>p, q</i> (<i>e.g.</i>, de 1024 bits cada).</li>
+			<li>Compute <span class="alert"><i>n</i></span> = pq, z = (p-1)(q-1).</li>
+			<li>Escolha um valor <span class="alert"><i>e</i></span> (com e &lt; n) que não possua fatores primos em comum com z (<i>i.e.</i>, <i>e, z</i> são coprimos).</li>
+			<li>Escolha <span class="alert"><i>d</i></span> tal que ed-1 é divisível por z (<i>i.e.</i>, ed mod z = 1).</li>
+			<li>A chave pública é <span class="alert"><span class="math inline">\(K^{+}_{B} = (n, e)\)</span></span> e a chave privada é <span class="alert"><span class="math inline">\(K^{-}_{B} = (n, d)\)</span></span>.</li>
+    		</ol>
+    </div>
+    </section>
+
+    <section>
+    <h1>RSA: Cifragem e Deciframento</h1>
+    <div class="slideContent">
+    		<ul>
+    			<li>Dados <span class="alert">(n, e)</span> e <span class="alert">(n, d)</span> como descrito no slide anterior:
+    			<ol>
+    				<li>Para cifrar uma mensagem m (&lt; n), calcule:
+				<center>
+					<span class="math">\(c = m^e\; mod\; n\)</span>
+				</center>
+				</li>
+				<li>Para decifrar o padrão de bits recebido, c, calcule:
+				<center>
+					<span class="math">\(m = c^d\; mod\; n\)</span>
+				</center>
+				</li>
+    			</ol></li>
+    		</ul>
+		<br>
+		<br>
+	   <center>
+		  <div style="border: solid 1px #c00; width: 80%; height: 100px; text-align:left;">
+		  <div class="column" style="width: 20%;">
+		  	<center>
+		  	<span class="alert">Mágica acontece!</span>
+		  	</center>
+		  </div>
+		  <div class="column" style="width: 80%;">
+		  	<center>
+		  		<span class="math">\(m = (\smash{\underbrace{m^e\;mod\;n}_{\large\text{c}}})^d\;mod\;n\)</span>
+		  	</center>
+		  </div>
+		  </div>
+	   </center>
+
+    </div>
+    </section>
+
+    <!-- Melhorar imagem. Há também um erro no exemplo (m deveria ser 8, não 12).-->
+    	<section>
+    	<h1>RSA: Exemplo</h1>
+    	<div class="slideContent">
+    		<ul>
+    			<li>Bob escolhe p = 5, q = 7. Logo, n = 35, z = 24.
+    			<ul>
+    				<li>e = 5 (tal que e, z são coprimos).</li>
+				<li>d = 29 (tal que ed - 1 é divisível por z).</li>
+    			</ul></li>
+			<li>Cifragem de mensagem de 8 bits:</li>
+    		</ul>
+		<center>
+			<img src="imagens/ExemploRSA.svg" style="width: 85%;"/>
+		</center>
+    	</div>
+    	</section>
+
+    <section>
+    <h1>Por Que o RSA Funciona?</h1>
+    <div class="slideContent">
+        <ul>
+            <li>Precisamos mostrar que <span class="math inline">\(c^d\;mod\;n = m\)</span>, onde <span class="math inline">\(c = m^e\;mod\;n\)</span>.</li>
+            <li>Fato: para qualquer x, y, <span class="math inline">\(x^y\;mod\;n = x^{(y\;mod\;z)}\;mod\;n\)</span>.
+            <ul>
+                <li>Onde n = pq e z = (p-1)(q-1).</li>
+                <li>Consequência do Teorema de Euler.</li>
+            </ul></li>
+            <li>Logo:</li>
+        </ul>
+        <center>
+            <span class="math">\(
+                \begin{align}
+                    c^d\;mod\;n & = (m^e\;mod\;n)^d\;mod\;n\\
+                    & = m^{ed}\;mod\;n\\
+                    & = m^{(ed\;mod\;z)}\;mod\;n\\
+                    & = m^1\;mod\;n\\
+                    & = m
+                \end{align}
+             \)</span><br>
+        </center>
+    </div>
+    </section>
+
+    <section>
+    <h1>RSA: Outra Propriedade Importante</h1>
+    <div class="slideContent">
+        <ul>
+            <li>A seguinte propriedade será <span class="alert">muito</span> importante em breve:</li>
+        </ul>
+        <br>
+        <center>
+            <div style="height: 100px;">
+            <span class="alert"><span class="math">\(\underbrace{K^{-}_{B}\left(K^{+}_{B}(m)\right)} = m = \underbrace{K^{+}_{B}\left(K^{-}_{B}(m)\right)}\)</span></span>
+            </div>
+            <div style="width: 50%; height: 150px;">
+                    <div class="column" style="width: 50%;">
+                        Use a chave pública, seguida da chave privada.
+                    </div>
+                    <div class="column" style="width: 50%;">
+                        Use a chave privada, seguida da chave pública.
+                    </div>
+            </div>
+            <span class="alert">Resultado é o mesmo!</span>
+        </center>
+    </div>
+    </section>
+
+    <section>
+    <h1>Por Que a Ordem Não Importa?</h1>
+    <div class="slideContent">
+    		<ul>
+    			<li>Consequência direta da aritmética modular:</li>
+    		</ul>
+
+		<center>
+			<span class="math inline">\(
+			\begin{align}
+				(m^e\;mod\;n)^d\;mod\;n = & m^{ed}\;mod\;n\\
+				 & m^{de} \;mod\;n\\
+				 & (m^d\;mod\;n)^e\;mod\;n
+			\end{align}\)</span>
+		</center>
+    </div>
+    </section>
+
+    <section>
+    <h1>Por Que o RSA é Seguro?</h1>
+    <div class="slideContent">
+    		<ul>
+    			<li>Assuma que você conhece a chave pública de Bob (n, e).
+    			<ul>
+    				<li>O quão difícil é determinar d?</li>
+    			</ul></li>
+			<li>Se soubéssemos o valor de z (lembrando: z = (p-1)(q-1), onde n = pq), seria trivial.</li>
+			<li>Não conhecemos z, mas conhecemos n. Ambos os valores são relacionados através dos fatores p e q.</li>
+			<li>Logo, basicamente precisamos <b>fatorar</b> o número n.
+			<ul>
+				<li>Mas se n é grande (<i>i.e.</i>, muitos algarismos), fatoração é computacionalmente difícil.</li>
+				<li>Ao menos hoje, não conhecemos algoritmos eficientes.</li>
+			</ul></li>
+    		</ul>
+    </div>
+    </section>
+
+	<!-- Demonstração do tempo de execução de cada algoritmo? -->
+    <section>
+    <h1>RSA na Prática: Chaves de Sessão</h1>
+    <div class="slideContent">
+    		<ul>
+    			<li>Exponenciação usada no RSA é computacionalmente intensiva.</li>
+			<li>DES é, ao menos, 100 vezes mais rápido que o RSA.</li>
+			<li>Na prática, utiliza-se criptografia de chave pública para <b>estabelecer uma conexão segura</b> e uma <b>chave simétrica</b> para a criptografia dos dados.
+			<ul>
+				<li>Chamada <b>chave de sessão</b>.</li>
+			</ul></li>
+			<li><span class="alert">Chave de sessão K<sub>S</sub></span>.
+			<ul>
+				<li>Bob e Alice usam RSA para combinar uma chave simétrica K<sub>S</sub>.</li>
+				<li>Uma vez que ambos possuem K<sub>S</sub>, eles utilizam criptografia de chave simétrica.</li>
+			</ul></li>
+    		</ul>
+    </div>
+    </section>
+
+	<section>
+	<h1>Resumo da Aula...</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li>Requisitos de segurança:
+				<ul>
+					<li><b>Confidencialidade:</b> apenas origem e destino entendem mensagens.</li>
+					<li><b>Autenticidade:</b> origem e destino são quem dizem ser.</li>
+					<li><b>Integridade:</b> mensagens não são alteradas (c.c., podemos detectar).</li>
+					<li><b>Acesso e disponibilidade:</b> serviços precisam estar disponíveis.</li>
+				</ul></li>
+				<li>Jargão típico:
+				<ul>
+					<li>Alice, Bob, Trudy.</li>
+					<li>Chaves.</li>
+					<li><b>Texto plano, texto cifrado</b>.</li>
+				</ul></li>
+				<li>Ataques típicos:
+				<ul>
+					<li><b>Eavesdrop</b>, <b>inserção de mensagens</b>, <b>spoofing</b>, <b>sequestro de conexão</b>, <b>negação de serviço</b>.</li>
+				</ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li>Criptografia: tipos.
+				<ul>
+					<li>Chave simétrica: ambos os lados <b>compartilham uma única chave</b>.
+					<ul>
+						<li>Exemplos: DES, AES.</li>
+					</ul></li>
+					<li>Chave pública: há duas chaves, uma com cada parte.
+					<ul>
+						<li>O que a <b>chave pública</b> cifra, a <b>chave privada</b> decifra.</li>
+						<li>E vice-versa.</li>
+						<li>Exemplo: RSA.</li>
+					</ul></li>
+				</ul></li>
+				<li>RSA: funcionamento.
+				<ul>
+					<li>Chaves: <b>(n, e) e (n, d)</b>.</li>
+					<li>Mensagem: <b>número</b> menor que n.</li>
+					<li>Cifragem: c = m<sup>e</sup> mod n.</li>
+					<li>Deciframento: m = c<sup>d</sup> mod n.</li>
+					<li>Seguro: <b>difícil fatorar n</b>.</li>
+				</ul></li>
+			</ul>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Leitura e Exercícios Sugeridos</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Conceitos de segurança:
+			<ul>
+				<li>Páginas 492 a a 494 do Kurose (Introdução do Cap. 8 e Seção 8.1).</li>
+				<li>Exercícios de fixação 1 e 2 do Capítulo 8 do Kurose.</li>
+			</ul></li>
+			<li>Criptografia:
+			<ul>
+				<li>Páginas 494 a a 504 do Kurose (Seção 8.2.1).</li>
+				<li>Exercícios de fixação 3, 6, 7, e 8 do Capítulo 8 do Kurose.</li>
+				<li>Problemas 1, 2, 3, 7 e 9 do Capítulo 8 do Kurose.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<!-- Criar slide com lembrete sobre segundo trabalho, explicando o que deve ser feito. -->
+
+	<!--
+	<section>
+	<h1>Lembrete do Segundo Trabalho</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Entrega em meados de fevereiro.</li>
+			<li>Objetivo: implementar programa para cifrar/decifrar mensagens com o RSA.
+			<ul>
+				<li>Entrada: chave (pública ou privada) e nome de arquivo a ser cifrado/decifrado.
+				<ul>
+					<li>Chave será informada como par de números (n, em conjunto com d ou e).</li>
+				</ul></li>
+				<li>Saída: arquivo cifrado/decifrado corretamente.</li>
+				<li>Cada byte do arquivo deverá ser cifrado/decifrado individualmente.
+				<li>A implementação pode assumir que 255 &lt; n &lt; 65536.</li>
+			</ul></li>
+			<li>Dica: cuidado com <i>overflows</i> nas exponenciações.
+			<ul>
+				<li>Abordagem sugerida: exponenciação binária.</li>
+				<li>Descrita na especificação do trabalho.</li>
+			</ul></li>
+			<li>Restrições:
+			<ul>
+				<li>Qualquer linguagem, mas implementação <b>deve ser totalmente original</b>.</li>
+				<li><i>i.e.</i>, não utilizar funções/implementações prontas do RSA!</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>-->
+	
+	<section>
+	<h1>Próxima Aula...</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Vamos falar sobre dois outros requisitos de segurança:
+			<ul>
+				<li>Autenticação: comprovar que a outra parte é quem diz ser.</li>
+				<li>Integridade: garantir que uma mensagem não foi alterada.
+				<ul>
+					<li>Ou detectar, caso tenha sido.</li>
+				</ul></li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<!-- {{{{ dzslides core
+	#
+	#
+	#     __  __  __       .  __   ___  __
+	#    |  \  / /__` |    | |  \ |__  /__`
+	#    |__/ /_ .__/ |___ | |__/ |___ .__/ core :€
+	#
+	#
+	# The following block of code is not supposed to be edited.
+	# But if you want to change the behavior of these slides,
+	# feel free to hack it!
+	#
+	-->
+
+    <!-- More CSS -->
+	<link href='../template/css/slides.css' id="slides" rel='stylesheet' type='text/css'>
+	<link href='../template/css/presentationSpecific2.css' id="presentationSpecific2" rel='stylesheet' type='text/css'>
+
+    <!-- More Javascript -->
+	<script type="text/javascript" src="../template/js/dz.js"></script>
+
+	<!-- More CSS -->
+	<link href='../template/css/notesSpecific.css' id="notesSpecific" rel='stylesheet' type='text/css'>
+	<link href='../template/css/printSpecific.css' id="printSpecific" rel='stylesheet' type='text/css'>
+</body>
+</html>

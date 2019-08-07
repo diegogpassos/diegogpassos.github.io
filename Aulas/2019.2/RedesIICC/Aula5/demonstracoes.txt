@@ -1,0 +1,25 @@
+0) Conectividade:
+  * Mostrar switch (ping entre dispositivos).
+  * Mostrar hub (ping entre dispositivos).
+  * Comparar desempenho com iperf: duas conexoes simultaneas.
+1) Mostrar tabela de encaminhamento de um switch gerenciavel ativo.
+  * Switch dell: 192.168.2.3
+2) Mostrar auto-aprendizado:
+  * Switch gerenciavel, tabela inicialmente sem entrada para host.
+  * Host eh conectado ao switch e envia quadro (ping broadcast?)
+  * Mostrar novamente tabela, exibindo associacao (mesmo sem resposta).
+3) Mostrar encaminhamento seletivo:
+  * Dois hosts se comunicam, sniffer em terceira porta.
+  * Sniffer captura (talvez) tráfego de ARP e um ou outro pacote unicast.
+  * Mas logo quadros deixam de ser enviados para a porta do sniffer.
+  * Contrapor com funcionamento de um hub?
+4) Mostrar possibilidade de uso de enlaces heterogeneos:
+  * Conectar interfaces de taxas distintas.
+  * Mostrar conectividade entre elas.
+  * Mostrar que vazao eh limitada a taxa do enlace garagalo.
+5) Mostrar ganhos de desempenho:
+  * Mostrar que de uma interface mais rápida pode-se saturar duas interfaces mais lentas.
+    + e.g., origem com interface giga transmitindo fluxo TCP para dois destinos fast.
+    + Destacar vazao agregada próxima de 200 Mb/s
+6) Mostrar tempestade de broadcast.
+  * Captura de tráfego do eduroam?

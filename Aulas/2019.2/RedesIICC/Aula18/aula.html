@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <!-- Meta info -->
+	<meta charset="utf-8">
+	<meta name="shortauthor" content="Diego Passos"/>
+	<meta name="shorttitle" content="Segurança: SSL"/>
+	<meta name="shortevent" content="Redes de Computadores II"/>
+	<title>Redes de Computadores II: Aula 18</title>
+
+    <!-- Math support -->
+	<script type="text/x-mathjax-config">
+		MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+			MathJax.InputJax.TeX.Definitions.number = /^(?:[0-9]+(?:\.[0-9]{3})*(?:\{,\}[0-9]*)*|\{,\}[0-9]+)/
+		});
+	</script>
+	<!--<script src="../../../../MathJax-2.6-latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>-->
+	<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+	<!--<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>-->
+
+    <!-- Fonts -->
+	<link href='https://fonts.googleapis.com/css?family=Lora:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
+	<!--<link href='../../../../Fonts/Lora/lora.css' rel='stylesheet' type='text/css'>-->
+
+    <!-- CSS -->
+	<link href='../template/css/template.css' id="template" rel='stylesheet' type='text/css'>
+	<link href='../template/css/presentationSpecific.css' id="presentationSpecific" rel='stylesheet' type='text/css'>
+
+    <!-- Javascript -->
+	<script type="text/javascript" src="../template/js/audio.js"></script>
+</head>
+
+<body>
+    <!-- Audio handlers -->
+
+    <!-- Title Slide -->
+	<section>
+
+        <div class="slideContent">
+            <h1 class="title">Aula 18 - Segurança: SSL</h1>
+            <h2 class="author">Diego Passos</h2>
+            <h4 class="institution">Universidade Federal Fluminense</h4>
+            <h3 class="date">Redes de Computadores II</h3>
+        </div>
+
+	</section>
+
+    <!-- Content slides -->
+
+	<section>
+	<h1>Na Última Aula... (I)</h1>
+	<div class="slideContent">
+        <div class="column" style="width: 50%;">
+            <ul>
+                <li>Certificação de chave pública: objetivo.
+                <ul>
+                    <li>Garantir <b>autenticidade</b> de chaves públicas.</li>
+                </ul></li>
+                <li>Certificação de chave pública: solução.
+                <ul>
+                    <li><b>Terceira parte confiável</b> certifica autenticidade da chave.</li>
+                    <li>CA: <i>Certification Authority</i>.</li>
+                    <li>Emite um &ldquo;documento&rdquo; <b>verificável</b> contendo a chave.
+                    <ul>
+                        <li>Assinado digitalmente com a chave privada da CA. </li>
+                    </ul></li>
+                </ul></li>
+                <li>Certificação de chave pública: verificação.
+                <ul>
+                    <li>Alice <b>obtém certificado</b> de Bob.</li>
+                    <li>Alice verifica assinatura digital com a <b>chave pública</b> da CA.</li>
+                    <li>Alice obtém chave pública de Bob.</li>
+                </ul></li>
+            </ul>
+        </div>
+        <div class="column" style="width: 50%;">
+            <ul>
+                <li>Certificados raiz:
+                <ul>
+                    <li>Certificados <b>previamente conhecidos</b>.</li>
+                    <li><b>Confiança implícita</b> na sua autenticidade.</li>
+                    <li>Contém chaves públicas de CAs.</li>
+                </ul></li>
+                <li>Hierarquia de Certificados:
+                <ul>
+                    <li>Alice pode precisar verificar uma <b>cadeia</b> de certificados.</li>
+                    <li>CA<sub>n</sub> certifica CA<sub>n-1</sub>, que certifica CA<sub>n-2</sub>, ..., que certifica Bob.</li>
+                </ul></li>
+                <li>Certificados apresentam <b>validade</b>.</li>
+                <li>CAs podem <b>revogar</b> certificados.</li>
+                <li>PKI: <i>Public Key Infrastructure</i>.
+                <ul>
+                    <li>Infraestrutura para distribuir/verificar chaves públicas.</li>
+                    <li>Exemplo: CAs + Certificados.</li>
+                </ul></li>
+            </ul>
+        </div>
+	</div>
+	</section>
+
+    <section>
+    <h1>Na Última Aula... (II)</h1>
+    <div class="slideContent">
+        <div class="column" style="width: 55%;">
+            <ul>
+                <li>Diffie-Hellman:
+                <ul>
+                    <li>Método para <b>estabelecimento seguro de chaves</b> compartilhadas.</li>
+                    <li>Não requer <b>conhecimento prévio</b> das partes.</li>
+                    <li>Partes concordam em parâmetros <b>não secretos</b> p e g.</li>
+				<li>Também enviam em texto plano A = g<sup>a</sup> mod p e B = g<sup>b</sup> mod p.
+				<ul>
+					<li>a e b são mantidos secretos.</li>
+				</ul></li>
+				<li>Chave compartilhada é s = B<sup>a</sup> mod p = A<sup>b</sup> mod p.</li>
+				<li><b>Sem método de autenticação</b>, é susceptível a ataque <i>man-in-the-middle</i>.</li>
+                </ul></li>
+            </ul>
+        </div>
+	   <div class="column" style="width: 45%;">
+	   	<ul>
+	   		<li>E-mail seguro: diferentes possíveis objetivos.
+	   		<ul>
+	   			<li><b>Confidencialidade</b>: chave simétrica de sessão, cifrada com chave pública do destinatário.</li>
+				<li><b>Integridade e Autenticidade</b>: assinatura digital com chave privada.</li>
+	   		</ul></li>
+	   	</ul>
+	   </div>
+    </div>
+    </section>
+
+	<section class="secao">
+	<div class="slideContent">
+		Conexões TCP Seguras: SSL
+	</div>
+	</section>
+
+	<section>
+	<h1>SSL: Secure Sockets Layer</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li>Protocolo de segurança amplamente implantado.
+				<ul>
+					<li>Suportado por quase todos os browsers, servidores web.</li>
+					<li>HTTPS</li>
+					<li>Bilhões de $/ano são transacionados sobre SSL.</li>
+				</ul></li>
+				<li>Mecanismos: [Woo 1994], implementação: Netscape.</li>
+				<li>Variação &#8212; TLS: Transport Layer Security, RFC 2246.</li>
+				<li>Provê:
+				<ul>
+					<li><span class="alert">Confidencialidade</span>.</li>
+					<li><span class="alert">Integridade</span>.</li>
+					<li><span class="alert">Autenticação</span>.</li>
+				</ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50%;">
+			<ul>
+				<li>Objetivos originais:
+				<ul>
+					<li>Suporte a transações de e-commerce pela Web.</li>
+					<li>Criptografia (especialmente para números de cartões de crédito).</li>
+					<li>Autenticação do servidor web.</li>
+					<li>Opcionalmente, autenticação do cliente.</li>
+					<li>Resultar em um mínimo de dificuldade em realizar negócios com novos vendedores.</li>
+				</ul></li>
+				<li>Disponível a qualquer aplicação TCP.
+				<ul>
+					<li>Interface de socket seguro.</li>
+				</ul></li>
+			</ul>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>SSL e TCP/IP</h1>
+	<div class="slideContent">
+		<center>
+			<img src="imagens/SSL_TCPIP.svg" style="width: 60%;"/>
+		</center>
+		<br>
+		<ul>
+			<li>SSL provê uma API para aplicações.</li>
+			<li>Bibliotecas/classes prontamente disponíveis para C e Java (e a maioria das linguagens).</li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Funcionamento Poderia ser Similar ao PGP</h1>
+	<div class="slideContent">
+		<center>
+			<img src="imagens/SSL_PGP.svg" style="width: 70%;"/>
+		</center>
+		<br>
+		<ul>
+			<li>Mas desejamos enviar fluxos de bytes e dados interativos.</li>
+			<li>Queremos conjuntos de chaves secretas para toda a duração da conexão.</li>
+			<li>Queremos troca de certificados como parte do protocolo: <i>handshake</i>.</li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>SSL (Muito) Simplificado: Um Canal Seguro Simples</h1>
+	<div class="slideContent">
+		<ul>
+			<li><span class="alert">Handshake:</span> Alice e Bob usam seus certificados, chaves privadas para se autenticar um com o outro e estabelecer uma chave secreta compartilhada.</li>
+			<li><span class="alert">Derivação das chaves:</span> Alice e Bob usam chave secreta compartilhada para derivar um conjunto de chaves.</li>
+			<li><span class="alert">Transferência de dados:</span> dados a serem transferidos são quebrados em uma série de registros.</li>
+			<li><span class="alert">Fechamento da conexão:</span> mensagens especiais usadas para fechar conexão de forma segura.</li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>SSL (Muito) Simplificado: Handshake Simplificado</h1>
+	<div class="slideContent">
+		<center>
+			<img src="imagens/SSLHandshake.svg" style="width: 70%;"/>
+		</center>
+		<br>
+		<ul>
+			<li><span class="alert">MS:</span> <i>Master Secret</i>.</li>
+			<li><span class="alert">EMS:</span> Master Secret cifrado.</li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>SSL (Muito) Simplificado: Derivação das Chaves</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Considera-se ruim a utilização de uma mesma chave para mais de uma operação criptográfica.
+			<ul>
+				<li>Usam-se chaves diferente para o MAC (<i>Message Authentication Code</i>) e a criptografia.</li>
+			</ul></li>
+			<li>Quatro chaves:
+			<ul>
+				<li>K<sub>C</sub>: chave de criptografia para dados enviados do cliente para o servidor.</li>
+				<li>M<sub>C</sub>: chave para o MAC dos dados enviados do cliente para o servidor.</li>
+				<li>K<sub>S</sub>: chave de criptografia para dados enviados do servidor para o cliente.</li>
+				<li>M<sub>S</sub>: chave para o MAC dos dados enviados do servidor para o cliente.</li>
+			</ul></li>
+			<li>Chaves derivadas a partir de uma <i>função de derivação de chaves</i> (KDF).
+			<ul>
+				<li>Recebe o <i>master secret</i> e (possivelmente) outros dados aleatórios e cria as chaves.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>SSL (Muito) Simplificado: Registros de Dados</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Por que não cifrar dados em um fluxo constante à medida que estes são escritos no socket TCP?
+			<ul>
+				<li>Onde seria colocado o MAC? Se no final, nenhuma verificação de integridade seria realizada até que todos os dados fossem processados.</li>
+				<li><i>e.g.</i>, aplicação de mensagens instantâneas, como realizar verificação de integridade sobre todos os bytes enviados antes de mostrá-los?</li>
+			</ul></li>
+			<li>Ao invés disso, quebrar o fluxo em sequência de registros.
+			<ul>
+				<li>Cada registro carrega um MAC.</li>
+				<li>Receptor pode trabalhar em cada registro isoladamente, à medida que estes chegam.</li>
+			</ul></li>
+			<li>Problema: dentro de um registro, receptor precisa distinguir MAC dos dados.
+			<ul>
+				<li>Queremos usar registros de tamanho variável.</li>
+			</ul></li>
+		</ul>
+		<br>
+		<center>
+			<img src="imagens/SSLDataRecords.svg" style="width: 60%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>SSL (Muito) Simplificado: Números de Sequência</h1>
+	<div class="slideContent">
+		<ul>
+			<li><span class="alert">Problema:</span> atacante pode capturar e repetir registro, ou mesmo reordenar registros.</li>
+			<li><span class="alert">Solução:</span> inserir número de sequência no MAC:
+			<ul>
+				<li>MAC = MAC(M<sub>x</sub>, sequência || dados).</li>
+				<li>Nota: não existe um campo para o número de sequência.</li>
+			</ul></li>
+			<li><span class="alert">Problema:</span> atacante pode repetir todos os registros.</li>
+			<li><span class="alert">Solução:</span> utilização de nonce.</li>
+		</ul>
+	</div>
+	</section>
+
+	<!-- Talvez seja legal simular este ataque. -->
+	<section>
+	<h1>SSL (Muito) Simplificado: Informações de Controle</h1>
+	<div class="slideContent">
+		<ul>
+			<li><span class="alert">Problema:</span> ataque baseado em truncagem de dados.
+			<ul>
+				<li>Atacante forja segmento de fechamento de conexão TCP.</li>
+				<li>Um ou ambos os lados pensam que há menos dados do que na verdade há.</li>
+			</ul></li>
+			<li><span class="alert">Solução: tipos de registro, com um tipo especial para fechamento.</span>
+			<ul>
+				<li>Tipo 0 para dados, tipo 1 para fechamento.</li>
+			</ul></li>
+			<li>MAC = MAC(M<sub>x</sub>, sequência || tipo || dados).</li>
+		</ul>
+		<br>
+		<center>
+			<img src="imagens/SSLControlInformation.svg" style="width: 50%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>SSL (Muito) Simplificado: Sumário</h1>
+	<div class="slideContent">
+		<center>
+			<img src="imagens/SSLSumario.svg" style="width: 70%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>SSL (Muito) Simplificado: Ainda Incompleto</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Qual é o tamanho dos campos?</li>
+			<li>Quais algoritmos de criptografia?</li>
+			<li>Negociação é desejável?
+			<ul>
+				<li>Permitir que cliente e servidor suportem diferentes algoritmos de criptografia.</li>
+				<li>Permitir que escolham em conjunto um algoritmo específico antes da transmissão dos dados.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>SSL: Suíte de Cifras</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 45%;">
+			<ul>
+				<li>Suíte de cifras.
+				<ul>
+					<li>Algoritmo de chave pública.</li>
+					<li>Algoritmo de chave simétrica.</li>
+					<li>Algoritmo de MAC.</li>
+				</ul></li>
+				<li>SSL suporta várias suítes de cifras.</li>
+				<li>Negociação: cliente, servidor concordam em usar uma suíte específica.
+				<ul>
+					<li>Cliente oferece opções.</li>
+					<li>Servidor escolhe uma.</li>
+				</ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 55%;">
+			<center>
+				   <div style="border: solid 1px #c00; width: 80%; text-align:left;">
+				   	<ul>
+				   		<li>Cifras simétricas comumente utilizadas pelo SSL:
+				   		<ul>
+				   			<li>DES &#8212; <i>Data Encryption Standard</i>: bloco.</li>
+							<li>3DES &#8212; <i>Triple Data Encryption Standard</i>: bloco.</li>
+							<li>RC2 &#8212; <i>Rivest Cipher 2</i>: bloco.</li>
+							<li>RC4 &#8212; <i>Rivest Cipher 4</i>: fluxo</li>
+				   		</ul></li>
+						<li>Criptografia de chave pública do SSL:
+						<ul>
+							<li>RSA.</li>
+						</ul></li>
+				   	</ul>
+				   </div>
+			</center>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>SSL Real: Handshake (I)</h1>
+	<div class="slideContent">
+		<ul>
+			<li><span class="alert">Propósito:</span>
+			<ol>
+				<li>Autenticação do servidor.</li>
+				<li>Negociação: concordar no conjunto de algoritmos de criptografia.</li>
+				<li>Estabelecimento das chaves de sessão.</li>
+				<li>Autenticação do cliente (opcional).</li>
+			</ol></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>SSL Real: Handshake (II)</h1>
+	<div class="slideContent">
+		<ol>
+			<li>Cliente envia lista de algoritmos que ele suporte, juntamente de um nonce do cliente.</li>
+			<li>Servidor escolhe algoritmos a partir da lista; envia de volta: escolhas + certificado + nonce do servidor.</li>
+			<li>Cliente verifica certificado, extrai chave pública do servidor, gera um <tt>pre_master_secret</tt>, o cifra com a chave pública do servidor, envia o resultado ao servidor.</li>
+			<li>Cliente e servidor computam independentemente chaves de criptografia e MAC a partir do <tt>pre_master_secret</tt> e dos nonces.</li>
+			<li>Cliente envia um MAC de todas as mensagens de handshake.</li>
+			<li>Servidor envia um MAC de todas as mensagens de handshake.</li>
+		</ol>
+	</div>
+	</section>
+
+	<section>
+	<h1>SSL Real: Handshake (III)</h1>
+	<div class="slideContent">
+		<ul>
+			<li><span class="alert">Últimos dois passos protegem o <i>handshake</i> de adulterações.</span>
+			<ul>
+				<li>Cliente tipicamente oferece uma gama de algoritmos, alguns fortes, outros fracos.</li>
+				<li>Ataque de <i>man-in-the-middle</i> poderia remover algoritmos mais fortes da lista.</li>
+				<li>Últimos dois passos evitam isso.
+				<ul>
+					<li>Duas últimas mensagens são cifradas.</li>
+				</ul></li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>SSL Real: Handshake (IV)</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Por que dois nonces?</li>
+			<li>Assuma que Trudy é capaz de ouvir todas as mensagens entre Alice e Bob.</li>
+			<li>No próximo dia, Trudy inicia conexão TCP com Bob, enviando exatamente a mesma sequência de registros.
+			<ul>
+				<li>Bob (Amazon) pensa que Alice fez dois pedidos separados para um mesmo item.</li>
+				<li>Solução: Bob envia um nonce aleatório diferente para cada conexão. Com isso, chaves de criptografia são diferentes nos dois dias.</li>
+				<li>Mensagens enviadas por Trudy não passarão na verificação de integridade de Bob.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>SSL Real: Protocolo Usado nos Registros</h1>
+	<div class="slideContent">
+		<center>
+			<img src="imagens/SSLRecordProtocol.svg" style="width: 70%;"/>
+		</center>
+		<br>
+		<ul>
+			<li><span class="alert">Record Header</span>: tipo do conteúdo, versão, tamanho.</li>
+			<li><span class="alert">MAC</span>: inclui número de sequência, chave MAC M<sub>x</sub>.</li>
+			<li><span class="alert">Fragment</span>: cada fragmento SSL tem 2<sup>14</sup> bytes (~ 160 kB).</li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>SSL Real: Formato do Registro</h1>
+	<div class="slideContent">
+		<center>
+			<img src="imagens/SSLRecordFormat.svg" style="width: 70%;"/>
+			<br>
+			Dados e MAC criptografados (algoritmo de chave simétrica).
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Exemplo de Conexão SSL Real</h1>
+	<div class="slideContent">
+		<center>
+			<img src="imagens/SSLRealExemplo.svg" style="width: 50%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Derivação de Chaves</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Nonces do cliente e do servidor e <tt>pre_master_secret</tt> são passados como entrada para algoritmo de geração de números pseudo-aleatórios.
+			<ul>
+				<li>Produz o <i>master secret</i>.</li>
+			</ul></li>
+			<li>O <i>master secret</i> e nonces são passados como entrada de outro gerador de números: &ldquo;bloco de chaves&rdquo;.
+			<ul>
+				<li>Permite &ldquo;restabelecimento de sessão&rdquo; <b>usando novos nonces</b>.</li>
+				<li>Economiza processamento do RSA no <i>handshake</i>.</li>
+			</ul></li>
+			<li>Bloco de chaves é repartido em componentes:
+			<ul>
+				<li>Chave MAC do cliente.</li>
+				<li>Chave MAC do servidor.</li>
+				<li>Chave de criptografia do cliente.</li>
+				<li>Chave de criptografia do servidor.</li>
+				<li>Vetor de inicialização do cliente (IV).</li>
+				<li>Vetor de inicialização do servidor (IV).</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<!-- Demonstração: captura de tráfego SSL -->
+	<!-- Demonstração: TLS com diffie-hellman -->
+	<!-- Demonstração: custo de handshake SSL no servidor -->
+
+	<section>
+	<h1>Resumo da Aula...</h1>
+	<div class="slideContent">
+		<div class="column" style="width: 55%;">
+			<ul>
+				<li>SSL: <i>Secure Sockets Layer</i>.
+				<ul>
+					<li>&ldquo;TCP Seguro&rdquo;.</li>
+					<li><b>Amplamente difundido</b> na Internet.
+					<ul>
+						<li>Suporte nativo de <i>browsers</i>.</li>
+						<li>Base do HTTPS.</li>
+					</ul></li>
+					<li>Pode ser entendido como uma camada de segurança <b>entre TCP e aplicação</b>.</li>
+				</ul></li>
+				<li>SSL provê:
+				<ul>
+					<li><b>Confidencialidade, integridade, autenticação</b>.</li>
+				</ul></li>
+				<li>SSL: fases.
+				<ul>
+					<li><i>Handshake</i>: autenticação, escolha de cifras, segredo compartilhado.</li>
+					<li>Derivação de chaves: <b>4 chaves</b>.</li>
+					<li>Transferência de dados: em <b>registros</b>.</li>
+					<li>Fechamento de conexão: importante, mensagens especiais.</li>
+				</ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 45%;">
+			<ul>
+				<li>SSL: <i>handshake</i>.
+				<ul>
+					<li>Múltiplas cifras suportadas: <b>negociação</b>.</li>
+					<li>Nonces impedem <b>ataques de repetição</b>.</li>
+				</ul></li>
+				<li>SSL: registros.
+				<ul>
+					<li>Tamanho <b>variável</b>.</li>
+					<li>Campos: tamanho, tipo, versão.</li>
+					<li>Registros possuem <b>MACs individuais</b>.
+					<ul>
+						<li>Computado sobre dados, cabeçalho e <b>número de sequência implícito</b>.</li>
+						<li>Número de sequência evita ataques do tipo <i>man-in-the-middle</i>.</li>
+					</ul></li>
+				</ul></li>
+				<li>SSL: autenticação.
+				<ul>
+					<li>Feita através de <b>certificados</b>.</li>
+				</ul></li>
+			</ul>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Leitura e Exercícios Sugeridos</h1>
+	<div class="slideContent">
+		<ul>
+			<li>SSL:
+			<ul>
+				<li>Páginas 521 a 525 do Kurose (Seção 8.5).</li>
+				<li>Exercícios de fixação 20, 21, 22 e 23 do capítulo 8 do Kurose.</li>
+				<li>Problemas 19, 20 e 21 do capítulo 8 do Kurose.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+
+	<section>
+	<h1>Próxima Aula...</h1>
+	<div class="slideContent">
+		<ul>
+			<li>SSL é uma solução de segurança na camada de transporte.</li>
+			<li>Na próxima aula, discutiremos segurança na camada de rede:
+			<ul>
+				<li>VPNs.</li>
+				<li>IPSec.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<!-- {{{{ dzslides core
+	#
+	#
+	#     __  __  __       .  __   ___  __
+	#    |  \  / /__` |    | |  \ |__  /__`
+	#    |__/ /_ .__/ |___ | |__/ |___ .__/ core :€
+	#
+	#
+	# The following block of code is not supposed to be edited.
+	# But if you want to change the behavior of these slides,
+	# feel free to hack it!
+	#
+	-->
+
+    <!-- More CSS -->
+	<link href='../template/css/slides.css' id="slides" rel='stylesheet' type='text/css'>
+	<link href='../template/css/presentationSpecific2.css' id="presentationSpecific2" rel='stylesheet' type='text/css'>
+
+    <!-- More Javascript -->
+	<script type="text/javascript" src="../template/js/dz.js"></script>
+
+	<!-- More CSS -->
+	<link href='../template/css/notesSpecific.css' id="notesSpecific" rel='stylesheet' type='text/css'>
+	<link href='../template/css/printSpecific.css' id="printSpecific" rel='stylesheet' type='text/css'>
+</body>
+</html>

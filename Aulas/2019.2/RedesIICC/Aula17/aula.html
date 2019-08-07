@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <!-- Meta info -->
+	<meta charset="utf-8">
+	<meta name="shortauthor" content="Diego Passos"/>
+	<meta name="shorttitle" content="Segurança: Certificados, E-mail Seguro"/>
+	<meta name="shortevent" content="Redes de Computadores II"/>
+	<title>Redes de Computadores II: Aula 17</title>
+
+    <!-- Math support -->
+	<script type="text/x-mathjax-config">
+		MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+			MathJax.InputJax.TeX.Definitions.number = /^(?:[0-9]+(?:\.[0-9]{3})*(?:\{,\}[0-9]*)*|\{,\}[0-9]+)/
+		});
+	</script>
+    <!--<script src="../../../../MathJax-2.6-latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>-->
+	<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+	<!--<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>-->
+
+    <!-- Fonts -->
+	<link href='https://fonts.googleapis.com/css?family=Lora:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
+    <!--<link href='../../../../Fonts/Lora/lora.css' rel='stylesheet' type='text/css'>-->
+
+    <!-- CSS -->
+	<link href='../template/css/template.css' id="template" rel='stylesheet' type='text/css'>
+	<link href='../template/css/presentationSpecific.css' id="presentationSpecific" rel='stylesheet' type='text/css'>
+
+    <!-- Javascript -->
+	<script type="text/javascript" src="../template/js/audio.js"></script>
+</head>
+
+<body>
+    <!-- Audio handlers -->
+
+    <!-- Title Slide -->
+	<section>
+
+        <div class="slideContent">
+            <h1 class="title">Aula 17 - Segurança: Certificados, Diffie-Hellman, E-mail Seguro</h1>
+            <h2 class="author">Diego Passos</h2>
+            <h4 class="institution">Universidade Federal Fluminense</h4>
+            <h3 class="date">Redes de Computadores II</h3>
+        </div>
+
+	</section>
+
+    <!-- Content slides -->
+
+	<section>
+	<h1>Na Última Aula (I)...</h1>
+	<div class="slideContent">
+			<ul>
+				<li>Autenticação: Objetivo.
+				<ul>
+					<li>Provar que as <b>partes são quem afirmam ser</b>.</li>
+				</ul></li>
+				<li>Autenticação: dificuldades.
+				<ul>
+					<li>Atacante pode <b>forjar identidade</b>.</li>
+					<li>Atacante pode <b>forjar endereço IP</b>.</li>
+					<li>Atacante pode <b>repetir pacotes legítimos enviados</b>.
+					<ul>
+						<li>Mesmo criptografados.</li>
+					</ul></li>
+				</ul></li>
+				<li>Autenticação: <b>nonce</b>.
+				<ul>
+					<li>Número <b>aleatório</b> que &ldquo;não se repete&rdquo;.</li>
+					<li>Enviado como um <b>desafio</b>.
+					<ul>
+						<li>&ldquo;Prove sua identidade <b>cifrando o nonce</b>&rdquo;.</li>
+					</ul></li>
+					<li>Criptografia simétrica ou de chave pública.</li>
+					<li>Ainda vulnerável a ataque do tipo <i>man-in-the-middle</i>.</li>
+				</ul></li>
+			</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Na Última Aula (II)...</h1>
+	<div class="slideContent">
+			<ul>
+				<li>Integridade: objetivo.
+				<ul>
+					<li>Ser capaz de <b>verificar</b> se mensagem foi <b>alterada pelo atacante</b>.
+					<ul>
+						<li>Bytes foram removidos, adicionados ou alterados.</li>
+					</ul></li>
+				</ul></li>
+				<li>Integridade: abordagens.
+				<ul>
+					<li>Enviar mensagem e versão criptografada com chave privada.
+					<ul>
+						<li>Funciona, mas tem alto custo computacional.</li>
+					</ul></li>
+					<li>Alternativa: assinatura digital.
+					<ul>
+					<ul>
+						<li>Enviar mensagem e <b>resumo criptográfico cifrado</b> com a chave privada.</li>
+						<li>Resumo é <b>pequeno, irreversível</b> e muda bastante com alterações na mensagem.</li>
+						<li>Requer criptografia.</li>
+					</ul></li>
+					<li>Alternativa: MAC.
+					<ul>
+						<li><i>Message Authentication Code</i>.</li>
+						<li>Usa <b>segredo compartilhado</b>.</li>
+						<li>Mas apenas <b>concatena</b> mensagem e segredo.</li>
+						<li>O MAC é o <i>hash</i> desta concatenação.</li>
+					</ul></li>
+				  	<li>MAC é mais leve, mas assinatura digital provê automaticamente identidade do transmissor.</li>
+				</ul></li>
+			</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Relembrando: Problema de Segurança do ap5.0</h1>
+	<div class="slideContent">
+		<ul>
+			<li><span class="alert">Ataque do tipo <i>man-in-the-middle</i>:</span> Trudy se passa por Alice (para Bob) e por Bob (para Alice).</li>
+		</ul>
+
+		<br>
+		<center>
+			<img src="imagens/AP5_Problema.svg" style="width: 60%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Certificação de Chave Pública (I)</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Motivação: Trudy faz &ldquo;pegadinha da pizza&rdquo; com Bob:
+			<ul>
+				<li>Trudy cria um e-mail de pedido: <i>Cara Pizzaria, por favor me entregue 4 pizzas de Pepperoni. Obrigado, Bob.</i></li>
+				<li>Trudy assina pedido com a sua chave privada.</li>
+				<li>Trudy envia pedido a pizzaria.</li>
+				<li>Trudy envia sua chave pública para a pizzaria, mas afirmando ser a chave pública de Bob.</li>
+				<li>Pizzaria confere assinatura e, então, entrega as 4 pizzas para Bob.</li>
+				<li>Bob sequer gosta de pizza de pepperoni.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Certificação de Chave Pública (II)</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Nos dois exemplos anteriores, o uso de criptografia de chave pública <b>não</b> impediu ataques.</li>
+			<li>Motivo: método de distribuição de chaves.
+			<ul>
+				<li>Chave pública foi &ldquo;entregue&rdquo; pelo próprio atacante.</li>
+				<li>Alice e pizzaria simplesmente aceitaram as chaves como sendo verdadeiras.</li>
+				<li>Não realizaram nenhum tipo de <b>autenticação</b> da chave.</li>
+			</ul></li>
+			<li>Mas como Alice e a pizzaria poderiam verificar a autenticidade da chave pública de Bob?</li>
+			<li>Ideia: analogia com a vida real.
+			<ul>
+				<li>Recebemos um documento (<i>e.g.</i>, um contrato) assinado por um individuo.</li>
+				<li>Como determinamos que a assinatura não é falsa?</li>
+				<li>Podemos utilizar um cartório: reconhecimento de firma.
+				<ul>
+					<li>Cartório &ldquo;certifica&rdquo; que a assinatura é verdadeira.</li>
+				</ul></li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Autoridades Certificadoras (I)</h1>
+	<div class="slideContent">
+		<ul>
+			<li><span class="alert"><i>Certification Authority (CA)</i>:</span> mapeia chaves públicas a entidade particular E.</li>
+			<li>E (pessoa, roteador) registra sua chave pública com a CA.
+			<ul>
+				<li>E provê &ldquo;prova de identidade&rdquo; à CA.</li>
+				<li>CA cria certificado ligando E a sua chave pública.</li>
+				<li>Certificado contém chave pública de E assinada digitalmente pela CA &#8212; CA afirma &ldquo;esta é a chave pública de E&rdquo;.</li>
+			</ul></li>
+		</ul>
+		<br>
+		<center>
+			<img src="imagens/AutoridadeCeriticadora.svg" style="width: 65%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Autoridades Certificadoras (II)</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Quando Alice quer a chave pública de Bob:
+			<ul>
+				<li>Obtém o certificado de Bob (com Bob ou por qualquer outro meio).</li>
+				<li>Aplica a chave pública da CA ao certificado do Bob, obtém a chave pública de Bob.</li>
+			</ul></li>
+		</ul>
+		<br>
+		<center>
+			<img src="imagens/AutoridadeCeriticadora2.svg" style="width: 60%;"/>
+		</center>
+	</div>
+	</section>
+
+	<section>
+	<h1>Autoridades Certificadoras (III)</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Solução baseada no princípio da <b>terceira parte confiável</b>.
+			<ul>
+				<li>Ao receber um certificado, Alice <b>confia</b> que a chave de Bob é legítima porque <b>confia na autoridade certificadora</b>.</li>
+				<li>Assumindo, é claro, que Alice seja capaz de <b>verificar a assinatura</b> do certificado.</li>
+			</ul></li>
+			<li>Diferente da chave pública sozinha, Alice pode receber o certificado diretamente da outra parte.
+			<ul>
+				<li>Graças a <b>verificabilidade da autenticidade</b> do certificado.</li>
+				<li>Atacante pode até enviar um certificado falso, mas Alice <b>deve</b> ser capaz de detectar.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<!-- Mostrar lista de certificados raiz no browser -->
+	<section>
+	<h1>Certificados Raiz</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Mas... Como Alice obtém a chave pública da CA?</li>
+			<li>Parece que apenas &ldquo;mudamos o problema de lugar&rdquo;.
+			<ul>
+				<li>Sim e não.</li>
+				<li>De fato, Alice ainda precisa obter de forma segura o certificado da CA.</li>
+				<li>Simplesmente se conectar à CA, pedindo a chave pública pela rede, traz os mesmos problemas que tínhamos anteriormente.</li>
+				<li>Por outro lado, há (relativamente) <b>poucas CAs</b> no mundo.
+				<ul>
+					<li>Algumas poucas CAs certificam um enorme número de entidades na Internet.</li>
+					<li>Logo, a <b>escala do problema</b> é menor.</li>
+				</ul></li>
+			</ul></li>
+			<li>Solução típica:
+			<ul>
+				<li><i>Software</i> usado para comunicação segura (<i>e.g.</i>, o browser) já traz conjunto de <b>certificados raiz</b>.</li>
+				<li>Certificados contendo chaves públicas de CAs.</li>
+				<li>Implicitamente, clientes <b>assumem</b> que estes certificados são legítimos.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<!-- Mostrar hierarquia de certificados no browser. -->
+	<section>
+	<h1>Hierarquia de Certificados</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Verificação de um certificado não é necessariamente feita de forma &ldquo;direta&rdquo;.
+			<ul>
+				<li><i>i.e.</i>, pode ser necessário verificar uma <b>cadeia</b> de certificados.</li>
+			</ul></li>
+		  	<li>Exemplo:
+		  	<ul>
+		  		<li>Bob envia seu certificado assinado pela CA<sub>1</sub>.</li>
+				<li>Obtemos a chave pública da CA<sub>1</sub> através do seu certificado, assinado pela CA<sub>2</sub>.</li>
+				<li>Obtemos a chave pública da CA<sub>1</sub> através do seu certificado, assinado pela CA<sub>3</sub>.</li>
+				<li>...</li>
+				<li>Obtemos a chave pública da CA<sub>n-1</sub> através do seu certificado, assinado pela CA<sub>n</sub>.</li>
+				<li>Possuímos um certificado <b>raiz</b> da CA<sub>n</sub> no qual confiamos <b>implicitamente</b>.</li>
+		  	</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<!-- Demonstração de certificado expirado (mudar data do relógio local). -->
+	<section>
+	<h1>Certificados: Campos Importantes</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Além da informação da chave pública e da assinatura, certificados contêm:
+			<ul>
+				<li>Número de série.</li>
+				<li>Descrição dos algoritmos usados (<i>e.g.</i>, para a assinatura digital).</li>
+				<li>Identificação do emissor.</li>
+				<li>Identificação da entidade certificada.</li>
+				<li><b>Validade</b> (certificado não deve ser aceito antes/depois de certa data).</li>
+				<li>...</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<!-- Talvez mostrar uma CLR, talvez mostrar captura do OCSP no wireshark. -->
+	<section>
+	<h1>Certificados: Revogações</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Uma CA pode <b>revogar</b> um certificado por várias razões. Exemplos:
+			<ul>
+				<li>A entidade certificada foi (ou pode ter sido) comprometida.</li>
+				<li>A própria CA foi (ou pode ter sido) comprometida.</li>
+				<li>Certificado foi suplantado por outro.</li>
+				<li>...</li>
+			</ul></li>
+			<li>Além de verificar assinatura digital do certificado (ou cadeia de certificados), cliente deve verificar ele não foi revogado.</li>
+			<li>Solução mais tradicional: CRL.
+			<ul>
+				<li><i>Certificate Revocation List</i> (lista de revogação de certificados).</li>
+				<li>Documento emitido periodicamente pelas CAs.</li>
+				<li>Assinado digitalmente pela CA.</li>
+			</ul></li>
+			<li>Alternativa mais recente: OCSP.
+			<ul>
+				<li><i>Online Certificate Status Protocol</i>.</li>
+				<li>Cliente requisita <i>status</i> de revogação do certificado.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>PKI: <i>Public Key Infrastructure</i></h1>
+	<div class="slideContent">
+		<ul>
+			<li>Note nesta solução para distribuição de chaves públicas, as partes que desejam se comunicar não são <b>suficientes</b>.
+			<ul>
+				<li>São necessários outros componentes, entidades.</li>
+				<li>Como as CAs, os certificados raízes, etc.</li>
+				<li>Em outras palavras, solução requer uma <b>infraestrutura</b>.</li>
+			</ul></li>
+			<li>Uso de certificados digitais e CAs para gerenciamento/distribuição de chaves públicas define uma PKI.
+			<ul>
+				<li><i>Public Key Infrastructure</i>, ou Infraestrutura de Chave Pública</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section class="secao">
+	<div class="slideContent">
+		Diffie-Hellman
+	</div>
+	</section>
+
+	<section>
+	<h1>Estabelecimento de Chaves Compartilhadas (I)</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Há algumas aulas atrás, discutimos as <b>diferenças</b> entre criptografia de chave pública e de chave simétrica.</li>
+			<li>Em particular, vimos que a criptografia de chave simétrica tem <b>menor complexidade computacional</b>.
+			<ul>
+				<li><i>i.e.</i>, cifrar/decifrar mensagens é &ldquo;mais rápido&rdquo;.</li>
+			</ul></li>
+			<li>Resultado:
+			<ul>
+				<li>Criptografia de chave simétrica é mais usada para confidencialidade.</li>
+				<li>Criptografia de chave pública ainda é extremamente útil, mas é mais usada para outros objetivos.
+				<ul>
+					<li><i>e.g.</i>, assinaturas digitais, autenticação.</li>
+				</ul></li>
+			</ul></li>
+			<li>Problema: como estabelecer uma chave simétrica secreta entre duas partes?
+			<ul>
+				<li>Complicador: chaves simétricas são geralmente <b>chaves de sessão</b>, <i>i.e.</i>, mudam a cada nova sessão de comunicação.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Estabelecimento de Chaves Compartilhadas (II)</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Uma opção (bastante comum) é a utilização de criptografia de chave pública para o estabelecimento de uma chave simétrica.
+			<ul>
+				<li><i>e.g.</i>, Alice cria uma chave de sessão aleatória e a cifra com a chave pública de Bob.</li>
+				<li>Alice envia chave de sessão cifrada para Bob.</li>
+				<li>Bob usa sua chave privada para decifrar chave de sessão.</li>
+				<li>Alice e Bob passam a usar criptografia de chave simétrica.</li>
+			</ul></li>
+			<li>Problema: Alice precisa conhecer chave pública de Bob.
+			<ul>
+				<li>Sabemos resolver isso através de uma PKI.</li>
+				<li>Mas e se não tivermos acesso uma PKI?</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Diffie-Hellman</h1>
+	<div class="slideContent">
+			<ul>
+				<li>Método para estabelecimento de chave secreta compartilhada através de canal não-seguro.</li>
+				<li>Não supõem qualquer tipo de conhecimento prévio das partes.</li>
+				<li>Funcionamento:
+			</ul>
+			<div>
+			<div class="column" style="width: 50%;">
+				<ul>
+					<li>Alice e Bob definem dois números, p e g.
+					<ul>
+						<li>p é um <b>número primo grande</b>.</li>
+						<li>g deve ser uma <b>raiz primitiva módulo p</b>.
+						<ul>
+							<li><i>i.e.</i>, para todo inteiro i, coprimo com p, existe k tal que g<sup>k</sup>&equiv; i (mod p).</li>
+						</ul></li>
+				  	</ul></li>
+					<li>p e g <b>não são secretos</b>, podem ser padronizados ou mesmo enviados em texto plano pelo canal.</li>
+				 </ul>
+			</div>
+			<div class="column" style="width: 50%;">
+				<ul>
+					<li>Alice e Bob sorteiam números aleatórios a e b, respectivamente (<b>devem ser mantidos em segredo!</b>).</li>
+					<li>Alice calcula A = g<sup>a</sup> mod p e envia para Bob.</li>
+					<li>Bob calcula B = g<sup>b</sup> mod p e envia para Alice.</li>
+					<li>Bob calcula s = A<sup>b</sup> mod p.</li>
+					<li>Alice calcula s = B<sup>a</sup> mod p.</li>
+					<li>s é a chave simétrica secreta.</li>
+				</ul>
+			</div>
+			</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Diffie-Hellman: Exemplo Numérico</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Alice e Bob definem p = 11 e g = 6.
+			<ul>
+				<li>Decisão pode ser padronizada ou baseada em troca de mensagens.</li>
+				<li>Potencial atacante pode conhecer p e g <b>sem prejuízo</b> de segurança.</li>
+			</ul></li>
+			<li>Alice e Bob sorteiam valores aleatórios a e b, respectivamente.
+			<ul>
+				<li>a = 3.</li>
+				<li>b = 4.</li>
+			</ul></li>
+		</ul>
+		<div>
+		<div class="column" style="width: 60%;">
+		<ul>
+			<li>Alice e Bob calculam os valores A e B, respectivamente.
+			<ul>
+				<li>A = g<sup>a</sup> mod p = 6<sup>3</sup> mod 11 = 7.</li>
+				<li>B = g<sup>b</sup> mod p = 6<sup>4</sup> mod 11 = 9.</li>
+			</ul></li>
+			<li>Alice e Bob transmitem A e B um para o outro.
+			<ul>
+				<li>Potencial atacante pode conhecer A e B.</li>
+			</ul></li>
+			<li>Alice e Bob calculam chave compartilhada s.
+			<ul>
+				<li>Alice: s = B<sup>a</sup> mod p = 9<sup>3</sup> mod 11 = 3.</li>
+				<li>Bob: s = A<sup>b</sup> mod p = 7<sup>4</sup> mod 11 = 3.</li>
+			</ul></li>
+		</ul>
+		</div>
+		<div class="column" style="width: 40%;">
+			<center>
+				<img src="imagens/DiffieHellman.svg" style="width: 90%;"/>
+			</center>
+		</div>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Diffie-Hellman: Por Que Funciona?</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Análise em duas partes: porque Alice e Bob chegam ao mesmo valor s e porque Trudy não consegue.</li>
+		</ul>
+		<div>
+		<div class="column" style="width: 50%;">
+			<center>
+				<b>Alice e Bob</b>
+			</center>
+			<ul>
+				<li>Alice calcula s = B<sup>a</sup> mod p.</li>
+				<li>Bob calcula s = A<sup>b</sup> mod p.</li>
+				<li>Mas A = g<sup>a</sup> mod p e B = g<sup>b</sup> mod p.</li>
+				<li>Logo:
+				<ul>
+					<li>Alice: s = (g<sup>b</sup>)<sup>a</sup> mod p = g<sup>ab</sup> mod p.</li>
+					<li>Bob: s = (g<sup>a</sup>)<sup>b</sup> mod p = g<sup>ab</sup> mod p.</li>
+				</ul></li>
+			</ul>
+		</div>
+		<div class="column" style="width: 50%;">
+			<center>
+				<b>Trudy</b>
+			</center>
+			<ul>
+				<li>Suponha que conhece g, p, A e B.</li>
+				<li>Sabemos que s = g<sup>ab</sup> mod p.</li>
+				<li>Com as informações que possui, Trudy precisaria de a ou b.</li>
+				<li>Teoricamente, é possível calcular a (ou b) sabendo g, p e A (ou B).
+				<ul>
+					<li>Mas é computacionalmente inviável se p é um <b>primo grande</b>.</li>
+					<li>Problema do <b>logaritmo discreto</b>.</li>
+				</ul></li>
+			</ul>
+		</div>
+		</div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Diffie-Hellman: Ataque <i>Man-In-The-Middle</i> (I)</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Vulnerabilidade do método: ataque do tipo <i>man-in-the-middle</i>.</li>
+			<li>Suponha que Trudy pode interceptar as mensagens entre Alice e Bob e trocá-las por mensagens próprias.
+			<ul>
+				<li>Alice envia A para Bob, Trudy intercepta e envia um A&prime; (baseado em um a&prime; conhecido por Trudy).</li>
+				<li>Bob envia B para Alice, Trudy intercepta e envia um B&prime; (baseado em um b&prime; conhecido por Trudy).</li>
+				<li>Alice calcula um s&prime; que pode ser facilmente calculado por Trudy.</li>
+				<li>Bob calcula um s&prime;&prime; que pode ser facilmente calculado por Trudy.</li>
+			</ul></li>
+			<li>Resultado: Trudy <b>conhece ambas as chaves de sessão</b> utilizadas por Alice e Bob.
+			<ul>
+				<li>Pode decifrar toda a comunicação criptografada.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Diffie-Hellman: Ataque <i>Man-In-The-Middle</i> (II)</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Qual a utilidade do Diffie-Hellman, então?
+			<ul>
+				<li>Poderíamos simplesmente ter usado um método de criptografia de chave pública (<i>e.g.</i>, RSA).</li>
+				<li>Justificativa inicial: sem PKI, Alice não pode obter chave pública de Bob de forma segura.
+				<ul>
+					<li>Bob poderia simplesmente enviá-la pelo canal, mas ficaria susceptível ao ataque de <i>man-in-the-middle</i>.</li>
+				</ul></li>
+				<li>Mas com Diffie-Hellman estamos susceptíveis de qualquer forma!</li>
+			</ul></li>
+			<li>Duas razões:
+			<ul>
+				<li>Primeira: quando proposto, métodos práticos de criptografia de chave pública não eram difundidos.</li>
+				<li>Segunda: usado <b>em conjunto</b> com criptografia de chave pública, Diffie-Hellman oferece algumas vantagens.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>Exemplo de Uso Atual de Diffie-Hellman: SSH (I)</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Protocolo de <i>shell</i> remoto <b>seguro</b>.
+			<ul>
+				<li>Alternativa segura, por exemplo, ao telnet.</li>
+				<li>Provê confidencialidade, integridade, autenticação do cliente com o servidor e do servidor com o cliente (sob algumas hipóteses).</li>
+			</ul></li>
+			<li>Dados são cifrados com criptografia de chave simétrica.
+			<ul>
+				<li>Usando uma nova chave de sessão a cada conexão.</li>
+				<li>Chave de sessão é <b>estabelecida usando Diffie-Hellman</b> (ou variantes).</li>
+			</ul></li>
+			<li>Autenticação do servidor com o cliente é feita através de criptografia de chave pública.
+			<ul>
+				<li>Opcionalmente, criptografia de chave pública é usada para autenticar o usuário com o servidor.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+    <section>
+    <h1>SSH: Funcionamento Básico</h1>
+    <div class="slideContent">
+        <ul>
+            <li>Cliente abre conexão TCP para o servidor (por padrão, na porta 22).</li>
+            <li>Cliente e servidor selecionam um algoritmo de estabelecimento de chaves de uma lista de algoritmos suportados.
+            <ul>
+                <li>Diffie-Hellman ou alguma variação.</li>
+            </ul></li>
+            <li>Cliente e servidor executam o algoritmo de estabelecimento de chave secreta compartilhada.</li>
+            <li>Servidor se autentica com o cliente.
+            <ul>
+                <li>Utiliza criptografia de chave pública (<i>e.g.</i>, RSA, DSA) e <i>hash</i> criptográfico para assinar chave simétrica.</li>
+                <li>Cliente autentica servidor usando sua chave pública (enviada pelo próprio servidor) para verificar assinatura.</li>
+            </ul></li>
+            <li>Cliente e servidor se comunicam cifrando mensagens com a chave compartilhada.
+            <ul>
+                <li>Mensagens incluem verificações de integridade usando MAC.</li>
+            </ul></li>
+        </ul>
+    </div>
+    </section>
+
+    <section>
+    <h1>SSH e Man-In-The-Middle (I)</h1>
+    <div class="slideContent">
+        <ul>
+            <li>Se o servidor envia sua chave pública, do que adianta a autenticação do ssh?</li>
+            <li>Ideia é que o cliente <b>conheça previamente</b> a chave pública do servidor.
+            <ul>
+                <li>Chave é obtida antes de <b>alguma forma segura</b>.</li>
+                <li>Neste caso, cliente não precisa <b>confiar</b> na chave que recebe pela rede.</li>
+            </ul></li>
+            <li>Mas...
+            <ul>
+                <li>Na prática, isso nem sempre ocorre.</li>
+                <li>Servidor pode precisar gerar novas chaves.
+                <ul>
+                    <li><i>e.g.</i>, porque o sistema foi reinstalado e chaves foram perdidas.</li>
+                </ul></li>
+                <li>Ainda mais comum: <b>usuários não têm o cuidado</b> de obter a chave pública previamente.</li>
+            </ul></li>
+        </ul>
+    </div>
+    </section>
+
+    <!-- Demonstrar ssh para máquina desconhecida e pedido de confirmação de fingerprint. -->
+    <section>
+    <h1>SSH e Man-In-The-Middle (II)</h1>
+    <div class="slideContent">
+        <ul>
+            <li>Solução prática:
+            <ul>
+                <li>Servidor envia chave pública, cliente verifica se esta bate com a previamente conhecida.</li>
+                <li>Se não bate (ou se não há chave previamente conhecida), usuário é alertado.
+                <ul>
+                    <li><i>Software</i> pede que usuário confirme a identidade do servidor.</li>
+                </ul></li>
+                <li><b>Assumindo que a primeira conexão seja realizada com o servidor real</b>, ssh consegue garantir autenticidade.</li>
+            </ul></li>
+            <li>Em resumo:
+            <ul>
+                <li>Diffie-Hellman ainda é susceptível ao ataque <i>man-in-the-middle</i>.</li>
+                <li>Mas <b>chave resultante</b> é assinada com criptografia de chave pública, permitindo detectar o ataque.
+                <ul>
+                    <li><i>Man-in-the-middle</i> e outros.</li>
+                </ul></li>
+            </ul></li>
+        </ul>
+    </div>
+    </section>
+
+    <section>
+    <h1>SSH e Diffie-Hellman: Vantagens</h1>
+    <div class="slideContent">
+        <ul>
+            <li><span class="alert">Pergunta:</span> se dependemos da confiança na chave pública, qual é a vantagem em usar o Diffie-Hellman?</li>
+            <li><span class="alert">Resposta:</span> Diffie-Hellman provê <i>forward secrecy</i>.
+            <ul>
+                <li>Propriedade muito interessante em criptografia.</li>
+                <li>A chave usada para cifrar os dados da sessão SSH é <b>efêmera</b>
+                <ul>
+                    <li><b>Parâmetros</b> usados para gerá-la também.</li>
+                    <li>Além disso, chave <b>nunca é transmitida pelo canal</b> (cifrada ou não).</li>
+                </ul></li>
+                <li>Ainda que o atacante...
+                <ul>
+                    <li>&ldquo;Grave&rdquo; todas mensagens cifradas/texto plano; e</li>
+                    <li>Futuramente consiga <b>comprometer</b> as chaves privadas (permanentes).</li>
+                </ul></li>
+                <li>... não há como <b>decifrar sessões passadas</b>.</li>
+            </ul></li>
+        </ul>
+    </div>
+    </section>
+
+    <!-- Possível demonstração capturar handshake do ssh no wireshark. -->
+
+	<section class="secao">
+	<div class="slideContent">
+		E-mail Seguro
+	</div>
+	</section>
+
+	<section>
+	<h1>E-mail Seguro (I)</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Alice quer enviar e-mail confidencial, m, para Bob.</li>
+		</ul>
+		<br>
+		<center>
+			<img src="imagens/EmailSeguro1.svg" style="width: 60%;"/>
+		</center>
+		<br>
+		<ul>
+			<li><span class="alert">Alice:</span>
+			<ul>
+				<li>Gera aleatoriamente chave simétrica privada, K<sub>S</sub></li>
+				<li>Cifra mensagem com K<sub>S</sub> (por razões de eficiência).</li>
+				<li>Também cifra K<sub>S</sub> com a chave pública de Bob.</li>
+				<li>Envia ambas K<sub>S</sub>(m) e <span class="math inline">\(K^{+}_{B}\left(K_S\right)\)</span> a Bob.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>E-mail Seguro (II)</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Alice quer enviar e-mail confidencial, m, para Bob.</li>
+		</ul>
+		<br>
+		<center>
+			<img src="imagens/EmailSeguro1.svg" style="width: 60%;"/>
+		</center>
+		<br>
+		<ul>
+			<li><span class="alert">Bob:</span>
+			<ul>
+				<li>Usa sua chave privada para decifrar e recuperar K<sub>S</sub>.
+				<li>Usa K<sub>S</sub> para decifrar K<sub>S</sub>(m) e recuperar m.</li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>E-mail Seguro (III)</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Alice quer prover meios de verificação da integridade e autenticidade da mensagem.</li>
+		</ul>
+		<br>
+		<center>
+			<img src="imagens/EmailSeguro2.svg" style="width: 60%;"/>
+		</center>
+		<br>
+		<ul>
+			<li>Alice assina digitalmente a mensagem.</li>
+			<li>Envia ambas a mensagem (em texto plano) e a assinatura digital.</li>
+		</ul>
+	</div>
+	</section>
+
+	<section>
+	<h1>E-mail Seguro (IV)</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Alice quer prover confidencialidade, integridade e autenticidade da mensagem.</li>
+		</ul>
+		<br>
+		<center>
+			<img src="imagens/EmailSeguro3.svg" style="width: 60%;"/>
+		</center>
+		<br>
+		<ul>
+			<li><span class="alert">Alice usa três chaves:</span> sua chave privada, a chave pública de Bob e a chave simétrica recém criada.</li>
+		</ul>
+	</div>
+	</section>
+
+    <!-- Possível demonstração: algum uso (envio/recebimento) de e-mail seguro. -->
+
+	<section>
+	<h1>Resumo da Aula... (I)</h1>
+	<div class="slideContent">
+        <div class="column" style="width: 50%;">
+            <ul>
+                <li>Certificação de chave pública: objetivo.
+                <ul>
+                    <li>Garantir <b>autenticidade</b> de chaves públicas.</li>
+                </ul></li>
+                <li>Certificação de chave pública: solução.
+                <ul>
+                    <li><b>Terceira parte confiável</b> certifica autenticidade da chave.</li>
+                    <li>CA: <i>Certification Authority</i>.</li>
+                    <li>Emite um &ldquo;documento&rdquo; <b>verificável</b> contendo a chave.
+                    <ul>
+                        <li>Assinado digitalmente com a chave privada da CA. </li>
+                    </ul></li>
+                </ul></li>
+                <li>Certificação de chave pública: verificação.
+                <ul>
+                    <li>Alice <b>obtém certificado</b> de Bob.</li>
+                    <li>Alice verifica assinatura digital com a <b>chave pública</b> da CA.</li>
+                    <li>Alice obtém chave pública de Bob.</li>
+                </ul></li>
+            </ul>
+        </div>
+        <div class="column" style="width: 50%;">
+            <ul>
+                <li>Certificados raiz:
+                <ul>
+                    <li>Certificados <b>previamente conhecidos</b>.</li>
+                    <li><b>Confiança implícita</b> na sua autenticidade.</li>
+                    <li>Contém chaves públicas de CAs.</li>
+                </ul></li>
+                <li>Hierarquia de Certificados:
+                <ul>
+                    <li>Alice pode precisar verificar uma <b>cadeia</b> de certificados.</li>
+                    <li>CA<sub>n</sub> certifica CA<sub>n-1</sub>, que certifica CA<sub>n-2</sub>, ..., que certifica Bob.</li>
+                </ul></li>
+                <li>Certificados apresentam <b>validade</b>.</li>
+                <li>CAs podem <b>revogar</b> certificados.</li>
+                <li>PKI: <i>Public Key Infrastructure</i>.
+                <ul>
+                    <li>Infraestrutura para distribuir/verificar chaves públicas.</li>
+                    <li>Exemplo: CAs + Certificados.</li>
+                </ul></li>
+            </ul>
+        </div>
+	</div>
+	</section>
+
+    <section>
+    <h1>Resumo da Aula... (II)</h1>
+    <div class="slideContent">
+        <div class="column" style="width: 55%;">
+            <ul>
+                <li>Diffie-Hellman:
+                <ul>
+                    <li>Método para <b>estabelecimento seguro de chaves</b> compartilhadas.</li>
+                    <li>Não requer <b>conhecimento prévio</b> das partes.</li>
+                    <li>Partes concordam em parâmetros <b>não secretos</b> p e g.</li>
+				<li>Também enviam em texto plano A = g<sup>a</sup> mod p e B = g<sup>b</sup> mod p.
+				<ul>
+					<li>a e b são mantidos secretos.</li>
+				</ul></li>
+				<li>Chave compartilhada é s = B<sup>a</sup> mod p = A<sup>b</sup> mod p.</li>
+				<li><b>Sem método de autenticação</b>, é susceptível a ataque <i>man-in-the-middle</i>.</li>
+                </ul></li>
+            </ul>
+        </div>
+	   <div class="column" style="width: 45%;">
+	   	<ul>
+	   		<li>E-mail seguro: diferentes possíveis objetivos.
+	   		<ul>
+	   			<li><b>Confidencialidade</b>: chave simétrica de sessão, cifrada com chave pública do destinatário.</li>
+				<li><b>Integridade e Autenticidade</b>: assinatura digital com chave privada.</li>
+	   		</ul></li>
+	   	</ul>
+	   </div>
+    </div>
+    </section>
+
+    <section>
+    <h1>Leitura e Exercícios Sugeridos</h1>
+    <div class="slideContent">
+		<ul>
+			<li>Certificação de chaves públicas:
+			<ul>
+				<li>Páginas 510 a 512 do Kurose (parte final da Subseção 8.3.3).</li>
+				<li>Exercício de fixação 14 do Capítulo 8 do Kurose.</li>
+				<li>Problema 14 do Capítulo 8 do Kurose.</li>
+			</ul></li>
+			<li>Diffie-Hellman:
+			<ul>
+				<li>Seção 8.7.2 do Tanenbaum.</li>
+				<li>Problema 9 do Capítulo 8 do Kurose.</li>
+			</ul></li>
+			<li>E-mail seguro:
+			<ul>
+				<li>Páginas 516 a 521 do Kurose (parte final da Seção 8.4).</li>
+				<li>Exercício de fixação 19 do Capítulo 8 do Kurose.</li>
+				<li>Problemas 17 e 18 do Capítulo 8 do Kurose.</li>
+			</ul></li>
+		</ul>
+    </div>
+    </section>
+
+
+	<section>
+	<h1>Próxima Aula...</h1>
+	<div class="slideContent">
+		<ul>
+			<li>Discutiremos um dos principais protocolos de segurança utilizados na Internet.
+			<ul>
+				<li>SSL: <i>Secure Sockets Layer</i>.</li>
+				<li>Adiciona serviços de segurança no transporte de dados na Internet.
+				<ul>
+					<li>Confidencialidade.</li>
+					<li>Autenticação.</li>
+					<li>Integridade.</li>
+				</ul></li>
+			</ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<!-- TODO: KDC? -->
+
+	<!-- {{{{ dzslides core
+	#
+	#
+	#     __  __  __       .  __   ___  __
+	#    |  \  / /__` |    | |  \ |__  /__`
+	#    |__/ /_ .__/ |___ | |__/ |___ .__/ core :€
+	#
+	#
+	# The following block of code is not supposed to be edited.
+	# But if you want to change the behavior of these slides,
+	# feel free to hack it!
+	#
+	-->
+
+    <!-- More CSS -->
+	<link href='../template/css/slides.css' id="slides" rel='stylesheet' type='text/css'>
+	<link href='../template/css/presentationSpecific2.css' id="presentationSpecific2" rel='stylesheet' type='text/css'>
+
+    <!-- More Javascript -->
+	<script type="text/javascript" src="../template/js/dz.js"></script>
+
+	<!-- More CSS -->
+	<link href='../template/css/notesSpecific.css' id="notesSpecific" rel='stylesheet' type='text/css'>
+	<link href='../template/css/printSpecific.css' id="printSpecific" rel='stylesheet' type='text/css'>
+</body>
+</html>

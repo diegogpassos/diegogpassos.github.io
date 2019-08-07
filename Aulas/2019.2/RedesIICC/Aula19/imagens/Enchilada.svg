@@ -1,0 +1,126 @@
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg id="svg36370" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://www.w3.org/2000/svg" height="34.061" width="88.078" version="1.1" xmlns:cc="http://creativecommons.org/ns#" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:dc="http://purl.org/dc/elements/1.1/">
+<defs id="defs36372">
+<clipPath id="clipPath13652" clipPathUnits="userSpaceOnUse">
+<path id="path13654" clip-rule="evenodd" d="m0,0.00012207,720,0,0,540-720,0v-540z"/>
+</clipPath>
+</defs>
+<metadata id="metadata36375">
+<rdf:RDF>
+<cc:Work rdf:about="">
+<dc:format>image/svg+xml</dc:format>
+<dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+<dc:title/>
+</cc:Work>
+</rdf:RDF>
+</metadata>
+<g id="layer1" transform="translate(-217.67269,-549.73906)">
+<path id="path13764" stroke-linejoin="miter" d="m217.74,568.45,15.308,0,0-8.2674-15.308,0,0,8.2674z" stroke="#000" stroke-linecap="butt" stroke-miterlimit="10" stroke-dasharray="none" stroke-width="0.12917814" fill="none"/>
+<text id="text13766" y="563.71021" x="221.19772" font-size="2.06685019px">
+<tspan id="tspan13768" style="writing-mode:lr-tb;" font-weight="normal" fill-rule="nonzero" font-size="2.75304437px" font-variant="normal" y="563.71021" x="221.19772 222.72841 224.25909 226.21924 226.98462 227.74992" font-family="Arial Black" fill="#000000">new IP</tspan>
+</text>
+<text id="text13770" y="567.01715" x="221.11502" font-size="2.06685019px">
+<tspan id="tspan13772" style="writing-mode:lr-tb;" font-weight="normal" fill-rule="nonzero" font-size="2.74891043px" font-variant="normal" y="567.01715" x="221.11502 222.64449 224.17395 225.70341 227.23288 228.76234" font-family="Arial Black" fill="#000000">header</tspan>
+</text>
+<path id="path13774" fill-rule="evenodd" fill="#F9C" d="m233.04,568.45,9.4946,0,0-8.2674-9.4946,0,0,8.2674z"/>
+<path id="path13776" stroke-linejoin="miter" d="m233.04,568.45,9.4946,0,0-8.2674-9.4946,0,0,8.2674z" stroke="#000" stroke-linecap="butt" stroke-miterlimit="10" stroke-dasharray="none" stroke-width="0.12917814" fill="none"/>
+<text id="text13778" y="563.71021" x="235.04111" font-size="2.06685019px">
+<tspan id="tspan13780" style="writing-mode:lr-tb;" font-weight="normal" fill-rule="nonzero" font-size="2.75304437px" font-variant="normal" y="563.71021" x="235.04111 236.88063 238.72015" font-family="Arial Black" fill="#000000">ESP</tspan>
+</text>
+<text id="text13782" y="567.01715" x="235.80588" font-size="2.06685019px">
+<tspan id="tspan13784" style="writing-mode:lr-tb;" font-weight="normal" fill-rule="nonzero" font-size="2.74891043px" font-variant="normal" y="567.01715" x="235.80588 237.33534 238.86481" font-family="Arial Black" fill="#000000">hdr</tspan>
+</text>
+<path id="path13786" fill-rule="evenodd" fill="#0C9" d="m242.54,568.45,13.241,0,0-8.2674-13.241,0,0,8.2674z"/>
+<path id="path13788" stroke-linejoin="miter" d="m242.54,568.45,13.241,0,0-8.2674-13.241,0,0,8.2674z" stroke="#000" stroke-linecap="butt" stroke-miterlimit="10" stroke-dasharray="none" stroke-width="0.12917814" fill="none"/>
+<text id="text13790" y="563.71021" x="244.72258" font-size="2.06685019px">
+<tspan id="tspan13792" style="writing-mode:lr-tb;" font-weight="normal" fill-rule="nonzero" font-size="2.75304437px" font-variant="normal" y="563.71021" x="244.72258 246.25328 247.16179 247.77846 249.30916 249.92033 251.45103 252.9817" font-family="Arial Black" fill="#000000">original</tspan>
+</text>
+<text id="text13794" y="567.01715" x="245.5287" font-size="2.06685019px">
+<tspan id="tspan13796" style="writing-mode:lr-tb;" font-weight="normal" fill-rule="nonzero" font-size="2.74891043px" font-variant="normal" y="567.01715" x="245.5287 246.29286 248.09065 248.83559 250.364 251.89238" font-family="Arial Black" fill="#000000">IP hdr</tspan>
+</text>
+<path id="path13798" fill-rule="evenodd" fill="#0C9" d="m255.78,568.45,30.162,0,0-8.2674-30.162,0,0,8.2674z"/>
+<path id="path13800" stroke-linejoin="miter" d="m255.78,568.45,30.162,0,0-8.2674-30.162,0,0,8.2674z" stroke="#000" stroke-linecap="butt" stroke-miterlimit="10" stroke-dasharray="none" stroke-width="0.12917814" fill="none"/>
+<text id="text13802" y="563.71021" x="264.45752" font-size="2.06685019px">
+<tspan id="tspan13804" style="writing-mode:lr-tb;" font-weight="normal" fill-rule="nonzero" font-size="2.75304437px" font-variant="normal" y="563.71021" x="264.45752 266.59116 267.5079 268.11911 269.64978 270.26648 271.79715 273.32785 273.93903 274.69061 275.45599" font-family="Arial Black" fill="#000000">Original IP</tspan>
+</text>
+<text id="text13806" y="567.01715" x="259.86914" font-size="2.06685019px">
+<tspan id="tspan13808" style="writing-mode:lr-tb;" font-weight="normal" fill-rule="nonzero" font-size="2.74891043px" font-variant="normal" y="567.01715" x="259.86914 261.39752 262.92593 263.69016 265.21857 266.74695 267.66232 269.19073 271.48602 272.2695 273.79788 275.32629 276.67325 277.29178 278.82016 280.34857" font-family="Arial Black" fill="#000000">datagram payload</tspan>
+</text>
+<path id="path13810" fill-rule="evenodd" fill="#0C9" d="m285.94,568.51,9.4946,0,0-8.2674-9.4946,0,0,8.2674z"/>
+<path id="path13812" stroke-linejoin="miter" d="m285.94,568.51,9.4946,0,0-8.2674-9.4946,0,0,8.2674z" stroke="#000" stroke-linecap="butt" stroke-miterlimit="10" stroke-dasharray="none" stroke-width="0.12917814" fill="none"/>
+<text id="text13814" y="563.77222" x="287.94904" font-size="2.06685019px">
+<tspan id="tspan13816" style="writing-mode:lr-tb;" font-weight="normal" fill-rule="nonzero" font-size="2.74891043px" font-variant="normal" y="563.77222" x="287.94904 289.78857 291.62802" font-family="Arial Black" fill="#000000">ESP</tspan>
+</text>
+<text id="text13818" y="567.07922" x="289.56122" font-size="2.06685019px">
+<tspan id="tspan13820" style="writing-mode:lr-tb;" font-weight="normal" fill-rule="nonzero" font-size="2.74891043px" font-variant="normal" y="567.07922" x="289.56122 290.32538 291.24075" font-family="Arial Black" fill="#000000">trl</tspan>
+</text>
+<path id="path13822" fill-rule="evenodd" fill="#FF0" d="m295.52,568.51,9.4946,0,0-8.2674-9.4946,0,0,8.2674z"/>
+<path id="path13824" stroke-linejoin="miter" d="m295.52,568.51,9.4946,0,0-8.2674-9.4946,0,0,8.2674z" stroke="#000" stroke-linecap="butt" stroke-miterlimit="10" stroke-dasharray="none" stroke-width="0.12917814" fill="none"/>
+<text id="text13826" y="563.77222" x="297.53064" font-size="2.06685019px">
+<tspan id="tspan13828" style="writing-mode:lr-tb;" font-weight="normal" fill-rule="nonzero" font-size="2.74891043px" font-variant="normal" y="563.77222" x="297.53064 299.37009 301.20963" font-family="Arial Black" fill="#000000">ESP</tspan>
+</text>
+<text id="text13830" y="567.07922" x="297.61328" font-size="2.06685019px">
+<tspan id="tspan13832" style="writing-mode:lr-tb;" font-weight="normal" fill-rule="nonzero" font-size="2.74891043px" font-variant="normal" y="567.07922" x="297.61328 299.14273 300.67221 301.4375" font-family="Arial Black" fill="#000000">auth</tspan>
+</text>
+<text id="text13834" y="557.89032" x="261.48474" font-size="2.06685019px">
+<tspan id="tspan13836" style="writing-mode:lr-tb;" font-weight="normal" fill-rule="nonzero" font-size="3.10027504px" font-variant="normal" y="557.89032" x="261.48474 263.20853 264.91675 266.46689 267.4993 269.00906 270.73285 271.59476 273.30914" font-family="Arial Black" fill="#000000">encrypted</tspan>
+</text>
+<path id="path13838" fill-rule="nonzero" fill="#000" d="m276.56,556.67,17.16,0,0,0.17224-17.16,0,0-0.17224zm16.988-0.4306,1.0334,0.51671-1.0334,0.51672,0-1.0334z"/>
+<path id="path13840" fill-rule="nonzero" fill="#000" d="m259.98,556.87-15.846-0.019,0.001-0.17224,15.846,0.019-0.001,0.17224zm-15.674,0.41165-1.0334-0.51844,1.0352-0.51498-0.001,1.0334z"/>
+<text id="text13842" y="552.09454" x="247.57484" font-size="2.06685019px">
+<tspan id="tspan13844" style="writing-mode:lr-tb;" font-weight="normal" fill-rule="nonzero" font-size="3.10027504px" font-variant="normal" y="552.09454" x="247.57484" font-family="MS PGothic" fill="#000000">“</tspan>
+</text>
+<text id="text13846" y="552.09454" x="249.12498" font-size="2.06685019px">
+<tspan id="tspan13848" style="writing-mode:lr-tb;" font-weight="normal" fill-rule="nonzero" font-size="3.10027504px" font-variant="normal" y="552.09454" x="249.12498 250.84877 252.55699 254.10713 255.83092 256.50366 257.19189 258.90012 260.6239" font-family="Arial Black" fill="#000000">enchilada</tspan>
+</text>
+<text id="text13850" y="552.09454" x="262.33557" font-size="2.06685019px">
+<tspan id="tspan13852" style="writing-mode:lr-tb;" font-weight="normal" fill-rule="nonzero" font-size="3.10027504px" font-variant="normal" y="552.09454" x="262.33557" font-family="MS PGothic" fill="#000000">”</tspan>
+</text>
+<text id="text13854" y="552.09454" x="264.77444" font-size="2.06685019px">
+<tspan id="tspan13856" style="writing-mode:lr-tb;" font-weight="normal" fill-rule="nonzero" font-size="3.10027504px" font-variant="normal" y="552.09454" x="264.77444 266.49823 268.20645 269.06836 270.79214 272.50653 274.23032 275.09222 275.78046 277.3306 279.03882 279.90073 281.62451" font-family="Arial Black" fill="#000000">authenticated</tspan>
+</text>
+<path id="path13858" fill-rule="nonzero" fill="#000" d="m283.86,550.84,9.8606,0.15846-0.004,0.17224-9.8606-0.15846,0.004-0.17224zm9.6952-0.27385,1.0248,0.53221-1.042,0.50121,0.0172-1.0334z"/>
+<path id="path13860" fill-rule="nonzero" fill="#000" d="m247.23,550.84-13.607-0.18084,0.001-0.17224,13.607,0.18257-0.001,0.17051zm-13.441,0.25147-1.0265-0.5305,1.0403-0.50292-0.0137,1.0334z"/>
+<path id="path13862" fill-rule="evenodd" fill="#0C9" d="m274.75,583.48,11.389,0,0-8.2674-11.389,0,0,8.2674z"/>
+<path id="path13864" stroke-linejoin="miter" d="m274.75,583.48,11.389,0,0-8.2674-11.389,0,0,8.2674z" stroke="#000" stroke-linecap="butt" stroke-miterlimit="10" stroke-dasharray="none" stroke-width="0.12917814" fill="none"/>
+<text id="text13866" y="580.39453" x="275.55136" font-size="2.06685019px">
+<tspan id="tspan13868" style="writing-mode:lr-tb;" font-weight="normal" fill-rule="nonzero" font-size="2.74891043px" font-variant="normal" y="580.39453" x="275.55136 277.07974 278.60815 280.13654 281.66495 282.28619 283.81461" font-family="Arial Black" fill="#000000">padding</tspan>
+</text>
+<path id="path13870" fill-rule="evenodd" fill="#0C9" d="m286.2,583.48,10.076,0,0-8.2674-10.076,0,0,8.2674z"/>
+<path id="path13872" stroke-linejoin="miter" d="m286.2,583.48,10.076,0,0-8.2674-10.076,0,0,8.2674z" stroke="#000" stroke-linecap="butt" stroke-miterlimit="10" stroke-dasharray="none" stroke-width="0.12917814" fill="none"/>
+<text id="text13874" y="578.74103" x="288.94971" font-size="2.06685019px">
+<tspan id="tspan13876" style="writing-mode:lr-tb;" font-weight="normal" fill-rule="nonzero" font-size="2.74891043px" font-variant="normal" y="578.74103" x="288.94971 290.47919 292.00864" font-family="Arial Black" fill="#000000">pad</tspan>
+</text>
+<text id="text13878" y="582.04797" x="287.50296" font-size="2.06685019px">
+<tspan id="tspan13880" style="writing-mode:lr-tb;" font-weight="normal" fill-rule="nonzero" font-size="2.74891043px" font-variant="normal" y="582.04797" x="287.50296 288.12146 289.64987 291.17825 292.70667 293.47083" font-family="Arial Black" fill="#000000">length</tspan>
+</text>
+<path id="path13882" fill-rule="evenodd" fill="#0C9" d="m296.17,583.48,9.5161,0,0-8.2674-9.5161,0,0,8.2674z"/>
+<path id="path13884" stroke-linejoin="miter" d="m296.17,583.48,9.5161,0,0-8.2674-9.5161,0,0,8.2674z" stroke="#000" stroke-linecap="butt" stroke-miterlimit="10" stroke-dasharray="none" stroke-width="0.12917814" fill="none"/>
+<text id="text13886" y="578.74103" x="298.34012" font-size="2.06685019px">
+<tspan id="tspan13888" style="writing-mode:lr-tb;" font-weight="normal" fill-rule="nonzero" font-size="2.74891043px" font-variant="normal" y="578.74103" x="298.34012 299.86853 301.39691 302.77136" font-family="Arial Black" fill="#000000">next</tspan>
+</text>
+<text id="text13890" y="582.04797" x="296.66602" font-size="2.06685019px">
+<tspan id="tspan13892" style="writing-mode:lr-tb;" font-weight="normal" fill-rule="nonzero" font-size="2.74891043px" font-variant="normal" y="582.04797" x="296.66602 298.19547 299.72495 301.25439 302.78387 304.31332" font-family="Arial Black" fill="#000000">header</tspan>
+</text>
+<path id="path13894" stroke-linejoin="round" d="m275.05,574.24,10.894-5.081" stroke="#000" stroke-linecap="butt" stroke-miterlimit="10" stroke-dasharray="none" stroke-width="0.12917814" fill="none"/>
+<path id="path13896" stroke-linejoin="round" d="m305.49,574.43-10.14-5.4677" stroke="#000" stroke-linecap="butt" stroke-miterlimit="10" stroke-dasharray="none" stroke-width="0.12917814" fill="none"/>
+<path id="path13898" fill-rule="evenodd" fill="#F9C" d="m228.72,583.69,9.4946,0,0-8.4388-9.4946,0,0,8.4388z"/>
+<path id="path13900" stroke-linejoin="miter" d="m228.72,583.69,9.4946,0,0-8.4388-9.4946,0,0,8.4388z" stroke="#000" stroke-linecap="butt" stroke-miterlimit="8" stroke-dasharray="none" stroke-width="0.12917814" fill="none"/>
+<text id="text13902" y="580.52271" x="231.25021" font-size="2.06685019px">
+<tspan id="tspan13904" style="writing-mode:lr-tb;" font-weight="normal" fill-rule="nonzero" font-size="2.74891043px" font-variant="normal" y="580.52271" x="231.25021 233.08966 234.92918" font-family="Arial Black" fill="#000000">SPI</tspan>
+</text>
+<path id="path13906" fill-rule="evenodd" fill="#F9C" d="m238.11,583.74,9.4946,0,0-8.4388-9.4946,0,0,8.4388z"/>
+<path id="path13908" stroke-linejoin="miter" d="m238.11,583.74,9.4946,0,0-8.4388-9.4946,0,0,8.4388z" stroke="#000" stroke-linecap="butt" stroke-miterlimit="8" stroke-dasharray="none" stroke-width="0.12917814" fill="none"/>
+<text id="text13910" y="578.91467" x="240.41151" font-size="2.06685019px">
+<tspan id="tspan13912" style="writing-mode:lr-tb;" font-weight="normal" fill-rule="nonzero" font-size="2.75304437px" font-variant="normal" y="578.91467" x="240.41151 242.24776 243.77844" font-family="Arial Black" fill="#000000">Seq</tspan>
+</text>
+<text id="text13914" y="582.22162" x="242.08563" font-size="2.06685019px">
+<tspan id="tspan13916" style="writing-mode:lr-tb;" font-weight="normal" fill-rule="nonzero" font-size="2.74891043px" font-variant="normal" y="582.22162" x="242.08563" font-family="Arial Black" fill="#000000">#</tspan>
+</text>
+<path id="path13918" stroke-linejoin="round" d="m228.63,574.78,4.3266-5.7915" stroke="#000" stroke-linecap="butt" stroke-miterlimit="8" stroke-dasharray="none" stroke-width="0.12917814" fill="none"/>
+<g id="g13922" transform="matrix(0.1722375,0,0,-0.1722375,205.14242,588.88101)" clip-path="url(#clipPath13652)">
+<path id="path13924" stroke-linejoin="round" d="m217.13,112.25,0,0" stroke="#000" stroke-linecap="butt" stroke-miterlimit="8" stroke-dasharray="none" stroke-width="0.75" fill="none"/>
+</g>
+<path id="path13926" stroke-linejoin="round" d="m242.35,568.99,4.8864,5.6192" stroke="#000" stroke-linecap="butt" stroke-miterlimit="8" stroke-dasharray="none" stroke-width="0.12917814" fill="none"/>
+</g>
+</svg>

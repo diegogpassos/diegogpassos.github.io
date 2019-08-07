@@ -1,0 +1,8 @@
+ 1) Transmissão sem fio com TCP, sem retransmissões na camada de 
+enlace. 
+    - Falta uma interface que permita esta configuração.
+    - Receptor: smartphone?
+ 2) Controle de fluxo em porta serial.
+    - Falta equipamento com porta serial e que permita controle de fluxo.
+    - Como demonstrar? Aplicação que não consome dados? Talvez ligar e desligar controle?
+ 3) Colisão em CRC32. Implementada em javascript.

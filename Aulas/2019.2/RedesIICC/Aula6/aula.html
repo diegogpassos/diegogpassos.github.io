@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <!-- Meta info -->
+	<meta charset="utf-8">
+	<meta name="shortauthor" content="Diego Passos"/>
+	<meta name="shorttitle" content="Enlace: VLANs"/>
+	<meta name="shortevent" content="Redes de Computadores II"/>
+	<title>Redes de Computadores II: Aula 6</title>
+
+    <!-- Math support -->
+	<script type="text/x-mathjax-config">
+		MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+			MathJax.InputJax.TeX.Definitions.number = /^(?:[0-9]+(?:\.[0-9]{3})*(?:\{,\}[0-9]*)*|\{,\}[0-9]+)/
+		});
+	</script>
+	<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+	<!--<script src="../../../../MathJax-2.6-latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>-->
+
+    <!-- Fonts -->
+	<link href='https://fonts.googleapis.com/css?family=Lora:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
+	<!--<link href='../../../../Fonts/Lora/lora.css' rel='stylesheet' type='text/css'>-->
+
+    <!-- CSS -->
+	<link href='../template/css/template.css' id="template" rel='stylesheet' type='text/css'>
+	<link href='../template/css/presentationSpecific.css' id="presentationSpecific" rel='stylesheet' type='text/css'>
+
+    <!-- Javascript -->
+	<script type="text/javascript" src="../template/js/audio.js"></script>
+</head>
+
+<body>
+    <!-- Audio handlers -->
+	<!--<audio src="audio/La.wav" id="La.wav" preload="auto"></audio>-->
+
+    <!-- Title Slide -->
+	<section>
+
+        <div class="slideContent">
+            <h1 class="title">Aula 6 - Camada de Enlace: VLANs</h1>
+            <h2 class="author">Diego Passos</h2>
+            <h4 class="institution">Universidade Federal Fluminense</h4>
+            <h3 class="date">Redes de Computadores II</h3>
+        </div>
+
+	</section>
+
+    <!-- Content slides -->
+
+	<section>
+	<h1>Na Última Aula (I)...</h1>
+	<div class="slideContent">
+        <div class="column" style="width: 50%;">
+            <ul>
+                <li><i>Switch</i>: dispositivo ativo, nível 2, intermediário.
+                <ul>
+                    <li><b>Enlaces dedicados</b> para cada dispositivo conectado.</li>
+                    <li>Paradigma <i>store-and-forward</i>.</li>
+                    <li><b>Examina</b> quadros recebidos, <b>seleciona</b> porta de saída.</li>
+                    <li><b>Transparente</b> para os dispositivos.</li>
+                    <li>Permite <b>transmissões simultâneas</b>.</li>
+                </ul></li>
+                <li><b>Aprendizado automático:</b> descobre sozinho onde estão os dispositivos.
+                <ul>
+                    <li>Monta uma <b>tabela de encaminhamento</b>.</li>
+                    <li>Se não há entrada na tabela: <b>inundação</b>.</li>
+                </ul></li>
+            </ul>
+        </div>
+        <div class="column" style="width: 50%;">
+            <ul>
+                <li><i>Switches</i> em cascata: podem ser interconectados para estender a rede.
+                <ul>
+                    <li>Auto-aprendizado continua funcionando.</li>
+                    <li>Potencialmente, <b>mais de um MAC associado a cada porta</b>.</li>
+                    <li>Pode <b>esgotar a capacidade</b> da tabela de encaminhamento.
+                    <ul>
+                        <li>Mais inundações, pior desempenho.</li>
+                    </ul></li>
+                </ul></li>
+                <li><b>Várias diferenças</b> em relação aos roteadores.
+                <ul>
+                    <li><b>Camada</b>.</li>
+                    <li>Encaminhamento baseado em <b>endereços diferentes</b>.</li>
+                    <li>Métodos de <b>construção</b> das tabelas.</li>
+                </ul></li>
+            </ul>
+        </div>
+	</div>
+	</section>
+
+	<section>
+	<h1>Na Última Aula (II)...</h1>
+	<div class="slideContent">
+	  <ul>
+	    <li>Vários potenciais problemas decorrentes de má configuração.
+	    <ul>
+	      <li>Erros de configuração física: <i>loops</i>.<ul>
+	        <li>Quadros em <i>broadcast</i> circulam pelos switches indefinidamente.</li>
+	      </ul></li>
+	      <li>Erros de configuração lógica: conflitos de endereço.
+	      <ul>
+	        <li>Conflito de IP.</li>
+	        <li>Conflito de MAC.</li>
+	      </ul></li>
+	    </ul></li>
+	    <li>Tempestade de <i>broadcast</i>.
+	    <ul>
+	      <li>Transmissões em <i>broadcast</i> (custosas) consomem muitos recursos da rede.</li>
+	      <li>Muitas vezes decorrente de <i>loops</i>.</li>
+	    </ul></li>
+	  </ul>
+	</div>
+	</section>
+
+	<section class="secao">
+	<div class="slideContent">
+		VLANs
+	</div>
+	</section>
+
+        <section>
+        <h1>VLANs: Motivação</h1>
+        <div class="slideContent">
+
+
+            <div class="column" style="width: 50% ;">
+                <br><br>
+                <center>
+                    <img src="imagens/VLANMotivacao_opt.svg" style="width: 80% ;"/>
+                </center>
+            </div>
+            <div class="column" style="width: 50% ;">
+                <ul>
+                    <li> Considere os seguintes aspectos:
+                    <ul>
+                        <li> Funcionário da CS muda para escritório na EE.
+                        <ul>
+                            <li> É possível mantê-lo &ldquo;conectado&rdquo; ao switch da CS?</li>
+                        </ul>
+                        </li>
+                        <li> Outra questão: único domínio de <i>broadcast</i>.
+                        <ul>
+                            <li> Todo tráfego de nível 2 (ARP, DHCP, inundações por falta de entrada nas tabelas de encaminhamento) atravessa toda a LAN.</li>
+                            <li> Problemas de privacidade/segurança e eficiência.</li>
+                        </ul>
+                        </li>
+                    </ul>
+                    </li>
+                </ul>
+            </div>
+
+
+        </div>
+        </section>
+
+        <section>
+        <h1>VLANs</h1>
+        <div class="slideContent">
+
+            <center>
+                <div class="block" style="width:1000px;">
+                    <div class="blockTitle" style="width: 100%;">
+                        <p><i>Virtual Local Area Network</i></p>
+                    </div>
+                    <div class="blockBody">
+                        <ul>
+                            <li> Switches que possuem capacidades de VLAN podem definir <b>múltiplas LANs virtuais</b> usando uma única infraestrutura física.</li>
+                        </ul>
+                    </div>
+                </div>
+            </center>
+
+            <ul>
+                <li> <span class="alert">VLAN baseada em porta:</span>
+                <ul>
+                    <li> Portas do switch agrupadas (pelo <i>software</i> de gerenciamento do switch).</li>
+                </ul>
+                </li>
+            </ul>
+
+            <div class="column" style="width: 50% ;">
+                <ul>
+                    <li> Um único switch físico...</li>
+                </ul>
+                <center>
+                    <img src="imagens/VLANPorPorta1_opt.svg" style="width: 80% ;"/>
+                </center>
+            </div>
+            <div class="column" style="width: 50% ;">
+                <ul>
+                    <li> ... age como <b>múltiplos</b> switches virtuais.</li>
+                </ul>
+                <center>
+                    <img src="imagens/VLANPorPorta2_opt.svg" style="width: 80% ;"/>
+                </center>
+            </div>
+
+
+        </div>
+        </section>
+
+        <section>
+        <h1>VLAN Baseada em Porta</h1>
+        <div class="slideContent">
+
+
+            <div class="column" style="width: 50% ;">
+                <ul>
+                    <li> <span class="alert">Isolamento de tráfego:</span> quadros originários das portas 1&mdash;8 chegam <b>apenas</b> às portas 1&mdash;8.</li>
+                    <li> <span class="alert">Alocação dinâmica:</span> portas podem ser alocadas dinamicamente a VLANs.
+                    <ul>
+                        <li> É possível definir VLANs com base nos MACs dos dispositivos.</li>
+                    </ul>
+                    </li>
+                    <li> <span class="alert">Encaminhamento entre VLANs:</span> feita via roteamento (nível 3).
+                    <ul>
+                        <li> Na prática, fabricantes vendem switches que são, também, roteadores.</li>
+                    </ul>
+                    </li>
+                </ul>
+            </div>
+            <div class="column" style="width: 50% ;">
+                <center>
+                    <img src="imagens/VLANPorPorta3_opt.svg" style="width: 80% ;"/>
+                </center>
+            </div>
+
+
+        </div>
+        </section>
+
+        <section>
+        <h1>VLANs Formadas por Múltiplos Switches Físicos</h1>
+        <div class="slideContent">
+
+            <center>
+                <img src="imagens/VLANMultiplosSwitches_opt.svg" style="width: 80% ;"/>
+            </center>
+
+            <ul>
+                <li> <span class="alert">Porta <i>trunk</i>:</span> transportam quadros entre VLANs definidas sobre múltiplos switches físicos.
+                <ul>
+                    <li> Quadros encaminhados dentro da mesma VLAN entre switches diferentes não podem ser quadros Ethernet &ldquo;normais&rdquo;.
+                    <ul>
+                        <li> Precisam armazenar identificador da VLAN.</li>
+                    </ul>
+                    </li>
+                    <li> Protocolo 802.1Q adiciona/remove campos adicionais de cabeçalho para quadros transmitidos entre portas <i>trunk</i>.</li>
+                </ul>
+                </li>
+            </ul>
+        </div>
+        </section>
+
+        <section>
+        <h1>Formato de um Quadro 802.1Q</h1>
+        <div class="slideContent">
+
+            <center>
+                <img src="imagens/802_1q_opt.svg" style="width: 80% ;"/>
+            </center>
+
+        </div>
+        </section>
+
+				<section>
+				<h1>IEEE 802.1Q: Adição e Remoção de <i>tags</i> (I)</h1>
+				<div class="slideContent">
+				  <ul>
+				    <li>Dispositivos como <i>switches</i> gerenciáveis normalmente são &ldquo;cientes&rdquo; da existência das VLANs de uma rede.</li>
+				    <li>Já dispositivos como <i>hosts</i> comumente não tem este conhecimento.</li>
+				    <li>É possível dividir a rede em duas porções:
+				    <ul>
+				      <li>Porção ciente das VLANs.</li>
+				      <li>Resto da rede.</li>
+				    </ul></li>
+				  </ul>
+					<center>
+					  <img src="imagens/porcaoCiente.svg" style="width: 70%;"/>
+					</center>
+
+				</div>
+				</section>
+
+				<section>
+				<h1>IEEE 802.1Q: Adição e Remoção de <i>tags</i> (II)</h1>
+				<div class="slideContent">
+				  <ul>
+				    <li>Quando quadro entra na porção ciente da rede, não possui uma <i>tag</i> especificada.
+				    <ul>
+				      <li>Switch associa quadro a uma VLAN padrão (para a porta de entrada ou para a rede).</li>
+							<li><i>Tag</i> correspondente é adicionada usando o cabeçalho IEEE 802.1Q.</li>
+				    </ul></li>
+				  </ul>
+					<br>
+					<br>
+					<center>
+					  <img src="imagens/quadroIngressante.svg" style="width: 70%;"/>
+					</center>
+
+				</div>
+				</section>
+
+				<section>
+				<h1>IEEE 802.1Q: Adição e Remoção de <i>tags</i> (III)</h1>
+				<div class="slideContent">
+					<ul>
+						<li>Comunicações internas à porção ciente mantém a <i>tag</i> no quadro.
+						<ul>
+						  <li>Permite que dispositivo que recebe o quadro identifique a VLAN.</li>
+						</ul></li>
+					</ul>
+					<br>
+					<br>
+					<center>
+						<img src="imagens/quadroEgressoComTag.svg" style="width: 70%;"/>
+					</center>
+
+				</div>
+				</section>
+
+				<section>
+				<h1>IEEE 802.1Q: Adição e Remoção de <i>tags</i> (III)</h1>
+				<div class="slideContent">
+					<ul>
+						<li>Quando quadro deixa a porção ciente, <i>tag</i> precisa ser removida.</li>
+					</ul>
+					<br>
+					<br>
+					<center>
+						<img src="imagens/quadroEgressoSemTag.svg" style="width: 70%;"/>
+					</center>
+
+				</div>
+				</section>
+
+				<section class="secao">
+				<div class="slideContent">
+				  <i>Spanning Tree Protocol</i>
+				</div>
+				</section>
+
+				<section>
+				<h1>STP: Introdução</h1>
+				<div class="slideContent">
+				  <div class="column" style="width: 55%;">
+				    <ul>
+				      <li>Protocolo executado na camada de enlace.</li>
+							<li>Criado por Radia Perlman, padronizado no IEEE 802.1D.</li>
+				      <li>Objetiva evitar <i>loops</i> lógicos, ainda que existam <i>loops</i> físicos.</li>
+				      <li>Como funciona:
+				      <ul>
+				        <li>Dispositivos (<i>e.g.</i>, switches) criam uma árvore geradora (mínima) da topologia física.</li>
+				        <li>Enlaces/portas que causariam <i>loops</i> são desativados para dados.</li>
+				      </ul></li>
+				    </ul>
+				  </div>
+					<div class="column" style="width: 45%;">
+					  <center>
+					    <span style=" font-size: 14pt; font-family: cursive;">Algorhyme</tt>
+							<div style="text-align:left; font-family: cursive; font-size: 14pt; margin-left: 30px;">
+								<br>
+        I think that I shall never see <br>
+        a graph more lovely than a tree.<br>
+        A tree whose crucial property<br>
+        is loop-free connectivity.<br>
+        A tree that must be sure to span<br>
+        so packet can reach every LAN.<br>
+        First, the root must be selected.<br>
+        By ID, it is elected.<br>
+        Least-cost paths from root are traced.<br>
+        In the tree, these paths are placed.<br>
+        A mesh is made by folks like me,<br>
+        then bridges find a spanning tree.<br>
+<br>
+							</div>
+               <div style="text-align:right; font-family: cursive; font-size: 14pt; margin-right: 30px;">Radia Perlman</span>
+					  </center>
+					</div>
+				</div>
+				</section>
+
+				<section>
+				<h1>STP: Operação Básica</h1>
+				<div class="slideContent">
+				  <ul>
+				    <li>Protocolo dividido nos seguintes passos:
+				    <ol>
+				      <li>Escolha de uma raiz para a árvore geradora.
+				      <ul>
+				        <li>Algoritmo distribuído de eleição de líder.</li>
+				        <li>Eleição se dá de acordo com identificador de cada dispositivo.</li>
+				      </ul></li>
+				      <li>Determinição do caminho mais curto entre cada dispositivo e a raiz.
+				      <ul>
+				        <li>Similar ao funcionamento de um algoritmo de roteamento de vetor de distâncias.</li>
+				        <li>Mas apenas uma distância importa: até a raiz.</li>
+				      </ul></li>
+				      <li>Configuração das portas.
+				      <ul>
+				        <li>Porta que leva à raiz só é deixada ativa se pertence à árvore geradora.</li>
+				        <li>Portas que não levam à raiz (<i>e.g.</i>, interconectam <i>hosts</i>) são deixadas ativas.</li>
+				      </ul></li>
+				    </ol></li>
+				  </ul>
+				</div>
+				</section>
+
+				<section>
+				<h1>STP: Mais (Alguns Poucos) Detalhes</h1>
+				<div class="slideContent">
+					<div class="column" style="width: 50%;">
+						<ul>
+						  <li>Cada switch envia periodicamente BPDUs (<i>Bridge Protocol Data Units</i>).
+						  <ul>
+						    <li>Quadro de controle do protocolo.</li>
+								<li>Informa (entre outras coisas):
+								<ul>
+								  <li>Identificador do switch.</li>
+								  <li>Raiz da árvore.</li>
+								  <li>Distância para a raiz.</li>
+								</ul></li>
+						    <li>Normalmente, a cada 2 segundos.</li>
+								<li>Enviado para o endereço MAC multicast <tt>01:80:C2:00:00:00</tt>.</li>
+						  </ul></li>
+						  <li>Identificador: prioridade, concatenada com MAC.
+						  <ul>
+						    <li>Prioridade é configurável.</li>
+								<li>Switch com menor identificador é eleito raiz.</li>
+						  </ul></li>
+						</ul>
+					</div>
+					<div class="column" style="width: 50%;">
+					  <ul>
+					    <li>Inicialmente:
+					    <ul>
+					      <li>Switches não sabem nada sobre a topologia.</li>
+					      <li>Cada switch <b>assume ser a raiz</b>.</li>
+					      <li>Envia BPDU com a tupla &lt;ID, ID, 0&gt; para todas as portas.</li>
+					    </ul></li>
+					    <li>Ao receber um BPDU por uma porta:
+					    <ul>
+					      <li>Verifica se ID da raiz reportada é menor que a da raiz atualmente conhecida.
+					      <ul>
+					        <li>Se sim: atualiza raiz, distância.</li>
+					        <li>Se não: ainda pode atualizar distância se menor.</li>
+					      </ul></li>
+					    </ul></li>
+					  </ul>
+					</div>
+				</div>
+				</section>
+
+				<section>
+				<h1>STP: Exemplo (I)</h1>
+				<div class="slideContent">
+					<center>
+					  <img src="imagens/STPExemplo.svg" style="width: 95%;"/>
+					</center>
+				</div>
+				</section>
+
+				<section>
+				<h1>STP: Exemplo (II)</h1>
+				<div class="slideContent">
+					<center>
+					  <img src="imagens/STPExemplo2.svg" style="width: 95%;"/>
+					</center>
+				</div>
+				</section>
+
+				<section>
+				<h1>STP: Exemplo (III)</h1>
+				<div class="slideContent">
+					<center>
+					  <img src="imagens/STPExemplo3.svg" style="width: 95%;"/>
+					</center>
+				</div>
+				</section>
+
+				<section>
+				<h1>STP: Exemplo (IV)</h1>
+				<div class="slideContent">
+					<center>
+					  <img src="imagens/STPExemplo4.svg" style="width: 95%;"/>
+					</center>
+				</div>
+				</section>
+
+				<section>
+				<h1>STP: Exemplo (V)</h1>
+				<div class="slideContent">
+					<center>
+					  <img src="imagens/STPExemplo5.svg" style="width: 95%;"/>
+					</center>
+				</div>
+				</section>
+
+    <section>
+    <h1>Resumo da Aula...</h1>
+    <div class="slideContent">
+			<div class="column" style="width: 50%;">
+        <ul>
+            <li>VLANs:
+            <ul>
+                <li>Solução para <b>&ldquo;separar&rdquo; redes em nível 2</b>, compartilhando mesma infraestrutura física.</li>
+                <li>Separação <b>puramente lógica</b>.</li>
+                <li>Define <b>domínios de broadcast</b> distintos.</li>
+                <li>Motivações: <b>segurança, desempenho</b>.</li>
+            </ul></li>
+            <li>Podem ser definidas com base em:
+            <ul>
+                <li>Portas específicas.</li>
+                <li>Tags informadas em cabeçalhos específicos.</li>
+            </ul></li>
+            <li>VLANs podem se estender por <b>vários switches físicos diferentes</b>.</li>
+        </ul>
+			</div>
+			<div class="column" style="width: 50%;">
+			  <ul>
+			    <li>STP:
+			    <ul>
+			      <li><b>Protocolo</b> da camada de enlace.</li>
+			      <li>Constrói <b>topologia lógica em árvore</b>.
+			      <ul>
+			        <li>Evita problemas causados por <i>loops</i>.</li>
+			      </ul></li>
+			      <li>Permite estabelecimento (físico) de <b>enlaces redundantes</b>.</li>
+			    </ul></li>
+					<li>Algoritmo distribuído:
+					<ul>
+					  <li>Similar a roteamento em vetor de distância.</li>
+					  <li>Switches <b>anunciam periodicamente</b> raiz, melhor distância conhecida.</li>
+					  <li><b>Conhecimento atualizado</b>, se informações mais corretas/caminhos melhores são recebidos.</li>
+					</ul></li>
+			  </ul>
+			</div>
+    </div>
+    </section>
+
+    <section>
+    <h1>Leitura e Exercícios Sugeridos</h1>
+    <div class="slideContent">
+    	<ul>
+				<li>VLANs:
+				<ul>
+					<li>Páginas 355 a 358 do Kurose (Subseção 5.6.5).</li>
+					<li>Exercícios de fixação 16 e 17 do capítulo 5 do Kurose.</li>
+				</ul></li>
+				<li>STP:
+				<ul>
+				  <li>Páginas 208 a 212 do Tanenbaum (Seção 4.8 até 4.8.3).</li>
+				</ul></li>
+    	</ul>
+    </div>
+    </section>
+
+	<section>
+	<h1>Próxima Aula...</h1>
+	<div class="slideContent">
+		<ul>
+		  <li>Discutiremos uma tecnologia que atua entre as camadas 2 e 3 da pilha TCP/IP.</li>
+		  <li>MPLS:
+		  <ul>
+		    <li>O que é.</li>
+		    <li>Como funciona.</li>
+		    <li>Objetivos e aplicações.</li>
+		  </ul></li>
+		</ul>
+	</div>
+	</section>
+
+	<!-- {{{{ dzslides core
+	#
+	#
+	#     __  __  __       .  __   ___  __
+	#    |  \  / /__` |    | |  \ |__  /__`
+	#    |__/ /_ .__/ |___ | |__/ |___ .__/ core :€
+	#
+	#
+	# The following block of code is not supposed to be edited.
+	# But if you want to change the behavior of these slides,
+	# feel free to hack it!
+	#
+	-->
+
+    <!-- More CSS -->
+	<link href='../template/css/slides.css' id="slides" rel='stylesheet' type='text/css'>
+	<link href='../template/css/presentationSpecific2.css' id="presentationSpecific2" rel='stylesheet' type='text/css'>
+
+    <!-- More Javascript -->
+	<script type="text/javascript" src="../template/js/dz.js"></script>
+
+	<!-- More CSS -->
+	<link href='../template/css/notesSpecific.css' id="notesSpecific" rel='stylesheet' type='text/css'>
+	<link href='../template/css/printSpecific.css' id="printSpecific" rel='stylesheet' type='text/css'>
+</body>
+</html>
