@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Apresentação de Artigo: On the Validity of IEEE 802.11 MAC Modeling Hypotheses</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" type="text/css" href="../template/css/roboto.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/general.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/code.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/cover.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/section.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/elements.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/table.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/block.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/dagre.css">
+    <style>
+      span.katex {
+        font-size: 0.95em;
+      }
+    </style>
+  </head>
+  <body>
+
+    <textarea id="source">
+
+class: cover-slide
+
+![:cover](
+Computação Móvel
+Apresentação do Relatório Técnico<br><i>ZigBee/IEEE 802.15.4 Summary</i>
+Diego Passos
+../template/img/logo.svg
+)
+
+---
+
+class: middle
+layout: true
+name: conteudo
+
+.title[
+{{slideTitle}}
+<hr>]
+
+---
+
+slideTitle: Dados Bibliográficos
+
+### Autora
+* Sinem Coleri Ergen.
+
+### Veículo
+* Relatório técnico da UC Berkeley.
+
+### Data de publicação
+* Setembro de 2004.
+
+---
+
+layout: false
+class: section-slide
+
+# Introdução
+
+---
+
+class: middle
+layout: true
+name: conteudo
+
+.title[
+{{slideTitle}}
+<hr>]
+
+---
+
+slideTitle: Padronização das LR-WPANs (I)
+
+### IEEE 802.11
+* Meados da década de 1990.
+* Foco: 
+  * WLANs: centenas de metros?
+  * Altas taxas de transmissão (e.g., Ethernet).
+  * *Roaming*.
+  * ...
+
+### *Low Rate Wireless Personnal Area Networks*
+* Espaço em torno de uma pessoa/objeto.
+    * Dezenas de metros?
+* Baixo custo, baixo consumo, pequeno alcance.
+
+---
+
+slideTitle: Padronização das LR-WPANs (II) 
+
+### IEEE 802.15
+* IEEE 802.15.3: aplicações multimidia (taxas altas).
+* IEEE 802.15.1: Bluetooth (taxas médias).
+* IEEE 802.15.4: .red[Zigbee (taxas baixas)].
+
+### Aplicações do IEEE 802.15.4
+* Industriais, residenciais, médicas.
+* Consumo energético .red[muito baixo].
+* Custo de produção .red[muito baixo].
+    * Viabilizado pelas baixas taxas.
+
+---
+
+slideTitle: Zigbee *vs.* IEEE 802.15.4 (I)
+
+### Zigbee
+* Surgiu primeiro.
+* Protocolo de rede sem fio com:
+    * Baixas taxas.
+    * Baixo consumo.
+    * Baixo custo.
+* Aplicações de automação.
+
+### IEEE 802.15.4
+* Posterior.
+* Objetivos semelhantes.
+* Resultado: IEEE e Zigbee Alliance uniram forças.
+    * Nome comercial mantido: Zigbee.
+
+---
+
+slideTitle: Zigbee *vs.* IEEE 802.15.4 (II)
+
+| IEEE 802.15.4 | Zigbee |
+| :--------------------------------- | :- |
+| Camadas 1 e 2 | Demais Camadas |
+
+---
+
+slideTitle: Zigbee: Características
+
+* Duração de bateria de vários meses.
+* Taxas mais baixas que o Bluetooth.
+* Alcance típico entre 10 e 75 metros.
+* Operação em faixas ISM.
+* Múltiplas topologias: estrela, malha, *cluster tree*.
+
+| Banda de Frequência |  Taxa de Transmissão  |
+| :--------------------------------- | :- |
+| 868 MHz | 250 kb/s |
+| 915 MHz | 40 kb/s |
+| 2,4 GHz | 20 kb/s |
+
+---
+
+layout: false
+class: section-slide
+
+# IEEE 802.15.4
+
+---
+
+class: middle
+layout: true
+name: conteudo
+
+.title[
+{{slideTitle}}
+<hr>]
+
+---
+
+slideTitle: IEEE 802.15.4: Componentes
+
+### Dois tipos de dispositivos
+* FFD: *Full-Function Device*.
+* RFD: *Reduced-Function Device*.
+    * Para dispositivos **muito** simples.
+    * Só comunicam com FFDs.
+     
+### Coordenador da PAN
+* Necessariamente um FFD.
+
+---
+
+slideTitle: IEEE 802.15.4: Topologias (I)
+
+.center[
+![:imageS width: 70%](topologias.png)
+]
+
+#### Estrela
+* Coordenador da PAN: FFD.
+    * Intermedeia comunicações.
+* Identificador da PAN: escolhido pela rede.
+    * Permite redes diferentes operando nas proximidades.
+
+---
+
+slideTitle: IEEE 802.15.4: Topologias (II)
+
+.center[
+![:imageS width: 70%](topologias.png)
+]
+
+#### Malha (Peer-to-peer)
+* .red[Ainda há coordenador!]
+* Mas nós podem se comunicar diretamente.
+    * Contanto que no alcance uns dos outros.
+* Zigbee: suporte **nativo** a roteamento, múltiplos saltos.
+    
+---
+
+slideTitle: IEEE 802.15.4: Topologias (III)
+
+.center[
+![:imageS width: 70%](topologias.png)
+]
+
+#### Cluster Tree
+* **Caso especial** da topologia em malha.
+    * Malha entre FFDs.
+    * Alguns RFDs como *folhas*.
+* Primeiro FFD vira o Cluster Head do cluster de ID 0.
+    * Pode solicitar que outros FFDs filhos virem Cluster Heads.
+
+---
+
+slideTitle: IEEE 802.15.4: Arquitetura de um Nó
+
+.center[
+![:imageS width: 35%](pilhaDeProtocolos.png)
+]
+
+---
+
+layout: false
+class: section-slide
+
+# Camada Física
+
+---
+
+class: middle
+layout: true
+name: conteudo
+
+.title[
+{{slideTitle}}
+<hr>]
+
+---
+
+slideTitle: Visão Geral
+
+### PPDU
+* *PHY Protocol Data Unit*.
+
+### Funções-chave
+* Ativação e desativação do transceptor.
+* Detecção de Energia (ED).
+* Medição do LQI (*Link Quality Indicator*).
+* Seleção de canal.
+* *Clear Channel Assessment* (CCA).
+* Transmissão e recepção de pacotes.
+
+---
+
+slideTitle: Duas Opções de PHY
+
+### Ambas Baseadas em DSSS
+
+.center[
+![:imageS width: 70%](PHYs.png)
+]
+
+---
+
+slideTitle: Canalização
+
+.center[
+![:imageS width: 70%](canalizacao.png)
+]
+
+* Em 2,4 GHz, canais de 2 MHz.
+
+---
+
+slideTitle: Bandas e Sensibilidade
+
+| Banda | Sensibilidade do Rádio |
+| :---- | :--------------------- |
+| 868 MHz | -92 MHz              |
+| 915 MHz | -92 MHz              |
+| 2,4 GHz | -85 MHz              |
+
+---
+
+slideTitle: Detecção de Energia (ED)
+
+#### Uso
+* Pela camada de rede.
+    * Seleção de canal.
+
+#### Definição
+* Intensidade do sinal recebido no canal.
+* Nenhuma tentativa de decodificá-lo.
+* Medido por 8 *períodos de símbolo*.
+
+#### Precisão
+* Inteiro de 8 bits.
+    * 0: menos de 10 dB acima da sensibilidade.
+* Faixa de valores: ao menos 40 dB.
+    * Linear nos valores em dB.
+
+---
+
+slideTitle: Estimativa de Qualidade do Canal (LQI)
+
+#### Uso
+* Pelas camadas superiores.
+    * .red[Mas não definido!]
+
+#### Definição
+* Intensidade do sinal recebido no canal.
+    * Associada ao recebimento de um quadro.
+    * Valor é informado juntamente com o quadro recebido.
+* Método de medição: .red[não definido].
+
+#### Precisão
+* Inteiro de 8 bits.
+
+---
+
+slideTitle: Clear Channel Assessment (CCA)
+
+### Três Métodos
+* Energia acima de um limiar.
+* Detecção de portadora.
+    * Sinal modulado e espalhado de acordo com o IEEE 802.15.4.
+* Combinação dos anteriores.
+
+---
+
+slideTitle: Formato do PPDU
+
+.center[
+![:imageS width: 70%](PPDU.png)
+]
+
+### Componentes
+* SHR: sincronização entre transmissor e receptor.
+* PHR: comprimento do quadro.
+* Carga-útil: quadro da camada de enlace.
+
+---
+
+layout: false
+class: section-slide
+
+# Camada de Enlace
+
+---
+
+class: middle
+layout: true
+name: conteudo
+
+.title[
+{{slideTitle}}
+<hr>]
+
+---
+
+slideTitle: Visão Geral
+
+### Características/funcionalidades
+* Gerenciamento de *beacons*.
+* Acesso ao meio.
+* Gerenciamento de GTS.
+* Validação de quadros.
+* Reconhecimento de entrega de quadros.
+* Associação e desassociação.
+
+---
+
+slideTitle: Estrutura do Super-Quadro
+
+### Super-quadro
+* Organização do tempo em etapas.
+* Cada etapa permite certos tipos de acesso ao meio.
+* Super-quadro se repete ciclicamente.
+    * Inicio e fim delimitados pelos *beacons* do coordenador.
+
+
+.center[
+![:imageS width: 70%](SuperFrame.png)
+]
+
+---
+
+slideTitle: Super-Quadro: Porções
+
+### Porção Inativa
+* Coordenador não interage com a rede.
+* Pode dormir.
+    * Economia de energia.
+
+### Porção Ativa
+* Quando a comunicação ocorre.
+* Subdividida em:
+    * CFP.
+    * CAP.
+
+---
+
+slideTitle: CAP
+
+### Contention Access Period
+* Nós competem pelo uso do meio.
+    * CSMA/CA.
+* Começa imediatamente após *beacon*.
+
+---
+
+slideTitle: CFP
+
+### Contention-Free Period
+* Começa imediatamente após CAP.
+* *Slots* de tempo dedicados.
+    * *Guaranteed Time Slots* (GTS).
+* Como no TDMA (*Time Division Multiple Access*).
+    * .red[Nesse período, CSMA/CA não é usado!]
+* Alocação dos GTS informada no *beacon* que antecede Super-Quadro.
+    * Até 7 GTS.
+
+---
+
+slideTitle: *Beacons*
+
+* Enviados sem CSMA/CA.
+    * Fora do super-quadro, meio é do coordenador.
+* Informam estrutura do super-quadro subsequente.
+    * *e.g.*, comprimento do CAP, do CFP, alocação de GTS.
+
+---
+
+slideTitle: Reconhecimentos
+
+### Acks
+* Enviados imediatamente após os dados.
+* Transmissor do *ack* não precisa de detecção de portadora ou de *slot*.
+
+---
+
+slideTitle: Redes Sem Super-Quadros
+
+### Suportadas, mas...
+* Coordenadores não enviam *beacons*.
+* Sem suporte a CFP/GTS.
+* Toda transmissão deve usar CSMA/CA.
+    * Exceto *acks*.
+
+---
+
+slideTitle: CSMA/CA no IEEE 802.15.4
+
+#### Duas variantes
+* *Slotted*: períodos de *backoff* sempre alinhados entre nós.
+* *Unslotted*: sem alinhamento necessário.
+
+#### Outros aspectos
+* Similar ao do IEEE 802.11.
+* Algumas diferenças:
+    * Contador de *backoff* decrementa independentemente do meio estar ocupado.
+    * Se meio está ocupado ao final do *backoff*, reage como transmissão mal-sucedida.
+   
+---
+
+slideTitle: Modos de Transferência
+
+| Origem | Destino | Rede com beacon? | Como? | Ack |
+| :----- | :------ | :--------------- | :----- | :--- |
+| Dispositivo | Coordenador | Não | CSMA/CA *unslotted* | Opcional |
+| Dispositivo | Coordenador | Sim | CSMA/CA *slotted* | Opcional |
+| Coordenador | Dispositivo | Sim | Quadro informado no beacon, comando de requisição, envio do dado (ambos com CSMA/CA *slotted*) | Mandatório |
+| Coordenador | Dispositivo | Não | Aguarda comando de requisição, envio do dado (ambos com CSMA/CA *unslotted*) | Mandatório |
+| Dispositivo | Dispositivo | N/A | CSMA/CA *unslotted* | Opcional |
+
+---
+
+slideTitle: Associação
+
+* Novo nó envia uma requisição de associação.
+    * Respondida com *ack*.
+    * .red[Confirma recebimento, não associação!]
+* Coordenador verifica se há recursos na PAN.
+    * Se sim, aloca um *short address* e gera resposta positiva.
+
+---
+
+slideTitle: Desassociação
+
+* Coordenador pode desassociar estações arbitrariamente.
+    * Enviando notificação de desassociação.
+* Estações podem solicitar suas desassociações também.
+
+---
+
+slideTitle: Gerenciamento de GTS
+
+* Alocação é prerrogativa exclusiva do coordenador.
+* GTS só pode ser usado para comunicações entre coordenador e dispositivos.
+* Dispositivos podem solicitar um GTS para transmissão e outro para recepção.
+    * Por super-quadro.
+* Quadro GTS request.
+
+---
+
+slideTitle: Formato de um Quadro MAC
+
+#### Formato Geral
+
+.center[
+![:imageS width: 70%](FormatoQuadro.png)
+]
+
+#### Tipos Específicos
+* *Beacon*.
+* Dados.
+* *ack*.
+* Quadro de comandos MAC.
+
+---
+
+layout: false
+class: section-slide
+
+# Zigbee e Roteamento
+
+---
+
+class: middle
+layout: true
+name: conteudo
+
+.title[
+{{slideTitle}}
+<hr>]
+
+---
+
+slideTitle: Camada de Roteamento no Zigbee
+
+* Permite redes Zigbee de múltiplos saltos.
+* Problema: definir caminhos entre cada par de dispositivos.
+* Dois protocolos:
+    * AODV.
+    * Cluster-Tree.
+
+.center[
+### Mais Detalhes em Outras Apresentações
+]
+
+</template>
+    </textarea>
+
+    <script src="../template/js/remark-latest.min.js" type="text/javascript"></script>
+    <script src="../template/js/d3.v4.js"></script>
+    <script src="../template/js/graphlib-dot.js"></script>
+    <script src="../template/js/dagre-d3.min.js"></script>
+    <script src="../template/js/dagre-d3-extra.js"></script>
+    <script src="../template/js/macros.js" type="text/javascript"></script>
+    <script src="../template/js/callbacks.js" type="text/javascript"></script>
+    <script src="../template/js/katex.min.js"></script>
+    <script src="../template/js/auto-render.min.js"></script>
+    <link rel="stylesheet" href="../template/css/katex.min.css">
+    <script type="text/javascript">
+
+      var renderMath = function() {
+        renderMathInElement(document.body, {delimiters: [
+           {left: "$$", right: "$$", display: true},
+           {left: "$", right: "$", display: false},],
+       ignoredTags: [
+           "script", "style", "noscript", "pre", "code"
+       ]});
+      }
+
+      var slideshow = remark.create({highlightStyle: "github", highlightLines: "true", highlightSpans: "true", slideNumberFormat: onSlideCallback}, renderMath);
+
+      dagreRenderAllSlides();
+
+    </script>
+</body>
+</html>

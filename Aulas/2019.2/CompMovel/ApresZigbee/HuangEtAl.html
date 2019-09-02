@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Apresentação de Artigo: On the Validity of IEEE 802.11 MAC Modeling Hypotheses</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" type="text/css" href="../template/css/roboto.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/general.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/code.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/cover.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/section.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/elements.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/table.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/block.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/dagre.css">
+    <style>
+      span.katex {
+        font-size: 0.95em;
+      }
+    </style>
+  </head>
+  <body>
+
+    <textarea id="source">
+
+class: cover-slide
+
+![:cover](
+Computação Móvel
+Apresentação do Artigo<br><i>On the Validity of IEEE 802.11 MAC Modeling Hypotheses</i>
+Diego Passos
+../template/img/logo.svg
+)
+
+---
+
+class: middle
+layout: true
+name: conteudo
+
+.title[
+{{slideTitle}}
+<hr>]
+
+---
+
+slideTitle: Dados Bibliográficos
+
+### Autores
+* Kaidi Huang, Ken R. Duffy, and David Malone.
+
+### Periódico
+* *IEEE/ACM Transactions on Networking*.
+
+### Data de publicação
+* Dezembro de 2010.
+    * Submetido em Outubro de 2008!
+
+---
+
+layout: false
+class: section-slide
+
+# Introdução
+
+---
+
+class: middle
+layout: true
+name: conteudo
+
+.title[
+{{slideTitle}}
+<hr>]
+
+---
+
+slideTitle: Motivação
+
+### IEEE 802.11
+* Padrão *de facto* para WLANs.
+* Amplamente implantado:
+  * Muita pesquisa em compreender/modelar CSMA/CA.
+
+### Modelos
+* **Vários**.
+* Baseados em *hipóteses* comuns.
+* Validação:
+  * Precisão das estimativas de desempenho.
+  * .alert[Mas não da validade das hipóteses].
+
+---
+
+slideTitle: Hipóteses Comuns (I)
+
+### Tentativas de Transmissão
+* $C_k$: resultado da *k-ésima* tentativa.
+  * $C_k = 0$: sucess.
+  * $C_k = 1$: fracasso.
+
+### Hipóteses
+* (A1) Sequência $\{C_k\}$ é estocasticamente **independente**.
+* (A2) Elementos de $\{C_k\}$ são **identicamente distribuídos**.
+  * Em particular: .alert[não dependem do estágio de *backoff*].
+
+---
+
+slideTitle: Hipóteses Comuns (II)
+
+### Enfileiramento
+* $Q_k$: estado da fila após *k-ésimo* pacote.
+  * $Q_k = 0$: fila vazia.
+  * $Q_k = 1$: fila não vazia.
+
+### Hipóteses
+* (A3) Sequência $\{Q_k\}$ é estocasticamente **independente**.
+* (A4) Elementos de $\{Q_k\}$ são **identicamente distribuídos**.
+  * Em particular: .alert[não dependem do estágio de *backoff*].
+
+---
+
+slideTitle: Hipóteses Comuns (III)
+
+### IEEE 802.11e
+* Diferentes prioridades: diferentes AIFS.
+    * AIFS menor &rArr; prioridade de acesso ao meio.
+* Seja $H_k$ o # de *slots* tal que:
+  * Estações prioritárias decrementam contador de *backoff*, demais **não**.
+
+### Hipóteses
+* (A5) Sequência $\{H_k\}$ é estocasticamente **independente**.
+* (A6) Elementos de $\{H_k\}$ são **identicamente distribuídos**, com distribuição:
+
+![:latex]($$P(H = i\) = (\Pi^i\)_{1,D+1} - (\Pi^{i-1}\)_{1,D+1}$$)
+
+---
+
+slideTitle: Hipóteses Comuns (IV)
+
+### IEEE 802.11s
+* Seja $D_k$ o intervalo entre saídas de pacotes de um nó.
+  * Final das transmissões com sucesso.
+* Suponha que pacotes chegam ao nó com distribuição de Poisson.
+
+### Hipóteses
+* (A7) Sequência $\{D_k\}$ é estocasticamente **independente**.
+* (A8) Elementos de $\{D_k\}$ têm **distribuição exponencial**.
+
+---
+
+slideTitle: Objetivos
+
+### Investigar validade das hipóteses
+* Coleta de dados.
+  * Experimentos reais.
+  * Simulações.
+* Análise estatística.
+  * Auto-covariância.
+  * *Run-test*.
+  * Estimação de parâmetros.
+  * Ajustes de curvas.
+
+---
+
+layout: false
+class: section-slide
+
+# Modelos Analíticos para o DCF e o EDCA
+
+---
+
+class: middle
+layout: true
+name: conteudo
+
+.title[
+{{slideTitle}}
+<hr>]
+
+---
+
+slideTitle: CSMA/CA no IEEE 802.11
+
+### *Backoff* Exponencial Binário (BEB)
+* Ponto chave do protocolo.
+* A cada nova retransmissão, janela de contenção dobra.
+* .alert[Acopla processos de estações diferentes].
+  * Colisões criam interdependências.
+  * .alert[Dificultam análise &rArr; aproximações].
+
+### Abordagens analíticas
+* p-persistente.
+* Campo médio de Markov.
+  * Distintas, mas **compartilham hipóteses**!
+  * Hipóteses **nunca verificadas diretamente**!
+
+---
+
+slideTitle: Aproximações e Idealizações
+
+### Canal sem ruídos
+* Se enlace existe, é **perfeito**.
+    * Só há perdas por colisão.
+
+### Aproximação para desacoplamento
+* Probabilidade de colisão **fixa**.
+    * .alert[Independente do passado].
+
+---
+
+slideTitle: Modelos p-persistentes (I)
+
+![:column 40%](
+### Histórico
+* Aloha.
+* Ethernet.
+* ...
+)
+
+![:column 60%](
+### Ideia básica
+* Nó transmite com **prob. fixa** $\tau$.
+* **Independente** de:
+    * *Slots* anteriores.
+    * Outros nós.
+)
+
+### Consequências
+* Probabilidade de colisão é fixa: $p$.
+* Com $N$ nós, se um nó transmite, prob. de **não** haver colisão é:
+
+$$(1-p) = (1-\tau)^{(N-1)}$$
+
+---
+
+slideTitle: Modelos p-persistentes (II)
+
+### Mais consequências
+* Resultados de transmissões: **independentes, identicamente distribuídos**.
+
+### Aplicando o modelo
+* Escolhe-se $\tau$ tal que:
+    * Tempo médio até transmissão com sucesso igual ao da rede real.
+
+### Precisão
+* Na prática, predições acuradas de vazão.
+
+---
+
+slideTitle: Modelos de Campo Médio
+
+### Fundamento similar ao p-persistente
+
+$$(1-p) = (1-\tau(p))^{(N-1)}$$
+
+.col-2[
+### Diferenças
+* $\tau$ função de $p$.
+* Nós sempre têm pacotes a transmitir.
+    * **Hipótese de saturação**.
+]
+
+.col-2[
+### Modelagem do *backoff*
+* Cadeia de Markov.
+* Transições dependem de $p$.
+* Estado estacionário determina $\tau(p)$.
+* $p$: solução de sistema de equações de equilíbrio.
+]
+
+---
+
+slideTitle: Acurácia dos Modelos
+
+### Comparação com simulações
+* Métricas de comparação:
+    * Vazão, atraso, ...
+
+.col-2[
+### Em geral...
+* Acurados.
+* Mesmo dadas as aproximações.
+]
+
+.col-2[
+### Mas...
+* Pode-se generalizar?
+]
+
+---
+
+slideTitle: Popularidade
+
+.col-2[
+#### Modelos p-persistentes
+* IEEE 802.11 saturado [4].
+    * Entre 400 e 800 citações.
+* IEEE 802.11e saturado [8].
+]
+
+.col-2[
+#### Modelos de campo médio
+* Modelo de Bianchi [2].
+    * Entre 1300 e 3200 citações.
+    ]
+
+| Variações do Modelo de Campo Médio |    |
+| :--------------------------------- | :- |
+| Sem saturação ou *buffers* | [6,7,9,10] |
+| Sem saturação, com *buffers* | [11-14] |
+| IEEE 802.11e saturado | [15-17] |
+| IEEE 802.11e sem saturação | [18-20] |
+| Múltiplos rádios, saltos | [21] |
+
+---
+
+slideTitle:
+layout: false
+class: section-slide
+
+# Setup Experimental
+
+---
+
+class: middle
+layout: true
+name: conteudo
+
+.title[
+{{slideTitle}}
+<hr>]
+
+---
+
+slideTitle: Topologia e Tráfego
+
+.col-2[
+![:imageS width: 95%](Setup.svg)
+
+### Nós
+* Todos PCs, Linux.
+* IEEE 802.11b/g
+* Taxa fixa de 11 Mb/s.
+]
+
+.col-2[
+### Metodologia
+* Sequência de pacotes UDP, Poisson.
+* Número de repetições: Inequação de Hoeffding.
+    * *Buffers* pequenos: 2h.
+    * *Buffers* grandes: 4h.
+* Estatísticas coletadas pelos clientes:
+    * *Timestamp* do *ack*.
+    * Número de retransmissões.
+    * Estado da fila.
+* Validação com ns-2.
+]
+
+---
+
+layout: false
+class: section-slide
+
+# Hipóteses (A1) e (A2)
+
+---
+
+class: middle
+layout: true
+name: conteudo
+
+.title[
+{{slideTitle}}
+<hr>]
+
+---
+
+slideTitle: Relembrando...
+
+### Colisões
+* $C_k$: resultado da *k-ésima* transmissão.
+    * $C_k = 0$: **sem colisão**.
+    * $C_k = 1$: **colisão**.
+
+### Hipóteses
+* (A1) Sequência $\{C_k\}$ é estocasticamente **independente**.
+* (A2) Elementos de $\{C_k\}$ são **identicamente distribuídos**.
+  * Em particular: .alert[não dependem do estágio de *backoff*].
+
+---
+
+slideTitle: Hipótese (A1)
+
+### Metodologia
+* Sequências de sucessos/falhas medidas experimentalmente.
+* Cálculo da **auto-covariância** normalizada.
+
+![:column 45%](
+### Três cenários
+* Saturado.
+* Não saturado, *buffer* pequeno.
+* Não saturado, *buffer* grande.
+)
+
+![:imageS width:60%; position: absolute; right: 5%;](Amostras.png)
+
+---
+
+slideTitle: Hipótese (A1) - Cenário Saturado
+
+![:imageS width: 55%; margin-left: 48%;](A1_Saturado.png)
+
+#### Auto-correlação normalizada
+* Para lag 0: sempre 1.
+* Para demais *lags*: **0, se independentes**.
+
+![:block width: 35%; position: absolute; top: 30%; left: 5%](Conclusões dos Autores
+* Rápida convergência p/ 0.
+    * Pouca dependência.
+)
+
+---
+
+slideTitle: Hipótese (A1) - Cenário Não Saturado
+
+![:imageS width: 50%; position: absolute; left: 50%; top: 14%](A1_NaoSaturadoPequeno.png)
+
+![:imageS width: 50%; position: absolute; right: 50%; bottom: 1%](A1_NaoSaturadoGrande.png)
+
+![:block width: 40%; position: absolute; top: 20%; left: 5%](Conclusões dos Autores
+* Novamente, rápida convergência p/ 0.
+    * Pouca dependência.
+)
+
+---
+
+slideTitle: Hipóteses (A1) e (A2)
+
+### Testadas em conjunto
+* *Run test*:
+    * Dada sequência binária ![:latex]( $C_1,...,C_n$ ).
+    * Hipótese nula: $\{C_k\}$ gerada por sequência de variáveis de Bernoulli.
+
+### Resultados
+* Estatística do teste variou de 11,66 a 68,58.
+
+### Interpretação
+* Menos de 1% de chance, se valor do teste é $\ge$ 2,58.
+* .alert[Conclusão]: resultados de transmissão **não** são i.i.d.
+
+---
+
+slideTitle: Hipótese (A2)
+
+### Metodologia
+* Para *k-ésima* tentativa de transmissão, anota-se:
+    * Sucesso ou fracasso ($C_k$).
+    * Estágio de *backoff* ($\alpha_k$).
+* Assume-se: $p_i$ fixo para cada estágio de *backoff* $i$.
+    * Estimado por:
+
+![:latex]($$\hat{p}_i = \frac{\sum_{k=1}^{n}{C_k\cdot\chi(\alpha_k = i\)}}{\sum_{k=1}^{n}{\cdot\chi(\alpha_k = i\)}}$$)
+
+* Ao menos 185 amostras.
+    * ![:latex]($\|\hat{p}_i - p_i\| < 0,01$) com 95% de certeza.
+    * Desigualdade de Hoeffding.
+
+---
+
+slideTitle: Hipótese (A2) - Cenário Saturado
+
+![:imageS width: 55%; margin-left: 48%;](A2_Saturado.png)
+
+#### Interpretação
+* Se $p$ independente de estágio de *backoff*, estimativa constante.
+
+![:block width: 35%; position: absolute; top: 30%; left: 5%](Conclusões dos Autores
+* P/ cada N, estimativa de $p$ relativamente constante.
+* Suporta hipótese de $p$ fixo, indepentende do *backoff*.
+)
+
+---
+
+slideTitle: Hipótese (A2) - Cenário Não Saturado
+
+![:imageS width: 50%; position: absolute; left: 50%; top: 14%](A2_NaoSaturadoPequeno.png)
+
+![:imageS width: 50%; position: absolute; right: 50%; bottom: 1%](A2_NaoSaturadoGrande.png)
+
+![:block width: 44%; position: absolute; top: 17%; left: 3%](Conclusões dos Autores
+* P/ buffer grande.
+    * $p$ cresce com estágio.
+    * (A2\) não é boa aproximação!
+)
+
+![:block width: 45%; position: absolute; bottom: 3%; right: 1%](Conclusões dos Autores
+* P/ buffer pequeno.
+    * Valores ainda próximos.
+    * Mas, certa "estrutura".
+    * $p$ *parece* dependente do estágio.
+)
+
+---
+
+layout: false
+class: section-slide
+
+# Hipóteses (A3) e (A4)
+
+---
+
+class: middle
+layout: true
+name: conteudo
+
+.title[
+{{slideTitle}}
+<hr>]
+
+---
+
+slideTitle: Relembrando...
+
+### Enfileiramento
+* $Q_k$: estado da fila após *k-ésimo* pacote.
+  * $Q_k = 0$: fila vazia.
+  * $Q_k = 1$: fila não vazia.
+
+### Hipóteses
+* (A3) Sequência $\{Q_k\}$ é estocasticamente **independente**.
+* (A4) Elementos de $\{Q_k\}$ são **identicamente distribuídos**.
+  * Em particular: .alert[não dependem do estágio de *backoff*].
+
+---
+
+slideTitle: Considerações dos Autores
+
+### Hipóteses mais especulativas
+* Ignoram dependências óbvias:
+    * Se **há dois ou mais** pacotes na fila na transmissão $k$, então:
+
+![:latex]($$Q_k = Q_{k+1} = 1$$)
+
+* Além disso:
+    * Se pacote **espera** na fila, **maior a prob.** de outro ser enfileirado.
+    * ...
+
+---
+
+slideTitle: Hipótese (A3)
+
+### Metodologia
+* Auto-covariância das amostras experimentais.
+* Relembrando: 0 indica independência.
+
+![:imageS margin-left: 45%; width: 55%](A3.png)
+
+![:block width: 42%; position: absolute; top: 60%; left: 1%](Conclusões dos Autores
+* Covariância $< 0,02$ p/ lag $\ge 5$.
+    * Dependência considerada insignificante.
+)
+
+---
+
+slideTitle: Hipóteses (A3) e (A4)
+
+### Avaliação conjunta
+* *Run test*.
+
+### Resultado
+* Estatística do teste: entre 130 e 397.
+* **Conclusão**: rejeição da hipótese de i.i.d.
+
+---
+
+slideTitle: Hipótese (A4)
+
+.col-2[
+### Metodologia
+* Estimar $\hat{q}_i$: prob. de haver pacote enfileirado após transmissão $k$.
+* Com base nos dados:
+
+![:latex]($$\hat{q}_i = \frac{\sum_{k = 1}^{n}{Q_k\cdot\chi(B_k = i\)}}{\sum_{k = 1}^{n}{\chi(B_k = i\)}}$$)
+]
+
+.col-2[
+![:imageS width: 95%; margin-top: 0%](A4.png)
+]
+
+![:block width: 85%; ](Conclusões dos Autores
+* $q_i$ claramente cresce com o estágio de *backoff* $i$.
+* (A4\) *não* é boa aproximação.
+)
+
+
+---
+
+layout: false
+class: section-slide
+
+# Hipóteses (A5) e (A6)
+
+---
+
+class: middle
+layout: true
+name: conteudo
+
+.title[
+{{slideTitle}}
+<hr>]
+
+---
+
+slideTitle: Relembrando...
+
+### IEEE 802.11e
+* Diferentes prioridades: diferentes AIFS.
+    * AIFS menor &rArr; prioridade de acesso ao meio.
+* Seja $H_k$ o # de *slots* tal que:
+  * Estações prioritárias decrementam contador de *backoff*, demais **não**.
+
+### Hipóteses
+* (A5) Sequência $\{H_k\}$ é estocasticamente **independente**.
+* (A6) Elementos de $\{H_k\}$ são **identicamente distribuídos**, com distribuição:
+
+![:latex]($$P(H = i\) = (\Pi^i\)_{1,D+1} - (\Pi^{i-1}\)_{1,D+1}$$)
+
+---
+
+slideTitle: Cenário Considerado
+
+### Duas classes de nós
+* $N_1$ estações de classe 1:
+    * Usam $AIFS_1$.
+* $N_2$ estações de classe 2:
+    * Usam $AIFS_2 = AIFS_1 + D\cdot \sigma$.
+        * $D$ é um inteiro positivo.
+        * $\sigma$ é um *slot time*.
+
+---
+
+slideTitle: Hipótese (A5)
+
+### Metodologia
+* Auto-covariância das amostras experimentais.
+* Relembrando: 0 indica independência.
+
+![:imageS margin-left: 45%; width: 55%](A5.png)
+
+![:block width: 42%; position: absolute; top: 60%; left: 1%](Conclusões dos Autores
+* Covariância $< 0,02$ p/ lag $\ge 5$.
+    * Razoável assumir independência.
+)
+
+---
+
+slideTitle: Hipótese (A6) (I)
+
+### Metodologia
+* Autores modelam **função de densidade de probabilidade** de $H_k$.
+    * Cadeia de Markov com matriz de transição $\Pi$.
+
+![:latex]($$P(H = i\) = (\Pi^i\)_{1,D+1} - (\Pi^{i-1}\)_{1,D+1}$$)
+
+* Função de $P_{s1} = (1 - \tau_1)^{N_1}$.
+    * $\tau_1$: prob. de estações classe 1 acessarem meio.
+    * $N_1$: # de estações classe 1.
+* Estimam $P_{s1}$ com base em dados experimentais.
+* Plotam FDP experimental e modelada.
+
+---
+
+slideTitle: Hipótese (A6) (II)
+
+.col-2[
+![:imageS width: 98%](A6_D2.png)
+]
+
+.col-2[
+![:imageS width: 98%](A6_D12.png)
+]
+
+![:block width: 85%;](Conclusões dos Autores
+* Acurácia considerada boa.
+* Distribuição da hipótese pode ser usada para propósitos práticos.
+)
+
+---
+
+layout: false
+class: section-slide
+
+# Hipóteses (A7) e (A8)
+
+---
+
+class: middle
+layout: true
+name: conteudo
+
+.title[
+{{slideTitle}}
+<hr>]
+
+---
+
+slideTitle: Relembrando...
+
+### IEEE 802.11s
+* Seja $D_k$ o intervalo entre saídas de pacotes de um nó.
+  * Final das transmissões com sucesso.
+* Suponha que pacotes chegam ao nó com distribuição de Poisson.
+
+### Hipóteses
+* (A7) Sequência $\{D_k\}$ é estocasticamente **independente**.
+* (A8) Elementos de $\{D_k\}$ têm **distribuição exponencial**.
+
+---
+
+slideTitle: Motivação
+
+### Comunicação em múltiplos saltos
+* Taxa de chegada de pacotes em um nó depende da saída do vizinho.
+
+### Hipótese de Modelos
+* Chegada de pacotes têm distribuição Poisson.
+
+### Logo
+* Se hipóteses são razoáveis, modelos atuais podem ser usados em múltiplos saltos.
+
+---
+
+slideTitle: Hipótese (A7) (I)
+
+.col-2[
+### Metodologia
+* Auto-covariância das amostras experimentais.
+* Relembrando: 0 indica independência.
+]
+
+.col-2[
+### Não saturado
+
+![:imageS width: 97%](A7_Saturado.png)
+]
+
+---
+
+slideTitle: Hipótese (A7) (II)
+
+.col-2[
+### Metodologia
+* Auto-covariância das amostras experimentais.
+* Relembrando: 0 indica independência.
+]
+
+.col-2[
+### Saturado, *buffer* pequeno
+
+![:imageS width: 97%](A7_NaoSaturadoPequeno.png)
+]
+
+---
+
+slideTitle: Hipótese (A7) (III)
+
+.col-2[
+### Metodologia
+* Auto-covariância das amostras experimentais.
+* Relembrando: 0 indica independência.
+]
+
+.col-2[
+### Saturado, *buffer* grande
+
+![:imageS width: 97%](A7_NaoSaturadoGrande.png)
+]
+
+---
+
+slideTitle: Hipótese (A7) (IV)
+
+### Conclusões
+* Pouca dependência.
+    * Exceto por *lags* muito baixos.
+* Hipótese de independência razoável na prática.
+
+---
+
+slideTitle: Hipótese (A8) (I)
+
+.col-2[
+### Metodologia
+* Comparação dos intervalos medidos com distribuição hipotética.
+    * Exponencial, considerando intervalo médio experimental.
+
+![:block](Conclusões dos Autores
+* Distribuição empírica bem próxima do esperado.
+* Hipótese razoável.
+* Passagem por interface IEEE 802.11 não afeta natureza do tráfego.
+)
+]
+
+.col-2[
+### Não saturado, *buffer* pequeno
+
+![:image 97%](A8_NaoSaturadoPequeno.png)
+]
+
+---
+
+slideTitle: Hipótese (A8) (II)
+
+.col-2[
+### Metodologia
+* Comparação dos intervalos medidos com distribuição hipotética.
+    * Exponencial, considerando intervalo médio experimental.
+
+![:block](Conclusões dos Autores
+* Distribuição empírica desvia do esperado principalmente para intervalos curtos.
+    * Mais próximos do caso com saturação.
+)
+]
+
+.col-2[
+### Não saturado, *buffer* grande
+
+![:image 97%](A8_NaoSaturadoGrande.png)
+]
+
+
+---
+
+slideTitle: Hipótese (A8) (III)
+
+.col-2[
+### Metodologia
+* Comparação dos intervalos medidos com distribuição hipotética.
+    * Exponencial, considerando intervalo médio experimental.
+
+![:block](Conclusões dos Autores
+* Grande desvio da distribuição esperada.
+* Intervalos dominados pelo acesso ao meio, *backoff*.
+    * Não seguem distribuição exponencial.
+)
+]
+
+.col-2[
+### Saturado
+
+![:image 97%](A8_Saturado.png)
+]
+
+---
+
+layout: false
+class: section-slide
+
+# Discussão
+
+---
+
+class: middle
+layout: true
+name: conteudo
+
+.title[
+{{slideTitle}}
+<hr>]
+
+---
+
+slideTitle: Hipótese (A0)
+
+#### Visão global
+* Todos os nós têm mesma visão do canal.
+    * Livre ou ocupado
+
+#### Amplamente adotada
+* Tanto por modelos p-persistentes, quanto campo médio.
+
+#### Razoável?
+* Não modela terminais escondidos.
+    * Múltiplos saltos.
+    * Ou redes vizinhas.
+
+---
+
+slideTitle: Resumo das Conclusões
+
+![:imageS width: 96%; margin-left: 2%](Resumo.png)
+
+---
+
+slideTitle: Canais Idealizados
+
+#### Pouco provável na prática
+* IEEE 802.11 opera em banda não-licenciada.
+* Dificuldade de reproduzir nos experimentos.
+
+#### Modelos para canais com perdas.
+* Existem, mas usam outras hipóteses.
+    * *e.g.*, perdas por interferência/ruído são i.i.d e independentes de qualquer outro fator do modelo.
+
+---
+
+slideTitle: Considerações Finais
+
+#### Várias hipóteses não parece razoáveis
+* Modelos precisam de mais trabalho.
+    * Flexibilizar algumas das hipóteses.
+* Em particular, modelos que consideram *buffers*.
+
+#### Sugestões
+* Hipóteses (A3') e (A4'):
+    * Considerar $\{Q_k\}$ i.i.d. apenas para um dado estágio de *backoff*.
+* Considerar modelos assimétricos.
+    * Cargas potencialmente diferentes para nós diferentes.
+
+</template>
+    </textarea>
+
+    <script src="../template/js/remark-latest.min.js" type="text/javascript"></script>
+    <script src="../template/js/d3.v4.js"></script>
+    <script src="../template/js/graphlib-dot.js"></script>
+    <script src="../template/js/dagre-d3.min.js"></script>
+    <script src="../template/js/dagre-d3-extra.js"></script>
+    <script src="../template/js/macros.js" type="text/javascript"></script>
+    <script src="../template/js/callbacks.js" type="text/javascript"></script>
+    <script src="../template/js/katex.min.js"></script>
+    <script src="../template/js/auto-render.min.js"></script>
+    <link rel="stylesheet" href="../template/css/katex.min.css">
+    <script type="text/javascript">
+
+      var renderMath = function() {
+        renderMathInElement(document.body, {delimiters: [
+           {left: "$$", right: "$$", display: true},
+           {left: "$", right: "$", display: false},],
+       ignoredTags: [
+           "script", "style", "noscript", "pre", "code"
+       ]});
+      }
+
+      var slideshow = remark.create({highlightStyle: "github", highlightLines: "true", highlightSpans: "true", slideNumberFormat: onSlideCallback}, renderMath);
+
+      dagreRenderAllSlides();
+
+    </script>
+</body>
+</html>
