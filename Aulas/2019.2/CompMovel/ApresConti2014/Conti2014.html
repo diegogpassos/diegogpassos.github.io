@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Apresentação de Artigo: Mobile Ad Hoc Networking: Milestones, Challenges, and New Research Directions</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" type="text/css" href="../template/css/roboto.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/general.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/code.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/cover.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/section.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/elements.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/table.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/block.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/dagre.css">
+    <style>
+      span.katex {
+        font-size: 0.95em;
+      }
+    </style>
+  </head>
+  <body>
+
+    <textarea id="source">
+
+class: cover-slide
+
+![:cover](
+Computação Móvel
+Apresentação do Artigo<br><i>Mobile Ad Hoc Networking: Milestones, Challenges, and New Research Directions</i>
+Diego Passos
+../template/img/logo.svg
+)
+
+---
+
+class: middle
+layout: true
+name: conteudo
+
+.title[
+{{slideTitle}}
+<hr>]
+
+---
+
+slideTitle: Dados Bibliográficos
+
+### Autores
+* Marco Conti.
+  * *Italian National Research Council*.
+* Silvia Giordano.
+  * *University of Applied Technology of Southern Switzerland*.
+
+### Periódico
+* *IEEE Communications Magazine*
+
+### Ano 
+* 2014
+
+---
+
+layout: false
+class: section-slide
+
+# Introdução
+
+---
+
+class: middle
+layout: true
+name: conteudo
+
+.title[
+{{slideTitle}}
+<hr>]
+
+---
+
+slideTitle: Paradigma de Redes Ad Hoc Multi-Saltos
+
+#### Origem
+* Aplicações militares.
+* Aplicações civis a partir de 1990.
+  * Advento de padrões como o Bluetooth, Wi-Fi.
+  * Permitiam comunicação direta.
+
+#### Objetivos
+* Permitir comunicação, sem infraestrutura.
+
+#### Compartilhar Acesso à Internet
+.center[
+<blockquote style="font-style: italic;">&quot;...in a MANET, the users’ devices cooperatively provide the Internet services, usually provided by the network infra-structure (e.g., routers, switches, servers).&quot; </blockquote>]
+
+---
+
+slideTitle: Potencial
+
+### Visão Inicial
+* Um dos paradigmas mais inovadores e desafiadores.
+* Promessa de presença no dia-a-dia dos usuários.
+
+### Possível Aplicação 
+* &quot;Opção atrativa para construir redes de quarta geração&quot; (?)
+
+---
+
+slideTitle: MANETs e IETF (I)
+
+### IETF 
+* *Internet Engineering Task Force*. 
+* Padroniza tecnologias para a Internet.
+
+### MANETs e TCP/IP 
+* Grupo de trabalho *MANET Internet Engineering Task Force*
+
+
+
+---
+
+slideTitle: MANETs e IETF (II)
+
+#### Foco em MANETs Puras de Propósito Geral
+* &quot;Pura&quot;:
+      * Nenhuma infraestrutura.
+      * Nenhuma entidade central.
+* &quot;Propósito Geral&quot;:
+      * Sem aplicações específicas.
+      * Suporte à aplicações TCP/IP legadas.
+
+.center[
+![:image 70%](GeneralPurposeMANET.png)]
+
+---
+
+slideTitle: Direções Iniciais de Pesquisa
+
+### Estender Roteamento e Encaminhamento IP
+* Proliferação de protocolos de roteamento.
+      * Protocolos legados não adequados. 
+      * Muito dinamismo.
+
+### Esforços de Padrnização
+* AODV.
+* OLSR.
+* DSR.
+* TBRPF.
+
+.center[.red[Nenhum claramente superior em todos os casos!]]
+
+---
+
+slideTitle: Outros Temas de Pesquisa
+
+### Temas em Todas as Camadas
+* Da física à de aplicação.
+
+### Exemplos:
+* Transporte: TCP não funciona bem em enlaces sem fio.
+* Aplicação: *middlewares* 
+
+### Também Aspectos *Cross-Layer* 
+* Eficiência energética.
+* Segurança.
+* Cooperação.
+
+---
+
+slideTitle: Resultados de Décadas de Pesquisa 
+
+#### Resultados Teóricos Profundos
+* Limites para o desempenho/capacidade.
+* Protocolos e arquiteturas inovadoras.
+
+#### Pouca Exploração Prática
+* Implementações reais.
+* Soluções da indústria.
+
+#### Por Quê?
+* [Conti e Giordano 2007a] e [Conti e Giordano 2007b]:
+      * Falta de implementação, integração e experimentação.
+      * Credibilidade das simulações.
+      * Motivações socio-econômicas.
+
+---
+
+slideTitle: Paradigmas Derivados
+
+### Vários
+* Mesh.
+* VANETs.
+* WSNs.
+
+### Vantagens
+* Mais pragmáticos:
+      * Orientados a aplicação.
+      * Complexidade reduzida.
+      * Pesquisa focada.
+      * Modelos de simulação realísticos.
+      * *Testbeds* reais.
+
+---
+
+slideTitle: Objetivos do Artigo 
+
+### Revisão
+* Estado da arte das MANETs.
+      * Marcos históricos.
+      * Desafios:
+        * Mesh.
+        * Oportunistas.
+        * VANETs.
+        * WSNs.
+
+#### Discussão
+* Perspectivas futuras (.red[em 2014]).
+      * Revolução das *people-centric networks*. 
+* Sucessos dos paradigmas derivados.
+
+---
+
+layout: false
+class: section-slide
+
+# Redes em Malha Sem Fio (*Mesh*)
+
+---
+
+class: middle
+layout: true
+name: conteudo
+
+.title[
+{{slideTitle}}
+<hr>]
+
+---
+
+slideTitle: Paradigma Orientado a Aplicação
+
+#### Origem em Cenários Bem Definidos
+* &quot;Extensão barata e flexível da Internet&quot;
+
+#### Primeiras Iniciativas
+* Redes comunitárias.
+* Enlaces longos entre residências.
+* VoIP, acesso à Internet.
+  * Retransmissões &rarr; queda de desempenho.
+
+#### Atualmente (2014)
+* WMN metropolitanas.
+      * Governos, empresas.
+* e.g., Google Mesh em Mountain View, CA.
+
+---
+
+slideTitle: Redes Comunitárias
+
+.center[
+![:image 70%](RedesComunitarias.png)]
+
+---
+
+slideTitle: Redução de Complexidade
+
+.col-2[
+### Mudanças Arquiteturais
+* Arquitetura em dois níveis:
+      * *Backbone* sem fio:
+        * Roteadores *mesh*. 
+        * Fixos.
+        * Dedicados.
+        * Roteamento.
+        * Alguns são *gateways*.
+      * Rede de acesso:
+        * Pontos de acesso *mesh*.
+        * Interconectam clientes.
+        * Suportam mobilidade.
+]
+
+.col-2[
+### Vantagens 
+* Energia e mobilidade não afetam encaminhamento.
+* Mobilidade restrita ao último salto.
+]
+
+
+---
+
+slideTitle: Pesquisa Focada (I)
+
+| Desafios |
+| :-------- |
+| Construir *backbone* robusto|
+| Protocolos de roteamento eficientes |
+| Suporte adequado à mobilidade de usuários |
+
+<br>
+
+#### Vasta Literatura
+* Múltiplos rádios, múltiplos canais, múltiplas taxas, múltiplas antenas.
+* Redes com tecnologias heterogêneas.
+* Atribuição de canais.
+
+---
+
+slideTitle: Pesquisa Focada (II)
+
+#### Dificuldades
+* Padrões complexos de interferência.
+      * Auto-interferência.
+* Dificuldade de seleção de caminhos.
+* Tráfego majoritariamente em *downlink*, originado no *gateway*.
+
+---
+
+slideTitle: Experimentos Realísticos
+
+### Simulações e Experimentos Reais
+* Uso combinado.
+      * Repetibilidade.
+      * Controle.
+      * Escalabilidade.
+      * Realismo.
+
+### Validação dos Modelos 
+* Testes reais proveem validação.
+
+---
+
+slideTitle: Pesquisa Atual (2014)
+
+### Soluções Comerciais
+* Já existentes.
+
+### Problemas em Aberto
+* QoS.
+* Eficiência energética.
+
+---
+
+layout: false
+class: section-slide
+
+# Redes de Sensores Sem Fio (*WSN*)
+
+---
+
+class: middle
+layout: true
+name: conteudo
+
+.title[
+{{slideTitle}}
+<hr>]
+
+---
+
+slideTitle: Paradigma Orientado a Aplicação
+
+### Objetivos 
+* Controlar, monitorar eventos, fenômenos.
+
+### Aplicações, Cenários Específicos
+* Agricultura de precisão.
+* Monitoramento de estruturas.
+
+### Projeto Dependente de Aplicação 
+* Requisitos.
+* Recursos.
+* Restrições.
+
+---
+
+slideTitle: Exemplos de WSN
+
+.center[
+![:image 70%](WSNs.png)]
+
+---
+
+slideTitle: Redução de Complexidade
+
+### Soluções Específicas
+* Aplicação participar sempre em mente.
+* Muitas vezes, sem mobilidade.
+* Possibilidade de nós de alta capacidade, especiais.
+      * *e.g.*, mulas de dados.
+
+---
+
+slideTitle: Pesquisa Focada
+
+#### Quatro Áreas Principais
+* Cenários de Aplicação.
+* Protocolos de comunicação.
+      * MAC, agrupamento, roteamento, segurança, ...
+* *Hardware* e *software*. 
+      * Plataformas, SO, ...
+* Serviços de otimização.
+      * Eficiência energética, sincronização, localização, ...
+
+---
+
+slideTitle: Experimentos Realísticos
+
+### Inicialmente, Simulações
+* Muitos nós, larga escala.
+
+### *Testbeds* universitários
+* *e.g.*, Motelab.
+* Tipicamente abertos para a comunidade.
+
+### Redes Reais 
+* GreenOrb.
+      * 5000 sensores.
+      * Monitoramento florestal.
+
+---
+
+slideTitle: Pesquisa Atual (2014)
+
+### Área Bem Consolidada, mas... 
+* Vários problemas em aberto:
+      * Segurança.
+      * Desempenho da comunicação.
+      * Facilidade de desenvolvimento.
+      * *Energy harvesting*.
+      * Uso de robôs. 
+      * WSN sub-aquáticas.
+      * Uso de *smartphones* em redes centradas em pessoas.
+      * ...
+
+---
+
+layout: false
+class: section-slide
+
+# Redes Oportunistas
+
+---
+
+class: middle
+layout: true
+name: conteudo
+
+.title[
+{{slideTitle}}
+<hr>]
+
+---
+
+slideTitle: Paradigma Orientado a Aplicação (I)
+
+### MANETs e Mobilidade 
+* Mobilidade é &quot;escondida&quot;.
+* Construção de caminhos &quot;estáveis&quot;.
+
+### Redes Oportunistas e Mobilidade 
+* Mobilidade cria &quot;oportunidades&quot;.
+      * **Contatos**.
+* Contatos conectam partes antes desconectadas da rede.
+* *Store-carry-and-forward*.
+
+### DTN
+* Para autores, sinônimo.
+
+---
+
+slideTitle: Paradigma Orientado a Aplicação (II)
+
+### Possível utilidade
+* Ambientes pervasivos.
+* Muitos dispositivos.
+* Tecnologias de curto alcance.
+
+### Mudança de Paradigma 
+* Comutação de pacotes *vs.* comuntação de mensagens.
+
+---
+
+slideTitle: Redução de Complexidade 
+
+### Abandona Paradigma TCP/IP
+* Sem necessidade de caminhos fim-a-fim.
+  * Uma das grandes complexidades das MANETs.
+
+### Modelo de Melhor Esforço 
+* Inerente.
+* Centrado no usuário.
+
+---
+
+slideTitle: Pesquisa Focada
+
+### Três Focos Principais
+* Modelos de mobilidade.
+      * Compreender, modelar movimento humano.
+      * Tempo de contato, tempo intercontato.
+        * Autores diferentes, modelos conflitantes!
+* Roteamento.
+      * Incerteza de contatos futuros.
+      * Mobilidade humana.
+      * Heterogeneidade.
+      * Mecanismos de replicação, encaminhamento probabilístico.
+* Disseminação de dados.
+      * Modelo publicador-assinante.
+
+---
+
+slideTitle: Experimentos Realísticos
+
+### Simulações 
+* Simuladores particulares.
+      * *e.g.*, ONE.
+* *Traces* de mobilidade.
+
+---
+
+slideTitle: Pesquisa Atual (2014)
+
+### Redes Oportunistas e Relações Sociais 
+* Dispositivos móveis são *proxies* dos humanos.
+* Herdam relações de contato.
+* Pode ser explorado para roteamento?
+
+### Computação Oportunista 
+* Recursos de nós explorados com base em contatos.
+
+---
+
+layout: false
+class: section-slide
+
+# Redes Oportunistas
+
+---
+
+class: middle
+layout: true
+name: conteudo
+
+.title[
+{{slideTitle}}
+<hr>]
+
+---
+
+slideTitle: Paradigma Orientado a Aplicação 
+
+#### Objetivos 
+* Conectar Veículos, infraestrutura da cidade/rodovia.
+* Suporte a *Inteligente Transportation Systems* (ITS).
+
+#### Tecnologias 
+* Sem fio, tipicamente 802.11 (?)
+
+#### Várias Possíveis Aplicações 
+* Evitar colisões.
+* Aviso de obstáculos na via.
+* Disseminação de informações de segurança.
+* Informações de trânsito.
+* Entretenimento.
+* ...
+
+---
+
+slideTitle: Redução de Complexidade 
+
+.col-2[
+#### Dois Tipos de Comunicação 
+* V2V.
+* V2R.
+
+#### V2R
+* Infraestrutura.
+      * Celular, WiMAX, Wi-Fi infraestruturado, ...
+* Densidade de estações base é suficiente?
+]
+
+.col-2[
+#### V2V 
+* Paradigma MANET &quot;puro&quot;. 
+      * Comunicação sem fio, auto-organização.
+* Alta mobilidade, velocidades.
+* Densidade possivelmente baixa.
+      * Cenário oportunista?
+
+#### Incentivos socio-econômicos
+* Importância dos veículos na sociedade.
+* Lobby da indústria.
+* Esforços de padronização: *e.g.*, WAVE (IEEE 1609).
+]
+
+---
+
+slideTitle: Pesquisa Focada
+
+### V2R
+* Tecnologias consolidadas.
+      * Wi-Fi, WiMAX, ... 
+* Adequadas a especificidades.
+      * *e.g.*, contatos curtos, escalabilidade.
+
+### V2V
+* Roteamento: 
+  * Alta mobilidade.
+  * Mas confinada às ruas, rodovias.
+* *Geocasting*.
+
+---
+
+slideTitle: Experimentos Realísticos (I)
+
+### Simulações 
+* Atenção à mobilidade realística.
+      * Velocidade, distâncias, desenho das pistas.
+* Simuladores tradicionais de redes adaptados.
+      * OMNET++.
+      * OPNET.
+      * ... 
+* Simuladores híbridos.
+      * Efeitos da rede na mobilidade.
+      * Efeitos da mobilidade na rede.
+* Modelos de propagação adequados.
+
+---
+
+slideTitle: Experimentos Realísticos (II)
+
+### Testbeds Reais 
+* Vários.
+      * CarTel (MIT).
+      * DieselNet (UMass).
+      * ShanghaiGrid.
+      * ...
+
+---
+
+slideTitle: Pesquisa Atual (2014)
+
+### Vários Problemas em Aberto 
+* Caracterização de mobilidade.
+* Desempenho do 802.11.
+* Ferramentas de simulação.
+* *Testbeds*.
+* ... 
+
+---
+
+layout: false
+class: section-slide
+
+# *People-Centric Networks*
+
+---
+
+class: middle
+layout: true
+name: conteudo
+
+.title[
+{{slideTitle}}
+<hr>]
+
+---
+
+slideTitle: Paradigma Orientado a Aplicação 
+
+### Objetivos 
+* Sinergia entre dispositivos móveis e donos.
+      * *Smartphones*. 
+* Mudança de paradigma:
+      * Comunicação entre dispositivos *vs.* entre pessoas.
+
+### Aplicações 
+* De interesse das pessoas.
+* Por isso, mais restritas.
+
+---
+
+slideTitle: Redução de Complexidade 
+
+### Abordagem *Top-Down* 
+* Começa por requisitos e restrições das pessoas.
+* *Cyber-Physical Systems* (CPS).
+
+
+---
+
+slideTitle: Pesquisa Focada (I)
+
+#### Duas Linhas Principais
+* Sensoriamento móvel (*Smartphones*).
+      * Sensoriamento participativo.
+      * Compartilhamento, publicação, busca, interpretação e verificação de dados.
+      * Sensoriamento oportunista.
+      * Vários sensores.
+      * Grande desafio: privacidade *vs.* acesso.
+
+
+---
+
+slideTitle: Pesquisa Focada (II)
+
+#### Duas Linhas Principais
+* Nuvem de *Smartphones*.
+      * Sucesso da Computação na Nuvem.
+      * Menor atraso, gasto energético para acesso.
+      * Explora alta capacidade dos *smartphones*.
+      * Economiza energia, comunicação.
+      * Usuários &quot;ansiosos&quot; para compartilhar recursos (?).
+---
+
+slideTitle: Experimentos Realísticos
+
+### Baseado no Usuário 
+* Mesmo simulações devem ser baseadas em *traces* reais.
+
+---
+
+layout: false
+class: section-slide
+
+# Conclusões e Sumário
+
+---
+
+class: middle
+layout: true
+name: conteudo
+
+.title[
+{{slideTitle}}
+<hr>]
+
+---
+
+slideTitle: Conclusões 
+
+### MANETs
+* Baixo impacto comercial.
+    * Falhas no projeto original.
+* Proveu lições para paradigmas derivados.
+    * WMN, WSN, VANETs, Redes Oportunistas, ...
+    * Abordagem mais pragmática.
+
+.center[    
+<blockquote style="font-style: italic">&quot;... which are, or soon will be, successful 
+  and widespread.&quot;</blockquote>
+]
+
+### Pontos-Chave 
+* Desenvolvimento orientado a aplicação.
+* Redução de complexidade.
+* Pesquisa focada.
+* Experimentos realísticos.
+
+---
+
+slideTitle: Sumário 
+
+.center[
+![:image 100%](Sumario.png)]
+
+</template>
+    </textarea>
+
+    <script src="../template/js/remark-latest.min.js" type="text/javascript"></script>
+    <script src="../template/js/d3.v4.js"></script>
+    <script src="../template/js/graphlib-dot.js"></script>
+    <script src="../template/js/dagre-d3.min.js"></script>
+    <script src="../template/js/dagre-d3-extra.js"></script>
+    <script src="../template/js/macros.js" type="text/javascript"></script>
+    <script src="../template/js/callbacks.js" type="text/javascript"></script>
+    <script src="../template/js/katex.min.js"></script>
+    <script src="../template/js/auto-render.min.js"></script>
+    <link rel="stylesheet" href="../template/css/katex.min.css">
+    <script type="text/javascript">
+
+      var renderMath = function() {
+        renderMathInElement(document.body, {delimiters: [
+           {left: "$$", right: "$$", display: true},
+           {left: "$", right: "$", display: false},
+        ]});
+      }
+
+      var slideshow = remark.create({highlightStyle: "github", highlightLines: "true", highlightSpans: "true", slideNumberFormat: onSlideCallback}, renderMath);
+
+      dagreRenderAllSlides();
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Apresentação de Artigo: Highly Dynamic Destination-Sequenced Distance-Vector Routing (DSDV) for Mobile Computers</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" type="text/css" href="../template/css/roboto.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/general.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/code.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/cover.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/section.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/elements.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/table.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/block.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/dagre.css">
+    <style>
+      span.katex {
+        font-size: 0.95em;
+      }
+    </style>
+  </head>
+  <body>
+
+    <textarea id="source">
+
+class: cover-slide
+
+![:cover](
+Computação Móvel
+Apresentação do Artigo<br><i>Highly Dynamic Destination-Sequenced Distance-Vector Routing (DSDV\) for Mobile Computers</i>
+Diego Passos
+../template/img/logo.svg
+)
+
+---
+
+class: middle
+layout: true
+name: conteudo
+
+.title[
+{{slideTitle}}
+<hr>]
+
+---
+
+slideTitle: Dados Bibliográficos
+
+### Autores
+* Charles E. Perkins.
+  * *IBM, T.J. Watson Research Center*.
+* Pravin Bhagwat.
+  * *University of Maryland*.
+
+### Conferência
+* *ACM SIGCOMM*
+
+### Ano 
+* 1994
+
+---
+
+layout: false
+class: section-slide
+
+# Introdução
+
+---
+
+class: middle
+layout: true
+name: conteudo
+
+.title[
+{{slideTitle}}
+<hr>]
+
+---
+
+slideTitle: Contexto (I)
+
+#### Dispositivos Móveis 
+* Crescimento da venda de *laptops*. 
+* Operação por baterias.
+* Grande poder computacional.
+
+.center[
+<blockquote style="font-style: italic;">&quot;Battery powered, untethered computers are 
+      likely to become apervasive part of our computing infrastructure. &quot;</blockquote>
+]
+
+#### Necessidade de Comunicação 
+* Objetivo: simplicidade.
+      * Evitar necessidade de infraestrutura.
+* Exemplo:
+      * Entrar em sala de conferência.
+      * Aceitar enlaces com dispositivos de outros usuários.
+      * Iniciar comunicação.
+
+---
+
+slideTitle: Contexto (II)
+
+#### Rede Ad Hoc 
+* Coleção de *hosts* móveis.
+* Relacionametno colaborativo.
+      * Próprios nós seriam **roteadores**.
+* Sem intervenção de AP centralizado.
+      * Definição similar ao do grupo IEEE 802.11.
+
+---
+
+slideTitle: Particularidades das Redes Ad Hoc
+
+### Diferenças Significativas
+* Topologias bastante dinâmicas.
+* Usuários não querem fardo de administração.
+* .red[Autores não assumem que estações estão sempre no alcance umas das outras].
+
+### Mobilidade 
+* Dificulta comunicação.
+* Traz imprevisibilidade ao projeto.
+      * A menos que se faça suposições fortes.
+
+---
+
+slideTitle: Protocolos de Roteamento
+
+#### Já Existiam, Mas...
+* Não preparados para o dinamismo das redes ad hoc.
+      * Pior caso de funcionamento.
+* Também não eram tão auto-configuráveis.
+* Características ruins de convergência.
+* Alto custo computacional.
+* Meio sem fio é diferente do cabeado.
+      * *e.g.*, única interface, múltiplos enlaces.
+      * *e.g.*, enlaces de qualidade variável.
+      
+#### Objetivo do Artigo
+* Propor novo protocolo de roteamento.
+* Para redes ad hoc.
+* Baseado em **vetor de distâncias**.
+
+---
+
+layout: false
+class: section-slide
+
+# Revisão de Métodos de Roteamento
+
+---
+
+class: middle
+layout: true
+name: conteudo
+
+.title[
+{{slideTitle}}
+<hr>]
+
+---
+
+slideTitle: Formulação do Problema
+
+#### Caminho Mais Curto
+* Problema clássico em grafos.
+* Para cada destino, cada nó mantém um *próximo salto*.
+      * Melhor para aquele destino.
+* Cada pacote contém um destinatário no cabeçalho.
+* Encaminhamento:
+      * Verifica-se destino do pacote.
+      * Consulta-se **tabela de roteamento**.
+      * Encaminha-se para o próximo salto.
+
+#### Construção da Tabela de Roteamento 
+* Diferença chave entre protocolos.
+* Objetivo comum: definir *caminho ótimo*.
+
+---
+
+slideTitle: Duas Abordagens Básicas (I)
+
+#### Estado de Enlace 
+* Ou *Link-State*.
+* Versão **centralizada** do prob. de caminho mínimo.
+      * **Visão global** da topologia em cada nó.
+      * *Broadcast* periódico dos seus enlaces (.red[toda rede!]).
+      * Aplicação de algoritmo de caminho mínimo.
+* Consistência pode ser um problema.
+      * Atrasos de propagação de informação.
+      * Possibilidade de *loops*.
+
+---
+
+slideTitle: Duas Abordagens Básicas (II)
+
+#### Vetor de Distâncias
+* Versão **distribuída**.
+      * Cada nó mantém estimativas de distâncias para destinatários.
+      * *Broadcast* periódico do vetor (.red[apenas para vizinhos!]).
+      * Ao receber vetor, nó verifica se há caminho melhor para cada destino.
+
+#### Equação de Bellman-Ford:
+.center[
+<blockquote style="font-style: italic; color: red;">&quot;Minha distância para o vizinho mais distância do vizinho para o destino é melhor que minha distância para o destino?&quot;</blockquote>
+]            
+
+#### Comparação 
+* Menor complexidade computacional, implementação mais simples.
+* .red[Loops ainda são possíveis!]
+      * Contagem ao infinito.
+
+
+
+---
+
+slideTitle: Envenenamento Reverso e Meio Sem Fio
+
+#### Envenenamento Reverso 
+* Se **A** usa **B** como próximo salto para **C**:
+      * Vetor enviado de **A** para **B** lista custo infinito para **C**.
+* Evita que **B** selecione **A** como próximo salto para **C**.
+      * Evita *loops*!
+* Amplamento usado em redes cabeadas.
+* Inviável em redes sem fio.
+      * Por quê?
+
+---
+
+layout: false
+class: section-slide
+
+# DSDV
+
+---
+
+class: middle
+layout: true
+name: conteudo
+
+.title[
+{{slideTitle}}
+<hr>]
+
+
+---
+
+slideTitle: Características Básicas 
+
+#### DSDV 
+* *Destination-Sequenced Distance Vector*. 
+      * Baseado em vetor de distâncias.
+      * Usa números de sequência.
+      * Identifica informações antigas.
+      * Evita *loops*. 
+
+#### Hipóteses
+* Não há sincronização entre nós. 
+      * Não sabemos *quando* vetores serão trocados.
+
+#### Métrica de Roteamento 
+* Rota mais recente, menos saltos.
+* Argumento dos autores: 
+      * Outras métricas podem ser adicionadas.
+
+---
+
+slideTitle: Informações de Controle (I)
+
+#### O Que? 
+* Informações de rotas conhecidas.
+      * Vetor de distâncias.
+
+#### Como?
+* *Broadcast* ou *multicast*.
+
+#### Quando?
+* Periodicamente (segundos); ou 
+* Quando ocorrem mudanças de topologia.
+
+---
+
+slideTitle: Informações de Controle (II)
+
+#### Conteúdo dos pacotes
+ * Número de sequência.
+      * .red[Sempre par].
+ * Lista de rotas:
+      * Endereço de destino.
+      * Número de saltos.
+      * Número de sequência (do destinatário) do pacote que gerou aquela rota.
+
+.center[.red[Rotas com número de sequência maior são **sempre** preferidas.]]
+
+---
+
+slideTitle: Repassando Anúncios de Rota 
+
+#### Ao Receber Anúncio 
+* Verifica se alguma rota é melhor ou nova.
+* Se sim, incrementa custo em um salto.
+* Reenvia sua nova lista de rotas aos vizinhos.
+
+---
+
+slideTitle: Quebra de Enlaces
+
+#### Causas
+* Principalmente, mobilidade.
+
+#### Detecção 
+* Aviso da camada de enlace; ou ausência de pacotes de controle.
+
+#### Consequências
+* Custo do enlace considerado infinito.
+* Rotas por aquele enlace são invalidadas.
+      * Custo para os destinatários também infinito.
+      * Número de sequência na tabela de rotas aumentado (.red[valor ímpar]).
+* Imediatamente, nó reenvia sua tabela aos vizinhos.
+* Quando nova rota válida é achada, tabela é reenviada imediatamente.
+      * E imediatamente.
+
+---
+
+slideTitle: Tipos de Anúncio 
+
+#### *Full Dump*
+* Tabela de roteamento inteira do nó.
+      * Todas as entradas.
+* Pacote potencialmente grande.
+
+#### Incremental
+* Apenas mudanças em relação a último *full dump*.
+* Pacote potencialmente pequeno.
+
+---
+
+slideTitle: Oscilações de Rotas (I)
+
+#### Sincronização 
+* Anúncios sempre chegam por dois vizinhos.
+      * Sempre por um primeiro que pelo outro.
+      * Mas rota do segundo é sempre melhor!
+* Causaria troca constante de rotas.
+      * Anúncio pelo primeiro vizinho chega: troca-se a rota.
+      * Anúncio pelo segundo (melhor) chega: troca-se de novo!
+
+#### Solução
+* Adiar anúncios de rotas se nó *acha* que outra melhor virá.
+* Mantém estatística do tempo entre atualizações da melhor rota.
+
+---
+
+slideTitle: Oscilações de Rotas (II)
+
+#### Exemplo
+
+.center[
+![:image 40%](exemploDumping.png)]
+
+---
+
+slideTitle: DSDV em Camada 2
+
+#### Roteamento na Camada 2?
+* Tipicamente, não.
+* Mas nada impede implementação.
+
+#### Resolução de Endereços
+* Camada 3 usa endereços próprios.
+* Como evitar enxurrada de ARPs?
+      * Rotas anunciadas tanto com endereços MAC, quanto nível 3.
+
+---
+
+slideTitle: Incorporando Estações Base 
+
+#### Objetivo
+* Conexão com mundo externo.
+
+#### Solução
+* Estação base roda DSDV.
+* Associadas à rota padrão nas tabelas dos clientes.
+
+---
+
+slideTitle: Exemplos de Operação (I)
+
+.center[
+![:image 50%](exemplo1Topo.png)]
+
+---
+
+slideTitle: Exemplos de Operação (II)
+
+#### Tabela em MH4
+.center[
+![:image 70%](exemplo1Tabela.png)]
+
+#### Observações
+* Números de sequência pares: rotas são válidas.
+* Tempos de instalação similares.
+* Rotas estáveis: ponteiros provavelmente nulos.
+
+---
+
+slideTitle: Exemplos de Operação (III)
+
+#### Anúncio de MH4
+.center[
+![:image 40%](exemplo1Anuncio.png)]
+
+#### Observações
+* *Full dump*.
+
+---
+
+slideTitle: Exemplos de Operação (IV)
+
+#### Tabela em MH4 Após Movimentação de MH1
+.center[
+![:image 70%](exemplo1TabelaAtualizada.png)]
+
+#### Observações
+* Próximo salto atualizado.
+* Convergência depois de vários número de sequência.
+      * S516 *vs.* S406.
+* Rota atualizada para MH1 precisa ser anunciada.
+      * Anúncio pode ser incremental.
+* Anúncio de MH7 para MH6 foi imediato.
+
+---
+
+slideTitle: Propriedades do DSDV
+
+#### Propriedade Básica 
+* Protocolo é *livre de loops*. 
+* *i.e.*, *loops* são impossíveis.
+* Artigo apresenta demonstração
+
+#### Prova Matemática
+* Possível demonstrar matematicamente.
+* Mais detalhes no artigo!
+
+---
+
+layout: false
+class: section-slide
+
+# Avaliação
+
+---
+
+class: middle
+layout: true
+name: conteudo
+
+.title[
+{{slideTitle}}
+<hr>]
+
+
+---
+
+slideTitle: Comparação com Outros Protocolos
+
+.center[
+![:image 50%](avaliacao.png)]
+
+#### Observações
+* *Loops*: particularmente graves em redes sem fio.
+      * Recursos escassos.
+      * Exarcebam colisões.
+* Espaço: memória limitada em dispositivos móveis.
+* Estado de Enlace: &quot;sem *loops*, mas muita memória.
+* DSDV: sem *loops*, pouca memória, simples.
+
+---
+
+layout: false
+class: section-slide
+
+# Status, Trabalhos Futuros
+
+---
+
+class: middle
+layout: true
+name: conteudo
+
+.title[
+{{slideTitle}}
+<hr>]
+
+---
+
+slideTitle: Status e Trabalhos Futuros
+
+#### Atualmente (1994)
+* Implementação preliminar em laboratório.
+* Implementação em andamento em simulador.
+      * Objetivo: determinar bons parâmetros de operação.
+
+</template>
+    </textarea>
+
+    <script src="../template/js/remark-latest.min.js" type="text/javascript"></script>
+    <script src="../template/js/d3.v4.js"></script>
+    <script src="../template/js/graphlib-dot.js"></script>
+    <script src="../template/js/dagre-d3.min.js"></script>
+    <script src="../template/js/dagre-d3-extra.js"></script>
+    <script src="../template/js/macros.js" type="text/javascript"></script>
+    <script src="../template/js/callbacks.js" type="text/javascript"></script>
+    <script src="../template/js/katex.min.js"></script>
+    <script src="../template/js/auto-render.min.js"></script>
+    <link rel="stylesheet" href="../template/css/katex.min.css">
+    <script type="text/javascript">
+
+      var renderMath = function() {
+        renderMathInElement(document.body, {delimiters: [
+           {left: "$$", right: "$$", display: true},
+           {left: "$", right: "$", display: false},
+        ]});
+      }
+
+      var slideshow = remark.create({highlightStyle: "github", highlightLines: "true", highlightSpans: "true", slideNumberFormat: onSlideCallback}, renderMath);
+
+      dagreRenderAllSlides();
+
+    </script>
+</body>
+</html>
