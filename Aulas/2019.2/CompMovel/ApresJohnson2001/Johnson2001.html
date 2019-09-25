@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Apresentação do Relatório Técnico: DSR: The Dynamic Source Routing Protocol for Multi-Hop Wireless Ad Hoc Networks</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" type="text/css" href="../template/css/roboto.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/general.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/code.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/cover.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/section.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/elements.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/table.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/block.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/dagre.css">
+    <style>
+      span.katex {
+        font-size: 0.95em;
+      }
+    </style>
+  </head>
+  <body>
+
+    <textarea id="source">
+
+class: cover-slide
+
+![:cover](
+Computação Móvel
+Apresentação do Relatório Técnico<br><i>DSR: The Dynamic Source Routing Protocol for Multi-Hop Wireless Ad Hoc Networks</i>
+Diego Passos
+../template/img/logo.svg
+)
+
+---
+
+class: middle
+layout: true
+name: conteudo
+
+.title[
+{{slideTitle}}
+<hr>]
+
+---
+
+slideTitle: Dados Bibliográficos
+
+### Autores
+* David B Johnson.
+* Josh Broch.
+* David A Maltz.
+  * *Carnegie Mellon University*.
+
+### Onde?
+* Relatório técnico da Universidade
+
+### Ano 
+* 2001
+
+---
+
+layout: false
+class: section-slide
+
+# Introdução
+
+---
+
+class: middle
+layout: true
+name: conteudo
+
+.title[
+{{slideTitle}}
+<hr>]
+
+---
+
+slideTitle: DSR
+
+#### Dynamic Source Routing
+* Protocolo de roteamento.
+* **Auto-organização** e **auto-configuração**.
+* MANETs de múltiplos saltos.
+      * Nós móveis.
+      * Encaminhamento cooperativo.
+
+#### Topologias Dinâmicas
+* Nós entram e saem a todo momento.
+* Mudam de posição.
+* Rotas precisam ser recalculadas.
+
+---
+
+slideTitle: Source Routing
+
+#### Roteamento pela Fonte
+* Rota **completa** determinada pela origem.
+* Caminho listado no cabeçalho dos pacotes.
+* Encaminhamento:
+      * Consultar cabeçalho.
+      * Enviar ao próximo salto.
+
+#### Vantagens
+* Livre de *loops*.
+* Consistência não necessária.
+* Nós intermediários podem aprender rotas.
+
+---
+
+slideTitle: Projeto Monarch
+
+#### Monarch
+* Grupo de pesquisa de longo prazo.
+* Universidade de Carnegie Mellon.
+* Protocolos e interfaces para mobilidade e redes sem fio transparentes.
+
+---
+
+slideTitle: DSR: Histórico e Objetivos
+
+#### Objetivos
+* **Baixo overhead**.
+* Reações rápidas.
+* Adequação a cenários móveis.
+
+#### Histórico
+* Série de artigos descrevem e comparam.
+      * 1996, 1998, 1999.
+* Especificação submetida ao IETF.
+
+---
+
+slideTitle: Objetivo do Relatório
+
+#### Descrever
+* O DSR.
+* Cenários de simulação.
+* Testbed de experimentação.
+* Resultados comparativos.
+
+---
+
+layout: false
+class: section-slide
+
+# Hipóteses
+
+---
+
+class: middle
+layout: true
+name: conteudo
+
+.title[
+{{slideTitle}}
+<hr>]
+
+---
+
+slideTitle: Hipóteses (I)
+
+#### Nós
+* Quaisquer pares de nós podem se comunicar.
+* Todo nó está disposto a encaminhar pacotes.
+
+
+#### Tamanho da redes
+* Diâmetro **pequeno**.
+      * Maior número de saltos entre dois nós.
+      * 5 a 10 saltos.
+
+---
+
+slideTitle: Hipóteses (II)
+      
+#### Erros
+* Toda transmissão pode falhar.
+      * Pacote pode ser corrompido.
+* Receptor é capaz de detectar corrupção.
+      * Pacote é descartado.
+
+#### Mobilidade
+* Todo nó é potencialmente móvel.
+* Mobilidade pode ocorrer a qualquer momento.
+      * Inclusive continuamente.
+* Mas velocidade é *moderada*. 
+      * Em relação a latência de transmissão, alcance.
+      * Do contrário, só inundação funcionaria.
+
+---
+
+slideTitle: Hipóteses (III)
+
+#### Modo Promíscuo
+* Suportado pelos rádios.
+* Interface entrega quadros sem filtro de endereço.
+* Não é mandatório, mas permite otimizações.
+* CPU pode ser gargalo.
+      * Implementação em *hardware*?
+
+#### Enlaces
+* Não necessariamente bidirecionais.
+      * Um sentido pode ser *melhor* que outro.
+* Quando bidirecionais, permitem otimizações.
+
+---
+
+slideTitle: Hipóteses (IV)
+
+#### Endereços
+* Endereços IP.
+* Nó possue um ou mais.
+      * *e.g.*, múltiplas interfaces.
+* Mas **um é selecionado como identificador**.
+      * *Home address* (IP Móvel).
+      
+---
+
+layout: false
+class: section-slide
+
+# Descrição do Protocolo
+
+---
+
+class: middle
+layout: true
+name: conteudo
+
+.title[
+{{slideTitle}}
+<hr>]
+
+---
+
+slideTitle: Visão Geral (I)
+
+#### Descoberta de Rotas
+* *Route Discovery*.
+      * Nó de origem **S**.
+      * Nó de destino **D**.
+      * **S** descobre rota para **D**. 
+* Apenas usado quando:
+      * **S** tem pacote para **D**. 
+      * **S** não tem rota para **D**. 
+
+---
+
+slideTitle: Visão Geral (II)
+
+#### Manutenção de Rotas 
+* *Route Maintenance*. 
+      * Detecção de alterações topológicas.
+      * Durante uso da rota.
+* Duas opções para **S**:
+      * Usar outra rota conhecida.
+      * Novo *Route Discovery*.
+
+---
+
+slideTitle: Operação Reativa 
+
+#### Mecanismos Sob Demanda 
+* Tanto *Route Discovery*, quanto *Route Maintenance*.
+* **Não usa qualquer pacote de controle periódico.** 
+      * Ainda é verdade?
+
+---
+
+slideTitle: Cache de Rotas 
+
+#### Situações Possíveis
+* Participação em outro *Route Discovery*.
+* Encaminhamento de pacotes.
+* Ao ouvir informações de forma promíscua.
+
+#### Vantagens 
+* Reação mais rápida a mudanças.
+      * Possível conhecimento de múltiplas rotas.
+* Evita novos *Route Discoveries*. 
+
+---
+
+slideTitle: Descoberta de Rotas (I)
+
+#### A Origina Pacote para E 
+* Checa cache de rotas.
+* Caso não encontre, *Route Discovery*.
+
+.center[
+![:image 70%](RouteDiscovery.png)]
+
+* **A** envia **Route Request** aos vizinhos diretos.
+      * *Request ID*. 
+      * Lista dos nós percorridos.
+* Ao receber **Route Request**:
+      * Se é o destinatário, retorna *Route Reply* com cópia da rota.
+      * Se não, e se já viu esse *Request ID*, ignora.
+      * Se não, adiciona seu endereço à lista e reenvia.
+
+---
+
+slideTitle: Descoberta de Rotas (II)
+
+.center[
+![:image 60%](RouteDiscovery.png)]
+
+#### Retorno do Route Reply 
+* **E** busca rota conhecida para **A** em seu cache.
+      * A utiliza, caso encontrada.
+* Se não, **E** dispara novo *Route Discovery* para A.
+      * Mas anexa rota recém-descoberta. 
+      * Também pode anexar pequenos pacotes de dados.
+
+#### Alternativa
+* Usar caminho reverso.
+      * Evita *overhead*.
+      * Mas assume enlaces bidirecionais.
+
+---
+
+slideTitle: Bufferização do Pacote de Dados 
+
+* Pacote que gerou *Route Discovery* fica armazenado.
+      * Aguarda rota.
+* *Timeout* para descarte.
+* Enquanto no *buffer*, origem reinicia *Route Discovery* de tempos em tempos.
+
+#### Backoff Exponencial
+* Limita quantidade de *Route Discoveries*. 
+* Similar ao mecanismo de limite do ARP.
+
+---
+
+slideTitle: Manutenção de Rotas (I)
+
+#### Confirmações Salto a Salto 
+* Ao transmitir pacote de dados, há confirmação de recepção.
+* Possíveis retransmissões.
+* Implementação:
+      * Protocolo MAC; ou
+      * Ack do DSR.
+
+.center[
+<blockquote style="font-style: italic;">&quot;this software acknowledgement will normally be transmitted directly to the sending node, but if the link between these two nodes is uni-directional, this software acknowledgement <b>may travel over a different, multi-hop path</b>.&quot; </blockquote>]
+
+---
+
+slideTitle: Manutenção de Rotas (II)
+
+.center[
+![:image 60%](RouteMaintenance.png)]
+
+#### Detecção de Erros 
+* Limite de tentativas excedido.
+      * Raro?
+* Transmissor (do enlace) envia *Route Error* para origem.
+      * Identifica enlace problemático.
+* Origem remove rotas com aquele enlace da sua cache.
+* DSR não retransmite pacotes.
+* Nova rota obtida via cache ou novo *Route Discovery*. 
+
+---
+
+slideTitle: Outras Características (I)
+
+#### Captura Promíscua de Rotas
+* A partir de qualquer pacote capturado.
+      * Destinado ao nó ou não.
+* Rotas adicionadas à cache.
+
+.center[
+![:image 60%](CachePromiscuo.png)]
+
+#### Problemas com Enlaces Unidirecionais
+* Enlaces **A** &rarr; **B**, **C** &rarr; **B** são bidirecionais?
+* Enlace **C** &rarr; **X** é bidirecional?
+
+---
+
+slideTitle: Outras Características (II)
+
+#### Route Request e Intermediários 
+* Se intermediário tem rota para destino, pode responder diretamente.
+      * Anexa rota percorrida pelo *Route Request* à conhecida.
+
+#### Cuidados
+* Existência de *loops*. 
+      * Editar rota?
+
+.center[
+![:image 60%](Loops.png)]
+
+---
+
+slideTitle: Outras Características (III)
+
+.col-2[
+#### Situação 
+* Vizinhos do destinatário provavelmente têm rotas.
+* Tendência que todos respondam.
+      * Tempestade.
+      * Desperdício de recursos.
+
+.center[
+![:image 90%](Storm.png)]
+]
+
+.col-2[
+#### Solução 
+* Recepção promíscua.
+* Atraso artificial na resposta.
+$$d = H \times (h - 1 + r)$$
+* Onde:
+      * $h$: comprimento da rota.
+      * $r$: valor aleatório.
+      * $H$: constante.
+* Rotas melhores ouvidas &rarr; resposta cancelada.
+]
+
+---
+
+slideTitle: Outras Características (IV)
+
+#### Campo Hop Limit 
+* Como um TTL.
+      * Limita saltos percorridos por um *Route Request*.
+* Se excedido, *Route Request* é descartado.
+
+#### Possíveis Usos
+* Detecção de vizinhança (Hop Limit = 0).
+* Busca progressiva em &quot;anéis&quot;.
+
+---
+
+slideTitle: *Route Maintenance*: Otimizações (I)
+
+#### Salvamento de Pacotes
+* Nó que detectou quebra de enlace.
+* Envia *Route Error*, mas:
+      * Busca rota alternativa na sua cache.
+      * Se há, troca rota no pacote e reenvia.
+* Pacote marcado para evitar múltiplos salvamentos.
+
+---
+
+slideTitle: *Route Maintenance*: Otimizações (II)
+
+#### Encurtamento de Rotas
+* Nó ouve promiscuamente que faz parte de rota.
+      * Pacote recebido *não foi transmitido pelo salto anterior*.
+      * *i.e.*, rota pode ser mais curta.
+* Nó envia um *Route Reply* gratuito para origem.
+
+.center[
+![:image 50%](Encurtamento.png)]
+
+---
+
+slideTitle: *Route Maintenance*: Otimizações (III)
+
+#### Aumentando Difusão dos Route Errors
+* Informação de *Route Error* anexada ao próximo *Route Request*.
+* Difunde info. do enlace inválido para resto da rede.
+* Ajuda a expurgar informações inconsistentes.
+
+---
+
+slideTitle: Cache de Informações Negativas
+
+#### Exemplo
+* *Route Error* informando enlace quebrado.
+      * Rotas na cache com aquele enlace são removidas.
+* Mas:
+      * Informação do enlace quebrado pode ser cacheada.
+      * *Route replies* futuros com aquele enlace são descartados.
+      * Necessita expiração.
+
+---
+
+slideTitle: Redes Heterogêneas (I)
+
+#### Exemplo 
+* Certos nós podem ter interfaces de alcance maior.
+
+.center[
+![:image 70%](RedeHeterogenea.png)]
+
+---
+
+slideTitle: Redes Heterogêneas (II)
+
+#### Múltiplas Interfaces 
+* DSR identifica nós por ID único.
+* Dada uma rota (sequência de nós), qual interface usar?
+      * Solução: adição do índice da interface usada.
+
+#### Gateways
+* Conectados à Internet.
+* Pode atuar como *home agent* (IP Móvel).
+
+---
+
+slideTitle: DSR e Multicast
+
+#### &quot;Aproximação&quot;
+* DSR não suporta *multicast*, mas *quase* (?)
+      * Uso de inundação com saltos limitados.
+      * Limita região.
+      * Nós podem aplicar filtro de destino.
+
+#### Mecanismo 
+* Mensagem *multicast* anexada a *Route Request*.
+
+.center[
+<blockquote style="font-style: italic;">&quot;The normal ROUTE REQUEST propagation scheme described in Section 3.2 will result 
+      in this packet being efficiently distributed to all nodes in the network within the specified hop count (TTL) 
+      of the originator.&quot; </blockquote>]
+
+---
+
+layout: false
+class: section-slide
+
+# Avaliação
+
+---
+
+class: middle
+layout: true
+name: conteudo
+
+.title[
+{{slideTitle}}
+<hr>]
+
+---
+
+slideTitle: Sumário das Simulações (I)
+
+.col-2[
+#### Simulador
+* NS-2.
+* Extensões dos próprios autores.
+      * Camadas física e de enlace mais realísticas.
+      * Mobilidade sem restrições.
+* IEEE 802.11.
+]
+
+.col-2[
+#### Cenário
+* 50 nós. 
+* Área de 1500x300 metros.
+* 900 segundos.
+* Tráfego CBR.
+      * 10, **20** ou 30 fontes.
+      * 4 p/s cada.
+]
+
+---
+
+slideTitle: Sumário das Simulações (II)
+
+#### Parâmetros de Camada Física
+* Objetivo: emular interface Lucent WaveLAN.
+
+#### Mobilidade 
+* *Random waypoint model*.
+
+.center[
+<blockquote style="font-style: italic;">&quot;We 
+      have found that this model can produce large amounts of relative node movement and network topology 
+      change, and thus provides a good movement model with which to stress DSR or other ad hoc network 
+      routing protocols.&quot; </blockquote>]
+
+---
+
+slideTitle: Simulações: Resultados (I)
+
+#### Taxa de Entrega de Pacotes 
+* 1 m/s de velocidade dos nós.
+
+.center[
+![:image 70%](PDR1ms.png)]
+
+---
+
+slideTitle: Simulações: Resultados (II)
+
+#### Taxa de Entrega de Pacotes 
+* 20 m/s de velocidade dos nós.
+
+.center[
+![:image 70%](PDR20ms.png)]
+
+---
+
+slideTitle: Simulações: Resultados (III)
+
+#### Overhead 
+* 1 m/s de velocidade dos nós.
+
+.center[
+![:image 70%](Overhead1ms.png)]
+
+---
+
+slideTitle: Simulações: Resultados (IV)
+
+#### Overhead 
+* 20 m/s de velocidade dos nós.
+
+.center[
+![:image 70%](Overhead20ms.png)]
+
+---
+
+slideTitle: Sumário do Testbed Experimental
+
+
+.center[
+![:image 40%](testbed.png)]
+
+.col-2[
+#### Implementação 
+* Sobre o FreeBSD.
+* Módulo de *kernel*.
+* Cria uma interface virtual de rede.
+]
+
+.col-2[
+#### Testbed 
+* *Outdoor*, na Universidade.
+* 5 nós móveis: carros, 25 MPH.
+* 2 nós estacionários.
+* 700 metros de extensão.
+]
+
+</template>
+    </textarea>
+
+    <script src="../template/js/remark-latest.min.js" type="text/javascript"></script>
+    <script src="../template/js/d3.v4.js"></script>
+    <script src="../template/js/graphlib-dot.js"></script>
+    <script src="../template/js/dagre-d3.min.js"></script>
+    <script src="../template/js/dagre-d3-extra.js"></script>
+    <script src="../template/js/macros.js" type="text/javascript"></script>
+    <script src="../template/js/callbacks.js" type="text/javascript"></script>
+    <script src="../template/js/katex.min.js"></script>
+    <script src="../template/js/auto-render.min.js"></script>
+    <link rel="stylesheet" href="../template/css/katex.min.css">
+    <script type="text/javascript">
+
+      var renderMath = function() {
+        renderMathInElement(document.body, {delimiters: [
+           {left: "$$", right: "$$", display: true},
+           {left: "$", right: "$", display: false},
+        ]});
+      }
+
+      var slideshow = remark.create({highlightStyle: "github", highlightLines: "true", highlightSpans: "true", slideNumberFormat: onSlideCallback}, renderMath);
+
+      dagreRenderAllSlides();
+
+    </script>
+</body>
+</html>

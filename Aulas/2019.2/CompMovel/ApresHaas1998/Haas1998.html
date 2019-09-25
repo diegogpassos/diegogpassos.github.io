@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Apresentação do Artigo: The performance of a new routing protocol for the reconfigurable wireless networks</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" type="text/css" href="../template/css/roboto.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/general.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/code.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/cover.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/section.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/elements.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/table.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/block.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/dagre.css">
+    <style>
+      span.katex {
+        font-size: 0.95em;
+      }
+    </style>
+  </head>
+  <body>
+
+    <textarea id="source">
+
+class: cover-slide
+
+![:cover](
+Computação Móvel
+Apresentação do Artigo<br><i>The performance of a new routing protocol for the reconfigurable wireless networks</i>
+Diego Passos
+../template/img/logo.svg
+)
+
+---
+
+class: middle
+layout: true
+name: conteudo
+
+.title[
+{{slideTitle}}
+<hr>]
+
+---
+
+slideTitle: Dados Bibliográficos
+
+### Autores
+* Z.J. Haas.
+* M.R. Pearlman.
+  * *Cornell University*.
+
+### Evento
+* IEEE International Conference on Communications (ICC)
+
+### Ano 
+* 1998
+
+---
+
+layout: false
+class: section-slide
+
+# Introdução
+
+---
+
+class: middle
+layout: true
+name: conteudo
+
+.title[
+{{slideTitle}}
+<hr>]
+
+---
+
+slideTitle: Objetivos
+
+#### Propor Novo Protocolo de Roteamento
+* ZRP: *Zone Routing Protocol*. 
+
+#### Avaliar Seu Desempenho
+* Simulações.
+
+#### Cenário de Motivação
+* *Reconfigurable Wireless Networks*. 
+* Caso especial das redes ad hoc.
+      * Maior mobilidade.
+      * Mais nós.
+      * Maior área de abrangência.
+
+---
+
+slideTitle: Reconfigurable Wireless Networks
+
+* Não dependem de infraestrutura prévia.
+* Rapidamente implantáveis.
+* Altamente móveis.
+* Grandes áreas de abrangência.
+* Enlaces relativamente curtos.
+      * Múltiplos saltos.
+* Cenário desafiador.
+      * E realístico?
+
+---
+
+slideTitle: Protocolos de Roteamento 
+
+#### Duas Classificações Até Então 
+* Proativos:
+      * Continuamente avaliam rotas.
+      * Sem atraso de descoberta.
+      * Exemplo: DSDV.
+* Reativos:
+      * Procedimento de descoberta de rota.
+      * Sob demanda.
+      * Inundação.
+      * Exemplos: AODV, DSR.
+
+#### Problema
+* Ambos têm **alto overhead** de controle.
+      * Proativos: manutenção contínua de rotas.
+      * Proativo: descoberta de rota por inundação.
+
+---
+
+layout: false
+class: section-slide
+
+# Visão Geral do ZRP
+
+---
+
+class: middle
+layout: true
+name: conteudo
+
+.title[
+{{slideTitle}}
+<hr>]
+
+---
+
+slideTitle: Abordagem
+
+#### Ideia Básica
+* Combinar abordagens proativa e reativa.
+      * Protocolo **híbrido**.
+* Proativo em uma zona limitada em torno do nó. 
+* Reativo fora da zona, com inundação controlada.
+
+.center[
+![:image 55%](hibrido.png)]
+
+---
+
+slideTitle: Zona de Roteamento 
+
+#### Região em Torno do Nó 
+* Conjunto de outros nós. 
+* Menor distância (saltos) não excede o **raio da zona**.
+      * Parâmetro do protocolo
+* Cada nó define a sua.
+* Dentro da sua zona, roteamento é proativo.
+
+.center[
+![:image 35%](exemploZona.png)]
+
+---
+
+slideTitle: Nós Periféricos
+
+#### Subconjunto Importante
+* Nós **exatamente** no raio da zona.
+* *e.g.*, K, J.
+
+.center[
+![:image 35%](exemploZona.png)]
+
+---
+
+slideTitle: Construção da Zone de Roteamento 
+
+#### Descoberta dos Vizinhos
+* De um salto.
+* Identificados pelo MAC, ou protocolo específico.
+      * NDP.
+
+#### IARP
+* *IntrAzone Routing Protocol*.
+* Monitora continuamente topologia da zona de roteamento.
+* Nesse artigo, vetor de distâncias.
+      * Mas outras abordagens podem ser usadas.
+
+---
+
+slideTitle: Interzone Routing (I)
+
+#### IERP
+* *IntErzone Routing protocol*. 
+* Encontra rotas sob demanda.
+      * Destinatários além da zona.
+* Explora estrutura das zonas conhecidas.
+
+#### Bordercasting
+* Envio de mensagens para nós periféricos.
+      * Forma de *multicast*. 
+      * Também implementável por vários *unicasts*.
+
+---
+
+slideTitle: Interzone Routing (II)
+
+#### Descoberta de Rota
+* Origem gera um *Route Query*. 
+      * ID da origem, número de sequência.
+* *Query* é *bordercasted* para nós periféricos.
+      * Ao receber, nó anexa seu ID à mensagem.
+      * Gera sequência de nós períféricos.
+      * Se destino está na zona do nó, responde com *Route Reply*. 
+      * Se não, faz *boardercast* para *seus* nós periféricos.
+* Qualquer *query* duplicada é descartada.
+
+.center[
+![:image 35%](exemploIERP.png)]
+
+---
+
+layout: false
+class: section-slide
+
+# Avaliação
+
+---
+
+class: middle
+layout: true
+name: conteudo
+
+.title[
+{{slideTitle}}
+<hr>]
+
+---
+
+slideTitle: Simulações (I)
+
+#### Simulador e Critérios
+* OPNET.
+* Medidas de **overhead** e atraso.
+      * Atraso baseado no IERP.
+      * Atraso apenas da **descoberta de rota**.
+
+#### Cenário
+* 52 nós móveis.
+* Interfaces operando a 1 Mb/s.
+* Raio de transmissão de 100 m.
+* Posições aleatórias em área de 600 m x 600 m.
+* *Random waypoint*.
+* Ao chegar à borda, é &quot;refletido&quot; de volta.
+
+---
+
+slideTitle: Simulações (II)
+
+#### Mais Parâmetros
+* Duração de cada simulação: 125 s. 
+      * 5 primeiros sempre descartados.
+* Requisições geradas com distribuição de Poisson.
+* Destinatários das requisições escolhidos aleatoriamente.
+
+---
+
+slideTitle: Simulações (III)
+
+#### Simplificações
+* Não há contenção.
+* Não há colisões.
+* BER é nula dentro do raio de transmissão.
+      * E de 100% fora dele.
+
+.center[
+<blockquote style="font-style: italic;">&quot;This simplified 
+      model  helps  to  improve  understanding of our routing 
+      protocol behavior by providing our performance measures 
+      with  some  immunity from lower  layer effects.&quot; </blockquote>]
+
+
+ 
+</template>
+    </textarea>
+
+    <script src="../template/js/remark-latest.min.js" type="text/javascript"></script>
+    <script src="../template/js/d3.v4.js"></script>
+    <script src="../template/js/graphlib-dot.js"></script>
+    <script src="../template/js/dagre-d3.min.js"></script>
+    <script src="../template/js/dagre-d3-extra.js"></script>
+    <script src="../template/js/macros.js" type="text/javascript"></script>
+    <script src="../template/js/callbacks.js" type="text/javascript"></script>
+    <script src="../template/js/katex.min.js"></script>
+    <script src="../template/js/auto-render.min.js"></script>
+    <link rel="stylesheet" href="../template/css/katex.min.css">
+    <script type="text/javascript">
+
+      var renderMath = function() {
+        renderMathInElement(document.body, {delimiters: [
+           {left: "$$", right: "$$", display: true},
+           {left: "$", right: "$", display: false},
+        ]});
+      }
+
+      var slideshow = remark.create({highlightStyle: "github", highlightLines: "true", highlightSpans: "true", slideNumberFormat: onSlideCallback}, renderMath);
+
+      dagreRenderAllSlides();
+
+    </script>
+</body>
+</html>
