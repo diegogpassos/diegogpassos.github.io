@@ -74,7 +74,304 @@ name: conteudo
 
 ---
 
-slideTitle: Paradigma de Redes Ad Hoc Multi-Saltos
+slideTitle: Motivação
+
+#### Cenários
+* Redes ad hoc móveis.
+* **Redes comunitárias**.
+      * Acesso à Internet.
+
+#### Características
+* Nós estáticos.
+      * Ou minimamente móveis.
+* Alimentação contínua.
+* Foco do roteamento: **desempenho**.
+
+#### Desafio
+* Redução da auto-interferência.
+
+---
+
+slideTitle: Proposta
+
+#### Múltiplos Rádios
+* Comunicação *full-duplex*.
+* Maior largura de banda.
+* Enlaces heterogêneos.
+      * Robustez.
+      * Conectividade.
+      * Desempenho.
+
+#### Outras Alternativas
+* Antenas direcionais.
+* Otimizações do MAC.
+* Salto de canais.
+* **Complementares**.
+
+---
+
+slideTitle: Problema
+
+#### Roteamento 
+* Ineficiente com múltiplos rádios.
+
+#### Cenário 1
+* Interfaces IEEE 802.11b e IEEE 802.11a.
+* IEEE 802.11b: maior alcance, menos saltos.
+      * Enlaces sempre escolhidos.
+      * Embora **mais lentos**.
+
+#### Cenário 2
+* Dois rádios IEEE 802.11b.
+      * Canais 1 e 11.
+* Rota de dois saltos.
+      * Ambos no mesmo canal.
+* Auto-interferência.
+
+---
+
+slideTitle: Objetivo
+
+#### Nova Métrica
+* Projetada do zero (?)
+* Considerando:
+      * Enlaces heterogêneos.
+      * Múltiplos rádios.
+
+#### Proposta
+* WCETT: *Weighted Commulative Expected Transmission Time*.
+
+---
+
+layout: false
+class: section-slide
+
+# Proposta
+
+---
+
+class: middle
+layout: true
+name: conteudo
+
+.title[
+{{slideTitle}}
+<hr>]
+
+---
+
+slideTitle: MR-LQSR 
+
+#### Protocolo de Roteamento
+* *Source routing*: similar ao DSR.
+* Implementa a métrica WCETT.
+
+---
+
+slideTitle: Hipóteses e Decisões
+
+#### Autores Assumem
+* Nós estacionários.
+* IEEE 802.11 (um ou mais rádios).
+* Múltiplos rádios em um nó: canais diferentes.
+
+#### Decisões de Projeto
+* Levar em conta perda de pacotes e taxa.
+* Métrica deve ser crescente.
+      * Adicionar novo enlace deve aumentar custo.
+      * Permite usar Dijkstra.
+* Levar em conta auto-interferência.
+
+---
+
+slideTitle: Computando o Custo de um Caminho (I)
+
+#### Peso de um Enlace 
+* Tempo para transmissão de um pacote.
+      * Tamanho fixo $S$.
+      * Função da taxa e da perda de pacotes.
+* ETT: *Expected Transmission Time*. 
+
+#### Primeira Tentativa
+$$WCETT = \sum_{i = 1}^{n}{ETT_i}$$
+* Aumenta com número de saltos.
+* Significado físico claro: atraso total.
+* Mas **ignora diversidade de canais**.
+
+---
+
+slideTitle: Computando o Custo de um Caminho (II)
+
+#### Segunda Tentativa 
+* Hipótese: enlaces em um mesmo canal **sempre** se interferem.
+      * Transmissões simultâneas impossíveis.
+      * Realístico para caminhos curtos, pessimista para os longos.
+* Limite inferior para atraso fim-a-fim:
+      * Soma dos atrasos nos enlaces do mesmo canal.
+
+$$X_j = \sum{ETT_i}$$ 
+
+* Custo do caminho:
+
+$$WCETT = \max_{1\le j\le k}{X_j}$$ 
+
+* Favorece caminhos com diversidade de canais.
+* Mas **nem sempre crescente com adição de enlaces**.
+
+---
+
+slideTitle: Computando o Custo de um Caminho (III)
+
+#### Terceira Tentativa 
+* Combinar abordagens anteriores.
+* Média ponderada.
+
+$$WCETT = (1-\beta)\cdot\sum\_{i = 1}^{n}{ETT\_i}+ \beta\cdot\max_{1\le j\le k}{X_j}$$
+
+---
+
+slideTitle: WCETT: Exemplos
+
+.center[
+      ![:image 50%](WCETTExemplos.png)
+]
+
+---
+
+slideTitle: Computando o ETT (I)
+
+#### Ideia
+* &quot;ETX ajustado para banda&quot;.
+* Ou seja:
+      * Divide ETX pela taxa de transmissão.
+
+$$ETT = ETX \times \frac{S}{B}$$ 
+
+* S: tamanho do pacote (fixo).
+* B: taxa de transmissão.
+
+---
+
+slideTitle: Computando o ETT (II)
+
+#### Estimando a Taxa de Transmissão 
+* Possibilidade 1:
+      * Fixar taxa do enlace (?)
+* Possibilidade 2:
+      * Obter taxa da interface.
+      * Nem toda interface fornece informação.
+* Possibilidade 3:
+      * *Packet-Pair Probing*.
+      * *Probe* pequeno seguido de outro grande.
+      * Tempo entre recepções estima **atraso**.
+      * Mínimo de janela de 10 amostras.
+
+---
+
+slideTitle: Discussão 
+
+#### WCETT Não Considera
+* Contenção.
+* Banda disponível.
+
+#### Problemas com Dijkstra
+* Métrica é não-isotônica.
+      * Rota ótima nem sempre formada por prefixos ótimos.
+
+.center[
+      ![:image 50%](NaoIsotonia.png)]
+
+* Dijkstra não garante melhores caminhos!
+
+---
+
+layout: false
+class: section-slide
+
+# Avaliação
+
+---
+
+class: middle
+layout: true
+name: conteudo
+
+.title[
+{{slideTitle}}
+<hr>]
+
+---
+
+slideTitle: WCETT: Exemplos
+
+.col-2[
+.center[
+      ![:image 40%](testbed.png)
+]
+]
+
+.col-2[
+* 23 nós.
+* PCs com dois rádios 802.11.
+      * 2,4 GHz e 5 GHz.
+* Modo ad hoc.
+* Sem RTS/CTS. 
+]
+
+---
+
+slideTitle: Acurácia do Packet-Pair Probing 
+
+#### Teste
+* Dois nós *próximos*, PPP.
+
+.center[
+      ![:image 80%](pppAcuracia.png)
+]
+
+#### Conclusão 
+* Preciso o suficiente.
+      * P/ distinguir taxas.
+
+---
+
+slideTitle: Um Rádio e Dois Rádios
+
+#### Teste 
+* 100 pares de nós selecionados aleatoriamente.
+* Fluxo TCP de 2 minutos.
+* Apenas um fluxo ativo por vez.
+* $\beta  = 0,5$.
+
+.col-2[
+.center[
+      ![:image 50%](UmRadio.png)
+]
+]
+
+.col-2[
+#### Conclusões
+* Dois rádios: melhor desempenho.
+* WCETT se aproveita melhor.
+* Ganhos mesmo com único rádio: taxa de transmissão.
+]
+
+---
+
+slideTitle: Ganho por Número de Saltos
+
+.center[
+      ![:image 80%](GanhoPorSaltos.png)
+]
+
+---
+
+slideTitle: Impacto de Beta
+
+.center[
+      ![:image 80%](ImpactoBeta.png)
+]
+
 
 </template>
     </textarea>
