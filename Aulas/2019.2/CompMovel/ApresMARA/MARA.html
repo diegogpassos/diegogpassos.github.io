@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Apresentação de Artigo: A Joint Approach to Routing Metrics and Rate Adaptation in Wireless Mesh Networks</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" type="text/css" href="../template/css/roboto.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/general.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/code.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/cover.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/section.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/elements.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/table.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/block.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/dagre.css">
+    <style>
+      span.katex {
+        font-size: 0.95em;
+      }
+    </style>
+  </head>
+  <body>
+
+    <textarea id="source">
+
+
+class: cover-slide
+
+![:cover](
+Computação Móvel
+Apresentação do Artigo<br><i>A Joint Approach to Routing Metrics and Rate Adaptation in Wireless Mesh Networks</i>
+Diego Passos
+../template/img/logo.svg
+)
+
+---
+
+class: middle
+layout: true
+name: conteudo
+
+.title[
+{{slideTitle}}
+<hr>]
+
+---
+
+slideTitle: Dados Bibliográficos
+
+### Autores
+* Diego Passos, Célio Albuquerque
+
+### Periódico
+* *IEEE/ACM Transactions on Networking*
+
+### Ano
+* 2012
+
+---
+
+layout: false
+class: section-slide
+
+# Introdução
+
+---
+
+class: middle
+layout: true
+name: conteudo
+
+.title[
+{{slideTitle}}
+<hr>]
+
+---
+
+slideTitle: Redes em Malha Sem Fio
+
+
+![:block](Características
+
+* Auto-configuráveis.
+	* Nós realizam roteamento dinâmico.
+	* Qual o critério para a escolha de uma rota?
+* Baixo custo de implantação.
+	* Dispositivos baseados no padrão IEEE~802.11.
+	* Várias taxas de transmissão disponíveis.
+	* Como escolher uma taxa?
+
+
+)
+.center[
+![:image 50%](mesh.png)
+]
+
+---
+
+slideTitle: Dificuldades nas Escolhas
+
+
+![:block](De Rotas
+* Condições da rede variam muito.
+* Qualidade dos enlaces depende de:
+	* Interferências.
+	* Obstáculos.
+	* Condições climáticas.
+
+
+)
+
+![:block](De Taxas
+* Em geral, quanto mais alta a taxa, maior a probabilidade de erros.
+	* Em redes não congestionadas.
+
+
+)
+
+
+---
+
+slideTitle: Correlação dos Dois Problemas
+
+
+![:block](Do Ponto de Vista da Métrica
+* As características dos enlaces dependem da taxa de transmissão.
+* A métrica deve ter ciência da taxa selecionada.
+
+)
+
+![:block](Do Ponto de Vista da Adaptação de Taxa
+* Enlace só tem tráfego se escolhido pelo roteamento.
+* Senão, adaptação não tem dados para selecionar a taxa.
+
+)
+
+
+---
+
+slideTitle: Proposta do Trabalho
+
+
+![:block](MARA (*Metric-Aware Rate Adaptation*\)
+* Uma abordagem *cross-layer*.
+* Abordagem unificada para dois problemas:
+	* Adaptação automática de taxa.
+	* Métrica de roteamento.
+
+
+)
+
+![:block](Objetivos
+* Escolha de taxa coerente com o custo atribuído ao enlace.
+* Inferência precisa das informações dos enlaces.
+	* Com baixo *overhead*. 
+
+
+)
+
+---
+
+slideTitle: Outras Contribuições
+
+
+![:block](Otimizações
+* MARA-P.
+	* Escolha de taxa dependente do tamanho do quadro.
+* MARA-RP.
+	* Escolha de taxa e rota dependente do tamanho do quadro.
+* Até que ponto influenciam?
+)
+
+![:block](Artefatos de Implementação
+* Protocolo SLSP (*Simple Link State Protocol*\).
+* Módulo PPRS (*Per-Packet Rate Selection*\).
+)
+
+---
+
+layout: false
+class: section-slide
+
+# Trabalhos Relacionados
+
+---
+
+class: middle
+layout: true
+name: conteudo
+
+.title[
+{{slideTitle}}
+<hr>]
+
+---
+
+slideTitle: Em Termos de Métricas
+
+
+* *Hop Count* .alert[(quantidade de saltos)].
+* ETX .alert[(número de retransmissões em nível 2)].
+* ETT .alert[(atraso fim a fim)].
+* ML .alert[(probabilidade de perda fim a fim)].
+* WCETT.
+* *AirTime*
+* mETX.
+* ENT.
+* ...
+
+
+![:block](Em Comum:
+* Imprecisão na obtenção de informações sobre os enlaces.
+)
+
+---
+
+slideTitle: Em Termos de Adaptação de Taxa
+
+
+* ARF .alert[(falhas ou sucessos consecutivos)].
+* AARF .alert[(falhas ou sucessos consecutivos)]
+* *SampleRate* .alert[(atraso médio)]
+* SNR .alert[(SNR no receptor)].
+* YARAa.
+* Onoe.
+* SRA.
+* ...
+
+![:block](Em Comum:
+* Estatísticas baseadas em amostras não uniformes.
+	* Frequência e tamanho dos quadros.
+)
+
+
+---
+
+slideTitle: Abordagens Unificadas
+
+
+.center[
+		<div style="font-size: 40px;">Até então, não conhecidas.</div>
+]
+
+---
+
+layout: false
+class: section-slide
+
+# Proposta
+
+---
+
+class: middle
+layout: true
+name: conteudo
+
+.title[
+{{slideTitle}}
+<hr>]
+
+---
+
+slideTitle: MARA (*Metric-Aware Rate Adaptation*)
+
+
+![:block](Idéia Básica
+* Modelar o custo de cada enlace como o tempo de transmissão.
+	* O tempo é uma função da taxa de transmissão.
+* Encontrar a taxa $\lambda$ que minimiza o atraso.
+* O atraso associado à taxa $\lambda$ será custo do enlace.
+)
+
+
+---
+
+slideTitle: MARA (Cont.)
+
+
+![:block](Modelo do Atraso (ou Expressão de Custo\)
+
+.center[
+
+	$$MARA\_{ab} = \min\_{i}{\left(\frac{ETX\_{ab}^{i}\cdot ps}{\lambda\_{i}}\right\)}$$
+]
+)
+
+![:block](Parâmetros
+* $\lambda_{i}$: *i-ésima* taxa.
+* $ETX_{ab}^{i}$: ETX do enlace na *i-ésima* taxa.
+* $ps$: tamanho do pacote de *probe*.
+)
+
+---
+
+slideTitle: Estimando ETX em Cada Taxa
+
+
+![:block](Primeira Parte
+* Envio periódico de pacotes de *probe*.
+* *Probes* enviados em $4$ taxas diferentes:
+	* $1$, $18$, $36$ e $54$ Mb/s.
+* Os *probes* são enviados através de um *round-robin*.
+	* Apenas um *probe* enviado por período.
+)
+
+![:block](Segunda Parte
+* As probabilidades para as demais taxas são estimadas.
+* É utilizada uma função de "conversão".
+	* A partir das probabilidades inferidas pelos *probes*, obtêm-se as demais.
+)
+
+---
+
+slideTitle: Função de Conversão
+
+.col-2[
+<br>
+<br>
+<br>
+<br>
+* Baseada tabela pré-computadas ([Pavon e Choi 2003], [Trivellato 2005]):
+	* SNR.
+	* Taxa de transmissão.
+	* Tamanho do quadro.
+	* Probabilidade de erro.
+]
+
+.col-2[
+![:image 100%](AlgoritmoETXTaxas.png)
+]
+
+
+---
+
+slideTitle: Problemas da Função de Conversão
+
+
+![:block](Regiões Não Inversíveis
+* A função que relaciona SNR e probabilidade de perda não é inversível.
+	* Por exemplo, para a probabilidade de perda igual a $1$.
+* O que fazer nos pontos extremos?
+)
+
+![:block](Limitações de Representação da Tabela
+* SNR e probabilidade de perda são valores contínuos.
+	* Impossível representar todas as entradas em uma tabela.
+* Aumentar a resolução da tabela implica torná-la maior.
+)
+
+---
+
+slideTitle: Inversibilidade
+
+
+![:block](Solução Proposta
+* Utilização de *probes* em $4$ taxas diferentes.
+* Com isso, todo o domínio da função é coberto por curvas inversíveis.
+
+)
+
+.center[
+![:image 70%](inversibilidade.png)
+]
+
+---
+
+slideTitle: Representação dos Dados
+
+
+![:block](Solução Proposta
+* Ajuste de curvas baseado nos dados da tabela.
+
+$$PER = \frac{1 - erf\left(\frac{SNR - a}{b\cdot \sqrt{2}}\right\)}{2}$$
+)
+
+.center[
+![:image 70%](ajuste.png)
+]
+
+
+---
+
+slideTitle: MARA-P
+
+
+![:block](Alterações em Relação à Proposta Original
+* Definição de $n$ *classes de tamanho*.
+	* $[0; 350]$, $[351; 750]$, $[751; 1300]$ e $[1301; 1520]$.
+* Para cada enlace, o custo é calculado $n$ vezes (uma para cada classe\).
+* No *k-ésimo* cálculo, $ps$ é substituído pelo limite superior da *k-ésima* classe.
+* Apenas o custo associado à classe dos maiores quadros é utilizado para roteamento.
+)
+
+![:block](Expressão de Custo para a *k-ésima* Classe
+.center[
+			$$MARA\_{ab} = \min\_{i}{\left(\frac{ETX\_{ab}^{i}\cdot sup[k]}{\lambda\_{i}}\right\)}$$
+]
+)
+
+
+---
+
+slideTitle: MARA-RP
+
+
+![:block](Alterações em Relação à Proposta Original
+* Extensão da ideia anterior.
+* Os custos associados a todas as classes são armazenados.
+* O algoritmo de caminho mínimo é executado em $n$ instâncias.
+* O resultado é uma tabela de roteamento com mais uma dimensão.
+
+)
+
+
+---
+
+layout: false
+class: section-slide
+
+# Implementação
+
+---
+
+class: middle
+layout: true
+name: conteudo
+
+.title[
+{{slideTitle}}
+<hr>]
+
+---
+
+slideTitle: Implementações Realizadas
+
+
+![:block](Simulações
+* Simulador ns-2.
+* Módulo DEI802.11-MR.
+	* Utilização de múltiplas taxas.
+	* Modelo de perda mais real.
+* Protocolo OLSR.
+
+)
+![:block](Implementação Real
+* Roteadores *Linksys* WRT-54G.
+* OpenWRT (distribuição *Linux*\).
+* Protocolo SLSP módulo PPRS.
+* *Iptables* e *Iproute2*.
+
+)
+
+
+---
+
+slideTitle: Protocolo SLSP
+
+
+![:block](Descrição
+* Protocolo baseado em estado de enlaces.
+* Bastante simples.
+* Projetado para ser extensível, em relação a implementação de novas métricas.
+* Simplificou o processo de implementação do MARA e suas variações.
+
+)
+
+
+---
+
+slideTitle: Módulo PPRS
+
+
+![:block](Descrição
+* Módulo para o *kernel* do *Linux*.
+* Permite a seleção de taxas de transmissão com base em:
+	* Próximo salto.
+	* Classe de tamanho do quadro.
+	* Modo de transmissão.
+* Independente do *driver* da interface.
+
+)
+
+
+---
+
+slideTitle: Funcionamento em Conjunto
+
+
+.center[
+![:image 70%](pprs.png)
+]
+
+---
+
+slideTitle: Implementação do MARA-RP
+
+
+![:block](Como Adicionar uma Dimensão à Tabela de Roteamento?
+* O *Linux* utiliza múltiplas tabelas de roteamento.
+	* *Iproute2*.
+* Existem *regras* associando pacotes a cada tabela.
+	* Baseadas em destino, origem, TOS...
+)
+![:block](Nesta Implementação...
+* O protocolo constrói tabelas diferentes.
+* O *Iptables* coloca marcações nos pacotes.
+* As regras redirecionam o pacote à tabela correta.
+
+)
+
+
+---
+
+layout: false
+class: section-slide
+
+# Avaliação
+
+---
+
+class: middle
+layout: true
+name: conteudo
+
+.title[
+{{slideTitle}}
+<hr>]
+
+---
+
+slideTitle: Simulações
+
+
+![:block](Cenários
+* Cinco topologias.
+* Um fluxo TCP de 300 segundos de duração.
+	* MARA e outras propostas.
+* Três fluxos UDP também de 300 segundos (voz, vídeo e *background*\).
+	* MARA, MARA-P e MARA-RP.
+)
+
+![:block](Propostas Comparadas
+* Métricas *Hop Count*, ETX, ML e ETT.
+* Algoritmos ARF, *SampleRate* e SNR.
+)
+
+---
+
+slideTitle: Experimentos Reais
+
+
+![:block](Cenários
+* Uma topologia.
+* Um fluxo TCP de 300 segundos de duração.
+	* Um fluxo ICMP concorrente.
+* Dois fluxos UDP também de 300 segundos (voz e vídeo\).
+* Ferramentas: *Iperf* e *ping*.
+
+)
+
+![:block](Propostas Comparadas
+* Métricas *Hop Count*, ETX e ML.
+* Algoritmo ARF (simplificado\).
+
+)
+
+---
+
+slideTitle: Topologias (I)
+
+
+.center[
+![:image 90%](topoA.png)
+]
+
+---
+
+slideTitle: Topologias (II)
+
+.center[
+![:image 90%](topoB.png)
+]
+
+---
+
+slideTitle: Topologias (III)
+
+.center[
+![:image 60%](topoligiaEmGrade.png)
+]
+
+---
+
+slideTitle: Topologias (IV)
+
+.center[
+![:image 60%](topoAleatoria.png)
+]
+
+---
+
+slideTitle: Topologias (V)
+
+.center[
+![:image 90%](topologiaExt2.png)
+]
+
+
+
+---
+
+slideTitle: Vazão TCP na Topologia Remesh
+
+
+.center[
+![:image 70%](topoATCP1_vaz.png)
+.center[
+			<span style="font-size: 18px;">Vazão entre os nós $0$ e $1$.</span>
+]
+]
+.center[
+![:image 70%](topoATCP6_vaz.png)
+.center[
+<span style="font-size: 18px;">Vazão entre os nós $0$ e $6$.</span>
+]
+]
+
+---
+
+slideTitle: Comparativo: ETT/SNR e MARA
+
+
+.center[
+![:image 70%](topoA_Comparativo.png)
+.center[
+<span style="font-size: 18px;">Topologia Remesh</span>
+]
+]
+
+---
+
+slideTitle: Vazão TCP na Topologia ReMoTE
+
+
+.center[
+![:image 70%](topoCTCP1_vaz.png)
+.center[
+<span style="font-size: 18px;">Vazão entre os nós $0$ e $1$</span>
+]
+]
+.center[
+![:image 70%](topoCTCP9_vaz.png)
+.center[
+<span style="font-size: 18px;">Vazão entre os nós $0$ e $9$</span>
+]
+]
+
+
+---
+
+slideTitle: Distribuição de Taxas
+
+
+.center[
+![:image 100%](topoA_TCP6_Taxas.png)
+]
+
+---
+
+slideTitle: MARA-P e MARA-RP
+
+.center[
+![:image 100%](Otimizacoes.png)
+]
+
+---
+
+slideTitle: Experimentos no Testbed Real
+
+
+.center[
+![:image 100%](ExpReal.png)
+]
+
+---
+
+layout: false
+class: section-slide
+
+# Conclusão
+
+---
+
+class: middle
+layout: true
+name: conteudo
+
+.title[
+{{slideTitle}}
+<hr>]
+
+---
+
+slideTitle: Considerações Finais
+
+
+* Adaptação de taxa e métrica de roteamento.
+	* Métricas: obter informações confiáveis.
+	* Características dos enlaces dependem da taxa.
+	* Problemas fortemente correlacionados.
+* MARA.
+	* Abordagem conjunta.
+	* Garante a coerência.
+* Avaliação em topologias simuladas e reais.
+	* Ganhos consideráveis.
+
+---
+
+slideTitle: Trabalhos Futuros
+
+
+![:block](Avaliação de Outros Cenários
+* Cenários sintéticos.
+* Cenários com mais nós.
+* Redes reais.
+
+)
+
+
+</template>
+</textarea>
+
+<script src="../template/js/remark-latest.min.js" type="text/javascript"></script>
+<script src="../template/js/d3.v4.js"></script>
+<script src="../template/js/graphlib-dot.js"></script>
+<script src="../template/js/dagre-d3.min.js"></script>
+<script src="../template/js/dagre-d3-extra.js"></script>
+<script src="../template/js/macros.js" type="text/javascript"></script>
+<script src="../template/js/callbacks.js" type="text/javascript"></script>
+<script src="../template/js/katex.min.js"></script>
+<script src="../template/js/auto-render.min.js"></script>
+<link rel="stylesheet" href="../template/css/katex.min.css">
+<script type="text/javascript">
+
+	var renderMath = function() {
+		renderMathInElement(document.body, {delimiters: [
+			 {left: "$$", right: "$$", display: true},
+			 {left: "$", right: "$", display: false},
+		]});
+	}
+
+	var slideshow = remark.create({highlightStyle: "github", highlightLines: "true", highlightSpans: "true", slideNumberFormat: onSlideCallback}, renderMath);
+
+	dagreRenderAllSlides();
+
+</script>
+</body>
+</html>
+
+

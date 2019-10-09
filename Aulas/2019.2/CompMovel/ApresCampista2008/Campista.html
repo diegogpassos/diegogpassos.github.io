@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Apresentação de Artigo: Routing Metrics and Protocols for Wireless Mesh Networks</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" type="text/css" href="../template/css/roboto.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/general.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/code.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/cover.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/section.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/elements.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/table.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/block.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/dagre.css">
+    <style>
+      span.katex {
+        font-size: 0.95em;
+      }
+    </style>
+  </head>
+  <body>
+
+    <textarea id="source">
+
+
+class: cover-slide
+
+![:cover](
+Computação Móvel
+Apresentação do Artigo<br><i>Routing Metrics and Protocols for Wireless Mesh Networks</i>
+Diego Passos
+../template/img/logo.svg
+)
+
+---
+
+class: middle
+layout: true
+name: conteudo
+
+.title[
+{{slideTitle}}
+<hr>]
+
+---
+
+slideTitle: Dados Bibliográficos
+
+#### Autores
+* Miguel Elias M. Campista, Pedro Miguel Esposito, Igor M. Moraes, Luís Henrique M. K. Costa, Otto Carlos M. B. Duarte.
+	* UFRJ.
+* Diego Passos, Célio Albuquerque, Débora Christina Muchaluat-Saade.
+	* UFF.
+* Marcelo Rubinstein.
+	* UERJ.
+
+#### Periódico
+* *IEEE Network*
+
+#### Ano
+* 2008.
+
+---
+
+layout: false
+class: section-slide
+
+# Introdução
+
+---
+
+class: middle
+layout: true
+name: conteudo
+
+.title[
+{{slideTitle}}
+<hr>]
+
+---
+
+slideTitle: Redes em Malha Sem Fio
+
+
+#### Redes Infraestruturadas
+* *e.g.*, IEEE 802.11 com sistema de distribuição.
+* Limitam cobertura.
+
+#### Redes Ad Hoc Móveis
+* Não necessitam infraestrutura.
+* Mas mobilidade prejudica desempenho.
+	* Pode causar partições.
+
+#### Redes em Malha Sem Fio
+* *Backbone* sem fio de múltiplos saltos.
+* Interconectam LANs isoladas.
+* Roteadores estacionários, clientes móveis.
+	* Permite avaliar qualidade dos enlaces, foco em desempenho.
+
+---
+
+slideTitle: Roteamento
+
+#### Pesquisa em WMN
+* Vários trabalhos sobre MAC/PHY.
+* Mas roteamento é fundamental.
+
+#### Tópicos de Pesquisa em Roteamento
+* Protocolos.
+* Métricas.
+* Além disso: IEEE 802.11s.
+
+---
+
+slideTitle: Objetivo do Artigo
+
+#### Revisão Bibliográfica
+* Métricas.
+* Protocolos.
+
+#### Taxonomia.
+* Classificação dos protocolos.
+
+---
+
+layout: false
+class: section-slide
+
+# Métricas de Roteamento
+
+---
+
+class: middle
+layout: true
+name: conteudo
+
+.title[
+{{slideTitle}}
+<hr>]
+
+---
+
+slideTitle: Hop Count
+
+#### Comum
+* Implicitamente adotada em protocolos de roteamento.
+	* Principalmente, MANETs.
+
+#### Vantagens
+* Convergência rápida.
+
+#### Desvantagens
+* Rotas potencialmente ruins.
+
+---
+
+slideTitle: ETX (I)
+
+#### Primeira Métrica para WMN 
+* *Expected Transmission Count*. 
+	* Número esperado de transmissões até sucesso.
+		* Contando retransmissões.
+
+#### Funcionamento
+* *Probes* periódicos em *broadcast*.
+	* Estimativa da probabilidade de sucesso na recepção de quadros: $d_r$.
+	* Janela deslizante dos últimos $w$ *probes*.
+* Vizinhos trocam suas estimativas.
+	* Obtêm $d_f$ para cada enlace.
+* ETX de um enlace:
+
+$$ETX\_{ab} = \frac{1}{d\_r\cdot d\_f}$$ 
+
+---
+
+slideTitle: ETX (II)
+
+#### Melhor Rota
+* A que minimiza soma do ETX dos enlaces.
+
+#### Overhead
+* $O(n)$ *probes*. 
+
+#### Potenciais Problemas
+* *Broadcasts* em taxas mais baixas.
+* *Probes* geralmente pequenos.
+
+---
+
+slideTitle: ML (I)
+
+#### Minimum Loss
+* Custo do Enlace: probabilidade de sucesso:
+
+$$ML\_{ab} = d\_r \cdot d\_f$$
+
+#### Melhor Rota
+* A que minimiza produtório do ML dos enlaces.
+	* *Proxy* para probabilidade de entrega fim-a-fim. 
+
+---
+
+slideTitle: ML (II)
+
+#### Potenciais Vantagens 
+* Caminhos com menor perda de pacotes.
+	* Possivel melhora da vazão TCP.
+
+#### Potenciais Desvantagens 
+* Caminhos potencialmente longos.
+* Também ignora características dos *probes*.
+
+---
+
+slideTitle: ETT
+
+#### Duas Propostas
+* Draves *et al.*:
+	* ETX vezes atraso de transmissão de um quadro.
+	* Taxas estimadas por (outros) *probes*.
+	* *Overhead*: $O(n^2)$.
+* Couto 2004:
+	* Estimar $d_r$ para pacotes grandes em cada taxa.
+		* Dados.
+		* Viável com broadcast?
+	* Estimar $d_r$ para pacotes pequenos na taxa básica.
+		* Ack.
+	* $Overhead$: $O(n*m)$.
+		* $m$: taxas.
+
+---
+
+slideTitle: WCETT
+
+#### Abordagem *Cross-Layer*
+* Múltiplos canais/rádios (PHY)
+* Roteamento (Rede).
+
+#### Objetivo
+* Reduzir auto-interferência.
+
+#### Weighted-Cumulative ETT
+* Modificação do ETT.
+* Custo da rota: combinação do ETT com fator de diversidade.
+
+#### Potenciais Desvantagens 
+* Não garante caminhos mais curtos (não isotônica)
+* Não evita interferência inter-fluxos. 
+
+---
+
+slideTitle: MIC 
+
+#### Metric of Interference and Channel Switching
+* Ataca desvantagens do WCETT.
+* Nós contabilizam vizinhos interferentes.
+	* Interferência inter-fluxos.
+* Tornam problema isotônico:
+	* Introdução de nós virtuais.
+
+---
+
+slideTitle: mETX
+
+#### Objetivo 
+* Capturar variações rápidas nos enlaces.
+	* Ordem de duração de símbolo/bit. 
+* Hipótese:
+	* Estatística de bits errados por pacote mais precisa que de pacotes perdidos.
+
+#### Funcionamento
+* *Probes* com padrão conhecido de bits.
+* *Probe* recebido: comparado ao padrão.
+	* Bits errados contados.
+* Considera tamanho dos pacotes, taxa.
+
+---
+
+slideTitle: ENT 
+
+#### Effective Number of Transmissions
+* Extensão do mETX.
+* Descarta enlaces muito ruins.
+	* Número esperado de retransmissões excessivo.
+
+---
+
+slideTitle: iAWARE
+
+#### Ideia Básica
+* Considerar tempo que meio permanece ocupado.
+	* Auto-interferência.
+
+---
+
+slideTitle: Métricas: Comparação
+
+.center[
+![:image 70%](Metricas.png)
+]
+
+---
+
+layout: false
+class: section-slide
+
+# Protocolos de Roteamento
+
+---
+
+class: middle
+layout: true
+name: conteudo
+
+.title[
+{{slideTitle}}
+<hr>]
+
+---
+
+slideTitle: Roteamento Ad Hoc
+
+#### Em Geral, 3 Classes
+* Próativo.
+	* Rotas sempre mantidas para todos os destinos.
+* Reativo.
+	* Rotas buscadas apenas quando necessárias.
+* Híbridos.
+	* Proativo para alguns destinos, reativo para outros.
+
+---
+
+slideTitle: Roteamento em WMNs
+
+
+</template>
+</textarea>
+
+<script src="../template/js/remark-latest.min.js" type="text/javascript"></script>
+<script src="../template/js/d3.v4.js"></script>
+<script src="../template/js/graphlib-dot.js"></script>
+<script src="../template/js/dagre-d3.min.js"></script>
+<script src="../template/js/dagre-d3-extra.js"></script>
+<script src="../template/js/macros.js" type="text/javascript"></script>
+<script src="../template/js/callbacks.js" type="text/javascript"></script>
+<script src="../template/js/katex.min.js"></script>
+<script src="../template/js/auto-render.min.js"></script>
+<link rel="stylesheet" href="../template/css/katex.min.css">
+<script type="text/javascript">
+
+	var renderMath = function() {
+		renderMathInElement(document.body, {delimiters: [
+			 {left: "$$", right: "$$", display: true},
+			 {left: "$", right: "$", display: false},
+		]});
+	}
+
+	var slideshow = remark.create({highlightStyle: "github", highlightLines: "true", highlightSpans: "true", slideNumberFormat: onSlideCallback}, renderMath);
+
+	dagreRenderAllSlides();
+
+</script>
+</body>
+</html>
+
+
