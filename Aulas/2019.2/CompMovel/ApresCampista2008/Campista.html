@@ -225,7 +225,7 @@ slideTitle: ETT
 		* Viável com broadcast?
 	* Estimar $d_r$ para pacotes pequenos na taxa básica.
 		* Ack.
-	* $Overhead$: $O(n*m)$.
+	* $Overhead$: $O(n\cdot m)$.
 		* $m$: taxas.
 
 ---
@@ -332,6 +332,309 @@ slideTitle: Roteamento Ad Hoc
 
 slideTitle: Roteamento em WMNs
 
+#### WMN *vs.* Ad Hoc
+* Problema, abordagens similares.
+* Mas WMNs têm peculiaridades.
+	* Orientação a desempenho.
+	* Baixa mobilidade.
+
+#### Taxonomia 
+* Baseados em roteamento *ad hoc*.
+* Inundação controlada.
+* Ciente de tráfego.
+* Oportunista.
+
+---
+
+slideTitle: Baseados em Roteamento Ad Hoc (I)
+
+#### Protocolos Clássicos
+* Adaptados para WMN.
+	* *e.g.*, metricas cientes de qualidade.
+
+#### LQSR
+* Baseado em estado de enlaces.
+* Reativo.
+	* Descoberta de rotas: atualização de estado dos enlaces.
+	* Sem pacotes de controle periódicos.
+* *Source routing*. 
+
+---
+
+slideTitle: Baseados em Roteamento Ad Hoc (II)
+
+#### SrcRR
+* Similar ao LQSR.
+* Mas visão da topologia é limitada.
+
+#### MR-LQSR 
+* Multi Radio LQSR.
+* Versão do LQSR para múltiplos rádios.
+
+---
+
+slideTitle: Inundação Controlada 
+
+#### Característica Básica 
+* Redução do *overhead* de controle.
+* Motivação:
+	* Inundação: escalabilidade ruim.
+
+#### Duas abordagens
+* Controle temporal.
+* Controle espacial.
+
+---
+
+slideTitle: Inundação Controlada: Inundação Clássica 
+
+.center[
+![:image 50%](SemControle.png)
+]
+
+* Periodicidade fixa.
+* Envio para todos os nós com mesma periodicidade.
+
+---
+
+slideTitle: Inundação Controlada: Controle Temporal 
+
+.center[
+![:image 50%](ControleTemporal.png)
+]
+
+* Periodicidade varia de acordo com distância.
+
+---
+
+slideTitle: Inundação Controlada: Controle Espacial 
+
+.center[
+![:image 50%](ControleEspacial.png)
+]
+
+* Nós distantes recebem menos informação.
+	*	Comunicação geralmente envolve nós próximos (?)
+* Alternativa: controle dos nós responsáveis pelo encaminhamento.
+
+---
+
+slideTitle: Inundação Controlada: Exemplos (I)
+
+#### LOLS
+* *Localized On-demand Link State*.
+* Enlaces têm dois custos:
+	* Longo prazo: custo "usual".
+	* Curto prazo: custo "atual".
+* Redução de *overhead*:
+	* Custo de curto prazo enviado frequentemente para vizinhos.
+	* Custo de longo prazo inundado menos frequentemente.
+* ETT ou ETX.
+
+---
+
+slideTitle: Inundação Controlada: Exemplos (II)
+
+#### MMRP
+* *Mobile Mesh Routing Protocol*.
+* Pacotes de controle têm validade.
+	* Em termos de tempo para transmissão.
+	* Não são encaminhados quando expirada.
+
+#### OLSR
+* *Optimized Link State Routing*.
+* Usa pacotes de *Hello* como *probe* do ETX.
+* Controla inundação com MPRs.
+	* Apenas sub-conjunto de vizinhos encaminha inundações.
+	* Suficiente para alcançar vizinhos de dois saltos.
+
+---
+
+slideTitle: Cientes de Tráfego
+		
+#### Ideia Básica 
+* Consideram a matriz de tráfego da rede.
+
+#### Baseados em Árvore
+* Nomenclatura alternativa.
+* Assume tráfego sempre em direção aos *gateways*. 
+
+---
+
+slideTitle: Cientes de Tráfego: Exemplo
+
+#### AODV-ST 
+* *Ad hoc On-demand Distance Vector-Spanning Tree*. 
+* Modificação do AODV.
+* *Gateway* periodicamente requisita rotas para outros nós.
+* Atua como raiz da árvore.
+* Comunicações sem o *gateway* usam AODV original.
+
+---
+
+slideTitle: Oportunistas
+
+#### Característica Básica 
+* Usam esquemas cooperativos de diversidade.
+* Exploram natureza de difusão do meio.
+* Se caminho principal falha, alternativo é acionado.
+	* Durante encaminhamento!
+	* Outro próximo salto pode ter recebido quadro.
+
+#### Desafio
+* Ao receber pacote, como nó sabe se deve encaminhá-lo?
+
+---
+
+slideTitle: Oportunistas: Exemplos 
+
+#### ExOR 
+* Pacotes enviados em lotes.
+	* Reduz *overhead*.
+* Rotas não são pré-computadas.
+	* Pacotes enviados em *broadcast* para vizinhos.
+* Transmissor define prioridades entre vizinhos.
+	* Prioridade alta: encaminhar mais cedo.
+	* Prioridade baixa: aguardar mais tempo.
+		* Desiste, se ouve retransmissão.
+
+#### ROMER
+* *Resilient Opportunistic MEsh Routing protocol*.
+* Similar ao ExOR, mas pré-computa rotas.
+* Alternativas são exploradas se necessário.
+
+---
+
+slideTitle: Protocolos de Roteamento: Resumo
+
+.center[
+![:image 70%](TabelaProtocolos.png)
+]
+
+---
+
+layout: false
+class: section-slide
+
+# Análise de Desempenho
+
+---
+
+class: middle
+layout: true
+name: conteudo
+
+.title[
+{{slideTitle}}
+<hr>]
+
+---
+
+slideTitle: Experimentos
+
+#### Objetivo 
+* Comparação de desempenho de métricas.
+	* Hop Count, ETX, ETT, ML.
+
+#### Metodologia
+* Experimentos em WMN real.
+* Métricas implementadas sobre o OLSR.
+	*  À época, candidato para o IEEE 802.11s.
+
+---
+
+slideTitle: Rede de Testes
+
+.center[
+![:image 50%](Topologia.png)
+]
+
+#### Características 
+* Roteadores Linksys WRT54G/GS/GL.
+* IEEE 802.11g.
+* Antenas omni-direcionais.
+* 9 nós.
+* Fluxos sempre do *gateway* (nó 0).
+
+---
+
+slideTitle: Número Médio de Saltos
+
+.center[
+![:image 60%](Hops.png)
+]
+
+#### Observações
+* *Hop Count*: menor número de saltos.
+* ML: maior.
+
+---
+
+slideTitle: Perda de Pacotes
+
+.center[
+![:image 60%](Loss.png)
+]
+
+#### Observações
+* Mais saltos, mais perdas.
+* Em certo ponto, *hop count* particularmente ruim.
+* ML: menores perdas.
+
+---
+
+slideTitle: RTT
+
+.center[
+![:image 60%](RTT.png)
+]
+
+#### Observações 
+* *Hop Count* novamente bem inferior.
+	*	Perdas resultam em retransmissões.
+* ETX: ~150 ms; ML: ~75 ms; ETT: ~35 ms.
+
+---
+
+slideTitle: Vazão
+
+.center[
+![:image 60%](Throughput.png)
+]
+
+#### Observações 
+* Cai com número de saltos.
+	* Perdas, interferência.
+* *Hop Count*: vazão quase zero para 3+ saltos.
+
+---
+
+layout: false
+class: section-slide
+
+# Análise de Desempenho
+
+---
+
+class: middle
+layout: true
+name: conteudo
+
+.title[
+{{slideTitle}}
+<hr>]
+
+---
+
+slideTitle: Conclusões
+
+#### Experimentos
+* Reforçam necessidade de métricas *quality-aware*.
+
+#### Direções Futuras
+* Abordagens *cross-layer*. 
+	* Melhorar roteamento com conhecimento do MAC, PHY.
+	* Melhor uso espectral.
 
 </template>
 </textarea>
