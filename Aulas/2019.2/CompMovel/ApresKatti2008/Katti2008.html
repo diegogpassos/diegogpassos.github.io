@@ -47,10 +47,12 @@ name: conteudo
 slideTitle: Dados Bibliográficos
 
 #### Autores
-* Sachin Katti, Hariharan Rahul, Dina Katabi, Muriel Médard e Jon Crowcroft.
+* Sachin Katti, Hariharan Rahul, Dina Katabi, Muriel Médard.
 	* MIT.
 * Wenjun Hu.
 	* University of Washington,
+* Jon Crowcroft.
+	* University of Cambridge
 
 #### Periódico
 * *IEEE/ACM Transactions on Networking*
@@ -114,11 +116,16 @@ slideTitle: Redes em Malha Sem Fio (*Mesh*)
 slideTitle: *Network Coding*
 
 	
-#### Definição
-* É o ato de nós intermediários combinarem informações de vários canais de entrada em uma única unidade de informação para um canal de saída.
-* Objetiva-se aumentar robustez ou capacidade da rede.
-* Cada nó da rede pode ser visto como uma matriz de transformação (linear ou não) dos diversos pacotes sendo gerados na rede.
-* Para decodificar um pacote, o nó de destino deve aplicar a matriz de transformação inversa.
+![:block](Definição
+Nós intermediários combinam informações de vários canais de entrada em uma única unidade de informação para um canal de saída.
+)
+
+#### Objetivo
+* Aumentar robustez ou capacidade da rede.
+
+#### Abstração Matemática
+* Nó: matriz de transformação (linear ou não) dos pacotes da rede.
+* Decodificação: destino aplica transformação inversa.
 
 
 ---
@@ -138,15 +145,15 @@ slideTitle: *Network Coding* (Exemplo)
 
 ---
 
-slideTitle: *Network Coding*: Características
+slideTitle: *Network Coding:* Características
 
 
-* Permite atingir o limite teórico de fluxo máximo (teorema do Fluxo Máximo - Corte Mínimo).
-* Permite a redução do número total de transmissões
-	* Ótimo em redes sem fio de múltiplos saltos.
-* Implementação prática não é trivial.
-	* Na prática, as topologias não são tão "controladas".
-	* Em redes sem fio, as topologias podem mudar dinamicamente.
+* Permite atingir o **limite teórico de fluxo máximo**.
+	* Teorema do *Fluxo Máximo - Corte Mínimo*.
+* Permite **reduzir número de transmissões**.
+	* Adequado a redes sem fio de múltiplos saltos.
+* Implementação prática **não trivial**.
+	* Topologias não tão "controladas" e dinâmicas.
 	* Como escolher um esquema de codificação eficiente neste caso?
 
 ---
@@ -171,12 +178,12 @@ name: conteudo
 slideTitle: Características
 
 
-* Esquema genérico de codificação.
-* Pode ser aplicado a qualquer topologia.
-* Se adapta automaticamente a mudanças.
+#### Esquema Genérico de Codificação.
+* Pode ser aplicado a **qualquer topologia**.
+* Se **adapta** automaticamente a mudanças.
 * Não faz suposições sobre a característica dos fluxos.
 * Provê codificação inter-fluxos.
-* A codificação/decodificação é feita salto a salto.
+* A codificação/decodificação é feita **salto a salto**.
 	* Foge um pouco ao conceito original de codificação de rede.
 
 ---
@@ -184,11 +191,11 @@ slideTitle: Características
 slideTitle: Implementação
 
 
-* Uma nova camada é adicionada entre o roteamento e o enlace.
-* Tenta detectar oportunidades de codificação.
+* Nova camada entre o roteamento e o enlace.
+* Detectar oportunidades de codificação.
 	* Caso existam, os pacotes são combinados via XOR.
 	* Caso contrário, eles são enviados normalmente.
-* Divide-se em 3 funcionalidades:
+* Três funcionalidades:
 	* Codificação oportunista.
 	* Escuta oportunista.
 	* Aprendizado do estado dos vizinhos.
@@ -199,7 +206,7 @@ slideTitle: Codificação Oportunista
 
 
 ![:block](Objetivos
-* Maximizar o número de pacotes entregues em cada transmissão.
+* Maximizar pacotes entregues em cada transmissão.
 * Garantir que os receptores sejam capazes de decodificar o pacote.
 
 )
@@ -215,15 +222,15 @@ slideTitle: Escuta Oportunista
 
 
 ![:block](Premissas
-* O meio sem fio tem natureza compartilhada (difusão\).
-* Nós, em geral, são equipados com antenas omni-direcionais.
+* Meio sem fio: difusão.
+* Antenas omni-direcionais.
 )
 
 ![:block](Como tirar proveito?
-* Nós são colocados em *modo promiscuo*.
+* Interfaces em **modo promiscuo**.
 * Todos os quadros transmitidos por vizinhos são recebidos (idealmente\).
 * Todos os quadros são armazenados por um pequeno período de tempo ($0,5$s\).
-	* Eles podem ser úteis para codificações posteriores.
+	* Podem ser úteis para decodificações.
 
 
 )
@@ -239,11 +246,11 @@ slideTitle: Aprendizado do Estado dos Vizinhos
 )
 
 ![:block](Solução
-* Envio de anúncios periódicos por cada nó.
-* Utilização de informação da camada de roteamento.
-	* O protocolo de roteamento calcula a probabilidade de recepção de cada nó.
-* Utiliza esta informação para estimar se um vizinho tem ou não um dado pacote.
-* Por ser probabilística, a estratégia pode falhar.
+* Anúncios periódicos por cada nó.
+* Informação da camada de roteamento.
+	* Probabilidade de recepção de cada nó.
+* Estimar se vizinho tem um dado pacote.
+* Probabilística: pode falhar.
 
 )
 
@@ -270,10 +277,9 @@ slideTitle: Tipos de Ganho
 
 
 ![:block](Ganho de Codificação
-* Razão entre o número de transmissões necessárias sem o COPE pelo número com o COPE.
-* Sempre maior ou igual a $1$.
-* Sem a escuta oportunista, o limite teórico é $2$.
-
+* Razão entre o número de transmissões necessárias sem e com o COPE.
+	* Maior ou igual a $1$.
+	* Sem a escuta oportunista, o limite teórico é $2$.
 )
 
 ![:block](Ganho de Codificação + MAC
@@ -303,7 +309,7 @@ slideTitle: Exemplo: Topologia em X
 ![:image 50%](imagens/Xtopology.PNG)
 ]
 
-* Ganho de Codificação: $1,33$.
+* Ganho de Codificação: $1{,}33$.
 * Ganho de Codificação + MAC: 2.
 
 
@@ -316,7 +322,7 @@ slideTitle: Exemplo: Topologia em Cruz
 ![:image 50%](imagens/crossTopology.PNG)
 ]
 
-* Ganho de Codificação: $1,6$.
+* Ganho de Codificação: $1{,}6$.
 * Ganho de Codificação + MAC: 4.
 
 
@@ -358,15 +364,12 @@ slideTitle: Algoritmo de Codificação
 
 ![:block](Características
 * Pacotes não são atrasados.
-	* Se não há oportunidade de codificação, os pacotes são enviados normalmente.
-* Dá preferencia à codificação de pacotes de tamanho semelhante.
-	* No entanto, isso não é regra.
-* São criadas duas classes: pacotes grandes e pequenos (menos de 100 bytes\).
+	* Sem oportunidade de codificação, pacotes enviados normalmente.
+* **Preferência** por codificar pacotes de tamanho semelhante.
+	* Duas classes: pacotes grandes e pequenos (menos de 100 bytes\).
 * Nunca serão codificados juntos:
 	* Pacotes destinados ao mesmo próximo salto.
 	* Pacotes gerados no próprio nó.
-
-
 )
 
 ---
@@ -375,11 +378,12 @@ slideTitle: Algoritmo de Codificação (Cont.)
 
 
 ![:block](Busca por Pacotes
-* São mantidas filas virtuais por vizinho.
-	* Duas para cada.
+* Filas virtuais por vizinho.
+	* Pacotes grandes e pacotes pequenos.
 * O primeiro pacote da fila real é escolhido.
-* As filas virtuais são percorridas, buscando oportunidades de codificação.
-	* Primeiro às de tamanho semelhante, depois de tamanho diferente.
+* Filas virtuais são percorridas, buscando oportunidades de codificação.
+	* Primeiro as de tamanho semelhante
+	* Depois as de tamanho diferente.
 
 
 )
@@ -387,6 +391,7 @@ slideTitle: Algoritmo de Codificação (Cont.)
 ![:block](Probabilidade de Decodificação
 * Para $n$ pacotes codificados:
 	$$P\_D = P\_1 \times P\_2 \times ... \times P\_{n-1}$$
+	* $P\_1$, ..., $P\_n$: probabilidade de decodificação.
 )
 
 ---
@@ -406,14 +411,12 @@ slideTitle: Pseudo-Broadcast
 
 ![:block](Motivação
 * Pacotes precisam ser transmitidos para vários vizinhos.
-* Nós precisam confirmar o recebimento.
-
 )
 
 ![:block](Solução Proposta
 * O quadro é enviado para um dos vizinhos em *unicast*.
-* Os demais nós recebem o pacote de forma promiscua.
-* A lista completa de receptores é colocada no cabeçalho do quadro.
+	* Demais nós recebem de forma promiscua.
+	* Lista de receptores no cabeçalho.
 * *Pseudo-broadcast* é mais confiável que *broadcast*.
 
 )
@@ -426,14 +429,12 @@ slideTitle: *Hop-By-Hop Acks*
 
 ![:block](Motivação
 * Pacotes codificados podem não ser recebidos por todos os nós.
-* Mesmo quando recebidos, os nós podem não ser capazes de decodificá-los.
-
+	* Mesmo assim, podem não ser decodificáveis.
 )
 
 ![:block](Solução Proposta
 * Incorporar Acks nos pacotes periódicos de anúncio de pacotes disponíveis.
 * O *overhead* de enviar um ack individualmente é muito alto.
-
 )
 
 ---
@@ -443,17 +444,15 @@ slideTitle: Evitando Reordenação
 
 ![:block](Motivação
 * Acks assíncronos podem causar reordenação de segmentos TCP.
-* O TCP pode interpretar segmentos fora de ordem como congestionamento.
-* Reduz o desempenho.
+	* O TCP pode interpretar como congestionamento.
+	* Reduz o desempenho.
 
 )
 
 ![:block](Solução Proposta
-* Para os pacotes TCP destinados ao nó atual, o COPE verifica a ordem.
-* Pacotes só são entregues para a camada superior se não houver ``buracos''.
+* Módulo de verificação de ordem.
+* Pacotes só entregues quando não houver "buracos".
 	* Ou até um *timer* expirar.
-
-
 )
 
 ---
@@ -489,17 +488,17 @@ slideTitle: Ambiente de Testes
 
 
 ![:block](Características
-* $20$ nós em dois andares de um prédio.
-* Número de saltos varia de $1$ a $6$.
-* Taxa de perda entre $0\%$ e $30\%$.
-* 802.11a .
-* $6$Mb/s.
-
+* 20 nós em dois andares de um prédio.
+	* 1 a 6 saltos.
+	* Taxa de perda entre 0% e 30%.
+	* 802.11a.
+	* 6 Mb/s.
+	* RTS/CTS desabilitado.
 )
 
 ![:block](*Software*
 * Click.
-* Fila de $100$ pacotes.
+* Fila de 100 pacotes.
 * Srcr com métrica ETT.
 * Libpcap.
 
@@ -514,7 +513,6 @@ slideTitle: Ambiente de Testes (Cont.)
 * PCs.
 * Duas interfaces de rede.
 	* Só uma é usada.
-* RTS/CTS desabilitado.
 
 )
 
@@ -530,15 +528,26 @@ slideTitle: Ambiente de Testes (Cont.)
 
 slideTitle: TCP: Topologias Simples (I)
 
-.center[
-![:image 60%](imagens/GainAliceBobTCP.PNG)
+![:column 40%](
 <br>
-**(a) Alice-and-Bob}**
-![:image 60%](imagens/GainXtopologyTCP.PNG)
 <br>
-**(b) Topologia em X**
-]
+<br>
+#### Detalhes
+* 40 execuções.
+* Vazão média para cada execução.
+* CDF da vazão de cada execução.
+)
 
+![:column 60%](
+.center[
+![:image 90%](imagens/GainAliceBobTCP.PNG\)
+<br>
+(a\) Alice-and-Bob
+![:image 90%](imagens/GainXtopologyTCP.PNG\)
+<br>
+(b\) Topologia em X
+]
+)
 ---
 
 slideTitle: TCP: Topologias Simples (II)
@@ -546,7 +555,7 @@ slideTitle: TCP: Topologias Simples (II)
 .center[
 ![:image 60%](imagens/GainCrosstopologyTCP.PNG)
 <br>
-**(c) Topologia em cruz**
+(c) Topologia em cruz
 ]
 
 ---
@@ -556,10 +565,10 @@ slideTitle: UDP: Topologias Simples (I)
 .center[
 ![:image 60%](imagens/GainAliceBobUDP.PNG)
 <br>
-**(a) Alice-and-Bob**
+(a) Alice-and-Bob
 ![:image 60%](imagens/GainXtopologyUDP.PNG)
 <br>
-**(b) Topologia em X**
+(b) Topologia em X
 ]
 
 ---
@@ -569,7 +578,7 @@ slideTitle: UDP: Topologias Simples (II)
 .center[
 ![:image 60%](imagens/GainCrosstopologyUDP.PNG)
 <br>
-**(c) Topologia em cruz**
+(c) Topologia em cruz
 ]
 
 ---
