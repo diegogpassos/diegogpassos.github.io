@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Apresentação de Artigo: Survey and Taxonomy of Duty Cycling Mechanisms in Wireless Sensor Networks</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" type="text/css" href="../template/css/roboto.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/general.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/code.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/cover.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/section.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/elements.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/table.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/block.css">
+    <link rel="stylesheet" type="text/css" href="../template/css/dagre.css">
+    <style>
+      span.katex {
+        font-size: 0.95em;
+      }
+    </style>
+  </head>
+  <body>
+
+    <textarea id="source">
+
+
+class: cover-slide
+
+![:cover](
+Computação Móvel
+Apresentação do Artigo<br><i>Survey and Taxonomy of Duty Cycling Mechanisms in Wireless Sensor Networks</i>
+Diego Passos
+../template/img/logo.svg
+)
+
+---
+
+class: middle
+layout: true
+name: conteudo
+
+.title[
+{{slideTitle}}
+<hr>]
+
+---
+
+slideTitle: Dados Bibliográficos
+
+#### Autores
+* Ricardo Carrano, Diego Passos, Luiz Claudio Schara Magalhães, Célio Albuquerque.
+	* UFF.
+
+#### Periódico
+* *IEEE Communications Surveys & Tutorials*
+
+#### Ano
+* 2014.
+
+---
+
+layout: false
+class: section-slide
+
+# Introdução
+
+---
+
+class: middle
+layout: true
+name: conteudo
+
+.title[
+{{slideTitle}}
+<hr>]
+
+---
+
+slideTitle: Duty Cycling e Redes de Sensores Sem Fio
+
+
+#### Duty Cycling
+* Alternância de estados.
+    * *e.g.*, ligado, desligado.    
+* Técnica de engenharia.
+	* Ar-condicionados, bombas hidráulicas, motores elétricos, ... 
+
+#### Redes de Sensores Sem Fio
+* Dispositivos pequenos.
+* Alimentados por baterias.
+* Recarregamento inviável.
+* Troca de bateria idem.
+* **Economia de energia é fundamental**.
+
+---
+
+slideTitle: Duty Cycling e Outras Redes Sem Fio
+
+* Também relevante.
+* Vários exemplos de implementação.
+* **Mas**:
+    * Particularmente relevante em WSNs.
+
+---
+
+slideTitle: Outras Técnicas
+
+#### Outras Técnicas
+* Controle de potência de transmissão.
+* Roteamento ciente de energia.
+* ... 
+
+#### Comparação com Duty Cycling 
+* Duty cycling é mais eficaz.
+* É mais amplamente implementado na prática.
+* Pode ser usado em conjunto.
+
+---
+
+slideTitle: Objetivo do Artigo
+
+#### Revisão Bibliográfica
+* Famílias de métodos.
+* Exemplos de cada família.
+
+#### Taxonomia.
+* Classificação dos métodos.
+* Comparação das vantagens e desvantagens de cada classe.
+
+---
+
+layout: false
+class: section-slide
+
+# Duty Cycling
+
+---
+
+class: middle
+layout: true
+name: conteudo
+
+.title[
+{{slideTitle}}
+<hr>]
+
+---
+
+slideTitle: Objetivo
+
+#### Gerais
+* Reduzir consumo energético.
+* Aumentar **tempo de vida** da rede.
+
+#### Mais Especificamente
+* Reduzir *idle-listening*. 
+    * Tempo que nó passa ouvindo meio desnecessariamente.
+    * **Dificuldade**: imprevisibilidade do tráfego.
+
+---
+
+slideTitle: Outras Fontes de Ineficiência Energética
+
+#### Escuta promíscua
+* Ouvir/receber quadros endereçados a outros.
+* *Overheads* de transmissão/recepção de quadros de controle.
+* Colisões.
+* Perdas de quadros.
+
+#### Corolário
+.center[Reduzir *idle-listening* não é suficiente se outros aspectos são exacerbados.]
+
+---
+
+slideTitle: Requisitos de Eficiência Energética
+
+#### Exemplo Típico
+* TI CC2422: rádio comum em *motes*. 
+* Alimentação: 2 pilhas AA.
+* Autonomia: **4 dias**, se em uso contínuo.
+
+#### Aumentando Tempo de Vida para Um Ano 
+* $1$ Ano $\approx$ $365$ dias $\approx 100 \times 4$ dias.
+* Necessita reduzir consumo em $\approx 100$ vezes. 
+* Duty cycle de $\frac{1}{100} = 1\%$.
+
+---
+
+slideTitle: A Relevância do Rádio
+
+.center[
+![:image 95%](consumoMotes.png)
+]
+
+---
+
+slideTitle: Desafios do Duty Cycling (I)
+
+#### Duty Cycles Baixos
+* Alvos: menos de 1%.
+
+#### Aumento do Atraso
+* Ocasionalmente, necessário esperar rádios serem ligados.
+* Adiciona atraso.
+* Pode adicionar **imprevisibilidade**.
+* Ruim para **aplicações de tempo-real**.
+    * *e.g.*, detecção de incêndios.
+
+---
+
+slideTitle: Desafios do Duty Cycling (II)
+
+#### Colisões 
+* Janelas de transmissão reduzidas.
+* Consequência: aglomeração de tentativas de transmissão.
+* Resultado: maior probabilidade de colisão.
+
+#### Quadros de Controle
+* Podem ser necessários.
+    * *e.g.*, sincronização.
+* **Consumem energia também!** 
+
+---
+
+layout: false
+class: section-slide
+
+# Taxonomia dos Métodos
+
+---
+
+class: middle
+layout: true
+name: conteudo
+
+.title[
+{{slideTitle}}
+<hr>]
+
+---
+
+slideTitle: Taxonomia 
+
+
+.center[
+![:image 60%](taxonomia.png)
+]
+
+---
+
+slideTitle: Métodos Síncronos (I)
+
+#### Característica
+* Sincronismo de relógio.
+* Global, *i.e.*, entre **todos os nós**. 
+* Necessita troca de pacotes para sincronização.
+
+#### Duas Famílias
+* *Rendezvous*.
+* *Skewed/Staggered*. 
+
+---
+
+slideTitle: Métodos Síncronos (II)
+
+.center[
+![:image 60%](sincronos.png)
+]
+
+---
+
+slideTitle: Métodos Síncronos: Rendezvous (I)
+
+#### Ideia
+* Intuitiva: todos os nós acordam/dormem periodicamente **juntos**. 
+
+#### Dificuldade 
+* Sincronização global em múltiplos saltos.
+    * Erros tendem a se **acumular**.
+
+#### Lidando com a Sincronização
+* *Hardware* adicional.
+    * *e.g.*, GPS.
+* Protocolos de sincronização.
+* **Intervalos de guarda**. 
+
+---
+
+slideTitle: Métodos Síncronos: Rendezvous (II)
+
+#### RT-Link 
+* Protocolo MAC baseado em TDMA.
+* Sincronização: receptor GPS ou rádio AM (WWVB).
+
+#### TRAMA
+* Protocolo MAC baseado em TDMA.
+* Não se preocupa com a sincronização.
+* Duty cycle mínimo de 12,5%.
+* *Slots* de contenção para admissão de nós.
+
+#### &mu;-MAC
+* Protocolo MAC baseado em TDMA.
+* Escalonamento criado com base no padrão de tráfego.
+
+---
+
+slideTitle: Métodos Síncronos: Skewed/Staggered (I)
+
+#### Observação Chave
+* Rendezvous pode não ser ótimo em múltiplos saltos.
+    * Nós intermediários podem dormir.
+    * Interrompem encaminhamento dos dados.
+
+#### Ideia 
+* Estabelecer topologia em árvore.
+    * Raiz: sorvedouro.
+* Nós acordam de acordo com sua altura.
+    * Distância para o sorvedouro.
+    * Padrão de **escada**. 
+
+---
+
+slideTitle: Métodos Síncronos: Skewed/Staggered (II)
+
+#### DMAC
+* Adaptativo: tempo que nó passa acordado é função da carga.
+
+#### PELLMAC
+* Observação: DMAC resulta em interferência.
+    * Nós de mesma distância acordam ao mesmo tempo.
+* Solução: escalonamentos diferentes para ramos diferentes.
+
+#### LEEMAC
+* Otimização do mecanismo adaptativo do DMAC.
+
+---
+
+slideTitle: Métodos Síncronos: Skewed/Staggered (III)
+
+#### Coloração de Grafos 
+* Escalonamento associado a "cores".
+* Algoritmo de coloração garante ao menos 1 vizinho de mesma "cor".
+
+#### SPEED-MAC
+* Foco: redução de colisões.
+* Período de sinalização: 
+    * Sensor informa nós do caminho ao sorvedouro sobre eventos.
+    * Nós estabelecem escalonamento para aqueles dados.
+* Mecanismo de detecção de colisão:
+    * Compara intesidade do sinal ao ruído de fundo.
+
+#### CUPID
+* Escalonamentos em dois sentidos: *uplink* e *downlink*.
+
+---
+
+slideTitle: Métodos Semi-Síncronos (I)
+
+#### Característica
+* Requer sincronismo restrito.
+* Grupos sincronizados.
+* Clusterização e eleição de líder.
+* Líderes interagem assincronamente.
+
+#### Potenciais Problemas
+* *Overhead* de estabelecimento e manutenção de *clusters*.
+* *Overhead* de eleição de líderes.
+
+#### Duas Abordagens
+* Baseado em eleição.
+* Formação espontânea.
+
+---
+
+slideTitle: Métodos Semi-Síncronos (II)
+
+.center[
+![:image 50%](semiSincronos.png)
+]
+
+---
+slideTitle: Métodos Semi-Síncronos: Formação Espontânea (I)
+
+#### Característica
+* Nós se coordenam sem necessidade de líder.
+
+#### S-MAC 
+* MAC baseado em contenção.
+* Sincronização de baixa resolução: troca de *timestamps*.
+    * Resolução da ordem de 0,5 segundos.
+* Formação de cluster:
+    * Nós fazem *broadcast* do seu escalonamento.
+    * Se nó ouve escalonamento antes de decidir o seu, adota o do vizinho.
+    * Se nó ouve múltiplos escalonamentos, adota todos.
+
+
+---
+
+slideTitle: Métodos Semi-Síncronos: Formação Espontânea (II)
+
+#### T-MAC 
+* Melhoria do S-MAC.
+* Componente adaptativa:
+    * Nós dormem se percebem ausência de tráfego.
+
+#### DSMAC
+* Outra variação do S-MAC. 
+* Nós aumentam duty cycle ao perceber tráfego.
+
+---
+
+slideTitle: Métodos Semi-Síncronos: Baseados em Eleição (I)
+
+#### LEACH
+* Proposta seminal.
+* Trabalha em ciclos.
+    * Eleição de líder.
+    * Transmissão de dados.
+* Líderes novos eleitos a cada ciclo.
+    * Reduz *stress* sobre líderes.
+* Líderes agregam tráfego, transmitem direto ao sorvedouro.
+
+---
+
+slideTitle: Métodos Semi-Síncronos: Baseados em Eleição (II)
+
+#### Multihop LEACH
+* Permite comunicação multisaltos entre líder e sorvedouro.
+
+#### Energy-LEACH
+* Leva em conta energia residual para eleição.
+
+#### GAF 
+* Clusterização baseada em posição geográfica.
+    * Cluster = quadrante.
+
+---
+
+slideTitle: Métodos Assíncronos
+
+#### Característica 
+* Não dependem de sincronismo entre nós.
+    * Nem global, nem local.
+* Assim, não requer *hardware* adicional, protocolo de sincronização.
+
+#### Várias Famílias
+* Amostragem de preâmbulo.
+* Iniciado pelo receptor.
+* Sob-demanda. 
+* Aleatório.
+* Baseado em escalonamento.
+
+---
+
+slideTitle: Métodos Assíncronos: Amostragem de Preâmbulo (I)
+
+.col-2[
+.center[
+![:image 100%](amostragemDePreambulo.png)
+]
+]
+
+.col-2[
+#### Low Power Listening (LPL)
+* B-MAC e WiseMAC.
+* Nós dormem, acordam assincronamente.
+    * Mas *periódicamente*.
+* Quadros precedidos de *preâmbulo longo*.
+    * Maior que período de sono.
+* Ao acordar, nós procuram preâmbulo.
+    * Se há, permanecem ligados.
+]
+
+---
+
+slideTitle: Métodos Assíncronos: Amostragem de Preâmbulo (II)
+
+.col-2[
+.center[
+![:image 100%](amostragemDePreambulo.png)
+]
+]
+
+.col-2[
+#### Prêmbulos Curtos
+* X-MAC.
+* Substitui prêmbulo longo por sequência de curtos.
+    * Carregam informação do receptor desejado.
+* Receptor indica que acordou, interrompendo preâmbulos.
+* Poupa tempo do meio.
+* Permite que outros nós durmam.
+]
+
+---
+
+slideTitle: Métodos Assíncronos: Iniciado pelo Receptor
+
+.col-2[
+.center[
+<br>
+<br>
+<br>
+![:image 100%](iniciadoPeloReceptor.png)
+]
+]
+
+.col-2[
+#### Ideia Básica
+* Todo nó, ao acordar, envia *beacon*.
+* Transmissor aguarda que receptor acorde.
+
+#### Exemplos 
+* LPP (*Low Power Probing*).
+* RI-MAC (*Receiver-Initiated MAC*).
+]
+
+
+---
+
+slideTitle: Métodos Assíncronos: Sob-Demanda
+
+.col-2[
+.center[
+<br>
+<br>
+<br>
+![:image 100%](sobDemanda.png)
+]
+]
+
+.col-2[
+#### Ideia Básica
+* Transmissor *acorda* receptor.
+* *Hardware* adicional:
+    * Rádio secundário.
+    * Circuito ativado por RF.
+
+#### Desafios 
+* Consumo do *hardware* de ativação.
+* Rejeição de ruído.
+]
+
+---
+
+slideTitle: Métodos Assíncronos: Duty Cycle Aleatório
+
+.col-2[
+.center[
+<br>
+<br>
+<br>
+![:image 100%](aleatorio.png)
+]
+]
+
+.col-2[
+#### Ideia Básica
+* Hipótese: rede é densa.
+* Nós dormem/acordam aleatoriamente.
+* Ao acordar, transmissor *deve* encontrar *alguns* vizinhos ligados.
+* Necessita auxílio do roteamento.
+    * Múltiplos caminhos.
+    * Roteamento oportunista.
+
+#### Exemplo 
+* RAW (*Random Asynchronous Wakeup Protocol*).
+]
+
+---
+
+slideTitle: Métodos Assíncronos: Baseados em Escalonamento
+
+.col-2[
+.center[
+<br>
+<br>
+<br>
+![:image 100%](baseadoEmEscalonamento.png)
+]
+
+
+#### Exemplos
+* *Block designs*/Planos Projetivos.
+    * Escalonamentos ótimos.
+* Grid/Torus.
+* Disco.
+]
+
+.col-2[
+<br>
+<br>
+#### Ideia Básica
+* Criar escalonamento que garanta sobreposição de atividade.
+    * Mesmo sem sincronia.
+    * **Fechamento para rotação**.
+* Exemplo (simples):
+    * Dividir tempo em ciclos.
+    * Nó fica acordado por mais de 50% do tempo.
+* Desafio: construir escalonamentos com baixo *duty cycle*.
+
+]
+
+---
+
+layout: false
+class: section-slide
+
+# Seleção de um Método de Duty Cycle
+
+---
+
+class: middle
+layout: true
+name: conteudo
+
+.title[
+{{slideTitle}}
+<hr>]
+
+---
+
+slideTitle: Fatores
+
+* Características da aplicação.
+* Características do *hardware* dos *motes*.
+* Características do cenário.
+
+---
+
+slideTitle: Características da Aplicação: Tipos de Fluxos
+
+#### Convergecast e Tráfego de Configuração
+* Favorecidos pelos esquemas *Skewed*. 
+
+#### Comunicação Local
+* Favorecida por métodos baseados em *clusters*.
+
+#### Broadcast 
+* Dificultado por métodos assíncronos.
+
+---
+
+slideTitle: Características da Aplicação: Periodicidade
+
+#### Periódicas
+* Permitem *piggybacking* de tráfego de sincronização.
+* Também possível se aperiódicas, mas frequentes.
+
+#### Esporádicas
+* Favorecem uso de métodos sob-demanda.
+
+---
+
+slideTitle: Características da Aplicação: Requisitos Temporais
+
+#### Limite Superior do Atraso 
+* Pode ser calculado para alguns métodos.
+* Importante para aplicações de tempo real.
+
+#### Hard Real-Time
+* Requer garantias mais fortes.
+* MACs baseados em reserva.
+    * *e.g.*, TDMA.
+
+#### Abordagens Assíncronas
+* Podem resultar em longos atrasos.
+
+---
+
+slideTitle: Características da Aplicação: Requisitos de Segurança 
+
+#### Possível Ataque
+* "Privação de sono".
+    * Forçar nós a permanecerem ligados.
+    * Reduz drasticamente tempo de vida.
+
+#### Escalonamentos Rígidos
+* Métodos como os assíncronos baseados em escalonamento são menos susceptíveis.
+
+---
+
+slideTitle: Características da Aplicação: Requisitos de Sincronização
+
+#### Se Já Há Sincronização 
+* Vale a pena usá-la para duty cycle.
+
+#### Caso Contrário
+* Deve-se avaliar custo/benefício.
+
+
+---
+
+slideTitle: Características de *Hardware* 
+
+.col-2[
+#### CPU, Armazenamento
+* Processamento não é crítico, mas armazenamento pode ser.
+* Sensores têm grandes restrições.
+
+#### Hardware de Sincronização 
+* GPS.
+* Rádios.
+]
+
+.col-2[
+#### Clock
+* Resolução: tamanho mínimo dos slots.
+* Erros: deslizamento de *clock*.
+    * *e.g.*, 4,32 segundos/dia.
+    * Variável no tempo.
+
+#### Outras Características 
+* Consumo em modo *sleep*. 
+* Tempo e consumo de transição.
+]
+
+
+---
+
+slideTitle: Características do Cenário (I)
+
+#### Terreno
+* Pode afetar sincronização.
+* Topologia instável?
+
+#### Densidade
+* Pode favorecer:
+    * *Duty cycle* aleatório. 
+    * Esquemas com líderes.
+
+#### Substituição de Nós
+* Em geral, impossível.
+* Se possível e interessante:
+    * Requer mecanismo de admissão.
+
+
+---
+
+slideTitle: Características do Cenário (II)
+
+#### Topologia 
+* Múltiplos saltos e sincronização.
+* Pode mudar com tempo:
+    * Novos nós, mobilidade, ...
+
+#### Expectativa de Longevidade
+* Determina *duty cycle* alvo.
+
+#### Outras Características
+* WBANs.
+* *Energy harvesting*.
+
+---
+
+layout: false
+class: section-slide
+
+# Direções Futuras
+
+---
+
+class: middle
+layout: true
+name: conteudo
+
+.title[
+{{slideTitle}}
+<hr>]
+
+---
+
+slideTitle: Tendências (I)
+
+#### Motes Mais Complexos e Poderosos
+* Melhor capacidade de *hardware*.
+* Mas tarefas mais complexas.
+
+#### Adaptabilidade
+* Adaptação de taxa, potência de transmissão.
+    * Dificulta avaliar enlaces.
+
+#### Estimativa de Latência
+* Cada vez mais importantes.
+* NDT: *Neighbor Discovery Time*.
+
+---
+
+slideTitle: Tendências (II)
+
+#### WSN Multipropósito
+* Se tornarão mais populares.
+* Aplicações diferentes, requisitos diferentes.
+
+#### Abordagens Cross-Layer
+* Importantes para otimização.
+* *e.g.*, casar *duty cycle* e aplicações.
+
+#### Definição de WSN 
+* *Wireless Multimedia Sensor Networks*.
+* *Wireless Sensor and Robot Networks*.
+* *Wireless Sensor and Actuator Networks*.
+
+---
+
+slideTitle: Tendências (III)
+
+#### Conceitos Antigos Ainda em Voga
+* *Smart Dust*. 
+* IoT.
+
+#### Melhorias na Alimentação 
+* *Energy Harvesting*.
+* Baterias com maior densidade energética.
+
+</template>
+</textarea>
+
+<script src="../template/js/remark-latest.min.js" type="text/javascript"></script>
+<script src="../template/js/d3.v4.js"></script>
+<script src="../template/js/graphlib-dot.js"></script>
+<script src="../template/js/dagre-d3.min.js"></script>
+<script src="../template/js/dagre-d3-extra.js"></script>
+<script src="../template/js/macros.js" type="text/javascript"></script>
+<script src="../template/js/callbacks.js" type="text/javascript"></script>
+<script src="../template/js/katex.min.js"></script>
+<script src="../template/js/auto-render.min.js"></script>
+<link rel="stylesheet" href="../template/css/katex.min.css">
+<script type="text/javascript">
+
+	var renderMath = function() {
+		renderMathInElement(document.body, {delimiters: [
+			 {left: "$$", right: "$$", display: true},
+			 {left: "$", right: "$", display: false},
+		]});
+	}
+
+	var slideshow = remark.create({highlightStyle: "github", highlightLines: "true", highlightSpans: "true", slideNumberFormat: onSlideCallback}, renderMath);
+
+	dagreRenderAllSlides();
+
+</script>
+</body>
+</html>
+
+

@@ -1,0 +1,144 @@
+\renewcommand\sfdefault{phv}
+\renewcommand\familydefault{\sfdefault}
+
+% Reset the theme to defaults
+\usetheme{default}
+\useoutertheme{default}
+
+% Load some packages
+\usepackage{color}
+\usepackage{texnansi}
+\usepackage{marvosym}
+
+% Color definition
+\definecolor{bottomcolour}{rgb}{0.932,0.93,0.938}
+\definecolor{middlecolour}{rgb}{0.908,0.908,0.916}
+\definecolor{mygray}{rgb}{0.0,0.0,0.0}
+%\definecolor{mygray}{rgb}{0.708,0.708,0.716}
+\definecolor{mybluefont}{rgb}{0.082,0.498,0.831}%
+\definecolor{mybluesidebar}{rgb}{0.308,0.617,0.732}
+%\definecolor{mybluesidebar}{rgb}{0.662,0.929,0.932}%a9edf3
+
+% Title proprieties
+\setbeamerfont{title}{size=\Huge}
+%\setbeamertemplate{title}{asda}
+\setbeamercolor{title}{fg=mybluefont}
+\setbeamercolor{title}{bg=}
+%\setbeamercolor{title}{bg=white}
+
+% Structure proprieties
+\setbeamercolor{structure}{fg=mygray}
+%\setbeamerfont{structure}{}
+\setbeamertemplate{structure begin}{}
+
+% frametitle proprieties
+\setbeamerfont{frametitle}{size=\huge}
+\setbeamercolor{frametitle}{bg=blue}
+\setbeamercolor{frametitle}{fg=}
+\setbeamertemplate{frametitle}
+{
+  \begin{centering}
+%    \color{red}
+    \textbf{\insertframetitle}
+    \par
+  \end{centering}
+}
+
+
+\setbeamercolor{normal text}{bg=black, fg=mybluefont}
+\setbeamertemplate{background canvas}[vertical shading]
+[bottom=bottomcolour, middle=middlecolour, top=white]
+
+\setbeamertemplate{items}[ball]
+
+\setbeamertemplate{navigation symbols}{} %no nav symbols
+
+\setbeamertemplate{headline}{}
+
+% Left sidebar
+\setbeamerfont{sidebar left}{size=\tiny}
+\setbeamercolor{sidebar left}{bg=mybluesidebar}
+\setbeamercolor{sidebar left}{fg=mygray}
+\setbeamersize{sidebar width left=1.75cm}
+\setbeamertemplate{sidebar left}
+{
+	\vbox
+	{%
+		\begin{beamercolorbox}[wd=1.75cm,ht=.15\paperheight,dp=1ex,top]{}%
+			\begin{center}
+				\includegraphics[width=1.70cm]{ic.pdf}
+			\end{center}
+		\end{beamercolorbox}
+		\begin{beamercolorbox}[wd=1.75cm,ht=.45\paperheight,dp=1ex,top]{}
+			\begin{center}
+				{\bf Agenda}
+				\rule{1.5cm}{1pt}
+			\end{center}
+			\begin{minipage}{1.75cm}
+				\insertsectionnavigation{1.75cm}	
+			\end{minipage}
+			\begin{center}
+				\rule{1.5cm}{1pt}
+			\end{center}
+		\end{beamercolorbox}%
+		\begin{beamercolorbox}[wd=1.75cm,ht=.35\paperheight,dp=1ex,botton]{}
+			\begin{center}
+				\insertdate	
+			\end{center}
+		\end{beamercolorbox}
+	}
+
+}
+
+\setbeamercolor{author in head/foot}{bg=mygray}
+\setbeamercolor{title in head/foot}{bg=mybluesidebar}
+
+\setbeamertemplate{title page} {
+
+	\vskip 2cm
+		\hskip 0cm
+		\begin{minipage}{6.5cm}
+		\inserttitle\\
+		\end{minipage}
+		\vskip -.3cm
+		\color{mygray}{\rule{6.5cm}{3pt}}\\
+		\vskip .3cm
+		\begin{minipage}[!h]{6.5cm}
+	{\small\normalfont
+		\raggedleft\insertauthor
+			\vskip -.3cm
+			\hskip 3.98cm{\footnotesize\itshape\insertinstitute}
+	}
+	\end{minipage}
+	\vskip 1cm\par
+}
+
+\setbeamertemplate{section in head/foot}{
+
+	\color{mybluefont}{\insertsectionhead}
+}
+
+\setbeamertemplate{section in head/foot shaded}{
+
+	\color{mygray}{\insertsectionhead}
+}
+
+\setbeamercolor{title in head/foot}{fg=mygray}
+\setbeamertemplate{footline}
+{
+  \hbox{%
+  \begin{beamercolorbox}[wd=.5\paperwidth,ht=2.25ex,dp=1ex,right]{author in head/foot}%
+	\usebeamerfont{author in head/foot}\insertshortauthor
+	\hspace*{1ex}
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.4\paperwidth,ht=2.25ex,dp=1ex,left]{title in head/foot}%
+	\hspace*{1ex}
+	\usebeamerfont{title in head/foot}\insertshorttitle
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.1\paperwidth,ht=2.25ex,dp=1ex,right]{title in head/foot}%
+	\usebeamerfont{title in head/foot}\insertframenumber/\inserttotalframenumber
+	\hspace*{2ex}
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+
