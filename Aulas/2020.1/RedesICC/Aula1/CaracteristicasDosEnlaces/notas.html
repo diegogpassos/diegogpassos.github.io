@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Características dos Enlaces</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+  </style>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<h1 id="enlaces-de-comunicação">Enlaces de Comunicação</h1>
+<p>Os enlaces de comunicação — ou simplesmente, <em>links</em> — estão no cerne das redes de computadores. Os enlaces são os componentes de uma rede responsáveis por interconectar <strong>dois ou mais</strong> dispositivos computacionais, permitindo a troca de informação entre eles.</p>
+<p>É importante, portanto, destacar que nem todo enlace interconecta somente dois dispositivos. De fato, uma possível forma de se classificar diferentes tipos de enlace é justamente essa: entre os enlaces <strong>ponto-a-ponto</strong> e os enlaces <strong>compartilhados</strong>. Enquanto os primeiros interligam exatamente dois dispositivos computacionais, os segundos podem interconectar mais elementos.</p>
+<p>Além dessa possível classificação, existem diversas outras características que variam de enlace para enlace. Tais características incluem o tipo de meio físico utilizado, a taxa de transmissão, o tempo de propagação do sinal pelo meio físico, a probabilidade de falhas na transmissão, entre diversas outras. Nesse material, faremos um breve apanhado dessas características, provendo alguns exemplos ao longo do caminho.</p>
+<h2 id="meio-físico">Meio Físico</h2>
+<p>Enlaces de comunicação são formados por algum tipo de meio físico. É importante ressaltar que, nesse contexto, <em>meio físico</em> não se restringe a objetos palpáveis, como cabos. Uma onda eletromagnética, por exemplo, pode constituir — e, frequentemente, constitui — o meio físico usado por um enlace. Independentemente do que constitui o meio físico, é ele o responsável por “transportar” os bits do dispositivo transmissor aos dispositivos receptores.</p>
+<p>Há uma grande variedade de meios físicos utilizados em enlaces de comunicação práticos, incluindo meios elétricos (<em>e.g.</em>, fios de cobre), meios ópticos (<em>e.g.</em>, fibras ópticas), meios sem fio (<em>e.g.</em>, rádio). Mesmo quando analisamos um desses tipos de meio físico, ainda há variações significativas. Por exemplo, existem meios elétricos baseados em cabos do tipo par-trançado e outros baseados em cabos coaxiais.</p>
+<p>De forma geral, transmite-se informação por um enlace manipulando-se alguma <em>característica mensurável do meio físico</em>; de forma análoga, a recepção dá-se através da observação dessa mesma característica. Por exemplo, se há um par de fios de cobre conectando o transmissor e o receptor, o primeiro pode manipular a tensão elétrica entre os fios, enquanto o segundo pode medi-la. Nesse caso, podemos mapear valores diferentes de informação (<em>e.g.</em>, valores de bits) a valores diferentes de tensão elétrica. Mais genericamente, o transmissor gera um <em>sinal</em> elétrico para codificar alguma informação.</p>
+<p>Meios físicos geralmente possuem uma <strong>capacidade</strong>. Aqui, capacidade se refere à quantidade de informação que podemos transmitir — de forma útil — por unidade de tempo. O conceito de capacidade de um enlace de comunicação é formalmente definido pelo campo da Teoria da Informação, desenvolvido por Claude Shannon na década de 1948. Esse tópico, entretanto, excede o escopo dessa disciplina. Para nossos propósitos, basta que saibamos que cada meio físico irá impor limitações na capacidade de transmitirmos informação.</p>
+<h2 id="meios-guiados-vs.-não-guiados">Meios Guiados vs. Não-Guiados</h2>
+<p>Outra forma de classificar enlaces de comunicação é analisar se o mesmo se baseia em um <em>meio guiado</em> ou em um <em>meio não-guiado</em>. Em meios guiados, o sinal se propaga ao longo de um caminho bem definido por um certo material — por exemplo, ao longo de um fio de cobre. Já em meios não guiados, o sinal não percorre um caminho fixo, tendendo a se espalhar pelo espaço (<em>e.g.</em>, um enlace sem fio).</p>
+<p>Enlaces baseados em meios não-guiados tendem a encontrar desafios maiores que aqueles baseados em meios guiados. Dentre outras razões, isso ocorre porque:</p>
+<ol type="1">
+<li>Em meios não-guiados, o sinal transmitido tende a chegar muito <em>atenuado</em> — <em>i.e.</em>, com pouca intensidade — no receptor. Sinais mais atenuados são mais difíceis de se interpretar.</li>
+<li>Em meios não-guiados, o receptor geralmente recebe maior interferência e ruído junto do sinal desejado. Quanto maior o nível de interferência e ruído, mais difícil é a interpretação do sinal.</li>
+</ol>
+<h2 id="probabilidade-de-falha">Probabilidade de Falha</h2>
+<p>Cada tipo de meio de transmissão tem características peculiares que afetam diretamente seu desempenho. Por exemplo, os meios sem fio são, em geral, bastante susceptíveis a falhas na transmissão/recepção de mensagens, enquanto a probabilidade de uma falha dessa natureza em uma fibra óptica é bastante reduzida. A maior susceptibilidade dos enlaces sem fio a falhas de transmissão se deve normalmente a ausência de um meio guiado e seus consequentes problemas.</p>
+<p>Tecnologias baseadas em enlaces de com alta probabilidade de falha geralmente precisam incluir mecanismos para mitigar esse tipo de ocorrência. Exemplos incluem métodos de verificação de integridade da informação recebida, mecanismos de retransmissão de dados corrompidos e até mesmo mecanismos que permitem a correção de trechos corrompidos de informação. Mesmo assim, no nosso dia-a-dia é comum lidarmos com enlaces em que 1% a 10% das mensagens transmitidas são perdidas por falhas desse tipo.</p>
+<h2 id="taxa-de-transmissão">Taxa de Transmissão</h2>
+<p>Enlaces variam também em termos de taxa de transmissão, <em>i.e.</em>, o quão rapidamente um transmissor <em>insere</em><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> a mensagem no meio físico. Um enlace de comunicação Wi-Fi, por exemplo, pode operar a diversas taxas (<em>e.g.</em>, 6 Mb/s, 200 Mb/s). Taxas de transmissão são normalmente medidas em bits por segundo — ou algum múltiplo disso —, denotando, portanto, o quão rapidamente o transmissor <em>insere</em> cada bit no meio físico. Assim, o tempo total para a transmissão de uma mensagem depende tanto da taxa de transmissão, quanto do tamanho da mensagem.</p>
+<p>A taxa de transmissão é também comumente chamada de <em>capacidade do enlace</em>, <em>banda</em> e <em>largura de banda</em>, embora esses termos não sejam tecnicamente equivalentes. Em particular, note que existe uma diferença conceitual entre a taxa de transmissão de um enlace e a capacidade do meio físico: de forma simplificada, a segunda <strong>limita</strong> a primeira, embora, por uma série de motivos, seja comum utilizarmos taxas de transmissão consideravelmente mais baixa que a capacidade máxima teórica de um meio físico. De toda forma, em determinados contextos, é comum que esses dois termos sejam usados — de forma imprecisa — como sinônimos.</p>
+<h2 id="comprimento-do-meio-físico">Comprimento do Meio Físico</h2>
+<p>Outro fator é o comprimento do meio físico ou, mais precisamente, a distância percorrida pelo sinal para deixar o transmissor e alcançar o receptor. No caso de um meio guiado, é fácil definir essa distância, porque o sinal, por definição, se propaga ao longo do meio físico.</p>
+<p>No entanto, para meios não-guiados nem sempre é trivial definir essa grandeza. Se não há qualquer obstáculo entre transmissor e receptor, podemos simplesmente considerar a distância entre esses dispositivos. Entretanto, quando existem barreiras entre eles — <em>e.g.</em>, uma parede —, é possível que o sinal chegue ao receptor por um caminho mais longo.</p>
+<p>Em resumo, o que importa aqui é a distância efetivamente percorrida pelo sinal. Essa distância é importante porque, tudo mais constante, ela determina quanto tempo leva a mensagem para sair do transmissor e chegar ao receptor. Esse tempo é chamado de <em>tempo de propagação</em> e depende <strong>apenas do comprimento do meio/distância e da velocidade de propagação do sinal no meio em questão</strong>.</p>
+<h2 id="velocidade-de-propagação">Velocidade de Propagação</h2>
+<p>Note que tipos de sinais diferentes se propagam a velocidades diferentes. Por exemplo, um sinal sonoro se propaga a aproximadamente 340 m/s no ar, enquanto a luz se propaga a pouco menos de 300.000 m/s. A velocidade de propagação também depende do tipo do meio: por exemplo, um sinal sonoro se propaga mais rapidamente em meios sólidos. Assim, para calcularmos o tempo de propagação, precisamos de, ambos, o comprimento do meio físico e a velocidade de propagação do sinal naquele meio.</p>
+<section class="footnotes" role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1" role="doc-endnote"><p>O termo <em>inserir</em> está sendo usado aqui para denotar o ato do transmissor manipular o meio físico para transmitir informação. No exemplo de um enlace baseado em um par de fios de cobre em que o transmissor manipula a tensão elétrica, o <em>inserir</em> denota o ato do transmissor alterar a tensão entre os fios para representar a próxima parte (<em>e.g.</em>, bit) da mensagem.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+</body>
+</html>

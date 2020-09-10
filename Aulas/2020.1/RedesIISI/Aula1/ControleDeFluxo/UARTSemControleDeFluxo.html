@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>UART Sem Controle de Fluxo</title>
+</head>
+
+<body>
+	<svg id="ControleDeFluxoBase" style="width: 785px; height: 571px;"></svg>
+	<table>
+		<tr>
+			<td>
+				<img 
+					id="backwardBtn"
+					src="imagens/backwardBtn.svg"
+					width="40" 
+					height="40"
+					onmouseover="btnOnMouseOver(this);"
+					onmouseout="btnOnMouseOut(this);"
+					onclick="backwardBtnOnClick(this);"
+					alt="Voltar um ciclo"
+				/>
+			</td>
+			<td>
+				<img 
+					id="playBtn"
+					src="imagens/playBtn.svg"
+					width="40" 
+					height="40"
+					onmouseover="btnOnMouseOver(this);"
+					onmouseout="btnOnMouseOut(this);"
+					onclick="playBtnOnClick(this);"
+					alt="Iniciar/continuar animação"
+				/>
+			</td>
+			<td>
+				<img 
+					id="stopBtn"
+					src="imagens/stopBtn.svg"
+					width="40" 
+					height="40"
+					onmouseover="btnOnMouseOver(this);"
+					onmouseout="btnOnMouseOut(this);"
+					onclick="stopBtnOnClick(this);"
+					alt="Parar animação"
+				/>
+			</td>
+			<td>
+				<img 
+					id="forwardBtn"
+					src="imagens/forwardBtn.svg"
+					width="40" 
+					height="40"
+					onmouseover="btnOnMouseOver(this);"
+					onmouseout="btnOnMouseOut(this);"
+					onclick="forwardBtnOnClick(this);"
+					alt="Avançar um ciclo"
+				/>
+			</td>
+
+		</tr>
+	</table>
+
+	<script src="js/snap.svg-min.js"></script>
+	<script type="text/javascript">
+
+		var ControleDeFluxoBaseAnimationTimer, ControleDeFluxoBaseAnimationFrame, ControleDeFluxoBaseAnimationTotalFrames = 35;
+		var playState = 0;
+
+		function btnOnMouseOver(btn) {
+
+			if (btn.style.opacity != 0.4) btn.style.opacity = 0.8;
+		}
+
+		function btnOnMouseOut(btn) {
+
+			if (btn.style.opacity != 0.4) btn.style.opacity = 1.0;
+		}
+
+		function playBtnOnClick(btn) {
+
+			if (playState == 1) {
+
+				btn.src='imagens/playBtn.svg';
+				btn.alt='Iniciar/continuar animação';
+				document.getElementById('backwardBtn').style.opacity = 1.0;
+				document.getElementById('forwardBtn').style.opacity = 1.0;
+				//document.getElementById('stopBtn').style.opacity = 0.4;
+				playState = 0;
+
+				window.clearInterval(ControleDeFluxoBaseAnimationTimer);
+			}
+			else {
+
+				btn.src='imagens/pauseBtn.svg';
+				btn.alt='Pausar animação';
+				document.getElementById('backwardBtn').style.opacity = 0.4;
+				document.getElementById('forwardBtn').style.opacity = 0.4;
+				//document.getElementById('stopBtn').style.opacity = 1.0;
+				playState = 1;
+
+				//ControleDeFluxoBaseAnimationFrame = 0;
+				ControleDeFluxoBaseAnimationUpdate(1);
+				ControleDeFluxoBaseAnimationTimer = window.setInterval(ControleDeFluxoBaseAnimationUpdate, 1000);
+			}
+		}
+
+		function stopBtnOnClick(btn) {
+
+			window.clearInterval(ControleDeFluxoBaseAnimationTimer);
+			ControleDeFluxoBaseAnimationFrame = 0;
+			initializeAnimation(Snap("#ControleDeFluxoBase"));
+
+			document.getElementById('playBtn').src='imagens/playBtn.svg';
+			document.getElementById('backwardBtn').style.opacity = 1.0;
+			document.getElementById('forwardBtn').style.opacity = 1.0;
+
+			playState = 0;
+		}
+
+		function backwardBtnOnClick(btn) {
+
+			if (btn.style.opacity != 0.4) {
+
+				if (ControleDeFluxoBaseAnimationFrame > 0) {
+
+					var tmp = ControleDeFluxoBaseAnimationFrame;
+
+					initializeAnimation(Snap("#ControleDeFluxoBase"));
+					for (ControleDeFluxoBaseAnimationFrame = 0; ControleDeFluxoBaseAnimationFrame < tmp - 1; ) {
+
+						ControleDeFluxoBaseAnimationUpdate(1);
+					}
+				}
+			}
+		}
+
+		function forwardBtnOnClick(btn) {
+
+			if (btn.style.opacity != 0.4) {
+
+				if (ControleDeFluxoBaseAnimationFrame < ControleDeFluxoBaseAnimationTotalFrames) {
+
+					ControleDeFluxoBaseAnimationUpdate(1);
+				}
+			}
+		}
+
+		function initializeAnimation(s) {
+			
+			// Leds
+			s.select("#rxLed").attr({fill: "none"});
+			s.select("#RTSLed").attr({fill: "none"});
+			s.select("#CTSLed").attr({fill: "none"});
+			s.select("#availableDataLed").attr({fill: "none"});
+
+			// UC
+			s.select("#ucActivity").attr({fill: "#696"});
+			s.select("#appTaskRead").attr({visibility: "hidden"});
+			s.select("#appTaskProc").attr({visibility: "visible"});
+
+			// Bits do buffer
+			s.select("#buffer1").selectAll('xhtml\\:div>xhtml\\:div>xhtml\\:div')[0].node.firstChild.data = "0";
+			s.select("#buffer2").selectAll('xhtml\\:div>xhtml\\:div>xhtml\\:div')[0].node.firstChild.data = "0";
+			s.select("#buffer3").selectAll('xhtml\\:div>xhtml\\:div>xhtml\\:div')[0].node.firstChild.data = "0";
+			s.select("#buffer4").selectAll('xhtml\\:div>xhtml\\:div>xhtml\\:div')[0].node.firstChild.data = "0";
+			s.select("#buffer5").selectAll('xhtml\\:div>xhtml\\:div>xhtml\\:div')[0].node.firstChild.data = "0";
+			s.select("#buffer6").selectAll('xhtml\\:div>xhtml\\:div>xhtml\\:div')[0].node.firstChild.data = "0";
+			s.select("#buffer7").selectAll('xhtml\\:div>xhtml\\:div>xhtml\\:div')[0].node.firstChild.data = "0";
+			s.select("#buffer8").selectAll('xhtml\\:div>xhtml\\:div>xhtml\\:div')[0].node.firstChild.data = "0";
+
+			s.select("#labelBufferRecepcao>tspan").node.firstChild.data = "Buffer de Recepção ('')";
+
+			// Bits do registrador de deslocamento
+			s.select("#shiftReg1").selectAll('xhtml\\:div>xhtml\\:div>xhtml\\:div')[0].node.firstChild.data = "0";
+			s.select("#shiftReg2").selectAll('xhtml\\:div>xhtml\\:div>xhtml\\:div')[0].node.firstChild.data = "0";
+			s.select("#shiftReg3").selectAll('xhtml\\:div>xhtml\\:div>xhtml\\:div')[0].node.firstChild.data = "0";
+			s.select("#shiftReg4").selectAll('xhtml\\:div>xhtml\\:div>xhtml\\:div')[0].node.firstChild.data = "0";
+			s.select("#shiftReg5").selectAll('xhtml\\:div>xhtml\\:div>xhtml\\:div')[0].node.firstChild.data = "0";
+			s.select("#shiftReg6").selectAll('xhtml\\:div>xhtml\\:div>xhtml\\:div')[0].node.firstChild.data = "0";
+			s.select("#shiftReg7").selectAll('xhtml\\:div>xhtml\\:div>xhtml\\:div')[0].node.firstChild.data = "0";
+			s.select("#shiftReg8").selectAll('xhtml\\:div>xhtml\\:div>xhtml\\:div')[0].node.firstChild.data = "0";
+
+			// Palavras de memória
+			s.select("#memPos1>tspan").node.firstChild.data = "";
+			s.select("#memPos2>tspan").node.firstChild.data = "";
+			s.select("#memPos3>tspan").node.firstChild.data = "";
+			s.select("#memPos4>tspan").node.firstChild.data = "";
+
+			// Setas para as palavras de memória
+			s.select("#UARTToMem1").attr({visibility: "hidden"});
+			s.select("#UARTToMem2").attr({visibility: "hidden"});
+			s.select("#UARTToMem3").attr({visibility: "hidden"});
+			s.select("#UARTToMem4").attr({visibility: "hidden"});
+
+			// Relógio da animação
+			s.select("#time>tspan").node.firstChild.data = "ciclos: 0";
+
+			// Buffer de transmissão
+			var i;
+			for (i = 0; i < 32; i++)
+				s.select("#dataBuffer" + i).attr({fill: "none"});
+		}
+
+		Snap.load("imagens/ControleDeFluxoBase.svg", function(f) {
+
+			var s = Snap("#ControleDeFluxoBase");
+			s.prepend(f.select("g"));
+			initializeAnimation(s);
+
+			ControleDeFluxoBaseAnimationFrame = 0;
+			//ControleDeFluxoBaseAnimationTimer = window.setInterval(ControleDeFluxoBaseAnimationUpdate, 1000);
+		});
+
+		function shiftRegister(s) {
+
+			var i;
+
+			for (i = 8; i > 1; i--) {
+
+				s.select("#shiftReg" + i).selectAll('xhtml\\:div>xhtml\\:div>xhtml\\:div')[0].node.firstChild.data = s.select("#shiftReg" + (i-1)).selectAll('xhtml\\:div>xhtml\\:div>xhtml\\:div')[0].node.firstChild.data;
+			}
+
+			s.select("#shiftReg1").selectAll('xhtml\\:div>xhtml\\:div>xhtml\\:div')[0].node.firstChild.data = "0";
+
+		}
+
+		function copyRegisterToBuffer(s) {
+
+			var i;
+			var e;
+			var code = 0;
+
+			for (i = 8; i > 0; i--) {
+
+				s.select("#buffer" + i).selectAll('xhtml\\:div>xhtml\\:div>xhtml\\:div')[0].node.firstChild.data = s.select("#shiftReg" + i).selectAll('xhtml\\:div>xhtml\\:div>xhtml\\:div')[0].node.firstChild.data;
+				code = 2 * code + parseInt(s.select("#shiftReg" + i).selectAll('xhtml\\:div>xhtml\\:div>xhtml\\:div')[0].node.firstChild.data);
+			}
+
+			var l = s.selectAll("#receivedArrows>path");
+			for (e in l.items)
+				l.items[e].attr({stroke: "#F00", fill: "#F00"});
+			
+			s.select("#labelBufferRecepcao>tspan").node.firstChild.data = "Buffer de Recepção ('" + String.fromCharCode(code) + "')";
+		}
+
+		function copyBufferToMemory(s, pos) {
+
+			var i;
+			var a = "";
+			var code = 0;
+
+			for (i = 8; i > 0; i--) {
+
+				a = a + s.select("#buffer" + i).selectAll('xhtml\\:div>xhtml\\:div>xhtml\\:div')[0].node.firstChild.data;
+				code = 2 * code + parseInt(s.select("#buffer" + i).selectAll('xhtml\\:div>xhtml\\:div>xhtml\\:div')[0].node.firstChild.data);
+			}
+
+			// Turn off the "available data" led
+			s.select("#availableDataLed").attr({fill: "none"});
+
+			// Highlight the arrow indicating the copy
+			s.select("#UARTToMem" + pos).attr({visibility: "visible"});
+
+			// Put the read data into the memory position
+			s.select("#memPos" + pos + ">tspan").node.firstChild.data = a + " ('" + String.fromCharCode(code) + "')";
+		}
+
+		function ControleDeFluxoBaseAnimationUpdate(step) {
+
+			var s = Snap("#ControleDeFluxoBase");
+			var bitSequence = ['0', '1', '1', '0', '0', '0', '1', '1', //'c'
+								'0', '1', '1', '0', '0', '0', '0', '1', //'a'
+								'0', '1', '1', '1', '0', '0', '1', '1', //'s'
+								'0', '1', '1', '0', '0', '0', '0', '1'];//'a'
+
+			// Remove the highlight from the previous bit
+			if (ControleDeFluxoBaseAnimationFrame <= 32 && ControleDeFluxoBaseAnimationFrame > 0)
+				s.select("#dataBuffer" + (ControleDeFluxoBaseAnimationFrame - 1)).attr({fill: "none"});
+
+			if (ControleDeFluxoBaseAnimationFrame == ControleDeFluxoBaseAnimationTotalFrames) {
+
+				// The last loop of the animation has ended. Start a new one.
+				initializeAnimation(s);
+
+				if (step === undefined || step == 0) {
+
+					window.clearInterval(ControleDeFluxoBaseAnimationTimer);
+					ControleDeFluxoBaseAnimationTimer = window.setInterval(ControleDeFluxoBaseAnimationUpdate, 1000);
+				}
+				ControleDeFluxoBaseAnimationFrame = 0;
+
+				return ;
+			}
+
+			// Update the clock
+			s.select("#time>tspan").node.firstChild.data = "ciclos: " + ControleDeFluxoBaseAnimationFrame;
+
+			// Highlight the bit being transmitted.
+			if (ControleDeFluxoBaseAnimationFrame < 32)
+				s.select("#dataBuffer" + ControleDeFluxoBaseAnimationFrame).attr({fill: "#3AA"});
+
+			// Clear some formating that may have been left from the previous frame
+			s.select("#UARTToMem1").attr({visibility: "hidden"});
+			s.select("#UARTToMem2").attr({visibility: "hidden"});
+			s.select("#UARTToMem3").attr({visibility: "hidden"});
+			s.select("#UARTToMem4").attr({visibility: "hidden"});
+			var l = s.selectAll("#receivedArrows>path");
+			for (var e in l.items)
+				l.items[e].attr({stroke: "#000", fill: "#000"});
+			s.select("#ucActivity").attr({fill: "#696"});
+			s.select("#appTaskRead").attr({visibility: "hidden"});
+			s.select("#appTaskProc").attr({visibility: "visible"});
+
+			// Do we still have bits to transmit?
+			if (ControleDeFluxoBaseAnimationFrame < 32) {
+
+				// Shift the register
+				shiftRegister(s);
+
+				// Input the next bit from the port
+				if (bitSequence[ControleDeFluxoBaseAnimationFrame] == '1') {
+
+					s.select("#rxLed").attr({fill: "#F00"});
+					s.select("#shiftReg1").selectAll('xhtml\\:div>xhtml\\:div>xhtml\\:div')[0].node.firstChild.data = "1";
+				}
+				else {
+
+					s.select("#rxLed").attr({fill: "none"});
+					s.select("#shiftReg1").selectAll('xhtml\\:div>xhtml\\:div>xhtml\\:div')[0].node.firstChild.data = "0";
+				}
+				
+				// Check if a full byte was received
+				if ((ControleDeFluxoBaseAnimationFrame + 1) % 8 == 0) {
+
+					// Yes, copy the contents of the register to the reception buffer.
+					copyRegisterToBuffer(s);
+
+					// Turn on the "available data" led
+					s.select("#availableDataLed").attr({fill: "#F00"});
+				}
+			}
+
+			// Asynchronous tasks
+			switch(ControleDeFluxoBaseAnimationFrame) {
+
+				case 9:
+					// Application reads first byte from the UART
+					copyBufferToMemory(s, 1);
+
+					// UC
+					s.select("#ucActivity").attr({fill: "#d63"});
+					s.select("#appTaskRead").attr({visibility: "visible"});
+					s.select("#appTaskProc").attr({visibility: "hidden"});
+					break ;
+
+				case 20:
+					// Application reads second byte from the UART
+					copyBufferToMemory(s, 2);
+					// UC
+					s.select("#ucActivity").attr({fill: "#d63"});
+					s.select("#appTaskRead").attr({visibility: "visible"});
+					s.select("#appTaskProc").attr({visibility: "hidden"});
+					break ;
+
+
+				case 32:
+					// Application reads third (it will be the fourth, actually) byte from the UART
+					copyBufferToMemory(s, 3);
+					// UC
+					s.select("#ucActivity").attr({fill: "#d63"});
+					s.select("#appTaskRead").attr({visibility: "visible"});
+					s.select("#appTaskProc").attr({visibility: "hidden"});
+					break ;
+			}
+
+			ControleDeFluxoBaseAnimationFrame++;
+
+			if (ControleDeFluxoBaseAnimationFrame == ControleDeFluxoBaseAnimationTotalFrames) {
+
+				if (step === undefined || step == 0) {
+
+					window.clearInterval(ControleDeFluxoBaseAnimationTimer);
+					ControleDeFluxoBaseAnimationTimer = window.setInterval(ControleDeFluxoBaseAnimationUpdate, 5000);
+				}
+			}
+		}
+
+	</script>
+
+</body>
+</html>

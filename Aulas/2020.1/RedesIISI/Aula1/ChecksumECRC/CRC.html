@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <!-- Meta info -->
+	<meta charset="utf-8">
+	<title>CRC</title>
+
+</head>
+
+<body>
+
+
+	<script>
+			var makeCRCTable = function(){
+			var c;
+			var crcTable = [];
+			for(var n =0; n < 256; n++){
+				c = n;
+				for(var k =0; k < 8; k++){
+				c = ((c&1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1));
+				}
+				crcTable[n] = c;
+			}
+			return crcTable;
+			}
+
+			var crc32 = function(str) {
+				var crcTable = window.crcTable || (window.crcTable = makeCRCTable());
+				var crc = 0 ^ (-1);
+
+				for (var i = 0; i < str.length; i++ ) {
+						crc = (crc >>> 8) ^ crcTable[(crc ^ str.charCodeAt(i)) & 0xFF];
+				}
+
+				return (crc ^ (-1)) >>> 0;
+				//return (crc) >>> 0;
+			};
+			function exemploCRC() {
+
+			var entrada = document.getElementById('exemploCRCEntrada');
+			var saida =  document.getElementById('exemploCRCSaida');
+
+			saida.value = ('00000000' + crc32(entrada.value).toString(16)).slice(-8);
+			}
+	</script>
+
+	<center>
+	<div style="width: 300px; border: 2px solid #000; padding-bottom: 10px;">
+	<table class="align" style="width: 90%;">
+		<tr>
+			<td style="width: 90%;">Mensagem</td>
+			<td><input type="text" id="exemploCRCEntrada" name="exemploCRCEntrada" value="RedesII" size="10" maxlength="10" style="font-size: 80%; padding: 0.5%;"/></td>
+		</tr>
+		<tr>
+			<td>CRC32</td>
+			<td><input type="text" readonly="true" id="exemploCRCSaida" name="exemploCRCSaida" value="6959b4c4" size="10" maxlength="4" style="font-size: 80%; padding: 0.5%;" /></td>
+		</tr>
+	</table>
+	<br>
+	<input type="submit" name="exemploCRCCalcular" value="Calcular" style="padding: 0.5%; font-size: 90%; font-family: 'Lora', sans-serif;" onClick="exemploCRC();"/>
+	<br>
+	</div>
+	</center>
+
+</body>
+</html>

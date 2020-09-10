@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <!-- Meta info -->
+	<meta charset="utf-8">
+	<meta name="shortauthor" content="Diego Passos"/>
+	<meta name="shorttitle" content="Apresentação, Conceitos, Medidas"/>
+	<meta name="shortevent" content="Redes de Computadores"/>
+	<title>Redes de Computadores: Aula 1</title>
+
+	<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+	<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+</head>
+
+<body>
+
+	<h1>Atraso de Transmissão <i>vs.</i> Atraso de Propagação</h1>
+
+	<p>
+		Conforme estudado durante as aulas, o atraso sofrido por um pacote em cada um dos saltos de um caminho é composto por quatro componentes:
+	</p>
+
+	<ul>
+		<li><b>Atraso de Processamento</b>: tempo gasto pelo dispositivo analisando o pacote (por exemplo, decidindo por qual enlace de saída encaminhá-lo).</li>
+		<li><b>Atraso de Enfileiramento</b>: tempo que o pacote aguarda até que o enlace de saída se torne disponível (<i>i.e.</i>, até que os pacotes a frente terminem de ser transmitidos).</li>
+		<li><b>Atraso de Transmissão</b>: tempo gasto pelo transmissor para <i>inserir</i> todos os bits do pacote no meio físico.</li>
+		<li><b>Atraso de Propagação</b>: tempo gasto para que o último bit do pacote se propague pelo meio físico do enlace.</li>
+	</ul>
+
+	<p>
+		As duas primeiras componentes dizem respeito a processos internos do dispositivo transmissor. Já as duas últimas, dizem respeito ao processo de transmissão. Por serem ambos relativos à transmissão em si do pacote pelo meio físico, é comum que haja certa confusão entre os conceitos de atraso de transmissão e propagação &mdash; embora se trate de componentes completamente independentes. Ao longo desse material, tentaremos diferenciar mais claramente esses dois atrasos.
+	</p>
+
+	<h2>Atraso de Transmissão: Detalhes</h2>
+
+	<p>
+		O atraso de transmissão denota o tempo necessário para que o dispositivo transmissor represente todos os bits do pacote no meio físico do enlace. Esse tempo depende tanto do tamanho do pacote (quanto maior o pacote, maior o tempo necessário para que todos os bits sejam transmitidos), quanto da taxa de transmissão do enlace (quanto maior a taxa de transmissão do enlace, menor o tempo necessário para que todos os bits sejam transmitidos). Mais especificamente, o atraso de transmissão é dado por:
+	</p>
+
+	$$D_{trans} = \frac{s}{R},$$
+
+	<p>onde \(s\) denota o tamanho do pacote e \(R\) denota a taxa de transmissão do enlace. Em geral, o tamanho do pacote é dado em bytes (B), enquanto taxas de transmissão são medidas em bits por segundo (b/s) ou algum múltiplo (<i>e.g.</i>, Mb/s, kb/s). Assim, repare que é importante atentar para as unidades, uma vez que compatibilizadas (por exemplo, convertendo o tamanho do pacote para bits).
+	</p>
+
+	<p>
+		O atraso de transmissão começa a ser contado a partir do momento que o transmissor começa a transmitir o primeiro bit do pacote pelo meio físico. De forma análoga, esse atraso se encerra no momento que o último bit do pacote é transmitido. <b>Repare que esse momento não equivale ao momento em que o pacote chega ao receptor, porque os bits transmitidos ainda precisam se propagar até a outra extremidade do enlace.</b>
+	</p>
+
+	<h2>Atraso de Transmissão: Detalhes</h2>
+
+	<p>
+		O atraso de propagação denota o tempo necessário para que o sinal usado pelo transmissor para representar os bits do pacote no meio de transmissão se propague de uma ponta a outra do enlace. Esse tempo depende de dois fatores: o comprimento do trajeto a ser percorrido pelo sinal (por exemplo, o comprimento do cabo em um enlace cabeado) e a velocidade de propagação daquele tipo de sinal na material que compõe o enlace (por exemplo, cerca de 300.000 km/s para um sinal de rádio se propagando no vácuo). Dados esses dois parâmetros do canal, o atraso de propagação pode ser calculado através da seguinte expressão:
+	</p>
+
+	$$D_{prop} = \frac{l}{V},$$
+
+	<p>
+		onde \(l\) denota a distância a ser percorrida pelo sinal e \(V\) denota a velocidade de propagação do tipo de sinal utilizado no meio físico em questão.
+	</p>
+
+	<p>
+		O atraso de propagação começa a ser contado a partir do momento em que o transmissor gera o sinal na sua extremidade do enlace e termina no momento em que esse sinal atinge o receptor. Repare que o primeiro bit/pedaço do pacote transmitido pelo meio físico sofre um atraso de propagação para alcançar o receptor. Entretanto, a transmissão do pacote não termina quando esse primeiro bit chega ao receptor, já que os demais bits subsequentes demorarão algum tempo adicional para serem recebidos.
+	</p>
+
+	<h2>Relação entre os Atrasos de Transmissão e Propagação</h2>
+
+	<p>
+		É importante notar que as expressões que determinam os atrasos de propagação e de transmissão são complemetamente independentes. Ou seja, essas duas componentes de atraso são determinadas por parâmetros completamente diferentes do enlace e do pacote &mdash; em particular, o atraso de propagação sequer depende do pacote a ser transmitido.
+	</p>
+
+	<p>
+		O tempo total desde o início da transmissão do pacote por um enlace até a sua recepção completa na outra extremidade é dada pela soma entre o atraso de transmissão e o atraso de propagação. Repare que embora todos os bits do pacote sofram o atraso de propagação, apenas contabilizamos nesse tempo total o atraso de propagação do último bit. Isso acontece porque há um paralelismo entre a propagação dos demais bits e as outras etapas da transmissão (<i>e.g.</i>, enquanto o primeiro bit se propaga, o transmissor prossegue transmitindo os bits subsequentes no canal).
+	</p>
+
+	<p>
+		Para que isso fique mais claro, considere a animação abaixo (pressione o botão &quot;Transmitir&quot; para inciá-la). Nessa animação, consideramos um pacote de 1000 bytes (ou 8000 bits) transmitido a uma taxa de 120 kb/s por um enlace com atraso de propagação de 200 ms. Dados esses parâmetros, é possível calcular que o transmissor demorará \(\frac{8000}{120.000} \approx 66,6\) ms para que transmitir (<i>i.e., inserir</i>) todos os bits do pacote no meio de transmissão. Por outro lado, vemos pela animação que o instante \(t = 66,6 \) ms não marca a chegada do pacote ao receptor. Ao contrário, nesse instante nem sequer o primero bit alcançou o receptor, já que apenas o atraso de propagação já corresponde a 200 ms (ou seja, o primeiro bit só alcança o receptor por volta do instante \(t = 200 ms\)). Assim, após \(t = 66,6 \), ainda é necessário que os bits do pacote se propaguem até o dispositivo de destino. Em particular, o bit mais &quot;distante&quot; é o último, que ainda precisa percorrer todo o comprimento do meio físico. Assim, a recepção do pacote no receptor termina em \(t = 66,6 + 200 = 266,6\) ms.
+	</p>
+
+	<table>
+
+		<tr>
+			<td>
+				<center>
+					<svg id="AnimacaoPropagacaoVsTransmissao" style="width: 600px; height: 90px;"></svg>
+					<br>
+					<br>
+					<p id="AnimacaoPropagacaoVsTransmissaoTempo">t = 0 ms</p><br>
+				</center>
+				<span id="AnimacaoPropagacaoVsTransmissaoStat1">Último bit é colocado no canal em t = </span><br>
+				<span id="AnimacaoPropagacaoVsTransmissaoStat2">Primeiro bit chega ao receptor em t = </span><br>
+				<span id="AnimacaoPropagacaoVsTransmissaoStat3">Último bit chega ao receptor em t = </span>
+			</td>
+
+			<td>
+				<div style="border: 2px solid #4A4; width: 95%; margin-left: 50px; padding-bottom: 10px;">
+					<center>
+						<table class="align" style="margin-bottom: 10px;">
+							<tr>
+								<td style="width: 80%;">Atraso de Propagação (ms)</td>
+								<td><input id="AnimacaoPropagacaoVsTransmissaoProp" value="200" size=5></input></td>
+							</tr>
+							<tr>
+								<td>Taxa de Transmissão (kb/s)</td>
+								<td><input id="AnimacaoPropagacaoVsTransmissaoTaxa" value="120" size=5></input></td>
+							</tr>
+							<tr>
+								<td>Tamanho do Pacote (B)</td>
+								<td><input id="AnimacaoPropagacaoVsTransmissaoTam" value="1000" size=5></input></td>
+							</tr>
+						</table>
+						<input type="button" onclick="PropagacaoVsTransmissaoStart();" value="Transmitir"></input>
+					</center>
+				</div>
+			</td>
+
+		</tr>
+	</table>
+
+	<script src="js/snap.svg-min.js"></script>
+	<script type="text/javascript">
+		Snap.load("imagens/AnimacaoPropagacaoVsTransmissao.svg", function(f) {
+			var s = Snap("#AnimacaoPropagacaoVsTransmissao");
+			s.prepend(f.select("g"));
+		});
+
+		var PropagacaoVsTransmissaoTimer;
+
+		function PropagacaoVsTransmissaoUpdateTime() {
+
+			var time = document.getElementById('AnimacaoPropagacaoVsTransmissaoTempo');
+			var t = parseInt(time.innerHTML.split(' ')[2]);
+
+			t = t + 100;
+			time.innerHTML = "t = " + t + " ms";
+		}
+
+		function PropagacaoVsTransmissaoEnd() {
+
+			var time = document.getElementById('AnimacaoPropagacaoVsTransmissaoTempo');
+			var linkBW_kbps = parseInt(document.getElementById('AnimacaoPropagacaoVsTransmissaoTaxa').value);
+			var propSpeed_ms = parseInt(document.getElementById('AnimacaoPropagacaoVsTransmissaoProp').value);
+			var packetSize_B = parseInt(document.getElementById('AnimacaoPropagacaoVsTransmissaoTam').value);
+
+			window.clearTimeout(PropagacaoVsTransmissaoTimer);
+			document.getElementById('AnimacaoPropagacaoVsTransmissaoStat1').innerHTML = "Último bit é colocado no canal em t = " + (Math.floor((packetSize_B * 8 / linkBW_kbps) * 100) / 100) + " ms";
+			document.getElementById('AnimacaoPropagacaoVsTransmissaoStat2').innerHTML = "Primeiro bit chega ao receptor em t = " + (Math.floor(propSpeed_ms * 100) / 100) + " ms";
+			document.getElementById('AnimacaoPropagacaoVsTransmissaoStat3').innerHTML = "Último bit chega ao receptor em t = " + (Math.floor((packetSize_B * 8 / linkBW_kbps + propSpeed_ms) * 100) / 100) + " ms";
+		}
+
+		function PropagacaoVsTransmissaoStart() {
+
+			// Conversão de unidades:
+			// * Cada s de tempo real corresponde a 100ms de tempo simulado.
+			// * Cada 4 kb/s de capacidade do enlace equivalem a 1px de largura.
+			var s = Snap("#AnimacaoPropagacaoVsTransmissao");
+			var linkBegin = 135; // Em px.
+			var linkEnd = 465; // Em px.
+
+			var link = s.select("#link");
+			var linkBW_kbps = document.getElementById('AnimacaoPropagacaoVsTransmissaoTaxa').value;
+			var linkBW = linkBW_kbps / 4;
+			link.attr({height: 0.606283755227 * (linkBW + 1.32), y: 0.606283755227 * (30.937 - (linkBW - 29.5) / 2) + 102.95758}); // Correção por causa da reescala da figura.
+
+			var propSpeed_ms = document.getElementById('AnimacaoPropagacaoVsTransmissaoProp').value;
+			var propSpeed = (linkEnd - linkBegin) / (propSpeed_ms * 10); // Em px/ms
+
+			var packet = s.rect(135, 28.2 - (linkBW - 29.5) / 2, 0, linkBW);
+							packet.attr({fill: '#33A'})
+			var packetSize_B = document.getElementById('AnimacaoPropagacaoVsTransmissaoTam').value;
+			var packetSize = 8 * packetSize_B / (linkBW_kbps) * 10 * propSpeed;
+
+			document.getElementById('AnimacaoPropagacaoVsTransmissaoTempo').innerHTML = "t = 0 ms";
+			PropagacaoVsTransmissaoTimer = window.setInterval(PropagacaoVsTransmissaoUpdateTime, 1000);
+			document.getElementById('AnimacaoPropagacaoVsTransmissaoStat1').innerHTML = "Último bit é colocado no canal em t = ";
+			document.getElementById('AnimacaoPropagacaoVsTransmissaoStat2').innerHTML = "Primeiro bit chega ao receptor em t = ";
+			document.getElementById('AnimacaoPropagacaoVsTransmissaoStat3').innerHTML = "Último bit chega ao receptor em t = ";
+
+			if (packetSize <= linkEnd - linkBegin) {
+
+				packet.animate({width: packetSize}, packetSize/propSpeed, null,
+					function() {
+						packet.animate({x: linkEnd - packetSize}, (linkEnd - packetSize - linkBegin) / propSpeed, null,
+							function() {
+									packet.animate({width: 0}, packetSize/propSpeed);
+									packet.animate({x: linkEnd}, packetSize/propSpeed);
+									window.setTimeout(function(){PropagacaoVsTransmissaoEnd();}, packetSize/propSpeed);
+							}
+						);
+					}
+				);
+			}
+			else {
+
+				packet.animate({width: linkEnd - linkBegin}, (linkEnd - linkBegin)/propSpeed, null,
+					function() {
+						window.setTimeout(function() {
+							packet.animate({width: 0}, (linkEnd - linkBegin)/propSpeed);
+							packet.animate({x: linkEnd}, (linkEnd - linkBegin)/propSpeed);
+							window.setTimeout(function() {PropagacaoVsTransmissaoEnd();}, (linkEnd - linkBegin)/propSpeed);
+						}, ((packetSize_B * 8 / linkBW_kbps) - propSpeed_ms) * 10);
+					}
+				);
+
+			}
+		}
+
+	</script>
+
+	<h2>Exercícios de Fixação</h2>
+
+	<p>
+		Usando o conteúdo visto nesse material e a animação acima (você pode alterar os parâmetros utilizando as caixas de texto à direita), responda as perguntas a seguir:
+	</p>
+
+	<ol>
+		<li>Um dos parâmetros da animação é o atraso de propagação &mdash; por padrão, no exemplo acima, 200 ms. Considere que o meio físico em questão é cabo de cobre é que o sinal se propaga a uma velocidade de 200.000 km/s. Qual é a extensão do cabo?</li>
+		<li>Agora suponha um outro enlace, esse sem fio e baseado em ondas acústicas submarinas. Assuma que transmissor e receptor estão distantes um do outro 30 metros e que a velocidade de propagação é de 1500 m/s. Qual é o atraso de propagação desse enlace?</li>
+		<li>Considere novamente o enlace do item anterior. Assuma agora que o enlace tem uma taxa de transmissão de 480 bits por segundo. Qual o tempo total entre o início da transmissão e a conclusão da recepção de um pacote de 600 bytes? Quando tempo demora para o primeiro bit alcançar o receptor?</li>
+		<li>Um enlace Ethernet 1000BASE-T opera a uma taxa de transmissão de 1 Gb/s e tem um comprimento máximo recomendado de 100 metros. Assuma que a velocidade de propagação do sinal no meio físico é de 200.000 km/s. Agora considere a transmissão de um pacote de 1500 bytes por por um enlace 1000BASE-T de 100 metros de comprimento. Qual componente domina o tempo total entre o início da transmissão do pacote no enlace e o final da recepção: o atraso de propagação ou o atraso de transmissão?</li>
+		<li>A sonda Voyager 2 foi lançada pela NASA em 20 de agosto de 1977 e continua ativa e enviando dados para o controle da missão. Atualmente (2020), ela se encontra a cerca de 18,5 bilhões de kilômetros da Terra. A sonda se comunica através de um rádio com uma taxa de transmissão que pode chegar a 115.2 kb/s. Assuma que a velocidade de propagação do sinal é de aproximadamente 300.000 km/s e considere uma transmissão hipotética de um pacote de 1500 bytes. Qual é o tempo total entre o início da transmissão e a conclusão da recepção desse pacote por um receptor na Terra, considerando esses parâmetros? Esse tempo é dominado pelo atraso de propagação ou pelo atraso de transmissão?</li>
+	</ol>
+</body>
+</html>

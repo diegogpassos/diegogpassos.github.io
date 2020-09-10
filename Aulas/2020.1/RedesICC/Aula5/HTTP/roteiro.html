@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Requisições HTTP</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+  </style>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<h1 id="requisições-http">Requisições HTTP</h1>
+<p>O HTTP tem sido, há vários anos, o protocolo de aplicação responsável pela maior parcela do tráfego total da Internet. O intuito original desse protocolo era dar suporte à aplicação <em>web</em>, mas devido a sua funcionalidade básica de transferência de objetos entre dois <em>hosts</em>, o HTTP é hoje usado em aplicações mais sofisticadas, como o <em>streaming</em> de de vídeo e áudio.</p>
+<p>O objetivo desse material é aprofundar o estudo do funcionamento do HTTP. Em particular, nesse material veremos exemplos práticos de requisições e respostas HTTP. Ao longo desses exemplos, destacaremos alguns detalhes relevantes de como esse protocolo funciona e de como ele evoluiu através dos anos.</p>
+<h2 id="mensagens-em-formato-texto">Mensagens em Formato Texto</h2>
+<p>Uma característica interessante do HTTP é o emprego de mensagens em formato texto. Ao contrário de vários outros protocolos que utilizam formatos de pacotes/mensagens binárias, o HTTP representa suas informações como <em>strings</em> de caracteres textuais.</p>
+<p>Formatos binários são mais eficientes, entre outros motivos por reduzirem a quantidade de bits necessários para representar determinada informação. Por exemplo, suponha que desejemos enviar o número inteiro 10 em uma mensagem transmitida entre dois <em>hosts</em> na Internet. Um protocolo que trabalha com mensagens binárias poderia representar esse número em base 2 com 4 bits: <code>1010</code>. Já um protocolo baseado em mensagens texto, como o HTTP, precisaria de dois caracteres textuais para a mesma informação. Usando a codificação ASCII, por exemplo, cada um desses caracteres ocuparia ao menos 7 bits<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>, totalizando pelo menos 14 bits — 3,5 vezes mais que no caso binário.</p>
+<p>Por outro lado, o uso de mensagens texto também traz uma série de vantagens. Uma delas é a facilidade de implementação e depuração do protocolo. A manipulação de <em>strings</em> é uma funcionalidade básica encontrada na enorme maioria das linguagens de programação. Por outro lado, nem toda linguagem tem suporte à manipulação de baixo nível de dados — <em>i.e.</em>, no nível dos bits individuais. Além disso, se queremos saber se nossa implementação está gerando corretamente os pacotes de um protocolo baseado em mensagens texto, podemos simplesmente imprimi-las e inspecioná-las em um terminal. O mesmo não é tão trivial quando manipulamos mensagens binárias.</p>
+<p>No âmbito de uma disciplina sobre Redes de Computadores, o uso de mensagens texto por parte do HTTP traz a vantagem adicional de nos permitir uma interação bem direta com o protocolo. Como veremos nas seções a seguir, podemos usar programas comumente instalados por padrão em sistemas operacionais para emular manualmente o funcionamento de um cliente HTTP — <em>i.e.</em>, um <em>browser</em>.</p>
+<p>Em particular, no restante desse material utilizaremos um programa chamado de <code>telnet</code> para executar uma série de demonstrações acerca do HTTP. À rigor, o <code>telnet</code> é um cliente de um outro protocolo de camada de aplicação homônimo. Esse protocolo era bastante popular há muitos anos atrás para a aplicação de <em>shell</em> remoto — ou seja, a habilidade de interagir remotamente com um <em>prompt</em> de comando de um servidor via rede<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>. No entanto, o telnet em si é um protocolo muito simples que basicamente se restringe a enviar cada caractere digitado pelo usuário no teclado para o <em>host</em> de destino e imprimir cada caractere recebido do <em>host</em> de destino. Essa funcionalidade permite que o programa <code>telnet</code> possa ser usado para interagir com implementações de outros protocolos baseados em mensagens de texto.</p>
+<p>Implementações do <code>telnet</code> são comumente encontradas instaladas por padrão na maior parte dos sistemas operacionais populares hoje em dia.</p>
+<h2 id="uma-requisição-http-simples">Uma Requisição HTTP Simples</h2>
+<p>Como um primeiro experimento, faremos uma simples requisição de um objeto identificado pela URL <code>http://www.midiacom.uff.br/~diego/</code>. Essa URL pode ser quebrada nas seguintes porções:</p>
+<ul>
+<li><strong>Esquema</strong> (<code>http://</code>): indica que o protocolo usado é o http.</li>
+<li><strong>Identificação do <em>host</em></strong> (<code>www.midiacom.uff.br</code>): indica que o objeto está armazenado por um servidor chamado <code>www.midiacom.uff.br</code>.</li>
+<li><strong>Camihno</strong> (<code>/~diego/</code>): indica que, internamente ao servidor, o objeto está armazenado no caminho <code>/~diego/</code>.</li>
+</ul>
+<p>O primeiro passo para executarmos essa requisição é estabelecermos uma conexão com o servidor. Para isso, usamos duas das três componentes da URL: o identificador do <em>host</em> nos diz a qual servidor devemos nos conectar; por outro lado, o esquema — mais especificamente o fato do protocolo ser o HTTP — nos diz implicitamente a porta do servidor a qual devemos nos conectar (a porta padrão do protocolo HTTP é a 80). Assim, podemos realizar a conexão com o servidor utilizando o seguinte comando:</p>
+<pre><code>telnet www.midiacom.uff.br 80</code></pre>
+<p>Se tudo deu certo, o <code>telnet</code> deve imprimir uma mensagem indicando que a conexão foi estabelecida. Algo como:</p>
+<pre><code>Trying 200.20.10.93...
+Connected to mesbla.midiacom.uff.br.
+Escape character is &#39;^]&#39;.</code></pre>
+<p>Após a conexão, no entanto, nada mais acontece. Na verdade, no HTTP, uma vez que cliente e servidor estão conectados, a iniciativa deve ser do cliente: ele deve formatar e enviar uma requisição. Do ponto de vista do <code>telnet</code>, no entanto, ele simplesmente passa a esperar que o usuário digite alguma coisa para ser enviada ao servidor<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>.</p>
+<p>Assim, nesse ponto, precisamos redigir uma requisição HTTP. Lembre-se que requeremos que o servidor nos envie o conteúdo do objeto localizado em <code>/~diego/</code>. Para esse fim, uma requisição web mínima seria:</p>
+<pre><code>GET /~diego/ HTTP/1.1
+Host: www.midiacom.uff.br
+
+</code></pre>
+<p>A primeira linha da requisição indica <em>o que queremos</em> do servidor. O <code>GET</code> indica o método desejado (<em>i.e.</em>, queremos obter o conteúdo do objeto). A especificação do método é seguida do caminho do objeto requisitado no servidor (nesse caso, <code>/~diego/</code>). Por fim, a primeira linha termina com a especificação da versão do protocolo HTTP que estamos utilizando. Essa especificação é importante porque um dos dois lados da comunicação pode, eventualmente, implementar uma versão mais recente do protocolo não suportada pelo outro lado. Assim, ao especificarmos a versão que estamos usando, evitamos que o servidor interprete de maneira incorreta determinada parte da mensagem se ele não suportá-la.</p>
+<p>A partir da segunda linha, a requisição HTTP contém um número arbitrário de <em>linhas de cabeçalho</em>. As linhas de cabeçalho servem para modificar a maneira pela qual o servidor trata ou interpreta a requisição. Essas linhas sempre seguem o formato <code>chave: valor</code>, onde <code>chave</code> indica um identificador do cabeçalho e <code>valor</code> indica o valor que queremos atribuir. Nesse exemplo simples, usamos uma única linha de cabeçalho (a <code>Host</code>) que simplesmente indica ao servidor a qual <em>site</em> nossa requisição corresponde. Essa especificação é importante porque um mesmo servidor web pode servir múltiplos sites diferentes. Cada site define uma estrutura de diretórios diferente a partir da qual o objeto requisitado será buscado.</p>
+<p>Por fim, note que há uma linha em branco ao final da requisição. Essa linha é <strong>fundamental</strong>: o protocolo HTTP indica que a seção de cabeçalhos da requisição deve sempre terminar com uma linha em branco. Isso possibilita ao servidor diferenciar o fim da requisição de uma situação em que a próxima linha de cabeçalho simplesmente demora um pouco para ser recebida. No <code>telnet</code>, criamos essa linha em branco simplesmente pressionando <code>&lt;enter&gt;</code> duas vezes ao final da segunda linha da requisição.</p>
+<p>Ao enviarmos essa requisição para o servidor, a resposta recebida deve ser algo como:</p>
+<pre><code>HTTP/1.1 200 OK
+Date: Thu, 03 Sep 2020 14:24:04 GMT
+Server: Apache/2.4.6 (CentOS) PHP/5.6.40
+Last-Modified: Thu, 09 Aug 2018 03:02:54 GMT
+ETag: &quot;59-572f7dd10cad0&quot;
+Accept-Ranges: bytes
+Content-Length: 89
+Vary: Accept-Encoding
+Content-Type: text/html; charset=UTF-8
+X-Cache: MISS from localhost
+X-Cache-Lookup: MISS from localhost:3128
+Via: 1.1 localhost (squid)
+Connection: keep-alive
+
+&lt;META http-equiv=&quot;refresh&quot; content=&quot;1;URL=https://sites.google.com/ic.uff.br/dpassos/&quot;&gt;</code></pre>
+<p>Assim como fizemos para a requisição, vamos analisar cada parte dessa resposta:</p>
+<ol type="1">
+<li>A primeira linha informa o <em>status</em>, <em>i.e.</em>, ela indica se a requisição foi bem sucedida e, caso contrário, provê algum tipo de informação sobre o motivo da falha. Nesse caso, em particular, a requisição foi bem sucedida, o que é indicado pelo código de <em>status</em> 200. Repare que o servidor provê, ainda, uma descrição textual desse código de <em>status</em>: o código 200 corresponde ao <em>status</em> <code>OK</code>. Por fim, note que o servidor também especifica a versão do HTTP usada na sua resposta.</li>
+<li>Assim como ocorre nas requisições, a linha de <em>status</em> é seguida de um número arbitrário de linhas de cabeçalho. O propósito é o mesmo: prover meta-informações que ajudem ou indiquem ao cliente como aquela resposta deve ser interpretada. Na prática, servidores web reais tendem a incluir um número grande de linhas de cabeçalho nas suas respostas. Aqui, destacaremos apenas algumas mais básicas:
+<ul>
+<li><code>Last-Modified</code>: indica a data da última modificação do conteúdo do objeto no servidor.</li>
+<li><code>Content-Length</code>: indica o tamanho total da resposta em bytes.</li>
+<li><code>Content-Type</code>: indica o tipo de conteúdo do objeto retornado (nesse exemplo, trata-se de um arquivo texto, correspondendo a um código HTML, na codificação de caracteres UTF-8).</li>
+</ul></li>
+<li>Como em toda mensagem HTTP, é obrigatório terminar as linhas de cabeçalho por uma linha em branco.</li>
+<li>Ao contrário do que ocorreu na requisição, essa mensagem de resposta possui um <strong>corpo</strong>. O corpo da mensagem carrega os dados em si. No caso dessa resposta, isso corresponde ao conteúdo do objeto requisitado<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>. Note que, em certos casos, requisições também podem conter dados enviados do cliente para o servidor — <em>e.g.</em>, quando anexamos um arquivo a um e-mail em um serviço de <em>webmail</em>.</li>
+</ol>
+<p>Veja agora um pequeno vídeo desse mesmo exemplo:</p>
+<figure>
+<video src="videos/RequisicaoSimples.mp4" controls=""><a href="videos/RequisicaoSimples.mp4"></a></video><figcaption>Exemplo de Requisição HTTP Simples</figcaption>
+</figure>
+<h2 id="persistência-de-conexão">Persistência de Conexão</h2>
+<p>Nas versões iniciais do HTTP, um cliente necessitava abrir uma nova conexão para cada nova requisição que ele quisesse realizar para um mesmo servidor. Como o HTTP foi criado para aplicações web, isso se torna pouco prático e afetava negativamente o desempenho. Isso ocorre porque, em geral, um <em>browser</em> requisita o objeto relativo ao código HTML base de uma página que, por sua vez, faz referência a diversos outros objetos — <em>e.g.</em>, imagens, <em>scripts</em>, arquivos CSS — possivelmente hospedados no mesmo servidor. Ao invés de reaproveitar a mesma conexão para requisitar esses outros objetos, o cliente era obrigado a iniciar novas conexões, adicionando tempo à comunicação.</p>
+<p>Para ilustrar isso, vamos refazer o experimento da seção anterior, com uma pequena modificação: ao invés de especificarmos a versão 1.1 do HTTP, vamos usar a versão 1.0 do protocolo. Para isso, basta mudarmos um caractere na requisição:</p>
+<pre><code>GET /~diego/ HTTP/1.0
+Host: www.midiacom.uff.br
+
+</code></pre>
+<p>Tente enviar essa requisição a partir do seu computador ou veja no vídeo abaixo o que ocorre:</p>
+<figure>
+<video src="videos/Requisicao_1.0.mp4" controls=""><a href="videos/Requisicao_1.0.mp4"></a></video><figcaption>Exemplo de Requisição com HTTP 1.0</figcaption>
+</figure>
+<p>Repare que, imediatamente após o recebimento resposta, o <code>telnet</code> termina sua execução. A última linha impressa pelo <code>telnet</code> explica o motivo: <em>Connection closed by foreign host</em> (ou, em Português, <em>a conexão foi fechada pelo outro host</em>). Em outras palavras, o próprio servidor web que estamos acessando proativamente fechou a conexão antes que tivéssemos a chance de enviar qualquer outra requisição.</p>
+<p>Isso acontece justamente por especificarmos a versão 1.0 do HTTP na nossa requisição original. Essa versão do HTTP usava conexões <strong>não-persistentes</strong> por padrão<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a>, ou seja, as conexões eram encerradas após a resposta da requisição. Repare, ainda, que o servidor especifica na sua resposta o cabeçalho <code>Connection</code> com valor <code>close</code>. Essa é uma outra forma — particularmente relevante ao HTTP 1.1 — de alertar o cliente sobre a não-persistência da conexão.</p>
+<p>Agora contraste esse comportamento com o que ocorreu no experimento anterior. Lembre-se — ou veja novamente no vídeo — que o <code>telnet</code> não encerrou sua execução logo após a recepção da resposta. Ao contrário, o cliente <code>telnet</code> continuou aguardando novos conteúdos digitados pelo usuário. Isso indica que o servidor, por sua vez, não fechou a conexão e, portanto, estava ainda disposto a utilizá-la para novas requisições subsequentes. Observe, ainda, que na resposta do experimento anterior o cabeçalho <code>Connection</code> tinha o valor <code>keep-alive</code>. Esse valor indica que o servidor pretende manter a conexão “viva” após a resposta, permitindo outras requisições.</p>
+<p>É interessante destacar mais uma vez que a única diferença entre as duas requisições foi a versão especificada do HTTP. Isso indica que o HTTP 1.0 usava conexões não-persistentes, mas também que conexões persistentes são <strong>o comportamento padrão no HTTP 1.1</strong>.</p>
+<p>Mas seria possível usar o HTTP 1.1 com conexões não-persistentes<a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a>? Sim. Para isso, basta fazermos uma pequena alteração na nossa requisição.</p>
+<pre><code>GET /~diego/ HTTP/1.1
+Host: www.midiacom.uff.br
+Connection: close
+</code></pre>
+<p>Essa requisição, apesar de utilizar a versão 1.1 do HTTP, usa uma linha de cabeçalho — <code>Connection: close</code> — para indicar que o cliente deseja uma conexão não-persistente. Envie essa requisição do seu computador ou veja o resultado no vídeo abaixo:</p>
+<figure>
+<video src="videos/Requisicao_1.1_NaoPersistente.mp4" controls=""><a href="videos/Requisicao_1.1_NaoPersistente.mp4"></a></video><figcaption>Exemplo de requisição não-persistente com HTTP 1.0</figcaption>
+</figure>
+<p>Apesar do comportamento padrão do HTTP 1.1, o servidor respeita o que foi pedido pelo cliente na requisição e fecha a conexão imediatamente após a resposta.</p>
+<h2 id="outros-códigos-de-status">Outros Códigos de Status</h2>
+<p>Até esse ponto, todas as requisições que fizemos resultaram em respostas com <em>status</em> 200 — sucesso. No entanto, existe um grande número de códigos de <em>status</em> previstos no HTTP. Alguns exemplos:</p>
+<ul>
+<li><code>200 OK</code> — Requisição bem sucedida, objeto se encontra no corpo da mensagem.</li>
+<li><code>301 Moved Permanently</code> — Objeto requistado foi movido, nova localização se encontra no corpo da mensagem.</li>
+<li><code>400 Bad Request</code> — Servidor não entendeu a requisição.</li>
+<li><code>404 Not Found</code> — Objeto requisitado não foi encontrado no servidor.</li>
+<li><code>505 HTTP Version Not Supported</code> — Versão do HTTP especificada na requisição do cliente não é suportada pelo servidor.</li>
+</ul>
+<p>Os valores numéricos atribuídos a cada código de <em>status</em> tem relação com seu tipo. Por exemplo, valores na faixa de 100 a 199 são usados para respostas meramente informativas (<em>e.g.</em>, o <em>status</em> 102 indica que o servidor está processando a última requisição, mas que a resposta ainda não está pronta). Valores de 200 a 299 indicam situações de sucesso. Valores de 300 a 399 indicam redirecionamentos (<em>e.g.</em>, um objeto ficava nesse local, mas foi movido). Valores de 400 a 499 indicam erros na requisição. Finalmente, valores de 500 a 599 indicam erros no lado do servidor.</p>
+<p>A lista completa de todos os possíveis códigos de <em>status</em> do HTTP pode ser consultada nas suas RFCs — por exemplo, a RFC 7231, para a versão 1.1. A lista é extensa e inclui diversos códigos que estão apenas reservados para uso futuro — <em>e.g.</em>, o código <code>402 Payment Required</code> é previsto na RFC provavelmente para dar suporte a algum tipo de serviço web pago, mas sua implementação não é especificada na RFC. Além disso, mesmo alguns <em>status</em> que estão, de fato, presentes nas versões atuais do protocolo raramente são encontradas na prática — <em>e.g.</em>, <code>413 Payload Too Large</code>.</p>
+<p>Por outro lado, há certos códigos que são frequentemente encontrados. Talvez o código de erro mais comum seja o <code>404 Not Found</code>, que indica que o servidor não foi capaz de encontrar o objeto requisitado no caminho especificado na requisição. Para a maioria dos servidores, é fácil provocar essa resposta, bastando encontrar um caminho que não exista no servidor. Por exemplo:</p>
+<pre><code>GET /~diego/aaaaa HTTP/1.1
+Host: www.midiacom.uff.br
+</code></pre>
+<p>Como não há nenhum objeto associado ao caminho <code>/~dpassos/aaaaa</code>, o servidor retorna um erro <code>404</code>:</p>
+<pre><code>HTTP/1.1 404 Not Found
+Date: Thu, 03 Sep 2020 18:14:28 GMT
+Server: Apache/2.4.6 (CentOS) PHP/5.6.40
+Content-Length: 210
+Content-Type: text/html; charset=iso-8859-1
+X-Cache: MISS from localhost
+X-Cache-Lookup: MISS from localhost:3128
+Via: 1.1 localhost (squid)
+Connection: keep-alive
+
+&lt;!DOCTYPE HTML PUBLIC &quot;-//IETF//DTD HTML 2.0//EN&quot;&gt;
+&lt;html&gt;&lt;head&gt;
+&lt;title&gt;404 Not Found&lt;/title&gt;
+&lt;/head&gt;&lt;body&gt;
+&lt;h1&gt;Not Found&lt;/h1&gt;
+&lt;p&gt;The requested URL /~diego/aaaaa was not found on this server.&lt;/p&gt;
+&lt;/body&gt;&lt;/html&gt;</code></pre>
+<p>É interessante notar que mesmo uma resposta de erro pode conter — e muitas vezes contem — dados no seu corpo. Esse conteúdo geralmente é um código HTML que os <em>browsers</em> usam para apresentar uma mensagem de erro potencialmente explicativa para o usuário.</p>
+<p>Outro exemplo de erro facilmente “provocável” é o <code>505 HTTP Version Not Supported</code>. Ele é retornado por um servidor quando esse não suporta a versão <em>major</em> especificada pelo cliente em uma requisição. Por exemplo, a seguinte requisição deve gerar esse código de <em>status</em>:</p>
+<pre><code>GET /~diego/ HTTP/5.1
+Host: www.midiacom.uff.br
+
+</code></pre>
+<p>Exemplo de resposta:</p>
+<pre><code>HTTP/1.1 505 HTTP Version not supported
+Server: squid
+Mime-Version: 1.0
+Date: Thu, 03 Sep 2020 18:24:10 GMT
+Content-Type: text/html
+Content-Length: 2896
+X-Squid-Error: ERR_UNSUP_HTTPVERSION 0
+Vary: Accept-Language
+Content-Language: az
+X-Cache: MISS from localhost
+X-Cache-Lookup: NONE from localhost:3128
+Via: 1.1 localhost (squid)
+Connection: close
+
+
+&lt;html&gt;&lt;head&gt;
+&lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=utf-8&quot;&gt;
+...</code></pre>
+<p>Considerando o que você viu até aqui e realizando outros experimentos, responda às seguintes perguntas:</p>
+<ol type="1">
+<li>Você consegue pensar em alguma requisição que geraria o código de <em>status</em> <code>400 Bad Request</code>?</li>
+<li>Considere novamente a requisição acima que resultou no código de <em>status</em> <code>505 HTTP Version Not Supported</code>. Substitua o número de versão 5.1 por 1.5 — uma versão que, igualmente, não existe. O servidor retorna algum erro? Você consegue explicar a razão?</li>
+</ol>
+<h2 id="outros-métodos">Outros Métodos</h2>
+<p>O método <code>GET</code> é mais comumente utilizado no HTTP e, certamente, o de mais simples compreensão. Entretanto, ele não é o único. No HTTP 1.1, alguns exemplos de métodos previstos incluem:</p>
+<ul>
+<li><code>GET</code>: solicita o conteúdo atual do objeto especificado.</li>
+<li><code>HEAD</code>: exatamente a mesma semântica do <code>GET</code>, mas o servidor não inclui o conteúdo do objeto na resposta — <em>i.e.</em>, apenas as linhas de <em>status</em> e cabeçalhos são enviadas.</li>
+<li><code>POST</code>: usado para que o cliente envie determinado conteúdo para processamento pelo servidor.</li>
+<li><code>PUT</code>: cliente solicita que o conteúdo do objeto especificado seja substituído pelo conteúdo enviado no corpo da requisição.</li>
+<li><code>DELETE</code>: cliente solicita que o objeto especificado seja removido do servidor.</li>
+</ul>
+<p>Os métodos <code>PUT</code> e <code>DELETE</code> não são frequentemente usados por servidores web — uma exceção notável que tem se popularizado nos últimos anos são as chamadas API RESTful, nas quais o HTTP é usado como protocolo para viabilizar a troca de mensagens entre um cliente que solicita serviços mais gerais de um servidor. Os métodos <code>HEAD</code> e <code>POST</code>, por outro lado, são frequentemente empregados na Internet.</p>
+<p>O propósito do método <code>HEAD</code> é permitir que o cliente obtenha metadados acerca de um objeto que ele pode solicitar no futuro próximo. Um exemplo simples é um <em>browser</em> que abre um diálogo mostrando informações básicas sobre um arquivo referente a um <em>link</em> clicado pelo usuário: antes de começar de fato o <em>download</em>, o <em>browser</em> pede uma confirmação do usuário. Para obter informações como o tipo e tamanho do arquivo, o <em>browser</em> pode gerar uma requisição do tipo <code>HEAD</code>, evitando gastar recursos em uma operação que pode não se concretizar.</p>
+<p>Outro uso comum do método <code>HEAD</code> é para dar suporte ao <em>cache</em> de objetos. <em>Browsers</em> modernos tendem a usar estratégias agressivas de <em>cache</em> para reduzir o uso de banda e o tempo de resposta no carregamento de páginas. A dificuldade de implementação de <em>cache</em> nesse cenário está na manutenção da consistência da informação. De forma mais concreta, o problema é como um <em>browser</em> determina que a versão de um objeto que possui atualmente em sua cache local ainda é valida. Normalmente, servidores web incluem nas suas respostas uma linha de cabeçalho informando a data da última alteração do objeto. Através de uma requisição do tipo <code>HEAD</code>, o <em>browser</em> pode obter essa informação sem pagar o custo associado ao <em>download</em> do conteúdo. Para objetos pequenos, fazer essa “consulta” não vale a pena, mas para conteúdos a partir de um determinado tamanho — <em>e.g.</em>, grandes imagens, áudios e vídeos — esse procedimento pode trazer ganhos representativos.</p>
+<p>Já o método <code>POST</code> encontra três grandes aplicações: o envio de arquivos do cliente para o servidor — <em>e.g.</em>, anexar arquivos a um e-mail, fazer <em>upload</em> de arquivos em um sistema de arquivos na nuvem —, o envio de dados de formulários web e a passagem de parâmetros para aplicações web<a href="#fn7" class="footnote-ref" id="fnref7" role="doc-noteref"><sup>7</sup></a> — <em>e.g.</em>, dados de <em>login</em> para autenticação de usuários. Nesse caso, assim como na resposta de um servidor a uma requisição do tipo <code>GET</code>, o cliente inclui o conteúdo no corpo da requisição e metadados (<em>e.g.</em>, tipo, tamanho do conteúdo) nas linhas de cabeçalho. Note que uma requisição do tipo <code>POST</code> ainda enseja uma resposta por parte do servidor. Essa resposta, inclusive, comumente carrega algum tipo de conteúdo (<em>e.g.</em>, uma página HTML a ser exibida para o usuário como resultado do envio das informações).</p>
+<p>Utilizando as informações vistas até aqui, tente fazer uma requisição do tipo <code>HEAD</code> para algum objeto de um servidor web na Internet. Observe a resposta do servidor.</p>
+<section class="footnotes" role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1" role="doc-endnote"><p>Na prática, na Internet, cada caractere ASCII normalmente ocupa 1 byte completo, agravando ainda mais a situação.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2" role="doc-endnote"><p>Hoje, o telnet ainda é usado para esse propósito, mas sua aplicação é normalmente restrita a alguns nichos, como a interação com dispositivos locais que não possuem teclado e monitor. Um exemplo relativamente comum é a configuração de um comutador. Já a aplicação de <em>shell</em> remoto com servidores através da Internet pública é hoje muito mais comum através de um outro protocolo denominado SSH. A maior popularidade do SSH se dá por este incluir uma série de medidas de segurança ausentes no telnet.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3" role="doc-endnote"><p>Se você esperar bastante tempo — <em>i.e.</em>, alguns minutos —, em algum momento a conexão será encerrada por inatividade pelo servidor.<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4" role="doc-endnote"><p>O código HTML referente ao objeto requisitado é bastante simples: ele simplesmente sugere um redirecionamento para outra página. No entanto, isso não é relevante para os propósitos desse material.<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn5" role="doc-endnote"><p>Mais especificamente, o HTTP 1.0 não especificava o suporte a conexões persistentes, embora algumas implementações de clientes e servidores a suportassem.<a href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn6" role="doc-endnote"><p>Há algumas possíveis razões para se utilizar conexões não-persistentes mesmo no HTTP 1.1. Algumas delas têm relação com desempenho, que pode justificar o uso de múltiplas conexões para obter vários objetos, em oposição a utilizar uma única conexão para todos os objetos. No entanto, uma explicação mais detalhada sobre isso está fora do escopo dessa parte da matéria.<a href="#fnref6" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn7" role="doc-endnote"><p>Embora o método <code>POST</code> possa ser usado para esse fim, muitas vezes aplicações utilizam um método mais simples baseado na passagem de parâmetros codificados na própria URL. Por exemplo, a URL <code>http://www.midiacom.uff.br/~diego/app?par1&amp;par2&amp;par4=2</code> passa os parâmetros <code>par1</code>, <code>par2</code> e <code>par4=2</code> para o objeto <code>http://www.midiacom.uff.br/~diego/app</code>. Nesse caso, o método <code>GET</code> pode ser usado ao invés do <code>POST</code>.<a href="#fnref7" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+</body>
+</html>
