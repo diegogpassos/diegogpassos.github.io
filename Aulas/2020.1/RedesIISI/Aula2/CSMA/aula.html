@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>CSMA e Persistência</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" type="text/javascript"></script>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<h1 id="csma-e-persistência">CSMA e Persistência</h1>
+<p>O CSMA (<em>Carrier-Sense Multiple Access</em>) é provavelmente o principal representante da família de protocolos de acesso aleatório atualmente. Esse protocolo é adotado por diversas tecnologias de comunicação modernas, incluindo o Ethernet e o Wi-Fi. No entanto, quando falamos em CSMA, estamos na prática nos referindo a um conjunto de protocolos, já que existem hoje diversas variantes dele. Ethernet e Wi-Fi, por exemplo, utilizam versões com diferenças consideráveis. Todas essas variantes, entretanto, compartilham uma mesma estratégia geral e uma série de componentes.</p>
+<p>A ideia básica do CSMA é evitar que transmissores atrapalhem transmissões já em andamento — algo que ocorre, por exemplo, no ALOHA Puro. Para isso, toda vertente do CSMA realiza uma operação fundamental chamada de <strong>detecção de portadora</strong>. Em termos mais simples, isso significa que, antes de iniciar a transmissão de um quadro, o transmissor <em>ouve o meio</em>. Se o transmissor percebe que o meio já está em uso, ele adia sua própria transmissão. A principal diferença entre as várias vertentes do CSMA se concentra justamente em como esse adiamento é realizado.</p>
+<p>Nesse material, estudaremos três vertentes do CSMA: o CSMA Persistente, o CSMA Não Persistente e o CSMA p-Persistente. O termo <em>persistência</em>, nesse contexto, se refere quão agressivamente o transmissor tenta iniciar sua transmissão. Em geral, tecnologias específicas implementam especializações de uma dessas três versões. Assim, uma boa compreensão do funcionamento e propriedade dessas três vertentes simplifica o entendimento das versões implementadas pelas tecnologias de comunicação.</p>
+<h2 id="csma-persistente">CSMA Persistente</h2>
+<p>Das três vertentes que estudaremos nesse material, o CSMA Persistente é o mais agressivo. Isso se reflete em duas situações:</p>
+<ol type="1">
+<li>Ao ouvir o meio inicialmente, se o nó percebe o canal ocioso, ele inicia sua transmissão imediatamente.</li>
+<li>Por outro lado, se o nó percebe o meio ocupado, ele continua ouvindo o meio até que esse se torne ocioso: quando isso ocorre, o nó imediatamente inicia sua transmissão.</li>
+</ol>
+<p>Em qualquer que seja o caso, uma vez iniciada a transmissão, o transmissor precisa, de alguma forma, determinar se houve colisão. Nesse material, não entraremos no mérito de como isso é realizado — as variantes do CSMA usadas pelo Ethernet e pelo Wi-Fi diferem nesse ponto, por exemplo. Assumiremos apenas que o transmissor conseguirá determinar isso. Caso a transmissão não tenha sofrido colisão, o transmissor considera o processo terminado. Do contrário, o nó inicia um processo de <em>backoff</em> aleatório: ele sorteia um tempo pelo qual se absterá de tentar acessar o meio novamente. Ao final do período de <em>backoff</em>, o transmissor tenta realizar uma retransmissão do quadro, seguindo exatamente o mesmo procedimento da tentativa original.</p>
+<p>Em resumo, o funcionamento do CSMA Persistente pode ser resumido no seguinte fluxograma:</p>
+<p><img src="imagens/CSMAPersistente.svg" id="csmapersistente" width="300" /></p>
+<h2 id="csma-não-persistente">CSMA Não Persistente</h2>
+<p>Em relação à versão persistente, o CSMA Não Persistente difere pelo comportamento do transmissor ao encontrar o meio ocupado durante a detecção de portadora. Ao invés de continuar monitorando o meio até que esse se torne livre e, em seguida, transmitir imediatamente, no CSMA Não Persistente o transmissor entra em processo de <em>backoff</em> aleatório. Apenas após esse período de <em>backoff</em>, o transmissor volta a realizar a detecção de portadora e, se o meio estiver livre, realizar a transmissão.</p>
+<p>Como um todo, o funcionamento do CSMA Não Persistente é ilustrado a seguir:</p>
+<p><img src="imagens/CSMANaoPersistente.svg" id="csmanaopersistente" width="360" /></p>
+<p>Contrastando o funcionamento das versões persistente e não persistente, percebe-se que a segunda é muito mais “cuidadosa” em relação ao acesso ao meio. Esse cuidado adicional tem como efeito reduzir a probabilidade de ocorrência de colisões. Isso porque, quando o meio se encontra ocupado, há uma tendência de acumulação de demanda: outros nós podem passar a querer transmitir. Quando isso ocorre no CSMA Persistente, esses vários transmissores passarão a aguardar o final da transmissão atual para começaram as suas. Isso gera em certo efeito de sincronização das tentativas de transmissão, o que contribui para a ocorrência de colisões.</p>
+<p>Por outro lado, essa redução na probabilidade de colisão obtida no CSMA Não Persistente vem a um custo: a possibilidade de aumentar o ociosidade do canal. Considere, por exemplo, uma situação em que há uma transmissão em curso e apenas um outro nó deseja transmitir. Nesse caso, como não há competição, não há qualquer risco de colisão no CSMA Persistente. Por outro lado, o CSMA Não Persistente determina a execução de um <em>backoff</em> aleatório que pode exceder o tempo restante da transmissão em curso. Assim, no tempo entre o final da transmissão em curso e o final do período de <em>backoff</em>, o enlace ficará ocioso. Assim como as colisões, os períodos de ociosidade do enlace constituem desperdício de recursos e, em última análise, queda no desempenho.</p>
+<h2 id="csma-p-persistente">CSMA p-Persistente</h2>
+<p>O CSMA p-Persistente tem um comportamento intermediário às duas vertentes anteriores. Como todo CSMA, o p-Persistente inicia seu funcionamento ouvindo o meio de transmissão. Nesse ponto, se o meio se encontra ocupado, o p-Persistente age como a vertente persistente: continua ouvindo o meio até que esse se torne ocioso.</p>
+<p>Em algum momento — seja inicialmente, seja depois de algum tempo — o transmissor deve encontrar o meio livre. Nesse momento, o funcionamento do CSMA p-Persistente passa a ser (potencialmente) diferente daquele da versão persistente. Enquanto na versão persistente, o transmissor sempre transmite imediatamente quando o meio se torna ocioso, no p-Persistente usa-se aleatoriedade para decidir quando transmitir. Em particular, o CSMA p-Persistente tem um parâmetro <span class="math inline">\(p\)</span> — daí o nome do protocolo — que representa a probabilidade de iniciar a transmissão uma vez que o meio se torna livre. Quando o meio se torna ocioso inicialmente, o CSMA p-Persistente toma uma decisão aleatória de transmitir com probabilidade <span class="math inline">\(p\)</span><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> — o que quer dizer que ele não transmitirá com probabilidade <span class="math inline">\(1-p\)</span>.</p>
+<p>Se o nó decide não transmitir, ele aguarda um tempo padronizado denominado <em>slot</em><a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>. Ao final desse período, o nó volta a ouvir o meio. Se o meio continua livre, ele novamente toma a decisão aleatória de transmitir com probabilidade <span class="math inline">\(p\)</span>, e o ciclo se repete. Se, durante esse ciclo, em algum momento o nó percebe o meio ocupado, o nó realiza um <em>backoff</em> aleatório. Ao final desse <em>backoff</em>, o nó volta ao estado inicial de detecção de portadora.</p>
+<p>Quando o nó finalmente consegue efetuar sua transmissão, ele verifica se houve colisão. Caso tenha havido, ele realiza um <em>backoff</em> aleatório e volta ao estado inicial de detecção de portadora.</p>
+<p>O fluxograma abaixo sumariza esse algoritmo:</p>
+<p><img src="imagens/CSMAPPersistente.svg" id="csmappersistente" width="650" /></p>
+<p>Repare que, nesse fluxograma, há dois contextos diferentes em que o nó realiza detecção de portadora. O primeiro contexto ocorre no início de uma tentativa de transmissão do pacote. Nesse caso, o comportamento do CSMA p-Persistente é o mesmo do CSMA Persistente. Depois que o meio se torna livre nesse primeiro momento, há um segundo uso da detecção de portadora que acontece na porção probabilística do algoritmo: enquanto a decisão probabilística de iniciar a transmissão não ocorre, o nó realiza uma nova detecção de portadora a cada <em>slot</em>.</p>
+<p>Nesse segundo contexto, o comportamento do CSMA p-Persistente se aproxima daquele do CSMA Não Persistente. Isso porque, caso o meio se torne ocupado novamente, o nó migra para um estado de <em>backoff</em> aleatório — ao invés de aguardar que o meio fique ocioso novamente, como na vertente Persistente.</p>
+<p>Ao analisar o CSMA p-Persistente, é importante entendermos o papel do parâmetro <span class="math inline">\(p\)</span>. Note que, se <span class="math inline">\(p = 1\)</span>, quando o processo inicial de detecção de portadora aponta o meio livre, o nó transmite imediatamente. Isso significa que, para <span class="math inline">\(p = 1\)</span>, o CSMA p-Persistente se comporta de maneira idêntica ao CSMA Persistente. Por esse motivo, o CSMA Persistente é muitas vezes chamado de CSMA 1-Persistente.</p>
+<p>Por outro lado, à medida que reduzimos o valor de <span class="math inline">\(p\)</span>, o CSMA p-Persistente se torna menos agressivo. Mesmo depois que o meio se torna livre inicialmente, o nó pode abrir mão de tentar transmitir imediatamente a depender do valor sorteado (e do valor exato da probabilidade <span class="math inline">\(p\)</span>). Essa característica mitiga o problema da sincronização de múltiplos transmissores quando o canal está ocupado, que pode levar a um excesso de colisões no CSMA Persistente.</p>
+<p>Assim como no CSMA Não Persistente, esse maior cuidado no acesso ao meio pode resultar em aumento da ociosidade do canal. Entretanto, no CSMA p-Persistente essa agressividade é configurável através do parâmetro <span class="math inline">\(p\)</span>, algo que as duas outras versões não permitem.</p>
+<h2 id="discussão-e-exercícios-de-fixação">Discussão e Exercícios de Fixação</h2>
+<p>Nesse material, estudamos como funcionam três vertentes do CSMA. É possível encontrar implementações práticas de cada uma dessas vertentes, geralmente com pequenas alterações em certos componentes — por exemplo, como o tempo de <em>backoff</em> é calculado e/ou contado, como se determina se houve ou não colisão. Além dessas implementações ligeiramente diferentes, existe ainda uma quarta estratégia de persistência chamada de <em>CSMA O-persistente</em>, que não abordaremos aqui. A existência e implementação prática de todas essas vertentes levanta a dúvida: por que há tantas variantes desse mesmo protocolo base?</p>
+<p>Um dos motivos está no <em>tradeoff</em> entre colisões e ociosidade. Vertentes mais agressivas resultam em mais colisões em troca de menos ociosidade. Para certas tecnologias, o custo associado à ocorrência de uma colisão é mais alto que para outras. Um exemplo disso são as tecnologias Ethernet e Wi-Fi: por motivos que serão estudados posteriormente, colisões afetam muito menos o desempenho do Ethernet que do Wi-Fi. Assim, faz sentido para o Ethernet utilizar um CSMA agressivo. Para o Wi-Fi, por outro lado, é melhor utilizar uma vertente mais cuidadosa, porque pequenos períodos de ociosidade são menos danosos ao seu desempenho que as colisões. Não por acaso, o CSMA utilizado pelo Ethernet é uma variação da versão Persistente, enquanto o Wi-Fi implementa uma variação da versão Não Persistente.</p>
+<p>Considerando tudo o que você viu nesse material, responda as seguintes questões:</p>
+<ol type="1">
+<li>Suponha que você administre um enlace de comunicação que suporta ambos os modos Persistente e Não Persistente do CSMA. Assuma que, como administrador, você possa chavear entre esses dois modos quando quiser. Se, em dado momento, você percebe que há pouca utilização do enlace, qual dos dois modos você utilizaria?</li>
+<li>Volte ao item anterior e assuma agora que a utilização do enlace está muito elevada. Sua resposta mudaria?</li>
+<li>Vimos que o parâmetro <span class="math inline">\(p\)</span> controla o nível de agressividade do CSMA p-Persistente. Também vimos que o CSMA Persistente é muito agressivo, enquanto o CSMA Não Persistente é pouco agressivo. Finalmente, lembre-se que, para <span class="math inline">\(p=1\)</span>, a operação do CSMA p-Persistente se torna idêntica àquela do CSMA Persistente. Podemos, então, afirmar que com <span class="math inline">\(p=0\)</span> o CSMA p-Persistente é equivalente ao CSMA Não Persistente?</li>
+</ol>
+<section class="footnotes" role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1" role="doc-endnote"><p>Na prática, isso pode ser feito da seguinte forma. O nó sorteia um número (uniformemente distribuído) entre 0 e 1. Se o valor sorteado for menor que <span class="math inline">\(p\)</span>, então o nó realiza a transmissão. Caso contrário, o nó não transmite naquele momento.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2" role="doc-endnote"><p>A duração de um <em>slots</em> geralmente é configurada de acordo com o atraso de propagação do enlace. É comum que o <em>slot</em> seja equivalente a duas vezes o atraso de propagação máximo no enlace.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+</body>
+</html>
