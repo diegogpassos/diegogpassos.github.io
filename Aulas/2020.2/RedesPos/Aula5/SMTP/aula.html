@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>SMTP</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+  </style>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<h1 id="smtp">SMTP</h1>
+<p>O protocolo SMTP é parte fundamental da aplicação de e-mail na Internet. Ele é responsável pela <strong>transmissão</strong> de mensagens de e-mail — em oposição à <strong>leitura</strong> dos e-mails por parte do receptor, que é viabilizada por outros protocolos.</p>
+<p>Assim como no HTTP, o SMTP é baseado em mensagens texto. Isso traz os mesmos benefícios e problemas que no caso do HTTP: maior legibilidade e facilidade de implementação e depuração das aplicações, ao custo de uma menor eficiência na representação das informações trocadas — em termos de tamanho. Nesse material, exploraremos essa característica do SMTP para estudar em mais detalhes esse protocolo. Em particular, veremos alguns exemplos e experimentos com interações entre cliente e servidor SMTP.</p>
+<h2 id="um-exemplo-de-interação-smtp">Um Exemplo de Interação SMTP</h2>
+<p>Começaremos esse aprofundamento com a análise de uma interação SMTP hipotética. Na seção seguinte, veremos uma demonstração utilizando um servidor SMTP real.</p>
+<p>Nesse exemplo, adaptado do material do livro-texto usado na disciplina, assumiremos que uma pessoa chamada Alice deseja enviar um e-mail para outra pessoa chamada Bob. O e-mail da Alice é <code>alice@crepes.fr</code>, enquanto Bob tem o endereço de e-mail <code>bob@hamburger.edu</code>.</p>
+<p>O processo começa com a composição da mensagem de e-mail por parte de Alice. Muito provavelmente isso será feito através de algum cliente de e-mail — seja um serviço de <em>webmail</em>, seja um software executado localmente no computador de Alice. Mais formalmente, esse <em>software</em> cliente é chamado de <em>user agent</em>.</p>
+<p>Em todo caso, quando a mensagem está pronta para envio, o <em>user agent</em> da Alice abrirá uma conexão TCP destinada ao servidor de e-mail da própria Alice — o servidor responsável pelo serviço de e-mail do domínio <code>crepes.fr</code> —, muito provavelmente na porta 25, que é a porta padronizada para o SMTP. Nesse ponto, o <em>user agent</em> da Alice fará a comunicação com o servidor usando as mensagens previstas no protocolo SMTP. Assumindo que não haja nenhum problema nessa iteração — discutiremos alguns possíveis problemas ao final desse material —, o servidor de e-mail da Alice passará a ficar responsável pelo envio da mensagem até o servidor de Bob.</p>
+<p>Em algum momento no futuro<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>, o servidor de e-mail da Alice tentará contactar o servidor de e-mail de Bob para transferir a mensagem. Para isso, o servidor de Alice abre uma conexão TCP com destino ao servidor de e-mail de Bob, provavelmente na porta 25, e inicia uma nova interação SMTP. Observe, portanto, que o envio de um único e-mail pode incluir — e normalmente inclui — múltiplas interações SMTP. Além disso, é interessante notar que, na primeira interação, o servidor de e-mail da Alice atuava efetivamente como servidor. Por outro lado, nessa segunda interação, ele atua como um cliente.</p>
+<p>Na listagem abaixo, vemos um exemplo hipotético de como essa interação SMTP ocorre. As linhas prefixadas de <code>S:</code> denotam mensagens enviadas do servidor para o cliente. Já as linhas prefixadas por <code>C:</code> denotam mensagens no sentido oposto.</p>
+<pre><code>S: 220 hamburger.edu
+C: HELO crepes.fr
+S: 250 Hello crepes.fr, pleased to meet you
+C: MAIL FROM: &lt;alice@crepes.fr&gt;
+S: 250 alice@crepes.fr... Sender ok
+C: RCPT TO: &lt;bob@hamburger.edu&gt;
+S: 250 bob@hamburger.edu ... Recipient ok
+C: DATA
+S: 354 Enter mail, end with &quot;.&quot;. on a line by itself
+C: Do you like ketchup?
+C: How about pickles?
+C: .
+S: 250 Message accepted for delivery
+C: QUIT
+S: 221 hamburger.edu closing connection</code></pre>
+<p>Uma primeira diferença clara entre SMTP e HTTP está na quantidade e tamanho das mensagens trocadas. Toda essa iteração mostrada acima diz respeito à transferência de uma única mensagem de e-mail. Entretanto, ao contrário do que ocorre no HTTP, que utiliza um único par requisição-resposta para transferir cada objeto, no SMTP há a troca de várias mensagens. Cada mensagem, por outro lado, é relativamente pequena: a título de ilustração, a mensagem mais longa desse exemplo não chega a 50 caracteres ASCII.</p>
+<p>Outro aspecto que pode ser observado é que as mensagens do SMTP são bastante <em>human-readable</em>: não só o protocolo é baseado em mensagens texto, como há várias frases com sentido completo em inglês (<em>e.g.</em>, “<em>pleased to meet you</em>”, “<em>Enter mail, end with ".". on a line by itself</em>”). Repare, por outro lado, que todas as mensagens enviadas pelo servidor são prefixadas de um código numérico. De forma análoga, com exceção do conteúdo da mensagem em si, todas as mensagens do cliente são iniciadas com algum tipo de identificador (<em>e.g.</em>, <code>DATA</code>, <code>QUIT</code>, <code>MAIL FROM</code>). Isso indica que o objetivo das porções mais descritivas das mensagens, escritas em linguagem natural, não é a interpretação pelos programas cliente e servidor. Ao contrário, essa interpretação do significado de cada mensagem é baseada nos códigos numéricos e nos identificadores de tipo.</p>
+<p>Começando pela primeira mensagem enviada na interação, notamos que ela é enviada do servidor para o cliente. Trata-se apenas de uma mensagem de boas-vindas, em que o servidor se apresenta como o servidor de e-mail responsável pelo domínio fictício <code>hamburger.edu</code>. Igualmente, na mensagem subsequente o cliente também se apresenta enviando o comando <code>HELO</code> seguido do seu nome de domínio. Na mensagem seguinte, o servidor confirma que recebeu a mensagem de identificação anterior utilizando o código de resposta 250 <a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>.</p>
+<p>Após essa fase inicial de apresentações, a interação passa para uma fase na qual o cliente pode transferir uma ou mais mensagens de e-mail para o servidor. No exemplo acima, há a transferência de uma única mensagem e isso ocorre da linha 4 à linha 13 (inclusive). Essa fase começa com a especificação do remetente por parte do cliente. Isso é feito com o comando <code>MAIL FROM</code>, no qual o cliente especifica o endereço de e-mail do remetente. Nesse ponto, o servidor pode realizar algum tipo de verificação desse remetente e, estando de acordo, ele envia uma resposta com código 250. Em seguida, o cliente utiliza o comando <code>RCPT TO</code> para identificar o endereço de e-mail do destinatário. Mais uma vez, o servidor realiza verificações — <em>e.g.</em>, esse usuário existe? — e, nesse exemplo, envia uma nova resposta de sucesso.</p>
+<p>Nesse ponto, o cliente utiliza o comando <code>DATA</code> para sinalizar que deseja começar a enviar o conteúdo da mensagem. Embora o código retornado na pelo servidor não esteja na faixa de 200 a 299, esse código em particular não representa um erro. Na verdade, o código 354 indica apenas que o servidor está de acordo com o início da transferência do conteúdo da mensagem e solicita que o cliente prossiga.</p>
+<p>Nas duas linhas subsequentes, o cliente faz justamente isso: as <em>strings</em> <code>Do you like ketchup?</code> e <code>How about pickles?</code> correspondem ao conteúdo do e-mail transferido, e não a mensagens do protocolo SMTP. Repare que o servidor não confirma o recebimento de cada linha da mensagem. Ao contrário, ele simplesmente espera que o cliente conclua o envio de todo o conteúdo.</p>
+<p>Mas como o servidor sabe quando a mensagem termina? A resposta para essa pergunta está na própria mensagem descritiva provida na resposta do servidor ao comando DATA. Essa mensagem diz ao cliente que ele deve marcar o final da mensagem com uma linha contendo apenas um caractere “<code>.</code>” sozinho<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>.</p>
+<p>Após o cliente enviar esse marcador de fim da mensagem, o servidor responde com o código 250, indicando que aceitou a mensagem para envio — em certas situações, o servidor pode rejeitar uma mensagem. Nesse ponto, se o cliente possui mais mensagens a serem enviadas por aquele servidor, ele deve repetir o mesmo processo, desde o comando <code>MAIL FROM</code>. Um número arbitrário de mensagens podem ser transferidas em uma mesma interação SMTP.</p>
+<p>Nesse exemplo em particular, o cliente não deseja enviar transferir outras mensagens. Por isso, após receber a resposta de aceite da mensagem por parte do servidor, o cliente envia o comando <code>QUIT</code>, indicando que deseja encerrar a interação. O servidor, por sua vez, confirma o encerramento enviando uma resposta com código 221. Nesse ponto, a conexão TCP pode ser encerrada.</p>
+<h2 id="experimentando-com-o-smtp">Experimentando com o SMTP</h2>
+<p>Agora que estamos familiarizados com os tipos de mensagens utilizadas em uma interação SMTP típica, podemos fazer alguns experimentos. Em particular, tentaremos realizar uma conexão a um servidor de e-mail real e tentaremos enviar um e-mail para uma conta de um usuário existente. Para isso, assim como no material referente a requisições HTTP, utilizaremos o programa <code>telnet</code>, que nos permitirá digitar os comandos a serem enviados ao servidor e visualizar as respostas correspondentes de forma interativa.</p>
+<p>Nesse exemplo, enviaremos um e-mail de teste para um usuário de um serviço de e-mail popular. A interação pode ser vista no vídeo abaixo:</p>
+<p><video src="videos/DemoSMTPLowerRes.mov" controls=""><a href="videos/DemoSMTPLowerRes.mov">Video</a></video></p>
+<p>Repare que a demonstração acima começa com o estabelecimento da conexão com o servidor de e-mail do destinatário:</p>
+<pre><code>telnet mta6.am0.yahoodns.net 25</code></pre>
+<p>Foge ao escopo desse material entender como o nome do servidor foi obtido. Isso ficará mais claro ao estudarmos o funcionamento do DNS.</p>
+<p>De toda forma, o servidor aceita a conexão e se apresenta. Em seguida, o cliente também se apresenta, especificando um nome de domínio fictício. Mesmo assim, o servidor responde de forma positiva e a interação prossegue.</p>
+<p>O cliente, então, começa a enviar as informações sobre a mensagem a ser transferida, começando pelos endereços do destinatário e do remetente. Nesse exemplo, o destinatário corresponde a uma conta de e-mail real desse servidor, mas o remetente é, novamente, fictício.</p>
+<p>Desse ponto em diante, a interação entre cliente e servidor nessa demonstração se torna bastante similar àquela apresentada no exemplo da seção anterior. No final da interação, o servidor aceita a mensagem e o cliente envia o comando QUIT, encerrando a conexão.</p>
+<p>Nesse ponto do vídeo, mostra-se o <em>webmail</em> do destinatário da mensagem. Em particular, o vídeo mostra que a mensagem foi, de fato, recebida pelo usuário — embora tenha sido colocada na pasta de <em>spam</em>.</p>
+<p>Outra observação interessante é que, no corpo do e-mail exibido pelo webmail a linha imediatamente subsequente à frase “Abaixo, uma linha com apenas um ponto:” contém um único ponto, ao invés de dois como ocorre no conteúdo bruto enviado para o servidor. Isso mostra justamente a necessidade de codificação especial, quando desejamos incluir no e-mail uma linha com um único ponto — que, de outra forma, denotaria o final da mensagem.</p>
+<h2 id="formato-de-uma-mensagem-de-e-mail">Formato de uma Mensagem de E-mail</h2>
+<p>Na demonstração do vídeo da seção anterior, é interessante notar que metadados, como o assunto da mensagem, são exibidos de corretamente pelo webmail. Mas de onde o webmail tirou essa informação de assunto? Se compararmos o conteúdo da mensagem enviado nesse exemplo com o conteúdo da mensagem do primeiro exemplo, podemos notar algumas linhas peculiares:</p>
+<pre><code>To: Fernanda &lt;nandagooliveira@yahoo.com.br&gt;
+From: Teste &lt;teste@teste&gt;
+Subject: E-mail de teste</code></pre>
+<p>Assim como uma requisição HTTP, uma <strong>mensagem</strong> de e-mail pode conter cabeçalhos, que especificam metadados relativos a como essa mensagem é interpretada pelos <em>user agents</em>. Note que esses cabeçalhos <strong>não são do SMTP, mas sim do e-mail em si</strong>. Em particular, a RFC 5322 define o formato de uma mensagem de e-mail, incluindo a previsão para esses e outros cabeçalhos<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>.</p>
+<p>Note ainda que os campos de cabeçalho <code>To</code> e <code>From</code> da mensagem são independentes dos comandos <code>MAIL FROM</code> e <code>RCPT TO</code> do SMTP. Isso significa que poderíamos ter especificado outros valores quaisquer para os campos <code>To</code> e <code>From</code> na mensagem em si, e essa ainda seria entregue ao usuário identificado pelo endereço de e-mail no comando <code>RCPT TO</code>. A diferença estaria apenas nas informações exibidas pelo webmail para esses campos.</p>
+<p>Ainda de forma análoga ao que ocorre em uma mensagem HTTP, os cabeçalhos de uma mensagem de e-mail devem ser terminados por uma linha em branco. Após essa linha em branco, começa o corpo da mensagem.</p>
+<p>Um detalhe importante aqui é que o SMTP só suporta mensagens que usam caracteres ASCII. A tabela ASCII só contém 128 caracteres — correspondendo aos bytes de valor 0 a 127, inclusive. Em particular, não existem caracteres acentuados na tabela ASCII. Dessa forma, duas perguntas importantes surgem:</p>
+<ol type="1">
+<li>Como podemos incluir caracteres acentuados em uma mensagem de e-mail?</li>
+<li>Como podemos incluir conteúdos binários (<em>e.g.</em>, um arquivo PDF) em um e-mail?</li>
+</ol>
+<p>De forma geral, a resposta para ambas as perguntas é a mesma: utilizamos algum esquema de codificação utilizando apenas caracteres ASCII para representar os caracteres acentuados e os conteúdos binários. Mais concretamente, podemos ver abaixo um trecho da versão bruta do corpo de uma mensagem de e-mail que contém ambos os elementos — caracteres acentuados e um arquivo binário anexado:</p>
+<pre><code>--0000000000008262cf05af604081
+Content-Type: text/plain; charset=&quot;UTF-8&quot;
+Content-Transfer-Encoding: quoted-printable
+
+Esse =C3=A9 um teste de e-mail com a finalidade de ilustrar como caracteres
+acentuados e dados bin=C3=A1rios s=C3=A3o representados em uma mensagem de =
+e-mail,
+dado que o SMTP s=C3=B3 consegue trabalhar com mensagens contendo caractere=
+s
+ASCII de 7 bits.
+
+Repare o arquivo anexado.
+
+--0000000000008262cf05af604081
+Content-Type: text/html; charset=&quot;UTF-8&quot;
+Content-Transfer-Encoding: quoted-printable
+
+&lt;div dir=3D&quot;ltr&quot;&gt;&lt;div&gt;Esse =C3=A9 um teste de e-mail com a finalidade de il=
+ustrar como caracteres acentuados e dados bin=C3=A1rios s=C3=A3o representa=
+dos em uma mensagem de e-mail, dado que o SMTP s=C3=B3 consegue trabalhar c=
+om mensagens contendo caracteres ASCII de 7 bits.&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;=
+Repare o arquivo anexado.&lt;/div&gt;&lt;/div&gt;
+
+--0000000000008262cf05af604081--
+--0000000000008262d105af604083
+Content-Type: application/pdf; name=&quot;Aula5.pdf&quot;
+Content-Disposition: attachment; filename=&quot;Aula5.pdf&quot;
+Content-Transfer-Encoding: base64
+Content-ID: &lt;f_kf4ffk4b0&gt;
+X-Attachment-Id: f_kf4ffk4b0
+
+JVBERi0xLjcNCiW1tbW1DQoxIDAgb2JqDQo8PC9UeXBlL0NhdGFsb2cvUGFnZXMgMiAwIFIvTGFu
+Zyhlbi1HQikgL1N0cnVjdFRyZWVSb290IDc2IDAgUi9NYXJrSW5mbzw8L01hcmtlZCB0cnVlPj4v
+TWV0YWRhdGEgMTE0MSAwIFIvVmlld2VyUHJlZmVyZW5jZXMgMTE0MiAwIFI+Pg0KZW5kb2JqDQoy
+IDAgb2JqDQo8PC9UeXBlL1BhZ2VzL0NvdW50IDE3L0tpZHNbIDMgMCBSIDExIDAgUiAxMyAwIFIg
+MjQgMCBSIDI2IDAgUiAzMCAwIFIgNDQgMCBSIDQ2IDAgUiA1MCAwIFIgNTIgMCBSIDU0IDAgUiA2
+MCAwIFIgNjIgMCBSIDY2IDAgUiA3MCAwIFIgNzIgMCBSIDc0IDAgUl0gPj4NCmVuZG9iag0KMyAw
+...</code></pre>
+<p>As primeiras três linhas — assim como outras linhas similares ao longo da mensagem — foram introduzidas pelo <em>user agent</em> do <em>software</em> usado para compor a mensagem. Elas marcam o início de uma <em>parte</em> da mensagem. Esse conceito de partes permite, entre outras coisas, a inclusão de anexos em uma mensagem de e-mail. Basicamente, o corpo da mensagem é dividido em várias partes (<em>e.g.</em>, texto principal, uma parte para cada anexo), cada uma delimitada por um certo marcador. No exemplo acima, o <em>user agent</em> definiu o marcador <code>0000000000008262cf05af604081</code> como o delimitador do texto principal da mensagem. Já o arquivo anexado é delimitado pelo marcador <code>0000000000008262d105af604083</code>.</p>
+<p>Além do marcador, o início de uma parte sempre especifica metadados que nos dizem como interpretar o seu conteúdo. No exemplo acima, o texto principal do corpo do e-mail foi enviado em duas versões diferentes: uma em texto plano e outra em HTML. Isso é informado nas linhas:</p>
+<pre><code>Content-Type: text/plain; charset=&quot;UTF-8&quot;</code></pre>
+<p>e</p>
+<pre><code>Content-Type: text/html; charset=&quot;UTF-8&quot;</code></pre>
+<p>Vamos nos concentrar no momento na versão de texto plano. Repare como as linhas acima especificam um <em>charset</em>, ou seja, uma codificação de caracteres. Em particular, nesse exemplo, utiliza-se a codificação UTF-8, que suporta caracteres acentuados. No entanto, caracteres UTF-8 podem conter bytes com valor acima de 127, o que não é permitido pelo SMTP. Para resolver esse problema, o <em>user agent</em> informa na linha subsequente que a mensagem utiliza um <code>Content-Transfer-Encoding</code> do tipo <code>quoted-printable</code>. Na prática, isso significa que bytes com valor acima de 127 são codificados usando apenas caracteres ASCII. Um exemplo pode ser visto logo na primeira linha do conteúdo em si:</p>
+<pre><code>Esse =C3=A9 um teste de e-mail com a finalidade de ilustrar como caracteres</code></pre>
+<p>A <em>string</em> <code>=C3=A9</code> na verdade denota o caractere “é” na codificação UTF-8. Mais especificamente, essa <em>string</em> indica que o próximo trecho do texto deve ser tratado como um caractere correspondente ao valor hexadecimal <code>C3A9</code>. Consultado uma tabela UTF-8, podemos ver que se trata justamente do caractere “é”. Outro exemplo pode ser visto no trecho <code>e dados bin=C3=A1rios</code>: aqui, a <em>string</em> <code>=C3=A1</code> indica que devemos tratar esse trecho como o caractere UTF-8 correspondente ao valor hexadecimal <code>C3A1</code>. Uma rápida consulta a uma tabela UTF-8 revela que se trata do caractere “á”, o que implica que esse trecho corresponde, na realidade, à <em>string</em> “e dados binários”.</p>
+<p>Por fim, repare agora na parte da mensagem delimitada pelo marcador <code>0000000000008262d105af604083</code>. Os metadados dessa parte são:</p>
+<pre><code>Content-Type: application/pdf; name=&quot;Aula5.pdf&quot;
+Content-Disposition: attachment; filename=&quot;Aula5.pdf&quot;
+Content-Transfer-Encoding: base64
+Content-ID: &lt;f_kf4ffk4b0&gt;
+X-Attachment-Id: f_kf4ffk4b0</code></pre>
+<p>Eles indicam que o conteúdo dessa parte é um PDF chamado “Aula5.pdf” (<code>Content-Type: application/pdf; name="Aula5.pdf"</code>), inserido no e-mail na forma de um anexo (<code>Content-Disposition: attachment</code>). A terceira linha de metadados especifica que esse conteúdo será representado utilizando uma codificação chamada de “base64”.</p>
+<p>Não faz parte do escopo desse material detalhar o funcionamento dessa codificação. No entanto, apenas para entendermos o exemplo, basta sabermos que a base64 representa cada sequência de 6 bits do conteúdo como um caractere ASCII dentro de um conjunto de 64 caracteres distintos — letras maiúsculas, minúsculas, algarismos, além dos caracteres “+” e “/”. Esses são justamente os caracteres vistos na representação do arquivo PDF em questão:</p>
+<pre><code>JVBERi0xLjcNCiW1tbW1DQoxIDAgb2JqDQo8PC9UeXBlL0NhdGFsb2cvUGFnZXMgMiAwIFIvTGFu
+Zyhlbi1HQikgL1N0cnVjdFRyZWVSb290IDc2IDAgUi9NYXJrSW5mbzw8L01hcmtlZCB0cnVlPj4v
+TWV0YWRhdGEgMTE0MSAwIFIvVmlld2VyUHJlZmVyZW5jZXMgMTE0MiAwIFI+Pg0KZW5kb2JqDQoy
+IDAgb2JqDQo8PC9UeXBlL1BhZ2VzL0NvdW50IDE3L0tpZHNbIDMgMCBSIDExIDAgUiAxMyAwIFIg
+MjQgMCBSIDI2IDAgUiAzMCAwIFIgNDQgMCBSIDQ2IDAgUiA1MCAwIFIgNTIgMCBSIDU0IDAgUiA2
+MCAwIFIgNjIgMCBSIDY2IDAgUiA3MCAwIFIgNzIgMCBSIDc0IDAgUl0gPj4NCmVuZG9iag0KMyAw
+...</code></pre>
+<h2 id="spams-e-restrições-dos-servidores-smtp-modernos">Spams e Restrições dos Servidores SMTP Modernos</h2>
+<p>No contexto do serviço de e-mail, um spam é definido genericamente como uma mensagem indesejada/não solicitada. Spammers geralmente enviam esse tipo de mensagem em grandes volumes. Além de constituir um inconveniente para os usuários do serviço de e-mail, o grande volume de spams gerados hoje na Internet causa problemas ao consumir recursos da rede e dos servidores de e-mail. Com isso, a prevenção de spams é hoje um desafio bastante relevante e grandes serviços de e-mail constantemente buscam novas formas de detectar e coibir esse tipo de mensagem.</p>
+<p>De forma simplificada, podemos dividir os esforços para combater spams em duas fases:</p>
+<ol type="1">
+<li>A análise de características da conexão para decidir se o servidor deve ou não aceitá-las <em>durante</em> a interação do SMTP.</li>
+<li>A análise das mensagens para decidir como classificá-las — spam ou não — depois que a mensagem é aceita na interação do SMTP.</li>
+</ol>
+<p>Um aspecto curioso no vídeo de demonstração acima é que a mensagem enviada, embora aceita pelo servidor durante a conexão SMTP, foi direcionada para a pasta de spams do usuário destinatário. Servidores de e-mail modernos são tipicamente configurados para passar todas as mensagens recebidas via SMTP por um software anti-spam que analisa características da mensagem para classificá-la. Essas características geralmente incluem metadados adicionados pelo próprio servidor SMTP, como o horário em que a mensagem foi recebida e o endereço IP ou nome do <em>host</em> que a enviou.</p>
+<p>Há uma grande gama de abordagens para essa análise. Há, por exemplo, <em>softwares</em> que contém grandes bases de regras que descrevem elementos que geralmente são encontrados em mensagens de spam. Há também abordagens mais sofisticadas baseadas em inteligência artificial que são capazes de aprender ao longo do tempo o que constitui ou não um spam. Em geral, grandes serviços de e-mail utilizam essa segunda abordagem.</p>
+<p>No vídeo de demonstração, em particular, havia vários elementos suspeitos na mensagem enviada. Por exemplo, o domínio fornecido tanto no endereço de e-mail do remetente, quanto no comando <code>HELO</code> do SMTP eram forjados, algo facilmente verificável por um <em>software</em> anti-spam.</p>
+<p>Entretanto, é comum que servidores rejeitem mensagens suspeitas já durante a conexão SMTP. Por exemplo, certos servidores possuem restrições quando ao <em>host</em> do cliente: se o endereço do <em>host</em> não casa com o domínio informado no comando <code>HELO</code>, o servidor rejeita a mensagem. Alguns servidores podem ir um passo além e verificar se o <em>host</em> cliente corresponde ao servidor de e-mail daquele domínio — uma informação que pode ser obtida via DNS. É comum também o uso de <em>blacklists</em> mantidas por diversos serviços na Internet que identificam a catalogam <em>hosts</em> com um histórico de enviar mensagens de spam.</p>
+<p>Todos esses fatores dificultam uma execução bem-sucedida de um experimento como o mostrado no vídeo acima, principalmente quando o destinatário escolhido é usuário de um grande serviço de e-mail.</p>
+<section class="footnotes" role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1" role="doc-endnote"><p>Servidores de e-mail contém uma fila das mensagens recebidas para encaminhamento. Quando exatamente a mensagem desse exemplo seria processada depende, entre outros fatores, do tamanho dessa fila.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2" role="doc-endnote"><p>De maneira análoga ao que ocorre no HTTP, as respostas do servidor SMTP sempre contém um código numérico de <em>status</em>. Números entre de 200 a 299 indicam códigos de sucesso. Há outras faixas para denotar outras situações como, por exemplo, códigos de erro. Nesse material, não detalharemos os vários possíveis códigos retornados.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3" role="doc-endnote"><p>E se, por acaso, a mensagem contiver um único ponto sozinho em uma linha? A RFC 5321 provê a solução na Seção 4.5.2. De forma simplificada, a RFC especifica que o cliente deverá verificar o conteúdo da mensagem criada pelo usuário e, se detectar uma linha começando pelo caractere “<code>.</code>”, deverá adicionar outro ponto ao início da linha; o servidor, por sua vez, ao perceber uma linha iniciada por dois caracteres “<code>.</code>” consecutivos, deverá remover um deles.<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4" role="doc-endnote"><p>Na parte final do vídeo, solicita-se que o <em>webmail</em> exiba a versão bruta da mensagem. Note como há outros cabeçalhos, além daqueles enviados pelo cliente. Servidores de e-mail geralmente adicionam vários outros cabeçalhos com informações sobre quando e como aquela mensagem foi recebida.<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+</body>
+</html>
