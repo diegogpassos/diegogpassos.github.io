@@ -49,7 +49,7 @@
 	</center>
 
 	<p>
-		Considere por exemplo a <i>string</i> "RedesII" (sem aspas). Ela resulta em um checksum cujo valor numérico é A219, em hexadecimal, ou 41497, em base 10. Se alterarmos um pouco a <i>string</i> de entrada, especificando agora "RedesI", obtemos como resultado \(EBD5_{(16)} = 60373_{(10)}\). Note que essa alteração aparentemente pequena resultou em uma mudança profunda no valor do checksum calculado.
+		Considere por exemplo a <i>string</i> "RedesII" (sem aspas). Ela resulta em um checksum cujo valor numérico é EB8C, em hexadecimal, ou 60300, em base 10. Se alterarmos um pouco a <i>string</i> de entrada, especificando agora "RedesI", obtemos como resultado \(EBD5_{(16)} = 60373_{(10)}\). Note que essa alteração aparentemente pequena resultou em uma mudança profunda no valor do checksum calculado.
 	</p>
 
 	<p>
@@ -139,7 +139,7 @@
 	
 	<p>Quando estudamos métodos que geram resumos de mensagens (tanto para fins de verificação de erros, quanto para outros propósitos), chamamos de <strong>colisão</strong> a situação de duas ou mais mensagens gerarem um mesmo valor de resumo. Obviamente, para os propósitos de verificação de erros, colisões são acontecimentos indesejados, porque podem levar um receptor a aceitar uma mensagem corrompida. Uma pergunta importante, portanto, é: o quão frequentes são essas colisões no checksum e no CRC.</p>
 	
-	<p>De forma geral, tanto CRC quanto checksum são boas “funções de espalhamento”. Isto é, ambos os métodos têm a propriedade de mapear de forma balanceada as mensagens de entrada nos vários valores possíveis de seus resumos. Por conta desse bom balanceamento, geralmente consideramos que uma mensagem genérica tem igual probabilidade de ser mapeada para cada um dos possíveis valores de resumo. Em um CRC de 32 bits, por exemplo, existem <span class="math inline">2<sup>32</sup></span> possíveis valores de resumo, o que significa que a probabilidade de uma mensagem ter um valor particular de CRC é de <span class="math inline">$\frac{1}{2^{32}} \approx 10^{-9,6}$</span>.</p>
+	<p>De forma geral, tanto CRC quanto checksum são boas “funções de espalhamento”. Isto é, ambos os métodos têm a propriedade de mapear de forma balanceada as mensagens de entrada nos vários valores possíveis de seus resumos. Por conta desse bom balanceamento, geralmente consideramos que uma mensagem genérica tem igual probabilidade de ser mapeada para cada um dos possíveis valores de resumo. Em um CRC de 32 bits, por exemplo, existem <span class="math inline">2<sup>32</sup></span> possíveis valores de resumo, o que significa que a probabilidade de uma mensagem ter um valor particular de CRC é de <span class="math inline">\(\frac{1}{2^{32}} \approx 10^{-9,6}\)</span>.</p>
 	
 	<p>Note que nessa análise não fizemos qualquer referência a como CRC e checksum operam: apenas consideramos o número de bits de seus respectivos resumos. Isso pode sugerir que um CRC e um checksum de mesmo comprimento (digamos, ambos de 16 bits) são igualmente efetivos evitando colisões.</p>
 	
