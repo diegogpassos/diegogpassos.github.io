@@ -63,7 +63,7 @@ Utilize essa aplicação modificando a topologia e/ou os parâmetros de configur
 5. Volte ao cenário do item anterior, mas agora remova exatamente um enlace da topologia, necessariamente entre o *switch* raiz e um dos demais. Houve alteração no tempo de convergência? Todos os *switches* demoram o mesmo tempo para convergir ou algum demorou mais? No segundo caso, qual foi o switch que mais demorou a convergir?
 6. Considere uma vez mais o cenário do item anterior. Continue removendo enlaces da topologia e observe novamente o tempo de convergência. Você consegue observar alguma relação entre alguma característica da topologia e esse tempo?
 
-<iframe src="STP.html" onload="this.style.height=(this.contentWindow.document.body.scrollHeight+40)+ 'px'; this.style.width=(this.contentWindow.document.body.scrollWidth+150)+ 'px';" style="width: 100%;"/>
+<iframe src="STP.html" onload="this.style.height=(this.contentWindow.document.body.scrollHeight+80)+ 'px'; this.style.width=(this.contentWindow.document.body.scrollWidth+50)+ 'px';" style="width: 100%;"/>
 
 
 
