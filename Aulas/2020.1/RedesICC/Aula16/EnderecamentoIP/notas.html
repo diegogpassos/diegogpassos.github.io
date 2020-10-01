@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Endereçamento IPv4</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+  </style>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+  <style type="text/css">
+      .red{
+          color: red;
+      }
+      .blue{
+          color: blue;
+      }
+      table {
+          border-top: 2px double #000;
+          border-bottom: 2px double #000;
+          border-spacing: 0px 2px;
+      }
+      thead > tr > th {
+          border-bottom: 1px solid #000;
+      }
+      th {
+
+          padding-left: 5px;
+          padding-right: 5px;
+      }
+  </style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Endereçamento IPv4</h1>
+</header>
+<p>Muitas vezes diz-se informalmente que o endereço IP é o identificador de um nó na Internet. Na verdade, endereços IP são atribuídos a interfaces de rede, o que significa que se um dispositivo possui múltiplas interfaces — como, por exemplo, um roteador — ele normalmente possuirá múltiplos endereços IP.</p>
+<p>No IPv4, cada endereço possui 32 bits. Na prática, é comum a utilização de uma notação em que os 32 bits são quebrados em quatro bytes — ou <em>octetos</em>, em um jargão comum em Redes de Computadores. Neste caso, o IP é representado pelos valores decimais dos seus octetos separados por pontos, <em>e.g.</em>, <code>200.20.15.166</code>.</p>
+<p>Os endereços IPv4, por sua vez, são organizados nas chamadas <strong>sub-redes</strong>. De uma maneira simplificada — embora não totalmente correta — uma sub-rede diz respeito a um conjunto de interfaces de redes que podem se comunicar sem o intermédio de um roteador. Um corolário desta definição é que o papel de um roteador é conectar sub-redes diferentes, permitindo a comunicação entre dispositivos destas várias sub-redes.</p>
+<p>Em termos de endereçamento, sub-redes correspondem a conjuntos de <span class="math inline">2<sup><em>n</em></sup></span> endereços numericamente subsequentes (considerando-se a representação binária dos 32 bits dos endereços). Em particular, os bits de um endereço IP podem ser quebrados em duas partes: <strong>um prefixo de sub-rede</strong>, denotado pelos bits mais significativos do endereço — <em>i.e.</em>, mais à esquerda — e a identificação da interface dentro daquela sub-rede, denotada pelos bits restantes.</p>
+<p>Uma pergunta imediata é: quantos bits devem ser alocados para o prefixo? Quanto mais bits alocarmos para o prefixo, maior o <strong>número de sub-redes diferentes</strong>. Por outro lado, estas sub-redes serão <strong>menores, <em>i.e.</em> terão menos endereços disponíveis</strong>. Outro fator a se considerar é que nem todas as sub-redes precisam ser do mesmo tamanho. Uma sub-rede utilizada para o endereçamento de dispositivos em uma residência pode ser bem menor que a sub-rede utilizada para endereçar todos os computadores de um grande <em>data-center</em>. Por esta razão, a Internet permite a definição de sub-redes com diferentes tamanhos — o que resulta em comprimentos distintos para os prefixos utilizados.</p>
+<h2 id="endereçamento-baseado-em-classes">Endereçamento Baseado em Classes</h2>
+<p>Originalmente, esta alocação de sub-redes na Internet seguia um padrão de endereçamento chamado de <strong>endereçamento por classes</strong>. A ideia era definir algumas <em>classes</em> de sub-redes padronizadas que fornecessem alguma flexibilidade de tamanho, com o propósito de servir bem a redes <em>pequenas</em>, <em>médias</em> ou <em>grandes</em>. Foram justamente estas noções abstratas de tamanho que guiaram a criação das classes. Em particular, foram criadas as seguintes cinco classes:</p>
+<ol type="1">
+<li><p><strong>Classe A</strong>: utilizada para redes <em>grandes</em>, usava um prefixo de apenas 8 bits, permitindo, portanto, até <span class="math inline">2<sup>24</sup> = 16777216</span> endereços. Todos os prefixos que denotavam sub-redes de Classe A eram iniciados pelo bit 0.</p></li>
+<li><p><strong>Classe B</strong>: utilizada para redes <em>médias</em>, usava um prefixo de 16 bits, permitindo, portanto, até <span class="math inline">2<sup>16</sup> = 65536</span> endereços. Todos os prefixos que denotavam sub-redes de Classe A eram iniciados pelos bits 10.</p></li>
+<li><p><strong>Classe C</strong>: utilizada para redes <em>pequenas</em>, usava um prefixo de 24 bits, permitindo, portanto, até <span class="math inline">2<sup>8</sup> = 256</span> endereços. Todos os prefixos que denotavam sub-redes de Classe A eram iniciados pelos bits 110.</p></li>
+<li><p><strong>Classes D e E</strong>: reservadas para outros usos mais específicos, como comunicação <em>multicast</em> — tópico de aulas futuras — no caso da Classe D.</p></li>
+</ol>
+<p>Eventualmente, percebeu-se que o endereçamento baseado em classes não fornecia uma granularidade suficiente para atender eficientemente a demandas típicas na Internet. Para ver isso, considere uma instituição que precisa conectar 1000 equipamentos à sua sub-rede. Uma sub-rede da Classe C é pequena demais, mas, ao mesmo tempo, uma sub-rede da classe B resulta em um desperdício de mais de 64 mil endereços.</p>
+<h2 id="cidr">CIDR</h2>
+<p>Para permitir uma alocação de sub-redes mais justas — <em>i.e.</em>, com “sobras” menores de endereços — o ideal é que pudéssemos definir <strong>arbitrariamente</strong> o comprimento do prefixo da sub-rede. Esta ideia é a base da solução de endereçamento utilizada atualmente na Internet: o endereçamento CIDR (<em>Classless Inter-Domain Routing</em>).</p>
+<p>No CIDR, pode-se utilizar sub-redes com qualquer comprimento de prefixo. Para que se possa saber o tamanho do prefixo da sub-rede a qual um endereço pertence, endereços são denotados por <code>a.b.c.d/x</code>, onde <code>x</code> é o número de bits no prefixo.</p>
+<p>Desta forma, podemos definir sub-redes com qualquer tamanho que seja uma potência de 2. Por exemplo, uma sub-rede <code>/23</code> tem prefixo de 23 bits, deixando 9 bits para o endereçamento de interfaces, resultando até <span class="math inline">2<sup>9</sup> = 512</span> endereços diferentes. Voltando ao exemplo de uma instituição com 1000 equipamentos a serem interligados em uma sub-rede, uma sub-rede <code>/22</code> passa a ser a opção mais eficiente, por permitir <span class="math inline">2<sup>32 − 22</sup> = 1024</span> endereços — resultando em uma sobra de apenas 24 endereços.</p>
+<h2 id="endereços-de-sub-rede-e-de-broadcast">Endereços de Sub-rede e de <em>Broadcast</em></h2>
+<p>Outros dois conceitos importantes quando se discutem as convenções de endereçamento no IP são os de <strong>endereço de sub-rede</strong> e <strong>endereço de <em>broadcast</em></strong>. O endereço de sub-rede é primeiro endereço da faixa definida pela sub-rede. Em outras palavras, trata-se do endereço IP formado pelo prefixo da sub-rede complementado por todos os demais bits iguais a zero. Já o endereço de <em>broadcast</em> é o último, formado pelo prefixo seguido de todos os demais bits iguais a um.</p>
+<p>O endereço de <em>broadcast</em> é utilizado para permitir o envio de um datagrama IP para todas as interfaces conectadas à sub-rede em questão. Embora até aqui nesta disciplina tenhamos focado exclusivamente na comunicação <em>unicast</em> — <em>i.e.</em>, aquela em que um pacote tem exatamente um destinatário especificado — comunicação em <em>broadcast</em> é relativamente comum em redes e tem importantes aplicações em uma série de protocolos que serão estudados mais à frente na disciplina. <strong>Uma interface, portanto, não pode ser configurada para operar com o endereço de <em>broadcast</em> da sua sub-rede</strong>.</p>
+<p>Já o endereço de sub-rede é, como o nome sugere, um endereço IP usado para identificar a sub-rede em questão. À princípio, uma interface <em>poderia</em> ser configurada para utilizar o endereço de sub-rede da sub-rede na qual se encontra — de fato, alguns equipamentos/plataformas aceitam essa configuração. Entretanto, a RFC 1812 especifica que roteadores devem descartar pacotes endereçados ao endereço de sub-rede da sub-rede de sua interface ou tratá-los como pacotes de <strong>broadcast</strong> — em certo momento da história, o que hoje chamamos de endereço de sub-rede já foi considerado o identificador do endereço de <em>broadcast</em>. Na prática, portanto, uma interface configurada para operar com o endereço de sub-rede da sua sub-rede provavelmente não será bem sucedida ao tentar se comunicar com outras interfaces.</p>
+<p>A atribuição de semânticas especiais a estes dois endereços faz com que o <em>tamanho útil</em> de uma sub-rede — <em>i.e.</em>, a quantidade de endereços que efetivamente podem ser utilizados para endereçar interfaces — seja dado por <span class="math inline">2<sup>32 − <em>x</em></sup> − 2</span>, onde <span class="math inline"><em>x</em></span> é o comprimento do prefixo da sub-rede. Esse fator deve ser considerado ao se escolher o tamanho do prefixo de uma sub-rede.</p>
+<h2 id="máscara-de-sub-rede">Máscara de Sub-rede</h2>
+<p>Por fim, é importante citar que há uma notação alternativa ainda bastante popular para denotar o comprimento de um prefixo no endereçamento CIDR: a chamada <strong>máscara de sub-rede</strong>. A máscara de sub-rede de uma determinada sub-rede <span class="math inline"><em>X</em></span> é uma sequência de 32 bits tal que, para qualquer endereço pertencente a <span class="math inline"><em>X</em></span>, a operação de <em>and</em> bit-a-bit da máscara com este endereço resulte no endereço de sub-rede de <span class="math inline"><em>X</em></span>. De uma forma um pouco mais simples e prática, se uma sub-rede possui um prefixo de comprimento <span class="math inline"><em>x</em></span>, sua máscara de sub-rede será dada por uma sequência de <span class="math inline"><em>x</em></span> bits um concatenada com uma sequência de <span class="math inline">32 − <em>x</em></span> bits zero. Por exemplo, uma sub-rede <code>/22</code> possui uma máscara de sub-rede <code>255.255.252.0</code>.</p>
+<h2 id="endereçamento-hierárquico">Endereçamento Hierárquico</h2>
+<p>Nas seções anteriores, discutimos como um <em>host</em> pode obter um endereço válido ao conectar sua interface a uma sub-rede IP. Este termo <em>endereço válido</em> denota justamente um endereço que pertença à faixa de endereços pertencentes àquela sub-rede. Uma pergunta que não respondemos, no entanto, é como uma sub-rede obtém seus endereços?</p>
+<p>No caso de uma empresa, por exemplo, que contrata o serviço de um ISP para conectar seus dispositivos à Internet, a resposta pode ser que o ISP aloca um pedaço da sua própria faixa de endereços IP para a empresa cliente. Suponha, por exemplo, que o ISP possua uma sub-rede com prefixo <code>/20</code> — totalizando, portanto, <span class="math inline">2<sup>12</sup> = 4096</span> endereços. Suponha que a empresa precise de uma sub-rede suficientemente grande para endereçar cerca de 400 interfaces. Logo, a empresa precisa de uma sub-rede de prefixo <code>/23</code>, que provê um total de <span class="math inline">2<sup>9</sup> = 512</span> endereços.</p>
+<p>Repare que a sub-rede do ISP é 8 vezes maior que a sub-rede necessária à empresa. Em particular, repare que podemos sub-dividir a sub-rede do ISP — de prefixo <code>/20</code> — em 8 sub-redes de prefixo <code>/23</code>. Uma forma alternativa de enxergar isso é pensar nos prefixos: como um prefixo <code>/23</code> usa três bits a mais que um prefixo <code>/20</code>, há <span class="math inline">2<sup>3</sup> = 8</span> combinações diferentes de prefixos <code>/23</code> compreendidos na sub-rede original.</p>
+<p>Esta capacidade de quebrarmos uma sub-rede maior em sub-redes menores — e vice-versa — recebe o nome de <strong>endereçamento hierárquico</strong> e é extensivamente utilizada no projeto lógico de redes IP. Um problema típico desta área é justamente o ilustrado no exemplo anterior: dada uma determinada sub-rede IP “grande” para atender a uma certa instituição e demandas de endereços — possivelmente distintas — para departamentos diferentes, como podemos quebrar a sub-rede original em sub-redes menores alocadas a cada departamento com o menor desperdício possível de endereços?</p>
+<p>Vamos ilustrar isso com um exemplo mais concreto. Suponha que uma empresa seja dividade em três departamentos, <strong>A</strong>, <strong>B</strong> e <strong>C</strong>. Cada departamento possui diversos <em>hosts</em> — <em>e.g.</em>, computadores, impressoras, equipamentos de vídeo-conferência — que necessitam de conexão com a rede. Assuma, por simplicidade, que cada um desses equipamentos possua uma única interface de rede e, portanto, necessite de um único endereço IP. Considere que os departamentos possuam os seguintes números de <em>hosts</em>:</p>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: center;">Departamento</th>
+<th style="text-align: center;">Hosts</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;"><strong>A</strong></td>
+<td style="text-align: center;">63</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><strong>B</strong></td>
+<td style="text-align: center;">200</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><strong>C</strong></td>
+<td style="text-align: center;">500</td>
+</tr>
+</tbody>
+</table>
+<p>Desejamos criar uma sub-rede separada para cada um dos departamentos. Suponha os departamentos se interconectem através um único roteador central da empresa: cada departamento está conectado a uma interface específica do roteador. Por fim, considere que o ISP que provê acesso à empresa tenha disponibilizado uma faixa de endereços correspondente à sub-rede <code>201.17.44.0/22</code>. A tarefa, portanto, é sub-dividir essa sub-rede em sub-redes menores a serem alocadas a cada departamento, atendendo às suas respectivas demandas de número de endereços IP, ao mesmo tempo em que minimizamos os endereços desperdiçados.</p>
+<p>Para começarmos a atacar um problema desse tipo, devemos inicialmente calcular as demandas de cada departamento. Repare que os números providos na tabela acima dizem respeito às quantidades de <em>hosts</em> a serem atendidos, não aos tamanhos necessários das sub-redes IP alocadas. Considere, por exemplo, o caso do departamento <strong>A</strong>: ele possui 63 <em>hosts</em>, o que poderia nos levar a crer que uma sub-rede <code>/26</code> fosse suficiente — já que <span class="math inline">2<sup>32 − 26</sup> = 64</span>. Entretanto, devemos nos lembrar que há dois endereços em qualquer sub-rede que não devem ser usados por possuírem uma semântica bem definida: o primeiro (endereço de sub-rede) e o último (endereço de <em>broadcast</em>). Além disso, devemos levar em conta que, além dos <em>hosts</em>, a sub-rede de cada departamento precisará de um endereço para a porta a qual estará conectada no roteador da empresa. Assim, necessitamos de uma sub-rede que comporte, no mínimo, <span class="math inline">63 + 3 = 66</span> endereços. A menor potência de 2 maior ou igual a esses 65 endereços é <span class="math inline">⌈log<sub>2</sub>66⌉ = 7</span>. Ou seja, é necessário, ao menos, uma sub-rede com prefixo de <span class="math inline">32 − 7 = 25</span> bits. Aplicando o mesmo raciocínio para os demais departamentos, chegamos às seguintes demandas:</p>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: center;">Departamento</th>
+<th style="text-align: center;">Hosts</th>
+<th style="text-align: center;">Total de Endereços</th>
+<th style="text-align: center;">Tamanho do Sufixo</th>
+<th style="text-align: center;">Tamanho do Prefixo</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">A</td>
+<td style="text-align: center;">63</td>
+<td style="text-align: center;">66</td>
+<td style="text-align: center;">7</td>
+<td style="text-align: center;">25</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">B</td>
+<td style="text-align: center;">200</td>
+<td style="text-align: center;">203</td>
+<td style="text-align: center;">8</td>
+<td style="text-align: center;">24</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">C</td>
+<td style="text-align: center;">500</td>
+<td style="text-align: center;">503</td>
+<td style="text-align: center;">9</td>
+<td style="text-align: center;">23</td>
+</tr>
+</tbody>
+</table>
+<p>Estabelecidas as demandas, podemos agora fazer o processo de divisão da sub-rede original em sub-redes menores que atendam aos requisitos de cada departamento. Para isso, note que a sub-rede original <code>201.17.44.0/22</code> pode ser dividida em duas sub-redes <code>/23</code>, conforme ilustrado na tabela abaixo:</p>
+<table>
+<colgroup>
+<col style="width: 17%" />
+<col style="width: 20%" />
+<col style="width: 16%" />
+<col style="width: 15%" />
+<col style="width: 16%" />
+<col style="width: 14%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: center;">Endereço de sub-rede</th>
+<th style="text-align: center;">Primeiro Octeto</th>
+<th style="text-align: center;">Segundo Octeto</th>
+<th style="text-align: center;">Terceiro Octeto</th>
+<th style="text-align: center;">Quarto Octeto</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Sub-rede original</td>
+<td style="text-align: center;">201.17.44.0/22</td>
+<td style="text-align: center;"><span class="red">11001001</span></td>
+<td style="text-align: center;"><span class="red">00010001</span></td>
+<td style="text-align: center;"><span class="red">001011</span>00</td>
+<td style="text-align: center;">00000000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Primeira divisão</td>
+<td style="text-align: center;">201.17.44.0/23</td>
+<td style="text-align: center;"><span class="red">11001001</span></td>
+<td style="text-align: center;"><span class="red">00010001</span></td>
+<td style="text-align: center;"><span class="red">001011</span><span class="blue">0</span>0</td>
+<td style="text-align: center;">00000000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Segunda divisão</td>
+<td style="text-align: center;">201.17.46.0/23</td>
+<td style="text-align: center;"><span class="red">11001001</span></td>
+<td style="text-align: center;"><span class="red">00010001</span></td>
+<td style="text-align: center;"><span class="red">001011</span><span class="blue">1</span>0</td>
+<td style="text-align: center;">00000000</td>
+</tr>
+</tbody>
+</table>
+<p>As colunas mais à direita da tabela mostram os valores dos octetos dos endereços de cada sub-rede representados em binário. Bits destacados em cor correspondem aos respectivos prefixos. Em particular, os bits marcados em azul são aqueles que se tornaram parte do prefixo nas duas sub-redes resultantes do particionamento da sub-rede original. Repare que esse particionamento consiste basicamente em aumentar o tamanho do prefixo e gerar todas as combinações possíveis com esses bits recém-adicionados ao prefixo. Nesse exemplo em particular, como começamos com uma sub-rede <code>/22</code> e a subdividimos em duas sub-redes <code>/23</code>, houve a adição de apenas um bit ao prefixo, o que permite apenas duas combinações.</p>
+<p>Esse mesmo processo pode ser repetido para subdividir novamente uma das redes <code>/23</code> obtidas no passo anterior em duas sub-redes menores <code>/24</code>. Por exemplo:</p>
+<table>
+<colgroup>
+<col style="width: 16%" />
+<col style="width: 18%" />
+<col style="width: 15%" />
+<col style="width: 15%" />
+<col style="width: 22%" />
+<col style="width: 12%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;"></th>
+<th style="text-align: center;">Endereço de sub-rede</th>
+<th style="text-align: center;">Primeiro Octeto</th>
+<th style="text-align: center;">Segundo Octeto</th>
+<th style="text-align: center;">Terceiro Octeto</th>
+<th style="text-align: center;">Quarto Octeto</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">Sub-rede original</td>
+<td style="text-align: center;">201.17.46.0/23</td>
+<td style="text-align: center;"><span class="red">11001001</span></td>
+<td style="text-align: center;"><span class="red">00010001</span></td>
+<td style="text-align: center;"><span class="red">0010111</span>0</td>
+<td style="text-align: center;">00000000</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Primeira divisão</td>
+<td style="text-align: center;">201.17.46.0/24</td>
+<td style="text-align: center;"><span class="red">11001001</span></td>
+<td style="text-align: center;"><span class="red">00010001</span></td>
+<td style="text-align: center;"><span class="red">0010111</span><span class="blue">0</span></td>
+<td style="text-align: center;">00000000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Segunda divisão</td>
+<td style="text-align: center;">201.17.47.0/24</td>
+<td style="text-align: center;"><span class="red">11001001</span></td>
+<td style="text-align: center;"><span class="red">00010001</span></td>
+<td style="text-align: center;"><span class="red">0010111</span><span class="blue">1</span></td>
+<td style="text-align: center;">00000000</td>
+</tr>
+</tbody>
+</table>
+<p>Repare no efeito desse processo de aumento do comprimento do prefixo e geração das combinações de valores dos bits adicionados a ele na representação decimal dos endereços de sub-rede. Em ambas as divisões — de <code>/22</code> para <code>/23</code> e de <code>/23</code> para <code>/24</code> — uma das sub-redes menores geradas tem exatamente o mesmo endereço de sub-rede da sub-rede original. Isso ocorre porque estamos apenas estendendo o número de bits do prefixo. Já para a segunda sub-rede resultante da divisão, o terceiro octeto foi incrementado em <span class="math inline">2<sup>1</sup></span> e <span class="math inline">2<sup>0</sup></span>, respectivamente, porque manipulamos o valor do segundo e primeiro bits mais à direita, respectivamente.</p>
+<p>Usando esse mesmo raciocínio, podemos facilmente realizar divisões sucessivas de uma sub-rede original:</p>
+<ul>
+<li><code>201.17.44.0/22</code> pode ser dividida em:
+<ul>
+<li><code>201.17.44.0/23</code>, que pode ser dividida em:
+<ul>
+<li><code>201.17.44.0/24</code>, que pode ser dividida em:
+<ul>
+<li><code>201.17.44.0/25</code>, que pode ser dividida em:
+<ul>
+<li>…</li>
+<li>…</li>
+</ul></li>
+<li><code>201.17.44.128/25</code>, que pode ser dividida em:
+<ul>
+<li>…</li>
+<li>…</li>
+</ul></li>
+</ul></li>
+<li><code>201.17.45.0/24</code>, que pode ser dividida em:
+<ul>
+<li><code>201.17.45.0/25</code>, que pode ser dividida em:
+<ul>
+<li>…</li>
+<li>…</li>
+</ul></li>
+<li><code>201.17.45.128/25</code>, que pode ser dividida em:
+<ul>
+<li>…</li>
+<li>…</li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li><code>201.17.46.0/23</code>, que pode ser dividida em:
+<ul>
+<li><code>201.17.46.0/24</code>, que pode ser dividida em:
+<ul>
+<li><code>201.17.46.0/25</code>, que pode ser dividida em:
+<ul>
+<li>…</li>
+<li>…</li>
+</ul></li>
+<li><code>201.17.46.128/25</code>, que pode ser dividida em:
+<ul>
+<li>…</li>
+<li>…</li>
+</ul></li>
+</ul></li>
+<li><code>201.17.47.0/24</code>, que pode ser dividida em:
+<ul>
+<li><code>201.17.47.0/25</code>, que pode ser dividida em:
+<ul>
+<li>…</li>
+<li>…</li>
+</ul></li>
+<li><code>201.17.47.128/25</code>, que pode ser dividida em:
+<ul>
+<li>…</li>
+<li>…</li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul>
+<p>Voltando ao problema original de alocação de sub-redes aos três departamentos, já somos capazes de realizá-la. Para isso, precisamos apenas pegar uma sub-rede <code>/23</code> para o departamento <strong>C</strong>, uma <code>/24</code> para o departamento <strong>B</strong> e uma <code>/25</code> para o departamento <strong>A</strong>. Percorrendo a hierarquia de sub-redes acima, uma possível alocação seria:</p>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: center;">Departamento</th>
+<th style="text-align: center;">Sub-rede</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">A</td>
+<td style="text-align: center;">201.17.44.0/23</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">B</td>
+<td style="text-align: center;">201.17.46.0/24</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">C</td>
+<td style="text-align: center;">201.17.47.0/25</td>
+</tr>
+</tbody>
+</table>
+<p>Utilizando o que foi visto até agora, tente responder às seguintes questões:</p>
+<ol type="1">
+<li>Volte à hierarquia de sub-redes resultante das sucessivas divisões da sub-rede original <code>201.17.44.0/22</code>. Para efeito daquele exemplo, paramos nas sub-redes <code>/25</code>. Você consegue subdividir cada sub-rede <code>/25</code> nas respectivas sub-redes <code>/26</code>?</li>
+<li>Imagine que a empresa tivesse um quarto departamento <strong>D</strong> ao qual atribuíssemos uma dessas sub-redes <code>/26</code> do item anterior, conectada também ao roteador central. Qual o número máximo de <strong><em>hosts</em></strong> que esse departamento poderia ter?</li>
+<li>A atribuição de sub-redes mostrada na tabela acima não é a única solução possível. Você consegue pensar em outra atribuição válida?</li>
+<li>E a atribuição mostrada na tabela abaixo? É válida? Justifique.</li>
+</ol>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: center;">Departamento</th>
+<th style="text-align: center;">Sub-rede</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">A</td>
+<td style="text-align: center;">201.17.44.0/23</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">B</td>
+<td style="text-align: center;">201.17.45.0/24</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">C</td>
+<td style="text-align: center;">201.17.47.0/25</td>
+</tr>
+</tbody>
+</table>
+<h2 id="endereçamento-hierárquico-e-icann">Endereçamento Hierárquico e ICANN</h2>
+<p>Na seção anterior, discutimos como uma sub-rede pode ser quebrada em sub-redes menores. Exemplificamos isso com a situação comum em que um ISP quebra sua faixa de endereços IP em sub-redes atribuídas a seus clientes. No entanto, ainda não está absolutamente claro como os ISPs, por sua vez, recebem suas faixas de endereço.</p>
+<p>Em última instância, quem coordena a atribuição de endereços IP na Internet é uma entidade denominada ICANN (<em>Internet Corporation for Assigned Names and Numbers</em>). O ICANN — mais especificamente, um departamento seu chamado de IANA (<em>Internet Assigned Numbers Authority</em>) — é responsável pela atribuição e padronização de uma série de “números” usados na Internet<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>, incluindo, por exemplo, os números de porta padrão para protocolos de camada de aplicação. Em particular, o ICANN controla o espaço de endereços IPv4 e distribui grandes blocos para as chamadas entidades de <em>Registro Regional da Internet</em>. Estas entidades regionais, por sua vez, aplicam políticas próprias para fragmentar estes grandes blocos em faixas menores — porém ainda tipicamente grandes — e atribui-las a outras entidades mais localizadas (<em>e.g.</em>, como órgãos nacionais de cada país ou diretamente a ISPs).</p>
+<p>Na América latina, por exemplo, a entidade de registro nacional é a LACNIC (<em>Latin America and Caribbean Network Information Centre</em>). O orgão brasileiro responsável por — entre outras coisas — atribuir as faixas de endereços IP é o CGI.br (Comitê Gestor da Internet no Brasil). O CGI.br recebe faixas atribuídas pela LACNIC e as redistribui de acordo com políticas nacionais para órgãos e entidades brasileiras.</p>
+<section class="footnotes" role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1" role="doc-endnote"><p>O ICANN também é a entidade responsável pelo gerenciamento do serviço de DNS na Internet, embora isso não seja diretamente relevante à discussão desta aula.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+</body>
+</html>
