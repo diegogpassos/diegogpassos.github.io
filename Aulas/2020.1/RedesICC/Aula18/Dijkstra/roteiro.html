@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Algoritmo de Dijkstra</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" type="text/javascript"></script>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+  <style type="text/css">
+          .algoritmo table {
+                  border-top: 2px double #000;
+                  border-bottom: 2px double #000;
+                  border-spacing: 0px 2px;
+          }
+          .algoritmo thead > tr > th {
+                  border-bottom: 1px solid #000;
+          }
+          .algoritmo th {
+
+                  padding-left: 5px;
+                  padding-right: 5px;
+          }
+          .algoritmo tr {
+
+                  height: 25px;
+          }
+          .algoritmo tr > td:last-child {
+                  color: gray;
+          }
+  </style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Algoritmo de Dijkstra</h1>
+</header>
+<p>O Algoritmo de Dijkstra é um algoritmo clássico para o problema de caminho de custo mínimo em grafos. Ele recebe como entrada um grafo ponderado — um conjunto de nós interconectados através de arestas associadas a pesos específicos — e um nó de origem. Os pesos de cada aresta devem ser não-negativos. Como saída, o Algoritmo de Dijkstra gera uma lista dos caminhos de custo mínimo interligando o nó de origem a cada um dos demais nós do grafo. Aqui, <strong>custo</strong> denota o somatório dos pesos das arestas que compõem cada caminho.</p>
+<p>O Algoritmo de Dijkstra foi criado por Edsger Dijkstra em 1956 e até hoje é amplamente adotado por protocolos de roteamento baseados em Estado de Enlace — o algoritmo também encontra diversos outros usos em diferentes domínios. Embora tenha mais de seis décadas, ele permanece como o algoritmo de menor complexidade assintótica conhecido para resolver o problema de caminho de menor custo a partir de um único nó de origem em grafos arbitrários. Essa grande eficiência é um dos principais pontos que justificam o emprego desse algoritmo em protocolos de roteamento práticos que, muitas vezes, lidam com redes — e, portanto, grafos — muito grandes.</p>
+<p>Nesse roteiro, faremos uma rápida revisão do funcionamento do Algoritmo de Dijkstra. Veremos também algumas propriedades e limitações desse algoritmo, além de alguns exemplos para fixação do seu funcionamento.</p>
+<h2 id="o-algoritmo">O Algoritmo</h2>
+<p>O Algoritmo de Dijkstra é baseado em uma observação acerca da composição dos melhores caminhos em redes: se o melhor caminho de um nó de origem <span class="math inline">\(u\)</span> para um determinado destinatário <span class="math inline">\(v\)</span> passa por um nó intermediário <span class="math inline">\(w\)</span>, então esse melhor caminho de <span class="math inline">\(u\)</span> para <span class="math inline">\(v\)</span> deve ser composto pelo melhor caminho de <span class="math inline">\(u\)</span> para <span class="math inline">\(w\)</span> concatenado com o melhor caminho de <span class="math inline">\(w\)</span> para <span class="math inline">\(v\)</span>.</p>
+<p>O algoritmo opera de forma iterativa, progressivamente encontrando o melhor caminho para cada um dos demais nós da rede. Mais especificamente, a cada iteração do seu <em>loop</em> principal, o algoritmo determina, com certeza, o melhor caminho até um novo destinatário. Assim, para uma rede com <span class="math inline">\(n\)</span> nós — incluindo o nó de origem —, o Algoritmo de Dijkstra precisará de <span class="math inline">\(n-1\)</span> iterações até sua finalização.</p>
+<p>A cada iteração, quando o algoritmo determina definitivamente o melhor caminho para um certo destinatário <span class="math inline">\(w\)</span>, ele percorre a lista dos vizinhos de <span class="math inline">\(w\)</span> montando novos caminhos candidatos. Esses caminhos candidatos são formados pela concatenação entre o melhor caminho da origem até <span class="math inline">\(w\)</span> e a aresta/enlace entre <span class="math inline">\(w\)</span> e seu vizinho. Se esse caminho candidato for melhor que o melhor caminho conhecido até esse momento para o vizinho de <span class="math inline">\(w\)</span>, o algoritmo atualiza seu conhecimento.</p>
+<p>Mais concretamente, o funcionamento do Algoritmo de Dijkstra pode ser resumido no pseudocódigo a seguir:</p>
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>Entrada:</strong> grafo <span class="math inline">\(G = (N, E)\)</span>, nó de origem <span class="math inline">\(u\in N\)</span> e função <span class="math inline">\(c(x, y)\)</span> associando os custos de cada aresta <span class="math inline">\((x, y)\in E\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Saída:</strong> vetor <span class="math inline">\(D(v)\)</span> das melhores distâncias da origem <span class="math inline">\(u\)</span> até cada destinatário <span class="math inline">\(v\)</span>.</td>
+</tr>
+</tbody>
+</table>
+<div class="algoritmo">
+<table>
+<colgroup>
+<col style="width: 5%" />
+<col style="width: 60%" />
+<col style="width: 33%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">1</td>
+<td style="text-align: left;"><span class="math inline">\(N^\prime \leftarrow \{u\}\)</span></td>
+<td style="text-align: left;">// Caminho para origem é trivial</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">2</td>
+<td style="text-align: left;"><span class="math inline">\(D(u) \leftarrow 0\)</span></td>
+<td style="text-align: left;">// Custo 0.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">3</td>
+<td style="text-align: left;"><span class="math inline">\(\forall v\in N\)</span></td>
+<td style="text-align: left;">// Para os demais nós</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">4</td>
+<td style="text-align: left;"><span class="math inline">\(\quad\)</span> <strong>se</strong> <span class="math inline">\((u,v)\in E\)</span></td>
+<td style="text-align: left;">// É vizinho da origem?</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">5</td>
+<td style="text-align: left;"><span class="math inline">\(\quad\quad\)</span> <strong>então</strong> <span class="math inline">\(D(v)\leftarrow c(u,v)\)</span></td>
+<td style="text-align: left;">// Conhecemos um caminho</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">6</td>
+<td style="text-align: left;"><span class="math inline">\(\quad\quad\)</span> <strong>senão</strong> <span class="math inline">\(D(v) = \infty\)</span></td>
+<td style="text-align: left;">// Ainda sem caminho</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">7</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">8</td>
+<td style="text-align: left;"><strong>Repita</strong></td>
+<td style="text-align: left;">// Loop principal</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">9</td>
+<td style="text-align: left;"><span class="math inline">\(\quad\)</span> Encontre <span class="math inline">\(w \not\in N^\prime\)</span> tal que <span class="math inline">\(D(w)\)</span> seja mínimo</td>
+<td style="text-align: left;">// Melhor caminho provisório</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">10</td>
+<td style="text-align: left;"><span class="math inline">\(\quad\)</span> <span class="math inline">\(N^\prime \leftarrow N^\prime \cup \{w\}\)</span></td>
+<td style="text-align: left;">// Se torna definitivo</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">11</td>
+<td style="text-align: left;"><span class="math inline">\(\quad\)</span> <span class="math inline">\(\forall v\)</span> tal que <span class="math inline">\(v\not\in N^\prime\land (w,v)\in E\)</span></td>
+<td style="text-align: left;">// Vizinhos de w ainda provisórios</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">12</td>
+<td style="text-align: left;"><span class="math inline">\(\quad\quad\)</span> <span class="math inline">\(D(v)\leftarrow min(D(v),D(w) + c(w,v))\)</span></td>
+<td style="text-align: left;">// Anterior ou passando por w?</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">13</td>
+<td style="text-align: left;"><strong>Até que</strong> <span class="math inline">\(N^\prime = N\)</span></td>
+<td style="text-align: left;">// Até adição de todos os nós</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>As seis primeiras linhas simplesmente fazem uma inicialização das estruturas de dados usadas pelo algoritmo. Basicamente, o algoritmo mantém um conjunto <span class="math inline">\(N^\prime\)</span> dos <strong>nós definitivos</strong> — isto é, aqueles para os quais já conhecemos, com certeza, o melhor caminho possível a partir da origem <span class="math inline">\(u\)</span> — e um vetor <span class="math inline">\(D(v)\)</span> dos custos dos melhores caminhos conhecidos até agora para cada destinatário <span class="math inline">\(v\)</span> — definitivos ou não. Em um primeiro momento (linhas 1 e 2), o algoritmo simplesmente declara que o nó <span class="math inline">\(u\)</span> — a própria origem — é definitivo, porque a melhor distância de qualquer nó para ele mesmo será trivialmente zero. Em seguida (linhas 3 a 6), o algoritmo varre os vizinhos de <span class="math inline">\(u\)</span> encontrando caminhos triviais de um salto e inicializando <span class="math inline">\(D(v)\)</span> de acordo. Note que esses caminhos não são — ainda, ao menos — definitivos e poderão ser melhorados mais à frente na execução.</p>
+<p>A partir da oitava linha, o algoritmo entra em seu <em>loop</em> principal. A cada iteração, um novo destinatário <span class="math inline">\(w\)</span> é adicionado ao conjunto <span class="math inline">\(N^\prime\)</span> dos nós definitivos (linhas 9 e 10). Em seguida (linhas 11 e 12), cada vizinho <span class="math inline">\(v\)</span> de <span class="math inline">\(w\)</span> é varrido e avalia-se o caminho candidato formado pela concatenação do melhor caminho de <span class="math inline">\(u\)</span> para <span class="math inline">\(w\)</span> (recém-declarado como definitivo) com a aresta/enlace de <span class="math inline">\(w\)</span> para <span class="math inline">\(v\)</span>. Se esse caminho candidato é melhor que o melhor caminho conhecido até esse momento para <span class="math inline">\(v\)</span>, o algoritmo atualiza <span class="math inline">\(D(v)\)</span>.</p>
+<p>Mas como, em uma dada iteração, o Algoritmo de Dijkstra tem certeza de que o melhor caminho conhecido até agora para <span class="math inline">\(w\)</span> é, de fato, o melhor caminho possível? Em outras palavras, como sabemos que em iterações futuras não encontraríamos um outro caminho até então desconhecido para <span class="math inline">\(w\)</span> que tivesse custo ainda menor que o atual?</p>
+<p>A resposta para isso está na condição adotada na linha 9: selecionamos <span class="math inline">\(w\)</span> como sendo o nó para o qual conhecemos o caminho de menor custo, dentre aqueles que ainda não estão no conjunto de definitivos. Suponha, por absurdo, que houvesse um outro caminho melhor de <span class="math inline">\(u\)</span> para <span class="math inline">\(w\)</span> diferente daquele conhecido agora. Vamos chamar o antecessor de <span class="math inline">\(w\)</span> nesse caminho — <em>i.e.</em>, o nó que vem imediatamente antes de <span class="math inline">\(w\)</span> no caminho — de <span class="math inline">\(x\)</span>. Por hipótese, ainda não conhecemos esse caminho, o que quer dizer que <span class="math inline">\(x\)</span> ainda não foi marcado como definitivo — <em>i.e.</em>, adicionado a <span class="math inline">\(N^\prime\)</span>. Além disso, como os pesos das arestas/enlaces são todos não-negativos, o caminho de menor custo de <span class="math inline">\(u\)</span> para <span class="math inline">\(x\)</span> deve ter custo menor que o caminho de menor custo de <span class="math inline">\(u\)</span> para <span class="math inline">\(w\)</span>, porque <span class="math inline">\(x\)</span> é antecessor de <span class="math inline">\(w\)</span>. Nesse caso, no entanto, <span class="math inline">\(w\)</span> não pode ser o nó para o qual conhecemos o caminho de menor custo, dentre aqueles que ainda não estão no conjunto de definitivos: esse nó deveria ser <span class="math inline">\(x\)</span> ou algum de seus antecessores no menor caminho de <span class="math inline">\(u\)</span> para <span class="math inline">\(x\)</span>.</p>
+<h2 id="predecessores-e-caminhos">Predecessores e Caminhos</h2>
+<p>Embora isso não esteja denotado explicitamente no pseudocódigo apresentado, em geral queremos obter também a composição dos caminhos mais curtos encontrados pelo Algoritmo de Dijkstra, e não apenas seus respectivos custos. Para isso, implementações desse algoritmo normalmente guardam um <strong>vetor de predecessores</strong>. Esse vetor associa cada destinatário <span class="math inline">\(v\)</span> da rede a um outro nó <span class="math inline">\(w\)</span> que é seu predecessor imediato no caminho de menor custo. Esse vetor é atualizado toda vez que o código atualiza (com algum valor finito) o vetor <span class="math inline">\(D(v)\)</span>: na linha 5, o predecessor é <span class="math inline">\(u\)</span>; na linha 12, se houve mudança, o predecessor é <span class="math inline">\(w\)</span>.</p>
+<p>Ao final do algoritmo, é possível reconstruir o caminho até um determinado destinatário <span class="math inline">\(v\)</span> percorrendo a lista de predecessores de trás para frente: começa-se determinando o predecessor <span class="math inline">\(w\)</span> de <span class="math inline">\(v\)</span>; depois, determina-se o predecessor <span class="math inline">\(x\)</span> de <span class="math inline">\(w\)</span>; o processo continua, até chegarmos em <span class="math inline">\(u\)</span>.</p>
+<h2 id="limitações">Limitações</h2>
+<p>Na introdução desse roteiro, destacamos que o Algoritmo de Dijkstra recebe como entrada um grafo ponderado cujos pesos sejam, necessariamente, não-negativos. Essa ressalva é importante porque, se o grafo contiver alguma aresta de peso negativo, o algoritmo deixa de garantir que irá encontrar os caminhos de menor custo. Isso não costuma ser um grande empecilho ao uso desse algoritmo de protocolos de roteamento, porque, em geral, as <strong>métricas de roteamento</strong> — <em>i.e.</em>, as funções que avaliam a qualidade dos enlaces e lhes atribuem pesos — normalmente geram pesos positivos apenas<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>. Por exemplo, métricas típicas incluem estimativas do atraso de transmissão e níveis de enfileiramento de cada interface. Mesmo assim, é importante ter em mente essa restrição quando projetamos como avaliar os enlaces para fins de escolha de rotas.</p>
+<h2 id="exemplos">Exemplos</h2>
+<p>Ao final dessa página, há uma pequena aplicação <code>javascript</code> que ilustra o funcionamento do Algoritmo de Dijkstra. A aplicação permite que se altere a topologia, adicionando ou removendo nós e enlaces. Os custos dos enlaces também podem ser livremente alterados. Para os nós, é possível alterar o identificador. Note que também é possível selecionar o nó de origem — destacado em verde.</p>
+<p>Cada alteração realizada automaticamente dispara um recálculo do algoritmo. Os caminhos resultantes são destacados em vermelho na topologia. Além disso, a aplicação exibe um passo-a-passo da execução na tabela imediatamente abaixo da figura. Esse passo-a-passo mostra o conteúdo de cada variável interna mantida pelo algoritmo, incluindo:</p>
+<ul>
+<li><span class="math inline">\(N^\prime\)</span>: conjunto dos nós definitivos.</li>
+<li><span class="math inline">\(D(v)\)</span>: custo do menor caminho conhecido até esse ponto para o nó <span class="math inline">\(v\)</span>.</li>
+<li><span class="math inline">\(p(v)\)</span>: predecessor (imediato) do nó <span class="math inline">\(v\)</span> no melhor caminho conhecido até esse ponto para o nó <span class="math inline">\(v\)</span>.</li>
+</ul>
+<p>A cada iteração, mostra-se também o nó selecionado para adição no conjunto de definitivos — o custo/predecessor é circulado em vermelho.</p>
+<p>Note, ainda, que o resultado final da execução é exibido na tabela à direita da imagem da topologia na forma de uma tabela de roteamento — <em>i.e.</em>, destinatário, próximo salto e distância/custo.</p>
+<p>Utilize essa aplicação modificando a topologia para tentar responder as questões ou executar as experiências sugeridas abaixo:</p>
+<ol type="1">
+<li>Considere a topologia carregada por padrão na aplicação e sua respectiva execução. Observe, em particular, o passo 1: há um empate entre os nós <code>A</code> e <code>B</code>, ambos com caminhos conhecidos naquele ponto com custo 4. Por qualquer motivo, o algoritmo optou por adicionar <code>A</code> ao conjunto de definitivos, ao invés de <code>B</code>. Essa opção faz alguma diferença? O resultado do algoritmo poderia ser alterado de alguma forma se <code>B</code> fosse escolhido? Caso sua resposta seja não, você consegue pensar em alguma topologia para a qual faria alguma diferença?</li>
+<li>Repare que tabelas de roteamento associam o próximo salto no melhor caminho escolhido até um determinado destinatário, e não seu predecessor, como armazenado pelo Dijkstra. Como a informação dos predecessores pode ser traduzida para a informação dos próximos saltos?</li>
+<li>Ainda com base no grafo carregado por padrão, remova as arestas/enlaces de <code>F</code> para <code>E</code> e de <code>F</code> para <code>B</code>. O que acontece nesse caso? Como o Dijkstra lida com isso?</li>
+</ol>
+<!--
+<iframe src="Dijkstra.html" onload="this.style.height=(this.contentWindow.document.body.scrollHeight+40)+ 'px'; this.style.width=(this.contentWindow.document.body.scrollWidth+40)+ 'px';" style="width: 100%;"/>
+-->
+<iframe src="Dijkstra.html" onload="this.style.height=(this.contentWindow.document.body.scrollHeight+40)+ 'px';" style="width: 100%;"/>
+<section class="footnotes" role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1" role="doc-endnote"><p>De fato, pesos negativos podem ser bastante problemáticos. Por exemplo, se a rede/grafo possui um ciclo negativo, então não há como definir um caminho de menor custo, porque sempre podemos passar mais uma vez pelas arestas do ciclo reduzindo o custo do “melhor” caminho atualmente conhecido.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+</body>
+</html>
