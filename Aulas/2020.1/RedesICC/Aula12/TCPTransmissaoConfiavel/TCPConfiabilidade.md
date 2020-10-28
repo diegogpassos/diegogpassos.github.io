@@ -6,7 +6,6 @@ figPrefix: figura
 tableTitle: Tabela
 tblPrefix: tabela
 secPrefix: seção
-figureTemplate: **$$figureTitle$$ $$i$$**
 ---
 
 # Transmissão Confiável de Dados no TCP
@@ -140,7 +139,7 @@ cada nova amostra de RTT obtida, o TCP utiliza a seguinte equação para
 atualizar sua estimativa deste desvio:
 
 $$\label{eq:estimativaDesvio}
-\text{DevRTT} = (1-\beta)\times\text{DevRTT} + \beta\times\| \text{SampleRTT} - \text{DevRTT}\|,$$
+\text{DevRTT} = (1-\beta)\times\text{DevRTT} + \beta\times\| \text{SampleRTT} - \text{EstimatedRTT}\|,$$
 onde $\beta$ é um fator de ponderação configurável.
 
 Pode-se notar que a
@@ -148,13 +147,13 @@ essa equação é muito similar à
 usada para estimar o RTT. Em outras palavras, `DevRTT` é
 simplesmente uma Média Móvel Exponencialmente Ponderada das diferenças
 --- em valor absoluto --- entre as amostras de RTT e os respectivos
-valores de `SampleRTT`.
+valores de `EstimatedRTT`.
 
-De posse dos valores atuais de `SampleRTT` e `DevRTT`, o TCP finalmente
+De posse dos valores atuais de `EstimatedRTT` e `DevRTT`, o TCP finalmente
 calcula o valor do temporizador --- denotado deste ponto em diante por
 `TimeoutInterval` --- segundo a seguinte equação:
 $$\label{eq:valorTimeout}
-\text{TimeoutInterval} = \text{SampleRTT} + 4\times\text{DevRTT}.$$
+\text{TimeoutInterval} = \text{EstimatedRTT} + 4\times\text{DevRTT}.$$
 
 O termo $4\times\text{DevRTT}$ é, portanto, a margem de segurança à qual
 nos referimos anteriormente. Votando à
