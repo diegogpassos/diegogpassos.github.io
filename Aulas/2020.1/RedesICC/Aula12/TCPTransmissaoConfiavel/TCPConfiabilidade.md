@@ -8,8 +8,6 @@ tblPrefix: tabela
 secPrefix: seção
 ---
 
-# Transmissão Confiável de Dados no TCP
-
 Embora o TCP forneça também outros serviços importantes, como o controle de fluxo e o controle de congestionamento, talvez sua característica mais notável seja a confiabilidade na entrega dos dados. Nessas notas de aula, veremos quais são e como o TCP implementa seus mecanismos de confiabilidade.
 
 ## Escolhendo Valores para o Temporizador

@@ -20,7 +20,6 @@
 <header>
 <h1 class="title">Transmissão Confiável de Dados no TCP</h1>
 </header>
-<h1 id="transmissão-confiável-de-dados-no-tcp">Transmissão Confiável de Dados no TCP</h1>
 <p>Embora o TCP forneça também outros serviços importantes, como o controle de fluxo e o controle de congestionamento, talvez sua característica mais notável seja a confiabilidade na entrega dos dados. Nessas notas de aula, veremos quais são e como o TCP implementa seus mecanismos de confiabilidade.</p>
 <h2 id="escolhendo-valores-para-o-temporizador">Escolhendo Valores para o Temporizador</h2>
 <p>Como visto em aulas anteriores, temporizadores (ou <em>timers</em>) são mecanismos fundamentais para a implementação de um protocolo de transmissão confiável de dados sobre um canal/rede não confiável. Em particular, temporizadores auxiliam este tipo de protocolo a lidar com a possibilidade de <em>supressão de pacotes</em>, <em>i.e.</em>, que pacotes sejam perdidos/descartados pela rede: eles provêm um sinal independente da rede que impede que o protocolo (em particular, o transmissor) fique travado aguardando um evento de recepção de pacotes pela rede.</p>
@@ -57,7 +56,7 @@
 <p>De posse dos valores atuais de <code>EstimatedRTT</code> e <code>DevRTT</code>, o TCP finalmente calcula o valor do temporizador — denotado deste ponto em diante por <code>TimeoutInterval</code> — segundo a seguinte equação: <span class="math display">\[\label{eq:valorTimeout}
 \text{TimeoutInterval} = \text{EstimatedRTT} + 4\times\text{DevRTT}.\]</span></p>
 <p>O termo <span class="math inline">\(4\times\text{DevRTT}\)</span> é, portanto, a margem de segurança à qual nos referimos anteriormente. Votando à Figura 1, podemos ver esta margem de segurança em ação. A curva azul ilustra a evolução do <code>TimeoutInterval</code> calculado com base nas amostras de RTT da conexão. Mesmo com a variabilidade dos valores de RTT experimentados pelos segmentos, durante o trecho representado na figura a curva azul se manteve sempre superior à curva vermelha (<em>i.e.</em>, das amostras). Isso significa que durante este trecho o TCP nunca inferiu erroneamente uma perda de segmento devido a um <strong>estouro prematuro do temporizador</strong>.</p>
-<h2 id="transmissão-confiável-de-dados-no-tcp-1">Transmissão Confiável de Dados no TCP</h2>
+<h2 id="transmissão-confiável-de-dados-no-tcp">Transmissão Confiável de Dados no TCP</h2>
 <p>Neste ponto, já introduzimos as características gerais de cada um dos mecanismos empregados pelo TCP para garantir a transmissão confiável de dados, a saber: temporizadores, números de sequência, <em>acks</em> e <em>pipeline</em>. Nesta seção, discutiremos como o TCP junta todos estes mecanismos em uma solução unificada para garantir a confiabilidade na transmissão dos dados.</p>
 <p>Como discutido em aulas anteriores, os <em>acks</em> do TCP são cumulativos, <em>i.e.</em>, eles reconhecem todos os dados enviados até um determinado número de sequência. Em particular, o número de sequência informado em um <em>ack</em> diz respeito ao <strong>próximo byte esperado</strong> pelo receptor<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a>.</p>
 <p>Em relação aos temporizadores, o TCP mantém apenas um, sempre associado ao segmento em trânsito mais antigo — ou, dito de outra forma, o segmento que está na base da janela do transmissor.</p>
