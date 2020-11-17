@@ -65,7 +65,7 @@
 		</p>
 
 		<p>
-			Pensando do ponto de vista do provedor de Internet, uma pergunta importante é: quantos clientes desse bairro podemos conectar a esse mesmo comutador? Suponha, por exemplo, que o provedor venda apenas um plano de 100 kb/s. Por simplicidade, focaremos aqui apenas no <i>upload</i>, <i>i.e.</i>, no fluxo de dados dos clientes para o mundo externo. A mesma análise pode ser feita para o <i>download</i>. Um raciocínio simplório pode sugerir que o provedor está limitado a 10 clientes, já que 1 Mb/s / 100 kb/s = 10. 
+			Pensando do ponto de vista do provedor de Internet, uma pergunta importante é: quantos clientes desse bairro podemos conectar a esse mesmo comutador? Suponha, por exemplo, que o provedor venda apenas um plano de 100 kb/s. Por simplicidade, focaremos aqui apenas no <i>upload</i>, <i>i.e.</i>, no fluxo de dados dos clientes para o mundo externo. A mesma análise pode ser feita para o <i>download</i>. 
 		</p>
 
 		<p>
@@ -77,7 +77,7 @@
 		</p>
 
 		<p>
-			O ponto importante aqui é que os fluxos de dados na Internet não são geralmente contínuos, havendo períodos em que um <i>host</i> não transmitirá novos pacotes. Assim, se um provedor aloca de maneira estática fatias de 100 kb/s do seu enlace compartilhado de 1 Mb/s para um determinado usuário, esse recurso ficará ocioso em certos momentos. Suponha, por exemplo, que no universo dos 10 clientes servidos pelo provedor sempre haja ao menos um que não esteja utilizando ativamente sua conexão em cada instante de tempo. Isso singifica que sempre há ao menos 100 kb/s de capacidade ociosa no enlace compartilhado. Para o provedor, seria interessante ele pudesse aproveitar essa capacidade ociosa e vender seu serviço a um décimo terceiro cliente.
+			O ponto importante aqui é que os fluxos de dados na Internet não são geralmente contínuos, havendo períodos em que um <i>host</i> não transmitirá novos pacotes. Assim, se um provedor aloca de maneira estática fatias de 100 kb/s do seu enlace compartilhado de 1 Mb/s para um determinado usuário, esse recurso ficará ocioso em certos momentos. Suponha, por exemplo, que no universo dos 10 clientes servidos pelo provedor sempre haja ao menos um que não esteja utilizando ativamente sua conexão em cada instante de tempo. Isso singifica que sempre há ao menos 100 kb/s de capacidade ociosa no enlace compartilhado. Para o provedor, seria interessante ele pudesse aproveitar essa capacidade ociosa e vender seu serviço a um décimo primeiro cliente.
 		</p>
 
 		<p>
@@ -130,7 +130,7 @@
 
 		<h2>Limites</h2>
 
-		O exemplo anterior ilustrou o grande potencial de aproveitamento de recursos da multiplexação estatística. Entretanto, é preciso observar que fizemos uma série de hipóteses a respeito do cenário. Por exemplo, até que ponto é realístico assumir que cada usuário passa apenas 10% do tempo ativo? Além disso, o que acontece se aumentarmos o número de aumentarmos ainda mais o número de usuários ou se diminuirmos a capacidade do enlace compartilhado? Até que ponto a probabilidade de não entregarmos o desempenho esperado pelo usuário permanece aceitável? Mais ainda: o que seria uma probabilidade aceitável?
+		O exemplo anterior ilustrou o grande potencial de aproveitamento de recursos da multiplexação estatística. Entretanto, é preciso observar que fizemos uma série de hipóteses a respeito do cenário. Por exemplo, até que ponto é realístico assumir que cada usuário passa apenas 10% do tempo ativo? Além disso, o que acontece se aumentarmos ainda mais o número de usuários ou se diminuirmos a capacidade do enlace compartilhado? Até que ponto a probabilidade de não entregarmos o desempenho esperado pelo usuário permanece aceitável? Mais ainda: o que seria uma probabilidade aceitável?
 
 		Para entender de forma mais concreta como esses vários parâmetros se inter-relacionam, observe os gráficos a seguir.
 
