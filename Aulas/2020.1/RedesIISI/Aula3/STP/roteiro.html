@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>-</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+  </style>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<h1 id="spanning-tree-protocol">Spanning Tree Protocol</h1>
+<p>O <em>Spanning Tree Protocol</em>, ou STP, é um protocolo de grande importância em implementações de redes Ethernet de médio e grande porte. Devido à forma de operação do auto-aprendizado e à ausência de um mecanismo para mitigação de <em>loops</em> de encaminhamento no Ethernet — por exemplo, um campo TTL decrementado a cada salto, como no IP —, topologias Ethernet contendo <em>loops</em> muito provavelmente sofrerão com o problema de <strong>tempestade de <em>broadcast</em></strong>. Nessa situação, determinados quadros serão inundados várias e várias vezes pelas mesmas portas de cada <em>switch</em>, resultando em um excesso de tráfego que traz grande prejuízo ao desempenho da rede.</p>
+<p>Para evitar esse problema, é necessário evitar a formação de <em>loops</em> na topologia de uma rede Ethernet. Embora isso possa parecer trivial, à medida que uma rede Ethernet cresce, essa tarefa se torna cada vez mais complicada, já que a probabilidade de um erro de configuração — <em>e.g.</em>, alguém conectar um cabo em uma porta errada — aumenta. O uso de VLANs — um mecanismo comumente empregado nessas redes de média e larga escala — facilita ainda mais esses erros, por gerar uma topologia lógica potencialmente diferente da topologia física. Outro complicador é que, não obstante seus severos efeitos no desempenho de uma rede Ethernet, <em>loops</em> são muitas vezes difíceis de diagnosticar e encontrar. Além disso, a introdução proposital de <em>loops</em> é muitas vezes desejável para aumentar a resiliência da rede a falhas.</p>
+<p>É nesse contexto que surge o STP. Esse protocolo “protege” a rede contra os efeitos danosos dos <em>loops</em> ao gerar uma <em>topologia lógica</em> livre de <em>loops</em> sobre a qual os <em>switches</em> Ethernet efetivamente operam. Mais especificamente, o STP permite que os <em>switches</em> detectem <em>loops</em> físicos e desabilitem logicamente portas que os causam.</p>
+<p>Para isso, o STP determina uma <strong>árvore geradora</strong> da topologia física. Uma árvore geradora de um grafo ou rede é um subconjunto daquela topologia contendo todos os nós/dispositivos da topologia original, mas com um número potencialmente menor de arestas/enlaces de forma que exista exatamente um caminho conectando cada par de nós/dispositivos. A existência de um único caminho entre dois nós implica a ausência de <em>loops</em>.</p>
+<p>Embora existam vários detalhes na operação do STP<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>, de forma simplificada, o protocolo realiza as seguintes atividades:</p>
+<ul>
+<li>Eleição de um dos <em>switches</em> para atuar como raiz.</li>
+<li>Definição do caminho mais curto entre cada <em>switch</em> e a raiz.</li>
+<li>Habilitação/desabilitação das portas de acordo com se elas estão ou não em algum dos caminhos mais curtos até a raiz.</li>
+</ul>
+<p>Essas três atividades são realizadas de forma contínua pelo STP, porque a topologia de rede pode sofrer modificações ao longo do tempo — por exemplo, enlaces podem falhar novas conexões físicas podem aparecer. Quando alguma alteração topológica ocorre, após algum tempo, o STP converge para uma nova configuração estável dos estados das portas.</p>
+<p>Em geral, não há nada de particularmente especial sobre o <em>switch</em> eleito como raiz. De fato, essa raiz atua simplesmente como um ponto de referência comum para a construção da árvore geradora. Essa eleição é baseada simplesmente em um identificador numérico de cada <em>switch</em>: o <em>switch</em> de menor identificador é escolhido como raiz. Tal identificador é formado pela concatenação de uma valor de prioridade de 16 bits com um endereço MAC do <em>switch</em>, resultando em um número de 64 bits. Por padrão, a prioridade tem valor 32768, mas pode ser alterada por um administrador da rede se, por algum motivo, este deseja garantir que um certo <em>switch</em> seja ou não selecionado como raiz. Se todos os <em>switches</em> são configurados com um mesmo valor de prioridade — ou se há mais de um com o menor valor de prioridade —, então aquele com o endereço MAC de menor valor numérico será a raiz.</p>
+<p>Para definir a árvore geradora sobre a topologia física, o STP basicamente determina e concatena os menores caminhos de cada <em>switch</em> até a raiz. Com base nessa informação, cada <em>switch</em> atribui um <strong>estado</strong> a cada uma das suas portas. O STP prevê vários estados possíveis para lidar com várias situações diferentes como, por exemplo:</p>
+<ul>
+<li>Porta faz parte do melhor caminho do <em>switch</em> até a raiz.</li>
+<li>Porta faz parte de um caminho alternativo do <em>switch</em> até a raiz — e, portanto, geraria um <em>loop</em> se estivesse em uso normal.</li>
+<li>Porta não faz parte de nenhum caminho viável até a raiz — por exemplo, porque há um <em>host</em> conectado a ela.</li>
+<li>Porta foi desabilitadamente manualmente pelo administrador.</li>
+</ul>
+<p>Desse ponto em diante nesse material, iremos abstrair esses vários tipos de estado diferentes e focaremos apenas nas interconexões entre os <em>switches</em>, classificando cada porta como “habilitada” ou “desabilitada” de acordo com sua pertinência ou não há árvore geradora.</p>
+<p>É importante notar que o STP trabalha com custos associados a cada enlace para a escolha dos melhores caminhos. Assim, se houver, por exemplo, dois caminhos possíveis de um <em>switch</em> até a raiz, um passando por apenas um enlace e outro passando por dois enlaces, é possível que o segundo caminho seja escolhido como o melhor. Os custos dos enlaces são determinados com base nas suas taxas de transmissão e os valores são especificados pelo padrão. Assim, enlaces mais rápidos recebem custos menores, o que faz com que esses sejam mais frequentemente mantidos habilitados, em relação a enlaces mais lentos.</p>
+<p>O STP utiliza pacotes de controle chamados de BPDUs (<em>Bridge Protocol Data Units</em>). BPDUs são enviados periodicamente por cada <em>switch</em> por cada uma das suas portas. Ao receber um BPDU por uma de suas portas, um <em>switch</em> aprende, entre outras coisas, quais outros <em>switches</em> são seus vizinhos imediatos na topologia. Além disso, o BPDU contém outras informações que dão suporte à eleição da raiz e à determinação dos melhores caminhos até ela.</p>
+<p>Em particular, um <em>switch</em> informa em seus BPDUs o seu identificador, o identificador do <em>switch</em> que ele <strong>acredita atualmente</strong> ser a raiz e o custo do caminho que ele <strong>acredita atualmente</strong> ser o melhor até a raiz. Inicialmente, quando o <em>switch</em> não sabe nada sobre a rede e sobre os outros <em>switches</em>, ele assume ser a raiz e, portanto, que o melhor caminho até a raiz tem custo trivialmente zero. À medida que BPDUs de seus vizinhos são recebidos, o <em>switch</em> aprende novas informações sobre a rede e pode atualizar sua visão sobre a raiz e sobre sua distância até ela. Mais precisamente, ao receber um novo BPDU, o <em>switch</em>:</p>
+<ol type="1">
+<li>Verifica se o ID da raiz informada no BPDU é menor que o ID de quem o <em>switch</em> atualmente assume ser a raiz.</li>
+</ol>
+<ul>
+<li>Se for, o <em>switch</em> passa a considerar o ID recebido como sendo o da raiz da rede e atualiza sua distância para a raiz para ser a distância anunciada no BPDU somada ao custo do enlace pelo qual o BPDU foi recebido.</li>
+</ul>
+<ol start="2" type="1">
+<li>Caso contrário, se o ID da raiz informada no BPDU é igual ao ID de quem o <em>switch</em> atualmente assume ser a raiz:</li>
+</ol>
+<ul>
+<li>Verifica se a distância anunciada no BPDU somada ao custo do enlace pelo qual o BPDU foi recebido é menor que o custo do melhor caminho conhecido atualmente.
+<ul>
+<li>Se for, atualiza seu melhor custo para o valor da soma e marca a porta pela qual o BPDU foi recebido como a porta que está no seu melhor caminho até a raiz<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>.</li>
+</ul></li>
+</ul>
+<p>Depois de algumas trocas de BPDUs, a rede converge para um estado no qual todos os <em>switches</em> concordam sobre qual é a raiz e também conhecem seu melhor caminho até ela.</p>
+<h2 id="exemplos-da-convergência-do-stp">Exemplos da Convergência do STP</h2>
+<p>Ao final dessa página, há uma pequena aplicação <code>javascript</code> que ilustra, de forma simplificada, o funcionamento do STP. A aplicação permite que se altere a topologia, adicionando ou removendo <em>switches</em> e enlaces. Os custos dos enlaces também podem ser livremente alterados. Para os switches, é possível alterar o endereço MAC, bem como a prioridade atribuída a cada um — para efeito da eleição da raiz.</p>
+<p>Cada alteração realizada automaticamente dispara um recálculo da árvore geradora. A árvore resultante é destacada em vermelho na topologia, enquanto os enlaces/portas desabilitados são ilustrados com linhas tracejadas. Além disso, a aplicação exibe um passo-a-passo do estado armazenado por cada <em>switch</em> — quem é a raiz? qual a menor distância até a raiz? qual porta leva até a raiz? — após cada troca de BPDUs.</p>
+<p>Repare que essa aplicação assume que BPDUs são trocados de forma síncrona entre os <em>switches</em> — <em>i.e.</em>, todos os <em>switches</em> enviam seus BPDUs exatamente ao mesmo tempo. Na prática, esses envios acontecem em momentos diferentes porque os <em>switches</em> não estão sincronizados. Entretanto, o algoritmo converge mesmo sem essa sincronia.</p>
+<p>Utilize essa aplicação modificando a topologia e/ou os parâmetros de configuração dos <em>switches</em> para tentar responder as questões abaixo:</p>
+<ol type="1">
+<li>Há algum problema em executar o STP em uma topologia sem <em>loops</em>? O que acontece nesse caso?</li>
+<li>Considere uma topologia em anel em que todos os enlace têm a mesma taxa de transmissão. Como fica a árvore geradora resultante?</li>
+<li>Volte à situação do item anterior, mas considere agora que um dos enlaces do <em>switch</em> raiz é mais lento que os demais. Em particular, assuma que o seu custo é o dobro do custo dos demais enlaces. Como isso altera a árvore geradora? E se fosse o triplo?</li>
+<li>Construa uma topologia contendo ao menos 4 <em>switches</em> que seja totalmente conectada — <em>i.e.</em>, há enlaces de cada <em>switch</em> para todos os demais. Use os mesmos custos para todos os enlaces. Agora observe o passo-a-passo do STP. Quanto tempo demora para o protocolo convergir?</li>
+<li>Volte ao cenário do item anterior, mas agora remova exatamente um enlace da topologia, necessariamente entre o <em>switch</em> raiz e um dos demais. Houve alteração no tempo de convergência? Todos os <em>switches</em> demoram o mesmo tempo para convergir ou algum demorou mais? No segundo caso, qual foi o switch que mais demorou a convergir?</li>
+<li>Considere uma vez mais o cenário do item anterior. Continue removendo enlaces da topologia e observe novamente o tempo de convergência. Você consegue observar alguma relação entre alguma característica da topologia e esse tempo?</li>
+</ol>
+<iframe src="STP.html" onload="this.style.height=(this.contentWindow.document.body.scrollHeight+50)+ 'px'; this.style.width=(this.contentWindow.document.body.scrollWidth+50)+ 'px';" style="width: 100%;"/>
+<section class="footnotes" role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1" role="doc-endnote"><p>Note que o STP evoluiu ao longo dos anos, sofrendo várias alterações — geralmente, com o propósito de acelerar sua convergência ou capacidade de se recuperar de falhas na rede. Em particular, hoje é comum o uso do RSTP (<em>Rapid Spanning Tree Protocol</em>). Entretanto, os princípios básicos do protocolo são os mesmos. Esse documento se foca justamente nesses princípios.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2" role="doc-endnote"><p>Esse processo é muito similar a como protocolos de roteamento baseados em vetor de distâncias funcionam. A diferença aqui é que apenas uma distância importa: aquela para a raiz.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+</body>
+</html>

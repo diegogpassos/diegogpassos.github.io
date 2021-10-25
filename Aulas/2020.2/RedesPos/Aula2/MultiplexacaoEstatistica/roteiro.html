@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <!-- Meta info -->
+	<meta charset="utf-8">
+	<meta name="shortauthor" content="Diego Passos"/>
+	<meta name="shorttitle" content="Multiplexação Estatística"/>
+	<meta name="shortevent" content="Redes de Computadores I"/>
+	<title>Multiplexação Estatística</title>
+
+    <!-- Math support -->
+	<script type="text/x-mathjax-config">
+		MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+			MathJax.InputJax.TeX.Definitions.number = /^(?:[0-9]+(?:\.[0-9]{3})*(?:\{,\}[0-9]*)*|\{,\}[0-9]+)/
+		});
+	</script>
+	<script src="js/plotly-latest.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+    <script src="../../../../../MathJax-2.6-latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+
+    <!-- Fonts -->
+    <link href='https://fonts.googleapis.com/css?family=Lora:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
+    <link href='../../../../../Fonts/Lora/lora.css' rel='stylesheet' type='text/css'>
+
+</head>
+
+<body>
+
+		<h1>Multiplexação Estatística</h1>
+
+		<p>
+			Conforme discutido durante as aulas, métodos de multiplexação <i>combinam</i> vários fluxos, permitindo a transmissão de todos por um mesmo canal de comunicação. Exemplos clássicos
+		incluem o TDM (<i>Time-Division Multiplexing</i>) e o FDM (<i>Frequency Division Multiplexing</i>). Em ambos os casos, o canal de comunicação é particionado em unidades físicas (tempo e frequência, respectivamente) atribuídas de forma exclusiva para cada fluxo.
+		</p>
+
+		<p>
+			Vimos também que, em redes de comutação de pacotes, essa combinação de vários fluxos de dados ocorre de maneira natural: à medida que os pacotes são recebidos pelos enlaces de entrada
+			de um comutador, eles são enfileirados na fila do enlace de saída, gerando uma sequência de pacotes a serem transmitidos. Tal sequência representa justamente a combinação dos vários
+			fluxos. 
+		</p>
+
+		<p>
+			Por conta da natureza aleatória segundo a qual os pacotes dos vários fluxos chegam ao comutador, a sequência de transmissão desses pelo enlace compartilhado se torna, também, aleatória.
+			Dito de outra forma, os momentos em que o enlace compartilhado é usado por cada um dos fluxos são definidos de maneira aleatória. Isso se opõe às naturezas determinísticas do TDM e do FDM
+			que garantem uma oferta totalmente determinística de recursos a cada fluxo.
+		</p>
+
+		<p>
+			Essa forma aleatória de multiplexação é chamada de <b>Multiplexação Estatística</b>. Apesar de seu não determinismo, a multiplexação estatística apresenta uma série de características
+			interessantes que tornam seu uso adequado em certas situações. Ao longo desse material, analisaremos mais a fundo o funcionamento da multiplexação estatística para entender quais
+			seriam essas características.
+		</p>
+
+		<h2>Multiplexação e Número de Usuários</h2>
+
+		<p>
+			Para entender os potenciais benefícios da multiplexação estatística, considere um cenário como o ilustrado na figura abaixo.
+		</p>
+
+		<img src="imagens/MultiplexacaoEstatisticaCenario.png" style="height: 400px;"/>
+
+		<p>
+			Nele, temos uma série de <i>hosts</i> conectados a um comutador que, por sua vez, possui um enlace de saída de 1 Mb/s ligando-o ao mundo externo. Esse cenário pode representar de forma simplificada, por exemplo, uma empresa que se conecta à Internet através de um enlace de 1 Mb/s e compartilha essa conexão por uma série de estações de trabalho utilizadas por seus funcionários. Esse cenário pode aproximar também a situação de um provedor de Internet que vende seus serviços a <i>N</i> residências de um certo bairro: nesse caso, os <i>hosts</i> da figura representariam essas residências que se conectam através de algum meio físico a um comutador do provedor.
+		</p>
+
+		<p>
+			Pensando do ponto de vista do provedor de Internet, uma pergunta importante é: quantos clientes desse bairro podemos conectar a esse mesmo comutador? Suponha, por exemplo, que o provedor venda apenas um plano de 100 kb/s. Por simplicidade, focaremos aqui apenas no <i>upload</i>, <i>i.e.</i>, no fluxo de dados dos clientes para o mundo externo. A mesma análise pode ser feita para o <i>download</i>. Um raciocínio simplório pode sugerir que o provedor está limitado a 10 clientes, já que 1 Mb/s / 100 kb/s = 10. 
+		</p>
+
+		<p>
+			Uma primeira análise pode sugerir que o provedor está limitado a 10 clientes, já que 1 Mb/s / 100 kb/s = 10. De fato, se utilizarmos métodos como o FDM ou o TDM para partilhar o enlace compartilhado pelos vários clientes, precisaremos alocar de maneira fixa os recursos do enlace, resultando num limite de 10 clientes.
+		</p>
+
+		<p>
+			Entretanto, pense no uso típico da Internet por um usuário final. Considere, por exemplo, um usuário que acesse um portal de notícias e leia algumas matérias. Em geral, o usuário solicitará a página principal do portal, gastará algum tempo lendo as manchetes e escolherá uma notícia em particular para ler. Repare que entre cada solicitação de uma nova página, o usuário passa algum tempo lendo o conteúdo. Durante esse período, em geral, não há necessidade de comunicação entre o computador do usuário e o servidor do portal. Isso significa que, em uma aplicação web típica, os momentos de comunicação efetiva são intercalados com períodos relativamente longos de inatividade. Outras aplicações, como leitura e envio de e-mails, possuem características similares.
+		</p>
+
+		<p>
+			O ponto importante aqui é que os fluxos de dados na Internet não são geralmente contínuos, havendo períodos em que um <i>host</i> não transmitirá novos pacotes. Assim, se um provedor aloca de maneira estática fatias de 100 kb/s do seu enlace compartilhado de 1 Mb/s para um determinado usuário, esse recurso ficará ocioso em certos momentos. Suponha, por exemplo, que no universo dos 10 clientes servidos pelo provedor sempre haja ao menos um que não esteja utilizando ativamente sua conexão em cada instante de tempo. Isso singifica que sempre há ao menos 100 kb/s de capacidade ociosa no enlace compartilhado. Para o provedor, seria interessante ele pudesse aproveitar essa capacidade ociosa e vender seu serviço a um décimo terceiro cliente.
+		</p>
+
+		<p>
+			A multiplexação estatística permite justamente esse reaproveitamento. Para entender como isso acontece, vamos considerar um exemplo hipotético em que cada cliente usa ativamente seus 100 kb/s apenas 10% do tempo. Repare que o padrão de tráfego dos usuários (<i>i.e.</i>, os instantes em que cada usuário transmitirá seus pacotes) é aleatório. Dessa forma, não sabemos exatamente <i>quando</i> os momentos de ociosidade ocorrerão. Mas sabemos que, a longo prazo (por exemplo, ao longo de um dia), usuários gerarão pacotes apenas 10% do tempo. Nessas condições, esperamos poder colocar um número <i>N</i> de usuários maior que os 10 da alocação estática. Mas qual seria o valor exato de <i>N</i>?
+		</p>
+
+		<h2>Exemplo: N = 35</h2>
+
+		<p>
+		Digamos que o provedor venda seus serviços para N = 35 usuários do bairro em questão, todos utilizando o mesmo enlace compartilhado para se comunicarem com a Internet. Se todos eles gerarem tráfego simultaneamente, cada usuário deveria receber 10 / 35 = 28,5 kb/s, um valor bem abaixo do serviço vendido pelo provedor. Na verdade, se mais que 10 usuários desse universo de 35 gerarem tráfego simultaneamente, o desempenho percebido será pior que o contratado. Assim, gostaríamos de saber o quão provável é essa situação, <i>i.e.</i>, que mais de 10 dos 35 usuários gerem tráfego simultaneamente.
+		</p>
+
+		<p>
+			Se cada usuário utiliza ativamente sua conexão apenas um percentual <span class="math inline">\(p = 10\%\)</span> do tempo, então, para um dado instante de tempo, podemos calcular a probabilidade de que exatamente um determinado conjunto de usuários utilize o enlace simultaneamente. A probabilidade de que um dado usuário esteja ativo enquanto os demais 34 permanecem inativos é dada por:
+		</p>
+
+		<span class="math">\(p\cdot(1-p)^{34}\)</span>					
+
+		<p>
+			De maneira análoga, se consideramos dois usuários específicos ativos e os demais 33 inativos, chegamos a seguinte probabilidade:
+		</p>
+
+		<span class="math">\(p^2\cdot(1-p)^{33}\)</span>					
+
+		<p>
+			De forma mais geral, se considerarmos um conjunto de k usuários ativos, enquanto os 35 - k restantes permanecem inativos, obtemos a seguinte probabilidade:
+		</p>
+
+		<span class="math">\(p^k\cdot(1-p)^{35-k}\)</span>					
+
+		<p>
+			Repare que a probabilidade acima diz respeito a um grupo específico de k usuários estar ativo, mas com 35 usuários, há múltiplas combinações de <span class="math inline">\(k\)</span> usuários que podem estar ativos simultaneamente. Por exemplo, para <span class="math inline">\(k = 1\)</span>, há 35 combinações. Para <span class="math inline">\(k = 2\)</span>, há <span class="math inline">\(\frac{35\cdot 34}{2} = 595\)</span> combinações. Em geral, há <span class="math inline">\({35}\choose{k}\)</span> combinações.
+		</p>
+
+		<p>
+			Assim, a probabilidade de que haja um grupo qualquer de exatamente k usuários ativos simultaneamente é dada por:
+		</p>
+
+		<span class="math">\({{35}\choose{k}}\cdot p^k\cdot(1-p)^{(35-k)}\)</span>
+
+		<p>
+			Lembre-se que nosso objetivo era saber o quão provável era que tivéssemos mais de 10 usuários ativos simultaneamente. Para isso, podemos simplesmente somar a probabilidade acima para k = 11, 12, ..., 35:
+		</p>
+
+		<span class="math">\(Pr(k > 10) = \sum\limits^{35}_{i=11}{{{35}\choose{i}}\cdot p^i\cdot(1-p)^{(35-i)}} \approx 0{,}00042\)</span>
+
+		<p>
+			Em resumo, mesmo com 35 usuários compartilhando o enlace, o provedor entregará o desempenho prometido 99,958% do tempo. Esse número é 3,5 vezes maior que o número de usuários suportado por um esquema de multiplexação estático. Embora haja uma chance dos usuários experimentarem um desempenho abaixo do contratado em alguns momentos, essa probabillidade é bem baixa, sendo, provavelmente, tolerável.
+		</p>
+
+		<h2>Limites</h2>
+
+		O exemplo anterior ilustrou o grande potencial de aproveitamento de recursos da multiplexação estatística. Entretanto, é preciso observar que fizemos uma série de hipóteses a respeito do cenário. Por exemplo, até que ponto é realístico assumir que cada usuário passa apenas 10% do tempo ativo? Além disso, o que acontece se aumentarmos o número de aumentarmos ainda mais o número de usuários ou se diminuirmos a capacidade do enlace compartilhado? Até que ponto a probabilidade de não entregarmos o desempenho esperado pelo usuário permanece aceitável? Mais ainda: o que seria uma probabilidade aceitável?
+
+		Para entender de forma mais concreta como esses vários parâmetros se inter-relacionam, observe os gráficos a seguir.
+
+		<!--
+		<span class="math inline">\(Pr(k > x) = \sum\limits^{N}_{i=x}{{{N}\choose{i}}\cdot p^i\cdot(1-p)^{(N-i)}}\)</span>
+		-->
+
+		<table style="padding-top: 20px;">
+			<tr>
+				<td>
+					<div id="MultiplexacaoEstatisticaGraph1" style="width: 550px; height: 225px;"></div>
+					<div id="MultiplexacaoEstatisticaGraph2" style="width: 550px; height: 225px;"></div>
+					<div id="MultiplexacaoEstatisticaGraph3" style="width: 550px; height: 225px;"></div>			
+				</td>
+				<td>
+					<span class="alert"><b>Parâmetros</b></span>
+					<!--
+					<div style="border: 3px solid #564;">
+						<div style="border: 2px solid #7B7; width: 20%;">
+							<table class="align">
+							<tr>
+								<td>k:</td>
+								<td><input id="MultiplexacaoEstatisticaInputk" value="10" style="height: 25px; font-size: 20px;"></input></td>
+							</tr>
+							<tr>
+								<td>N:</td>
+								<td><input id="MultiplexacaoEstatisticaInputN" value="35"  style="height: 25px; font-size: 20px;"></input></td>
+							</tr>
+							<tr>
+								<td>p:</td>
+								<td><input id="MultiplexacaoEstatisticaInputp" value="0.1" style="height: 25px; font-size: 20px;"></input></td>
+							</tr>
+						</table>
+						<input type="button" onclick="MultiplexacaoEstatisticaplot();" value="Recalcular"></input>
+					</div>
+			
+					<ul>
+						<li>Onde:
+						<ul>
+							<li>k: máximo de usuários simultâneos.
+							<ul>
+								<li>Depende da capacidade do enlace/rede e da banda para cada usuário.</li>
+							</ul></li>
+							<li>N: número total de usuários.</li>
+							<li>p: probabilidade de um dado usuário estar ativo.</li>
+						</ul></li>
+					</ul>
+					-->
+						<table class="align">
+							<tr>
+								<td>k:</td>
+								<td><input id="MultiplexacaoEstatisticaInputk" value="10"></input></td>
+							</tr>
+							<tr>
+								<td>N:</td>
+								<td><input id="MultiplexacaoEstatisticaInputN" value="35"></input></td>
+							</tr>
+							<tr>
+								<td>p:</td>
+								<td><input id="MultiplexacaoEstatisticaInputp" value="0.1"></input></td>
+							</tr>
+						</table>
+						<input type="button" onclick="MultiplexacaoEstatisticaplot();" value="Recalcular"></input>
+			
+					<ul>
+						<li>Onde:
+						<ul>
+							<li>k: máximo de usuários simultâneos.
+							<ul>
+								<li>Depende da capacidade do enlace/rede e da banda para cada usuário.</li>
+							</ul></li>
+							<li>N: número total de usuários.</li>
+							<li>p: probabilidade de um dado usuário estar ativo.</li>
+						</ul></li>
+					</ul>
+								
+				</td>
+			</tr>
+		</table>
+
+		Cada gráfico mostra como a probabilidade de falha &mdash; ou seja, a probabilidade do desempenho percebido pelo usuário ficar abaixo do esperado &mdash; varia de acordo com os três parâmetros do cenário: o número N de usuários que compartilham o enlace, o percentual p de tempo que cada usuário permanece ativo e o número máximo k de usuários que podem estar ativos simultaneamente sem que haja prejuízo de desempenho (<i>i.e.</i>, a capacidade do enlace compartilhado dividida pelo número de usuários que o compartilham). Em cada gráfico, dois desses três parâmetros permanecem fixos, enquanto o terceiro varia no eixo horizontal.
+		
+		Você pode alterar os valores dos parâmetros através do quadro à direta dos gráficos. Faça alguns experimentos e  observe o que acontece. Em particular, procure responder as seguintes perguntas:
+
+		<ol>
+			<li>Suponha que você abra um provedor de Internet e a legislação do País permita que a velocidade entregue ao cliente fique abaixo da contratada até 30% do tempo. Suponha que você venda planos de 10 Mb/s e que, em uma certa vizinhaça, você conecte seus clientes a um enlace compartilhado de 100 Mb/s. Assuma novamente que cada cliente fica ativo apenas 10% do tempo. Qual o número máximo de clientes suportado por esse enlace?</li>
+			<li>Suponha agora que você tenha conseguido vender seu pacote de Internet para o número máximo de clientes calculado no item anterior. Entretanto, ao longo dos anos, o perfil de uso desses clientes mudou: ao invés de majoritariamente acessarem páginas web e enviarem e receberem e-mails, os clientes passam grandes períodos de tempo utilizando aplicações como Netflix e Youtube, além de realizarem frequentemente video-conferências. Suponha que, com isso, o percentual de utilização dos usuários subiu para 60%. Você precisaria redimensionar o enlace compartilhado? Qual a capacidade mínima para continuar atendendo à legislação?</li>
+			<li>Suponha agora que a legislação em vigor seja alterada, se tornando mais exigente: provedores agora precisam garantir a velocidade contratada 90% do tempo. Qual o número máximo de usuários suportados agora?</li>
+		</ol>
+		
+		
+		</div>
+        <script type="text/javascript" charset="utf-8">
+
+            function MultiplexacaoEstatisticaCDF(n, k, p) {
+
+                var i;
+                var res = 0;
+                var comb = 1;
+                var probSel = 1;
+                var probNotSel = Math.pow(1-p, n);
+
+                for (i = 0; i <= k; i++) {
+
+                    res = res +  comb * probSel * probNotSel;
+                    comb = comb * (n-i) / (i + 1);
+                    probSel = probSel * p;
+                    probNotSel = probNotSel / (1-p);
+                }
+
+                return(res);
+            }
+
+             var MultiplexacaoEstatisticaLayout1 = {
+                font: {
+
+                    family: "helvetica, sans-serif",
+                    size: 14
+                },
+                yaxis: {
+                    title: "Prob. de Falha",
+                    showgrid: false,
+                    showline: true,
+                    ticks: "outside",
+                    range: [0, 1]
+                },
+                xaxis: {
+                    title: "N",
+                    showgrid: false,
+                    showline: true,
+                    showzeroline: false,
+                    nticks: 4,
+                    ticks: "outside",
+                },
+                margin: {                           // update the left, bottom, right, top margin
+                    l: 50, b: 65, r: 2, t: 5
+                },
+                height: 200,
+                width: 500
+            };
+
+             var MultiplexacaoEstatisticaLayout2 = {
+                font: {
+
+                    family: "helvetica, sans-serif",
+                    size: 14
+                },
+                yaxis: {
+                    title: "Prob. de Falha",
+                    showgrid: false,
+                    showline: true,
+                    ticks: "outside",
+                    range: [0, 1]
+                },
+                xaxis: {
+                    title: "p",
+                    showgrid: false,
+                    showline: true,
+                    showzeroline: false,
+                    nticks: 4,
+                    ticks: "outside",
+                },
+                margin: {                           // update the left, bottom, right, top margin
+                    l: 50, b: 65, r: 2, t: 5
+                },
+                height: 200,
+                width: 500
+            };
+
+             var MultiplexacaoEstatisticaLayout3 = {
+                font: {
+
+                    family: "helvetica, sans-serif",
+                    size: 14
+                },
+                yaxis: {
+                    title: "Prob. de Falha",
+                    showgrid: false,
+                    showline: true,
+                    ticks: "outside",
+                    range: [0, 1]
+                },
+                xaxis: {
+                    title: "k",
+                    showgrid: false,
+                    showline: true,
+                    showzeroline: false,
+                    nticks: 4,
+                    ticks: "outside",
+                },
+                margin: {                           // update the left, bottom, right, top margin
+                    l: 50, b: 65, r: 2, t: 5
+                },
+                height: 200,
+                width: 500
+            };
+
+	    var Nmax = 150;
+
+            function MultiplexacaoEstatisticareplot() {
+
+                var N = document.getElementById('MultiplexacaoEstatisticaInputN').value;
+                var k = document.getElementById('MultiplexacaoEstatisticaInputk').value;
+                var p = document.getElementById('MultiplexacaoEstatisticaInputp').value;
+                var x = [];
+                var y = [];
+                var i;
+
+                for (i = 1; i < Nmax; i++) {
+
+                    x[i] = i;
+                    y[i] = 1 - MultiplexacaoEstatisticaCDF(i, k, p);
+                }
+
+                var data = [{
+                    y: y,
+                    x: x,
+                    line: { width: 2, color: 'red' },
+                    uid: "00abaa"
+                }];
+
+                Plotly.newPlot(MultiplexacaoEstatisticaGraph1, data, MultiplexacaoEstatisticaLayout1);
+                Plotly.newPlot(MultiplexacaoEstatisticaGraph2, data, MultiplexacaoEstatisticaLayout2);
+                Plotly.newPlot(MultiplexacaoEstatisticaGraph3, data, MultiplexacaoEstatisticaLayout3);
+             }
+
+	     function MultiplexacaoEstatisticaplot() {
+
+                var N = document.getElementById('MultiplexacaoEstatisticaInputN').value;
+                var k = document.getElementById('MultiplexacaoEstatisticaInputk').value;
+                var p = document.getElementById('MultiplexacaoEstatisticaInputp').value;
+                var x = [];
+                var y = [];
+                var i;
+
+                for (i = 1; i < Nmax; i++) {
+
+                    x[i] = i;
+                    y[i] = 1 - MultiplexacaoEstatisticaCDF(i, k, p);
+                }
+
+                var data = [{
+                    y: y,
+                    x: x,
+                    line: { width: 2, color: 'red' },
+                    uid: "00abaa"
+                }];
+
+                Plotly.newPlot(MultiplexacaoEstatisticaGraph1, data, MultiplexacaoEstatisticaLayout1);
+
+		x = [];
+		y = [];
+                for (i = 0; i <= 100; i++) {
+
+                    x[i] = i / 100;
+                    y[i] = 1 - MultiplexacaoEstatisticaCDF(N, k, i / 100);
+                }
+
+                var data = [{
+                    y: y,
+                    x: x,
+                    line: { width: 2, color: 'red' },
+                    uid: "00abaa"
+                }];
+
+
+                Plotly.newPlot(MultiplexacaoEstatisticaGraph2, data, MultiplexacaoEstatisticaLayout2);
+
+		x = [];
+		y = [];
+                for (i = 1; i <= N; i++) {
+
+                    x[i] = i;
+                    y[i] = 1 - MultiplexacaoEstatisticaCDF(N, i, p);
+                }
+
+                var data = [{
+                    y: y,
+                    x: x,
+                    line: { width: 2, color: 'red' },
+                    uid: "00abaa"
+                }];
+
+                Plotly.newPlot(MultiplexacaoEstatisticaGraph3, data, MultiplexacaoEstatisticaLayout3);
+             }
+
+            MultiplexacaoEstatisticaplot();
+          </script>
+
+</body>
+</html>

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <!-- Meta info -->
+	<meta charset="utf-8">
+	<title>Checksum e CRC</title>
+
+    <!-- Math support -->
+	<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+	<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+</head>
+
+<body>
+
+	<h1>Checksum e CRC</h1>
+
+	<p>
+		Checksum e CRC são dois métodos de verificação de erros em mensagens popularmente utilizados em protocolos de redes. Embora ambos tenham o mesmo propósito, seus modos de operação são bem diferentes. Da mesma forma, cada método tem suas vantagens e desvantagens. Esse material tem por objetivo ilustrar e contrastar as características desses métodos.
+	</p>
+
+	<h2>Checksum</h2>
+
+	<p>
+		O checksum interpreta uma mensagem de comprimento arbitrário como uma sequência de números inteiros. Por exemplo, na vertente do checksum usada pelos protocolos tradicionais da Internet UDP, TCP e IP, os bits da mensagem são divididos em blocos de 16 bits, cada um interpretado como um inteiro. Caso o comprimento da mensagem não seja um múltiplo de 16 bits, adicionam-se zeros ao final &mdash; uma operação chamada de <i>padding</i>. Esses números são, então, somados e o resultado é o checksum da mensagem. 
+	</p>
+
+	<p>
+		Tanto as parcelas quando o resultado final da soma do checksum são armazenadas em um número fixo de bits &mdash; por exemplo, 16 bits no caso do checksum dos protocolos IP, UDP e TCP. Como o resultado final sempre é armazenado utilizando-se o mesmo número de bits, o checksum tem a propriedade de "resumir" mensagens arbitrariamente longas em números relativamente pequenos.
+	</p>
+
+	<p>
+		Para permitir a verificação da integridade de uma mensagem, o transmissor calcula o seu checksum e o anexa à mensagem. O receptor, por sua vez, faz ele próprio o cálculo do checksum da mensagem recebida e o valor obtido ao do checksum recebido com a mensagem. Se os valores forem diferentes, o receptor assume que a mensagem foi corrompida. Caso contrário, o receptor entende que a mensagem chegou íntegra.
+	</p>
+
+	<p>
+		Embora essa seja a ideia básica do checksum, há diversos parâmetros e detalhes que podem ser variados. Desse ponto em diante, consideraremos o checksum usado pelo IP. Em resumo, trata-se de um checksum de 16 bits: a mensagem é quebrada em blocos de 16 bits que são tratados como números inteiros representados em complemento a um. Esses valores são, então, somados. O valor final do checksum é o negativo do valor da soma &mdash; em complemento a 1, basta inverter os bits do resultado da soma.
+	</p>
+
+	<h2>Checksum: Exemplos</h2>
+
+	<p>
+		A implementação do checksum é relativamente simples. No quadro abaixo, você encontra uma implementação do checksum utilizado no protocolo IP. Essa implementação calcula o checksum de uma "mensagem" no formato de uma <i>string</i> especificada pelo usuário e a imprime na caixa de texto logo abaixo. Os bytes da mensagem correspondem aos valores dos caracteres ASCII da <i>string</i>.
+	</p>
+
+	<center>
+		<iframe src="checksum.html" width="370px" height="150px"></iframe>
+	</center>
+
+	<p>
+		Considere por exemplo a <i>string</i> "RedesII" (sem aspas). Ela resulta em um checksum cujo valor numérico é EB8C, em hexadecimal, ou 60300, em base 10. Se alterarmos um pouco a <i>string</i> de entrada, especificando agora "RedesI", obtemos como resultado \(EBD5_{(16)} = 60373_{(10)}\). Note que essa alteração aparentemente pequena resultou em uma mudança profunda no valor do checksum calculado.
+	</p>
+
+	<p>
+		Considere agora a <i>string</i> "casa". Ela possui um checksum \(3d29_{(16)}\). Agora faça o seguinte experimento: calcule o checksum da <i>string</i> "casa)=". Curiosamente, o resultado obtido é exatamente zero. Será que existe alguma relação entre os caracteres ")" e "=" e a <i>string</i> "casa" que explique esse resultado, ou trata-se apenas de uma coincidência?
+	</p>
+
+	<p>
+		De fato, não é uma coincidência e é relativamente fácil encontrar mensagens que gerem um checksum de 0. Para ver a razão, basta consultarmos uma tabela ASCII. Com ela, veremos que os caracteres "=" e ")" correspondem, respectivamente, aos valores hexadecimais 29 e 3D. Quando quebramos a mensagem "casa)=" em blocos de 16 bits (ou seja, dois bytes ou dois caracteres ASCII), percebemos que o último bloco corresponde exatamente aos caracteres "=" e ")". Mais precisamente, concatenando os bits de suas representações ASCII obtemos exatamente o número 3D29 em hexadecimal, que é o mesmo valor numérico do checksum da <i>string</i> "casa". Lembre-se, no entanto, que o checksum usado no protocolo IP corresponde ao negativo da soma dos valores de 16 bits que compõem a mensagem. Assim, o número 3D29 é exatamente o negativo da soma das representações numéricas de "ca" e "sa". Dessa forma, ao calcular o checksum de "casa)=", a última parecela da soma resulta em zero.
+	</p>
+
+	<p>
+		Embora isso possa parecer uma mera curiosidade, implementações práticas do checksum se utilizam dessa propriedade. Quando a mensagem chega ao receptor &mdash; anexada do checksum calculado pelo transmissor &mdash;, ao invés de separar as duas componentes, calcular o checksum da mensagem recebida e compará-lo ao checksum recebido, o receptor simplesmente calcula o checksum de todo o pacote &mdash; <i>i.e.</i>, da mensagem anexada ao checksum. Se o valor obtido for zero, isso significa que o somatório dos inteiros que constituem a porção da mensagem apenas corresponde ao negativo do valor de checksum recebido. Logo, a mensagem é considerada correta. Por outro lado, qualquer resultado diferente de zero indica uma inconsistência entre a mensagem e o valor de checksum recebido. Isso torna a implementação e o processamento do checksum um pouco mais simples.
+	</p>
+
+	<p>
+		Considerando o que foi visto até aqui, utilize a implementação de checksum acima e uma tabela ASCII e responda às questões a seguir:
+	</p>
+
+	<ol>
+		<li>A <i>string</i> "CASA" tem o mesmo checksum da string "casa"? Por quê?</li>
+		<li>Quais dois caracteres você adicionaria ao final de "CASA" para obter uma mensagem cujo checksum seja zero?</li>
+		<li>Considere agora a <i>string</i> "12345". O método que você utilizou no item anterior para gerar um sufixo de modo que o checksum dê zero funciona para essa <i>string</i>? Por quê?</li>
+		<li>Volte ao exemplo da mensagem "CASA". O que ocorre se, ao invés de adicionar o sufixo que você determinou no item 2 ao final da mensagem, você adicionasse os mesmos caracteres no início da <i>string</i>? Por que isso ocorre? Há outras posições em que esses mesmos caracteres podem ser inseridos resultando em um checksum igual a zero.</li>
+	</ol>
+
+	<h2>CRC</h2>
+	
+	<p>
+		Assim como o checksum, o CRC processa uma mensagem de tamanho arbitrário e gera como resultado um resumo de tamanho fixo. Também de forma análoga ao checksum, o CRC é parametrizável: entre outros parâmetros, o número de bits do CRC &mdash; <i>i.e.</i>, o número de bits usados para representar o resultado &mdash; varia de implementação para implementação. Por exemplo, uma implementação particularmente popular do CRC é o CRC32, usado em tecnologias como o Ethernet e o Wi-Fi. Por outro lado, existem também CRCs de 10, 12 e 16 bits &mdash; e de vários outros comprimentos.
+	</p>
+
+	<p>
+		Outra semelhança entre o CRC e o checksum é em como seus respectivos resumos são utilizados para a verificação de erros: o transmissor calcula o CRC da mensagem original e envia mensagem e CRC concatenados; o receptor calcula o CRC da mensagem recebida e compara o resultado ao CRC recebido junto da mensagem. Se os valores de CRC no receptor — calculado e recebido — baterem, considera-se a mensagem correta. Caso contrário, entende-se que a mensagem foi corrompida.
+	</p>
+
+	<p>
+		As semelhanças entre CRC e checksum terminam nesse ponto. A forma como seus respectivos resumos são calculados difere bastante. Enquanto o checksum trata a mensagem como uma sequência de números inteiros, o CRC a interpreta como um <em>polinômio em GF(2)</em>. De forma simplificada, isso significa que cada bit da mensagem se torna um coeficiente de um polinômio <span class="math inline"><em>P</em>(<em>x</em>)</span> — mais especificamente, o <em>i-ésimo</em> bit da mensagem se torna o coeficiente do termo em <span class="math inline"><em>x</em><sup><em>i</em></sup></span>. Qualquer operação sobre os coeficientes desses polinômios é realizada em módulo 2. Por exemplo, <span class="math inline">(<em>x</em><sup>3</sup> + <em>x</em>) + (<em>x</em><sup>2</sup> + <em>x</em>) = <em>x</em><sup>3</sup> + <em>x</em><sup>2</sup></span> (o termo em <span class="math inline"><em>x</em></span> desaparece porque <span class="math inline">1 + 1 ≡ 0 <em>m</em><em>o</em><em>d</em> 2</span>).
+	</p>
+
+	<p>
+		Dada essa interpretação da mensagem como um polinômio, o CRC de <span class="math inline"><em>k</em></span> bits de uma mensagem <span class="math inline"><em>M</em></span> corresponde ao resto da divisão de <span class="math inline"><em>M</em> ⋅ <em>x</em><sup><em>k</em></sup></span> por um outro polinômio <span class="math inline"><em>G</em></span> de grau <span class="math inline"><em>k</em></span>. Esse polinômio <span class="math inline"><em>G</em></span> é chamado de <em>polinômio gerador</em> e é um parâmetro do CRC. Repare que o resto dessa divisão necessariamente é um polinômio de grau menor que <span class="math inline"><em>k</em></span>. Assim, da mesma forma que podemos mapear uma mensagem <span class="math inline"><em>M</em></span> de <span class="math inline"><em>n</em></span> bits para um polinômio de grau <span class="math inline"><em>n</em></span>, podemos mapear o polinômio do resto da divisão de volta para uma sequência de de <span class="math inline"><em>k</em></span> bits. Essa sequência é justamente o resultado final do CRC da mensagem original.
+	</p>
+
+	<p>
+		Embora conceitualmente esse processo de divisão de polinômios possa parecer complicado, a implementação do CRC em computadores digitais binários é bastante simples. Isso ocorre porque as ações necessárias a essa divisão correspondem a operações lógicas simples sobre bits, como deslocamentos, comparações e <em>ou-exclusivo</em>.
+	</p>
+
+	<h2>CRC: Exemplos</h2>
+
+	<p>O quadro abaixo contém uma implementação do CRC32 — variante utilizada pelo Ethernet e pelo Wi-Fi, por exemplo. Assim como nos exemplos de checksum, essa implementação opera sobre mensagens na forma de <em>strings</em> de caracteres ASCII.</p>
+	
+	<center>
+		<iframe src="CRC.html" width="370px" height="150px"></iframe>
+	</center>
+
+	<p>Utilizando a <em>string</em> “RedesII” como exemplo, uma primeira observação é o tamanho do resumo gerado: o CRC32 contém 4 bytes, contra apenas 2 do checksum. Note, no entanto, que isso é configurável: poderíamos ter utilizado um CRC de 16 bits ou um checksum de 32.</p>
+
+	<p>Se alterarmos a <em>string</em> de entrada para “RedesI”, como fizemos para o checksum, podemos notar que o CRC também altera bastante sua saída: de 6959B4C4 para 501C4AFC. Na verdade, como veremos mais adiante, o CRC é bem mais sensível que o checksum a pequenas alterações na mensagem.</p>
+
+	<!--bitsSSvT-->
+
+	<p>Nos exemplos com o checksum, vimos que é relativamente simples encontrarmos um sufixo para uma dada mensagem de forma que o checksum da nova mensagem seja zero. Isso suscita a pergunta: o mesmo ocorre com o CRC? Mais uma vez, a resposta é “sim”. Recorde-se que, por definição, o CRC é o resto da divisão de <span class="math inline"><em>M</em> ⋅ <em>x</em><sup><em>k</em></sup></span> pelo polinômio gerador de grau <span class="math inline"><em>k</em></span>. Assim, se denotarmos esse resto por <span class="math inline"><em>C</em></span>, sabemos que <span class="math inline"><em>M</em> ⋅ <em>x</em><sup><em>k</em></sup> − <em>C</em></span> é divisível pelo polinômio gerador — ou seja, deixa resto zero. Igualmente, o polinômio <span class="math inline">(<em>M</em> ⋅ <em>x</em><sup><em>k</em></sup> − <em>C</em>) ⋅ <em>x</em><sup><em>k</em></sup></span> também é divisível pelo polinômio gerador. Logo, uma mensagem <span class="math inline"><em>M</em><sup>′</sup> = <em>M</em> ⋅ <em>x</em><sup><em>k</em></sup> − <em>C</em></span> tem necessariamente CRC zero. Lembre-se, ainda, que todas as operações entre coeficientes nos polinômios utilizados em um CRC são calculadas módulo 2. Isso implica <span class="math inline"><em>M</em><sup>′</sup> = <em>M</em> ⋅ <em>x</em><sup><em>k</em></sup> + <em>C</em></span> (<em>i.e.</em>, podemos substituir a subtração por <span class="math inline"><em>C</em></span> por uma soma). Por fim, repare que, como <span class="math inline"><em>C</em></span> é um polinômio de grau menor que <span class="math inline"><em>k</em></span>, o polinômio <span class="math inline"><em>M</em> ⋅ <em>x</em><sup><em>k</em></sup> + <em>C</em></span> corresponde à mensagem M concatenada à representação binária de <span class="math inline"><em>C</em></span> (com <span class="math inline"><em>k</em></span> bits).</p>
+	
+	<p>Na prática, o que essa análise indica é que se concatenarmos os bits do CRC calculado sobre uma mensagem original a essa mensagem, obteremos uma nova mensagem cujo CRC será necessariamente zero. Para ver um exemplo disso, considere uma segunda implementação de um CRC de 32 bits disponível no quadro abaixo. Experimente calcular o CRC da mensagem “bits”. Você deve obter como resultado o valor hexadecimal 54765353. Quebrando os 32 bits desse CRC em cada um de seus 4 bytes, podemos utilizar uma tabela ASCII e convertê-los nos caracteres ‘T’, ‘v’, ‘S’ e ‘S’. Agora tente calcular o CRC da <em>string</em> “bitsSSvT” — novamente utilizando o quadro abaixo. O resultado obtido deve ser 0, justamente porque essa nova mensagem é a concatenação da mensagem original com o seu CRC.</p>
+	
+	<center>
+		<iframe src="CRCSimplificado.html" width="370px" height="160px"></iframe>
+	</center>
+
+	<p>Assim como no checksum, essa propriedade é utilizada em implementações do CRC para simplificar o processo de verificação: ao invés de separar a porção da mensagem da porção do CRC, calcular o CRC da mensagem recebida e compará-lo ao CRC recebido, o receptor pode simplesmente calcular o CRC de todo o pacote formado pela concatenação da mensagem original com o CRC calculado pelo transmissor. Um resultado de zero indica uma mensagem aparentemente correta, enquanto qualquer outro resultado aponta para algum tipo de corrupção dos dados.</p>
+
+	<p>Nesse ponto, talvez você tenha tido a curiosidade de fazer o experimento das <em>strings</em> “bits” e “bitsSSvT” na implementação de CRC presente no primeiro quadro dessa seção. Se você tentou computar os CRCs dessas mensagens usando aquela implementação, deve ter notado que os resultados obtidos foram completamente diferentes. Em primeiro lugar, o valor de CRC retornado pela primeira implementação para a <em>string</em> “bits” foi diferente: 75328c4f ao invés de 54765353. Além disso, ainda que usássemos a mesma estratégia e concatenássemos o valor do CRC da mensagem original ao final dela, o CRC da nova mensagem não seria zero. Isso ocorre porque o algoritmo de CRC32 utilizado no Ethernet e no Wi-Fi realiza alguns passos além do que um algoritmo “puro” de CRC faria. Em particular, depois de terminar o cálculo do resto da divisão, esse algoritmo realiza uma operação de <em>ou-exclusivo</em> desse resto com o valor hexadecimal FFFFFFFF (32 bits iguais a 1). Na prática, a adição desse passo não tem efeitos sobre a capacidade do CRC de detectar erros, embora altere os valores de CRC associados a cada mensagem.</p>
+
+	<h2>Falsos Positivos e Falsos Negativos</h2>
+
+	<p>Uma questão fundamental quando discutimos métodos de detecção de erros é: esses métodos sempre acertam? Sempre que a mensagem sofre corrupções ao atravessar o enlace, esses métodos conseguem detectá-las? Por outro lado, existe alguma possibilidade de uma mensagem íntegra ser erroneamente classificada como corrompida? Como veremos nessa seção, tanto CRC quanto checksum — e, na verdade, qualquer outro método de verificação de erros — podem errar para ambos os lados: classificar mensagens íntegras como corrompidas (falso negativo) e classificar mensagens corrompidas como íntegras (falso positivo).</p>
+
+	<p>Em um primeiro momento, pode parecer estranha a ideia de que CRC ou checksum possam incorrer em falsos negativos. Ambos os métodos são determinísticos — <em>i.e.</em>, não possuem qualquer passo aleatório —, o que quer dizer que, dada uma mesma entrada/mensagem, eles sempre geram uma mesma saída/resumo. Assim, assumindo que <strong>nem a mensagem nem o CRC/checksum computados pelo transmissor sofreram corrupção no enlace</strong>, de fato, a verificação no receptor deve ser bem-sucedida. O problema ocorre quando apenas a primeira parte dessa hipótese é verdadeira: os bits da mensagem original não sofreram corrupção, mas os bits do CRC/checksum anexados pelo transmissor foram alterados de alguma forma. Nesse caso, o receptor recalculará exatamente o mesmo valor de CRC/checksum gerado pelo transmissor, mas a comparação falhará, porque o CRC/checksum recebido terá sido alterado durante a transmissão.</p>
+
+	<p>Note que quando a verificação de um CRC/checksum falha, o receptor não tem a informação de quais conjuntos de bits do pacote foram corrompidos. Assim, o receptor é obrigado a assumir o pior caso: que a mensagem em si pode ter sido corrompida. Via de regra, isso leva ao descarte do pacote, embora a mensagem em si — <em>i.e.</em>, o que de fato interessa — esteja íntegra.</p>
+
+	<p>O descarte de uma mensagem por conta de um falso negativo é inconveniente, mas em geral não é particularmente nocivo. Se a mensagem descartada é importante, possivelmente a comunicação utiliza algum mecanismo de retransmissões que permitirá recuperá-la. Na maioria das situações, um falso positivo é um problema mais grave, porque, nesse caso, o receptor aceitará uma mensagem que se encontra corrompida.</p>
+
+	<p>Em métodos como o CRC e o checksum, falso positivos ocorrem quando, por azar, a versão corrompida da mensagem tem exatamente o mesmo resumo que a original. De fato, qualquer método de verificação de erros baseado resumos em está susceptível a esse problema porque eles transformam mensagens de tamanhos arbitrários em resumos de tamanho fixo. Matematicamente, isso corresponde a uma função não-injetiva: múltiplas mensagens necessariamente resultam no mesmo resumo, já que existem mais possíveis mensagens originais que valores diferentes de resumo.</p>
+
+	<h2>Colisões no CRC e no Checksum</h2>
+	
+	<p>Quando estudamos métodos que geram resumos de mensagens (tanto para fins de verificação de erros, quanto para outros propósitos), chamamos de <strong>colisão</strong> a situação de duas ou mais mensagens gerarem um mesmo valor de resumo. Obviamente, para os propósitos de verificação de erros, colisões são acontecimentos indesejados, porque podem levar um receptor a aceitar uma mensagem corrompida. Uma pergunta importante, portanto, é: o quão frequentes são essas colisões no checksum e no CRC.</p>
+	
+	<p>De forma geral, tanto CRC quanto checksum são boas “funções de espalhamento”. Isto é, ambos os métodos têm a propriedade de mapear de forma balanceada as mensagens de entrada nos vários valores possíveis de seus resumos. Por conta desse bom balanceamento, geralmente consideramos que uma mensagem genérica tem igual probabilidade de ser mapeada para cada um dos possíveis valores de resumo. Em um CRC de 32 bits, por exemplo, existem <span class="math inline">2<sup>32</sup></span> possíveis valores de resumo, o que significa que a probabilidade de uma mensagem ter um valor particular de CRC é de <span class="math inline">\(\frac{1}{2^{32}} \approx 10^{-9,6}\)</span>.</p>
+	
+	<p>Note que nessa análise não fizemos qualquer referência a como CRC e checksum operam: apenas consideramos o número de bits de seus respectivos resumos. Isso pode sugerir que um CRC e um checksum de mesmo comprimento (digamos, ambos de 16 bits) são igualmente efetivos evitando colisões.</p>
+	
+	<p>Embora, em geral, isso seja verdade, aspectos práticos fazem com que o CRC seja mais eficaz para detectar os tipos de corrupção geralmente introduzidas por enlaces de comunicação. Para entender isso, vamos ver alguns exemplos de colisões obtidas com o CRC e o checksum.</p>
+	
+	<p>Considere, por exemplo, a <em>string</em> “testar” (sem as aspas). Utilizando o quadro abaixo, que implementa o mesmo esquema de checksum usado pelo protocolo IP, vemos que essa <em>string</em> possui um checksum de B3B6 em hexadecimal. Agora calcule o checksum da <em>string</em> “settar”: o valor obtido deve ser exatamente o mesmo, indicando uma colisão. Embora a existência de colisões no checksum seja matematicamente inevitável, é importante observar a facilidade com que conseguimos gerar essa colisão: apenas dois caracteres foram alterados, totalizando 6 bits mudados de uma mensagem para a outra. Na verdade, é fácil gerarmos uma outra colisão com ainda menos alterações: a <em>string</em> “uertar” tem o mesmo checksum que “testar” e apenas dois bits diferentes.</p>
+	
+	<center>
+		<iframe src="checksum.html" width="370px" height="150px"></iframe>
+	</center>
+
+	<p>Em geral, se mudarmos um bit de zero para um e outro, a uma distância múltipla de 16 bits do primeiro, de um para zero, a nova mensagem continuará com o mesmo checksum — aqui, estamos nos referindo em particular ao checksum usado pelo IP, embora propriedades semelhantes possam ser derivadas para qualquer checksum. Isso ocorre porque o checksum é simplesmente uma soma: pares de bits cuja distância seja um múltiplo de 16 correspondem a algarismos de uma mesma posição em parcelas distintas da soma. Assim, os efeitos das alterações desses dois bits se cancelam. Como consequência, poucas alterações de uma mensagem podem resultar em uma mensagem corrompida de mesmo checksum e, consequentemente, em um falso positivo.</p>
+	
+	<p>Já no CRC, a situação é diferente. Um exemplo de colisão do CRC32 são as <em>strings</em> “plumless” e “buckeroo”: ambas resultam no valor hexadecimal 4DDB0C25 (vide o quadro abaixo). Note, entretanto, que as duas <em>strings</em> são bem diferentes, não compartilhando um único caractere em comum. Em geral, pequenas alterações nas mensagens geram grandes mudanças nos valores de CRC. Essa característica torna o CRC uma boa alternativa para detecção de erros introduzidos por enlaces, porque esses erros tendem a ser localizados em pequenos trechos do pacote.</p>
+
+	<center>
+		<iframe src="CRC.html" width="370px" height="150px"></iframe>
+	</center>
+</body>
+</html>

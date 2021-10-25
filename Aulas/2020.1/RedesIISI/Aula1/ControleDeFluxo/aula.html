@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <!-- Meta info -->
+	<meta charset="utf-8">
+	<meta name="shortauthor" content="Diego Passos"/>
+	<meta name="shorttitle" content="Apresentação, Conceitos, Medidas"/>
+	<meta name="shortevent" content="Redes de Computadores"/>
+	<title>Redes de Computadores: Aula 1</title>
+
+	<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+	<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+</head>
+
+<body>
+
+	<h1>Controle de Fluxo</h1>
+
+	<p>
+		O controle de fluxo é uma funcionalidade presente em alguns protocolos e tecnologias de comunicação de dados e redes. O objetivo do controle de fluxo é adequar os momentos em que o transmissor realiza os envios dos dados à capacidade de recepção do receptor. Dito de outra maneira, o controle de fluxo visa impedir que o transmissor envie dados &quot;mais rapidamente&quot; do que o receptor é capaz de recebê-los.
+	</p>
+
+	<h2>Problemas da Ausência do Controle de Fluxo: Um Exemplo</h2>
+
+	<p>
+		Em um primeiro momento, pode não ser claro o que exatamente &quot;enviar dados mais rapidamente do que o receptor é capaz de recebê-los&quot; significa. Para entender mais concretamente como isso pode acontecer, vamos considerar um exemplo prático de uma <b>comunicação serial</b>.
+	</p>
+
+	<p>
+		A comunicação serial é uma tecnologia bastante utilizada ainda hoje em dispositivos embarcados &mdash; há três décadas, essa tecnologia também era comumente utilizada na conexão de periféricos, como <i>mouses</i>, a computadores pessoais. Dispositivos embarcados geralmente são compostos por um microcontrolador que executa alguma aplicação especializada. É comum também que eles estejam conectados a outros sistemas mais complexos, com os quais troquem dados. Essa conexão é muitas vezes realizada através de uma interface UART (<i>Universal Asynchronous Receiver-Transmitter</i>) fisicamente conectada por uma porta serial.
+	</p>
+
+	<p>
+		Não é objetivo desse material explicar em detalhes o funcionamento de uma interface UART, mas, em síntese, a unidade básica de informação enviada/recebida por uma UART é um byte. Por sua vez, os bytes enviados por uma UART são divididos nos seus bits que são enviados sequencialmente &mdash; ou de forma "serial". O receptor, por sua vez, possui um registrador de deslocamento que acumula os bits recebidos: a medida que novos bits chega, o conteúdo do registrador é deslocado e o novo bit é inserido na primeira posição do registrador. Quando o receptor recebe o último bit de um byte, a transmissão é completada e o conteúdo do byte é disponibilizado para leitura por parte das aplicações. Essa disponibilização é feita copiando-se o conteúdo do byte do registrador de deslocamento para algum tipo de <i>buffer</i>. Em um PC, esse <i>buffer</i> tipicamente pode acumular vários bytes recebidos, mas é relativamente comum que em dispositivos microcontrolados o <i>buffer</i> tenha capacidade para um único byte. Como a UART "avisa" a aplicação sobre a disponibilidade novos dados para leitura varia da dispositivo para dispositivo: certos dispositivos suportam interrupções; em outros, a aplicação faz <i>polling</i> (<i>i.e.</i>, indaga a UART de tempos em tempos sobre a existência de novos dados).
+	</p>
+
+	<p>
+		Embora haja diversos tipos de porta serial diferentes, é comum que UARTs estejam conectadas a portas com ao menos cinco pinos:
+	</p>
+
+	<ul>
+		<li>RX: recepção de bits.</li>
+		<li>TX: transmissão de bits.</li>
+		<li>GND: terra (<i>i.e.</i>, provê uma referência comum para a tensão elétrica usada em TX e RX para a representação dos bits).</li>
+		<li>RTS: <i>Request-To-Send (usado para controle de fluxo).</i></li>
+		<li>CTS: <i>Clear-To-Send (usado para controle de fluxo).</i></li>
+	</ul>
+
+	<p>
+		Para entender a necessidade de controle de fluxo, suponha, por exemplo, que conectemos um PC a um sistema embarcado que controle um letreiro. Esse sistema hipotético receberia <i>strings</i> codificadas com caracteres ASCII pela porta serial/UART e as exibiria no letreiro. Imagine que, em determinado momento, o PC envie a <i>string</i> 'casa' pela porta serial. Em um primeiro momento, vamos assumir uma comunicação que <b>não utiliza controle de fluxo</b> para identificarmos os potenciais problemas.
+	</p>
+
+	<p>
+		A animação abaixo ilustra esse cenário. À direita, temos o PC e uma representação, bit a bit, do dado a ser transmitido (a string 'casa'). À esquerda, vemos uma representação simplificada dos componentes relevantes do sistema do letreiro. Em particular, vemos os pinos da porta serial. O pino RX é conectado à entrada do registrador de deslocamento. Quando um byte completo é recebido, o conteúdo do registrador de deslocamento é imediatamente copiado para um buffer com capacidade de armazenar exatamente um byte. Ao mesmo tempo, o <i>software</i> que implementa a funcionalidade do sistema é executado no microcontrolador e, em cada instante de tempo, pode estar em dois estados: lendo o último byte recebido pela UART ou executando outras tarefas da aplicação. A figura contém ainda "LEDs", que indicam condições específicas. Por exemplo, quando o pino RX recebe um bit 1, seu LED correspondente fica vermelho (em oposição a permanecer branco, quando o bit recebido é 1). De forma análoga, há um LED para "dados disponíveis", indicando à aplicação que um byte (ainda não lido) está disponível no <i>buffer</i> de recepção da UART.
+	</p>
+
+	<p>
+		Nesse exemplo, quando houver bytes disponíveis no <i>buffer</i> da UART, a aplicação irá realizar a leitura e armazenará esse valor na memória principal (cada linha da memória armazena um byte). Note, no entanto, não necessariamente a aplicação efetuará a leitura do próximo byte imediatamente quando esse é recebido. É possível que a aplicação esteja realizando alguma outra atividade mais importante naquele momento e demore algum tempo até fazer a leitura &mdash; isso é particularmente comum em sistemas baseados em <i>polling</i>.
+	</p>
+
+	<center>
+		<iframe src="UARTSemControleDeFluxo.html" style="width: 800px; height: 650px;"></iframe>
+	</center>
+
+	<p>
+		Observe que isso é justamente o que ocorre nesse exemplo. Por exemplo, transmissão do primeiro byte termina ao final do ciclo 7, mas a aplicação só realiza a leitura no ciclo 9. Da mesma forma, segundo byte chega ao final do ciclo 15, mas a aplicação só o lê no ciclo 20. A situação se torna particularmente problemática com o terceiro byte (o caractere 's'). Sua transmissão é finalizada ao final do ciclo 23, mas a próxima leitura feita pela aplicação só ocorre no ciclo 32. Nesse ponto, no entanto, o quarto byte da <i>string</i> também já foi recebido, fazendo com que a UART sobreescreva o conteúdo do <i>buffer</i> de recepção. Dessa forma, quando a aplicação finalmente realizada a leitura do <i>buffer</i>, o caractere lido é o segundo 'a', ao invés do 's'. Em última análise, isso causa uma corrupção do dado transmitido, fazendo com que a <i>string</i> errada seja exibida no letreiro.
+	</p>
+
+	<h2>Introduzindo Controle de Fluxo</h2>
+
+	<p>
+		Pode-se argumentar que o problema do exemplo anterior se deve a um <i>buffer</i> excessivamente pequeno. De fato, o problema não teria se manifestado no exemplo anterior se a UART hipotética tivesse um <i>buffer</i> de pelo menos dois bytes. Entretanto, é preciso observar que:
+	</p>
+
+	<ol>
+		<li>O uso de <i>buffers</i> pequenos nesse tipo de dispositivo é proposital. Faz-se isso para tornar o dispositivo mais simples e, consequentemente, mais barato, menor e mais eficiente energéticamente.</li>
+		<li>Mesmo com um <i>buffer</i> de dois bytes, ainda é possível incorrer no mesmo tipo de problema: basta que a aplicação, por qualquer motivo, demore mais que o tempo necessário para a transmissão de 3 bytes para realizar a leitura.</li>
+	</ol>
+
+	<p>
+		Dessa forma, nota-se que é importante conseguirmos uma solução para esse problema que não dependa de suposições acerca de uma capacidade mínima de <i>buffer</i> ou do tempo máximo entre leituras do <i>buffer</i> efetuadas pela aplicação. Tal solução passa por um controle dos momentos em que transmissor pode, efetivamente, enviar novos bytes &mdash; ou seja, por um controle de fluxo.
+	</p>
+
+	<p>
+		A implementação do controle de fluxo em portas seriais é bastante simples. Basicamente, sempre que o transmissor desejar enviar um novo byte, ele deve <b>pedir autorização</b>. Para isso, o transmissor utiliza o pino RTS da porta serial. Ao enviar um sinal elétrico apropriado por esse pino, o transmissor indica ao receptor sua intenção de enviar mais dados. Cabe, então, ao receptor avaliar se pode seguramente receber esse próximo byte &mdash; em particular, verificando se tem espaço em seu <i>buffer</i> de recepção para escrever esse próximo byte sem sobreescrever dados anteriores ainda não lidos pela aplicação. Quando o receptor determina que é seguro prosseguir com a transmissão do próximo byte, ele sinaliza isso ao transmissor enviando um sinal elétrico apropriado pelo pino CTS. O transmissor, por sua vez, aguarda esse sinal CTS, começando a transmissão apenas após receber a autorização.
+	</p>
+
+	<center>
+		<iframe src="UARTComControleDeFluxo.html" style="width: 800px; height: 650px;"></iframe>
+	</center>
+
+	<p>
+		Repare esse processo ilustrado na animação acima. Ao contrário do que ocorria no exemplo anterior, o PC não começa a transmitir o primeiro bit do primeiro byte imediatamente no ciclo 0. Ao contrário, nesse ciclo o transmissor sinaliza sua intenção de enviar um próximo byte enviando um sinal RTS. Como há nesse momento <i>buffer</i> suficiente para armazenar esse próximo byte, o receptor autoriza essa transmissão já no próximo ciclo através do pino CTS. Apenas no ciclo 2, após receber o sinal CTS, o PC envia o primeiro bit pelo pino RX.
+	</p>
+
+	<p>
+		Ao final do ciclo 9, o primeiro byte termina de ser recebido pelo receptor e é imediatamente copiado para o <i>buffer</i> de recepção. Note que no ciclo seguinte o PC manifesta seu interesse em transmitir o próximo byte enviando um sinal RTS. Entretanto, o <i>buffer</i> do receptor está indisponível, já que a aplicação não realizou até esse ponto a leitura do último byte recebido. Essa leitura acontece apenas no ciclo 11, permitindo que a UART do receptor envie o sinal CTS autorizando a transmissão do próximo byte.
+	</p>
+
+	<p>
+		Esse comportamento do transmissor precisar esperar para começar a transmissão do próximo byte se repete outras vezes. Por exemplo, no ciclo 20 o transmissor sinaliza que deseja começar a transmissão do terceiro byte da <i>string</i>, mas só recebe a autorização no ciclo 24; a transmissão do terceiro byte é concluída no ciclo 32, mas apenas no ciclo 38 o transmissor recebe a autorização para transmitir o quarto byte.
+	</p>
+
+	<h2>Controle de Fluxo e Taxa de Transmissão</h2>
+
+	<p>
+		Uma observação interessante desses dois exemplos é que, embora o controle de fluxo tenha impedido a corrupção dos dados transmitidos, ele resultou em uma redução da vazão. No primeiro exemplo, os 32 bits da string foram transmitidos em 32 ciclos: uma vazão de 1 bit por ciclo. Já no segundo exemplo, a mesma transferência precisou de 46 ciclos para ser concluída: uma vazão de \(\frac{32}{46} \approx 0,696\) bits por ciclo.
+	</p>
+
+	<p>
+		Na prática, isso se deve à redução da taxa de transmissão por parte do transmissor: ao abrir mão de transmitir em certos momentos (por não ter ainda a autorização do receptor), na média, o transmissor acaba transmitindo a uma taxa mais baixa. Além disso, note que há algum tempo gasto com a troca dos sinais RTS e CTS &mdash; o que constitui um <i>overhead</i> de controle do protocolo. Ainda assim, esse custo adicional é muitas vezes aceitável em troca de evitar eventuais corrupções de dados.
+	</p>
+
+</body>
+</html>

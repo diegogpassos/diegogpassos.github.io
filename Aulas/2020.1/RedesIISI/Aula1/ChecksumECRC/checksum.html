@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <!-- Meta info -->
+	<meta charset="utf-8">
+	<title>Checksum</title>
+
+</head>
+
+<body>
+
+		<script type="text/javascript" >
+			var exemploLanternaASCII = '';
+			var exemploLanternaTempo;
+
+			function exemploChecksum2(input) {
+
+				var saida = document.getElementById('exemploChecksumSaida2');
+				var entrada = document.getElementById('exemploChecksumEntrada2');
+				var s = entrada.value;
+				var i;
+				var sum = 0;
+				var par = 0;
+
+				for (i = 0; i < s.length; i += 2) {
+
+					par = 0;
+					if (i + 1 < s.length)
+						par = (s.charCodeAt(i + 1) << 8);
+					par += s.charCodeAt(i);
+					sum += par;
+					if (sum >= 65536)
+						sum -= 65535
+				}
+
+				sum = 65535 - sum;
+				saida.value = ('0000' + sum.toString(16)).slice(-4);
+			}
+		</script>
+
+		<center>
+		<div style="width: 300px; border: 2px solid #000; padding-bottom: 10px;">
+		<table class="align" style="width: 90%;">
+			<tr>
+				<td style="width: 90%;">Mensagem</td>
+				<td><input type="text" id="exemploChecksumEntrada2" name="exemploChecksumEntrada2" value="RedesII" size="10" maxlength="10" style="font-size: 80%; padding: 0.5%;"/></td>
+			</tr>
+			<tr>
+				<td>Checksum</td>
+				<td><input type="text" readonly="true" id="exemploChecksumSaida2" name="exemploChecksumSaida2" value="eb8c" size="10" maxlength="4" style="font-size: 80%; padding: 0.5%;" /></td>
+			</tr>
+		</table>
+		<br>
+		<input type="submit" name="exemploChecksumCalcular2" value="Calcular" style="padding: 0.5%; font-size: 90%; font-family: 'Lora', sans-serif;" onClick="exemploChecksum2();"/>
+		<br>
+		</div>
+		</center>
+
+</body>
+</html>

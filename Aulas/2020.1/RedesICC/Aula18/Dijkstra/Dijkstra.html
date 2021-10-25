@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html>
+  <head>
+
+    <meta charset="utf-8">
+    <title>Algoritmo de Dijkstra</title>
+
+		<script src="js/snap.svg-min.js" charset="utf-8"></script>
+		<script src="js/Grafos.js" charset="utf-8"></script>
+
+    <style>
+      html {
+        font-family: "Times New Roman";
+      }
+
+      .circle {
+        width:30px;
+        height:20px;
+        border-radius:50%;
+        border: 2px solid #c33;
+        line-height:20px;
+        text-align:center;
+        margin: auto;
+      }
+
+      table.TabelaDeRoteamento {
+        border-top: 2px double #000;
+        border-bottom: 2px double #000;
+        padding-left: 10px;
+        padding-right: 10px;
+        border-spacing: 0px 2px;
+      }
+
+      table.TabelaDeRoteamento > thead > tr > th {
+        border-bottom: 1px solid #000;
+      }
+
+      table.TabelaDeRoteamento td {
+        padding-left: 10px;
+        padding-right: 10px;
+        text-align: center;
+      }
+
+      table.TabelaDeRoteamento th {
+        padding-left: 10px;
+        padding-right: 10px;
+      }
+
+      table.TabelaExecucao {
+        border-top: 2px double #000;
+        border-bottom: 2px double #000;
+        padding-left: 10px;
+        padding-right: 10px;
+        border-spacing: 0px 2px;
+      }
+
+      table.TabelaExecucao > thead > tr > th {
+        border-bottom: 1px solid #000;
+      }
+
+      table.TabelaExecucao td {
+        padding-left: 10px;
+        padding-right: 10px;
+        text-align: center;
+      }
+
+      table.TabelaExecucao th {
+        padding-left: 10px;
+        padding-right: 10px;
+      }
+    </style>
+
+  </head>
+  <body>
+    <table>
+      <tr>
+        <td>
+          <div style="border: 2px solid #333; width: 550px;">
+            <svg id="DijkstraArbitrario" style="width: 550px; height: 280px;"></svg>
+          </div>
+        </td>
+
+        <td style="padding-left: 40px; vertical-align: top;">
+          <table class="TabelaDeRoteamento">
+            <thead>
+              <tr>
+                <th>Destino</th><th>Próximo Salto</th><th>Distância</th>
+              </tr>
+            </thead>
+            <tbody id="TabelaDeRoteamento">
+            </tbody>
+          </table>
+        </td>
+      </tr>
+    </table>
+
+    <br>
+
+    <table class="TabelaExecucao">
+      <thead>
+        <tr>
+          <th>Passo</th><th>N&prime;</th>
+        </tr>
+      </thead>
+      <tbody id="TabelaExecucao">
+      </tbody>
+    </table>
+
+    <br>
+
+    <h2>Instruções</h2>
+
+    <ul>
+      <li>Nós podem ser adicionados através de um duplo-clique na imagem.</li>
+      <li>Nós também podem ser arrastados e reposicionados.</li>
+      <li>Para criar uma aresta, clique no nó de origem segurando <tt>&lt;shift&gt;</tt> e clique no nó de destino.</li>
+      <li>Nós e arestas podem ser removidos: clique no elemento desejado segurando <tt>&lt;ctrl&gt;</tt>.</li>
+      <li>O peso de uma aresta pode ser modificado através de um clique segurando a tecla <tt>&lt;shift&gt;</tt>.</li>
+      <li>Os nomes dos nós podem ser alterados através de um clique segurando ambas as teclas <tt>&lt;ctrl&gt;</tt> e <tt>&lt;shift&gt;</tt>.</li>
+      <li>Um clique simples em qualquer nó o seleciona como o nó de origem para o cálculo dos caminhos mais curtos.</li>
+      <li>Qualquer alteração no grafo dispara automaticamente o cálculo dos melhores caminhos.</li>
+    </ul>
+  </body>
+
+  <script type="text/javascript">
+    function Dijkstra(grafo, tabelaDeRoteamento, tabelaExecucao) {
+
+      var adj = grafo.AdjacencyMatrix();
+      var N = grafo.Nodes();
+
+      var nNos = N.length;
+      var definitivos = Array.apply(null, Array(nNos)).map(function(){return(false);});
+      var distancias = Array.apply(null, Array(nNos)).map(function(){return(Number.MAX_VALUE);});
+      var predecessores = Array.apply(null, Array(nNos)).map(function(){return(-1);});
+      var proximosSaltos = Array.apply(null, Array(nNos)).map(function(){return(-1);});
+      var minimo;
+      var s = N.indexOf(grafo.SelectedNode());
+      var w;
+      var v;
+      var i, j;
+
+      var tabelaExecucaoHeaders = tabelaExecucao.parentElement.children[0].children[0];
+      var newHTMLText;
+
+      var newHTMLText = "";
+      for (i = 0; i < nNos; i++) {
+
+        if (i != s) {
+          var labelNo = N[i][1].node.innerHTML;
+
+          newHTMLText += "<th>D(" + labelNo + "), p(" + labelNo + ")</th>";
+        }
+      }
+      tabelaExecucaoHeaders.innerHTML = "<th>Passo</th><th>N&prime;</th>" + newHTMLText;
+      tabelaExecucao.innerHTML = "";
+      tabelaDeRoteamento.innerHTML = "";
+
+      definitivos[s] = true;
+      distancias[s] = 0;
+      for (i = 0; i < adj[s].length; i++) {
+
+        distancias[adj[s][i].id] = adj[s][i].weight;
+        predecessores[adj[s][i].id] = s;
+        proximosSaltos[adj[s][i].id] = adj[s][i].id;
+      }
+/*
+      newHTMLText = "<tr><td>0</td>";
+      newHTMLText += "<td>{" + N[s][1].node.innerHTML + "}</td>";
+      for (i = 0; i < nNos; i++) {
+
+        if (i == s) continue ;
+        if (predecessores[i] == -1)
+          newHTMLText += "<td>&infin;</td>";
+        else
+          newHTMLText += "<td>" + distancias[i] + ", " + N[predecessores[i]][1].node.innerHTML + "</td>";
+      }
+      newHTMLText += "</tr>";
+      tabelaExecucao.innerHTML += newHTMLText;
+*/
+      for (j = 1; j < nNos; j++) {
+
+        minimo = Number.MAX_VALUE;
+        w = null;
+        for (i = 0; i < distancias.length; i++) {
+
+          if (definitivos[i]) continue ;
+          if (distancias[i] < minimo) {
+            w = i;
+            minimo = distancias[i];
+          }
+        }
+
+        newHTMLText = "<tr><td>" + (j - 1) + "</td>";
+        newHTMLText += "<td>{";
+        var primeiroDoConjunto = true;
+        for (i = 0; i < nNos; i++) {
+
+          if (definitivos[i]) {
+            if (primeiroDoConjunto) {
+              newHTMLText += N[i][1].node.innerHTML;
+              primeiroDoConjunto = false;
+            }
+            else
+              newHTMLText += ", " + N[i][1].node.innerHTML;
+          }
+        }
+        newHTMLText += "}</td>";
+
+        for (i = 0; i < nNos; i++) {
+
+          if (i == s) continue ;
+          if (i == w) {
+
+              newHTMLText += "<td><div class=\"circle\">" + distancias[i] + ", " + N[predecessores[i]][1].node.innerHTML + "</div></td>";
+          }
+          else if (!definitivos[i]){
+
+            if (predecessores[i] == -1)
+              newHTMLText += "<td>&infin;</td>";
+            else
+              newHTMLText += "<td>" + distancias[i] + ", " + N[predecessores[i]][1].node.innerHTML + "</td>";
+          }
+          else {
+            newHTMLText += "<td></td>";
+          }
+        }
+        newHTMLText += "</tr>";
+        tabelaExecucao.innerHTML += newHTMLText;
+
+        if (w == null) {
+
+          tabelaExecucao.innerHTML += "<tr><td colspan='" + (nNos + 1) + "' style='font-family: bold;'>Grafo Bipartido Detectado!</td></tr>";
+          break ;
+        }
+
+        definitivos[w] = true;
+        for (i = 0; i < adj[w].length; i++) {
+
+          v = adj[w][i].id;
+          if (distancias[v] > distancias[w] + adj[w][i].weight) {
+
+            distancias[v] = distancias[w] + adj[w][i].weight;
+            predecessores[v] = w;
+            proximosSaltos[v] = proximosSaltos[w];
+          }
+        }
+      }
+
+      grafo.UnHighlightAllEdges();
+      for (i = 0; i < N.length; i++) {
+
+        if (predecessores[i] == -1) continue;
+
+        var aresta = grafo.FindEdge(N[i], N[predecessores[i]]);
+        grafo.HighlightEdge(aresta);
+
+        tabelaDeRoteamento.innerHTML += "<tr><td>" + N[i][1].node.innerHTML + "</td>"
+                                      + "<td>" + N[proximosSaltos[i]][1].node.innerHTML + "</td>"
+                                      + "<td>" + distancias[i] + "</td></tr>";
+      }
+
+      if (j == nNos) {
+
+        newHTMLText = "<tr><td>" + (nNos - 1) + "</td>";
+        newHTMLText += "<td>{";
+
+        var primeiroDoConjunto = true;
+        for (i = 0; i < nNos; i++) {
+
+          if (primeiroDoConjunto) {
+            newHTMLText += N[i][1].node.innerHTML;
+            primeiroDoConjunto = false;
+          }
+          else
+            newHTMLText += ", " + N[i][1].node.innerHTML;
+        }
+        newHTMLText += "}</td>";
+
+        for (i = 0; i < nNos; i++) {
+
+            newHTMLText += "<td></td>";
+        }
+        newHTMLText += "</tr>";
+        tabelaExecucao.innerHTML += newHTMLText;
+      }
+    }
+
+    var s = Snap("#DijkstraArbitrario");
+
+    var GrafoDijkstraArbitrario = new Grafo(s);
+
+    var nodes = [];
+    nodes.push(GrafoDijkstraArbitrario.DrawNode(50, 150, 'A'));
+    nodes.push(GrafoDijkstraArbitrario.DrawNode(200, 45, 'B'));
+    nodes.push(GrafoDijkstraArbitrario.DrawNode(200, 150, 'C'));
+    nodes.push(GrafoDijkstraArbitrario.DrawNode(200, 255, 'D'));
+    nodes.push(GrafoDijkstraArbitrario.DrawNode(350, 150, 'E'));
+    nodes.push(GrafoDijkstraArbitrario.DrawNode(500, 150, 'F'));
+
+    GrafoDijkstraArbitrario.DrawEdge(nodes[0], nodes[1], '3');
+    GrafoDijkstraArbitrario.DrawEdge(nodes[0], nodes[2], '1');
+    GrafoDijkstraArbitrario.DrawEdge(nodes[0], nodes[3], '5');
+    GrafoDijkstraArbitrario.DrawEdge(nodes[1], nodes[2], '1');
+    GrafoDijkstraArbitrario.DrawEdge(nodes[1], nodes[4], '7');
+    GrafoDijkstraArbitrario.DrawEdge(nodes[1], nodes[5], '2');
+    GrafoDijkstraArbitrario.DrawEdge(nodes[2], nodes[3], '3');
+    GrafoDijkstraArbitrario.DrawEdge(nodes[2], nodes[4], '5');
+    GrafoDijkstraArbitrario.DrawEdge(nodes[3], nodes[4], '5');
+    GrafoDijkstraArbitrario.DrawEdge(nodes[4], nodes[5], '8');
+
+    GrafoDijkstraArbitrario.OnChange(function() {Dijkstra(GrafoDijkstraArbitrario, document.getElementById('TabelaDeRoteamento'), document.getElementById('TabelaExecucao'));});
+    GrafoDijkstraArbitrario.ChangeSelectedNode(nodes[3]);
+
+    Dijkstra(GrafoDijkstraArbitrario, document.getElementById('TabelaDeRoteamento'), document.getElementById('TabelaExecucao'));
+  </script>
+
+</html>
