@@ -1,0 +1,157 @@
+<html>
+	<head>
+		<meta charset="utf-8"/>
+		<style>
+
+			table, td, th {
+
+				border: 1px solid;
+				border-collapse: collapse;
+				margin: 5px;
+				padding: 5px;
+			}
+
+			th {
+				background-color: gray;
+				font-weight: bold;
+			}
+
+			button {
+
+				margin: 5px;
+			}
+		</style>
+		<script>
+
+			// Small Fast Counter pseudo-random number implementation.
+			// Based on the original code by Chris Doty-Humphrey:
+			//  - http://pracrand.sourceforge.net/
+			function sfc32(a, b, c, d) {
+
+				return function() {
+					a >>>= 0; b >>>= 0; c >>>= 0; d >>>= 0; 
+					var t = (a + b) | 0;
+					a = b ^ b >>> 9;
+					b = c + (c << 3) | 0;
+					c = (c << 21 | c >>> 11);
+					d = d + 1 | 0;
+					t = t + d | 0;
+					c = c + t | 0;
+					return (t >>> 0);
+				}
+			}
+
+			function geraInstancia() {
+
+				var dept1 = new Array(16), dept2 = new Array(16);
+				var i;
+				var seed1, seed2, seed3;
+				var numeroAluno;
+
+				// Esvaziar a tabela de saída
+				var tab = document.getElementById('output');
+				tab.innerHTML = "";
+
+				// Número do primeiro aluno:
+				seed1 = Number(document.getElementById('elem1').value);
+				if (isNaN(seed1) || Math.floor(seed1) != seed1 || seed1 < 0) {
+					alert("Número do primeiro aluno é inválido!");
+					return(0);
+				}
+
+				// Número do segundo aluno:
+				seed2 = Number(document.getElementById('elem2').value);
+				if (isNaN(seed2) || Math.floor(seed2) != seed2 || seed2 < 0) {
+					alert("Número do segundo aluno é inválido!");
+					return(0);
+				}
+
+				// Número do terceiro aluno:
+				seed3 = Number(document.getElementById('elem3').value);
+				if (isNaN(seed3) || Math.floor(seed3) != seed3 || seed3 < 0) {
+					alert("Número do terceiro aluno é inválido!");
+					return(0);
+				}
+
+				if (seed1 == 0 && seed2 == 0 && seed3 == 0) {
+
+					alert("Ao menos um aluno deve ser especificado!");
+					return(0);
+				}
+
+				// Inicializa gerador de números pseudo-aleatórios com 
+				// números dos alunos como seeds
+				var rand = sfc32(0x9E3779B9, seed1, seed2, seed3);
+				rand();
+				rand();
+
+				// Gerar mapeamentos funcionario -> departamentos
+				for (i = 0; i < 16; i++) {
+
+					dept1[i] = rand() % 5;
+					do {
+
+						dept2[i] = rand() % 5;
+					} while(dept2[i] == dept1[i]);
+				}
+
+				// Exibir mapeamentos
+				
+				var tr = document.createElement("tr");
+				tr.innerHTML = "<th>Funcionário</th><th>Departamentos</th>";
+				tab.appendChild(tr);
+
+				for (i = 0; i < 16; i++) {
+
+					var tr = document.createElement("tr");
+					var html = "";
+					html = "<td>" + String(i) + "</td><td>";
+					if (dept1[i] < 4)
+						html += "D" + String(dept1[i]) + " ";
+					if (dept2[i] < 4)
+						html += "D" + String(dept2[i]) + " ";
+					html += "</td>";
+					tr.innerHTML = html;
+					tab.appendChild(tr);
+				}
+			}
+		</script>
+	</head>
+
+	<body>
+		<table style="border: 0px;">
+			<tr style="border: 0px;">
+				<td style="border: 0px;">
+					<img src="isel.svg" style="width: 250px;">
+				</td>
+				<td style="border: 0px;">
+					<h1>Gerador de Instância para o TLAB1</h1>
+				</td>
+			</tr>
+		</table>
+		<p><b>Instruções:</b></p>
+		<ul>
+			<li>Preencha os campos abaixo com as identificações dos elementos do grupo.</li>
+			<li>Os elementos devem ser identificados por seus <b>números de aluno</b>.</li>
+			<li>Se o grupo tiver menos de três alunos, o(s) último(s) campo(s) deve(m) ser deixado(s) em branco.</li>
+			<li>Ao final do preenchimento, pressione o botão &quot;Gerar Instância&quot;. Uma associação entre os identificadores dos funcionários e os departamentos aos quais pertencem será exibida abaixo.</li>
+		</ul>
+		<div style="border: 1px solid;">
+			<h3>Grupo (número dos alunos)</h3>
+			<label for="elem1">Elemento 1: </label>
+			<input type="text" id="elem1" name="elem1"><br><br>
+			<label for="elem2">Elemento 2: </label>
+			<input type="text" id="elem2" name="elem1"><br><br>
+			<label for="elem3">Elemento 3: </label>
+			<input type="text" id="elem3" name="elem1"><br><br>
+			<input type="button" value="Gerar Instância" onclick="geraInstancia();">
+		</div>
+
+		<div>
+			<h3>Instância</h3>
+			<table id="output">
+
+			</table>
+		</div>
+	</body>
+</html>
